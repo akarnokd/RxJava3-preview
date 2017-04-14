@@ -11,18 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
+package io.reactivex.common.schedulers;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.annotations.NonNull;
 import org.junit.Test;
 
-import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.NonNull;
 
 public class SchedulerWorkerTest {
 

@@ -10,17 +10,17 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.disposables;
+package io.reactivex.common.internal.disposables;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Action;
-import io.reactivex.internal.util.ExceptionHelper;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.functions.Action;
+import io.reactivex.common.internal.utils.ExceptionHelper;
 
-final class ActionDisposable extends ReferenceDisposable<Action> {
+public final class ActionDisposable extends ReferenceDisposable<Action> {
 
     private static final long serialVersionUID = -8219729196779211169L;
 
-    ActionDisposable(Action value) {
+    public ActionDisposable(Action value) {
         super(value);
     }
 

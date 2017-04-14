@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.reactivex.internal.schedulers;
+package io.reactivex.common.internal.schedulers;
 
-import io.reactivex.Scheduler;
-import io.reactivex.annotations.NonNull;
+import io.reactivex.common.Scheduler;
+import io.reactivex.common.annotations.NonNull;
 
 import java.util.concurrent.ThreadFactory;
 

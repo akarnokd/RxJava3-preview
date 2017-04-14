@@ -11,23 +11,20 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.common;
 
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.annotations.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.schedulers.*;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.internal.disposables.*;
+import io.reactivex.common.internal.schedulers.NewThreadWorker;
+import io.reactivex.common.internal.utils.ExceptionHelper;
 
 /**
  * A {@code Scheduler} is an object that specifies an API for scheduling
  * units of work with or without delays or periodically.
- * You can get common instances of this class in {@link io.reactivex.schedulers.Schedulers}.
+ * You can get common instances of this class in {@link io.reactivex.common.Schedulers}.
  */
 public abstract class Scheduler {
     /**
@@ -40,6 +37,8 @@ public abstract class Scheduler {
         CLOCK_DRIFT_TOLERANCE_NANOSECONDS = TimeUnit.MINUTES.toNanos(
                 Long.getLong("rx2.scheduler.drift-tolerance", 15));
     }
+
+    public static final Disposable REJECTED = DisposedDisposable.INSTANCE;
 
     /**
      * Returns the clock drift tolerance in nanoseconds.
@@ -164,91 +163,11 @@ public abstract class Scheduler {
         PeriodicDirectTask periodicTask = new PeriodicDirectTask(decoratedRun, w);
 
         Disposable d = w.schedulePeriodically(periodicTask, initialDelay, period, unit);
-        if (d == EmptyDisposable.INSTANCE) {
+        if (d == REJECTED) {
             return d;
         }
 
         return periodicTask;
-    }
-
-    /**
-     * Allows the use of operators for controlling the timing around when
-     * actions scheduled on workers are actually done. This makes it possible to
-     * layer additional behavior on this {@link Scheduler}. The only parameter
-     * is a function that flattens an {@link Flowable} of {@link Flowable}
-     * of {@link Completable}s into just one {@link Completable}. There must be
-     * a chain of operators connecting the returned value to the source
-     * {@link Flowable} otherwise any work scheduled on the returned
-     * {@link Scheduler} will not be executed.
-     * <p>
-     * When {@link Scheduler#createWorker()} is invoked a {@link Flowable} of
-     * {@link Completable}s is onNext'd to the combinator to be flattened. If
-     * the inner {@link Flowable} is not immediately subscribed to an calls to
-     * {@link Worker#schedule} are buffered. Once the {@link Flowable} is
-     * subscribed to actions are then onNext'd as {@link Completable}s.
-     * <p>
-     * Finally the actions scheduled on the parent {@link Scheduler} when the
-     * inner most {@link Completable}s are subscribed to.
-     * <p>
-     * When the {@link Worker} is unsubscribed the {@link Completable} emits an
-     * onComplete and triggers any behavior in the flattening operator. The
-     * {@link Flowable} and all {@link Completable}s give to the flattening
-     * function never onError.
-     * <p>
-     * Limit the amount concurrency two at a time without creating a new fix
-     * size thread pool:
-     * 
-     * <pre>
-     * Scheduler limitScheduler = Schedulers.computation().when(workers -> {
-     *  // use merge max concurrent to limit the number of concurrent
-     *  // callbacks two at a time
-     *  return Completable.merge(Flowable.merge(workers), 2);
-     * });
-     * </pre>
-     * <p>
-     * This is a slightly different way to limit the concurrency but it has some
-     * interesting benefits and drawbacks to the method above. It works by
-     * limited the number of concurrent {@link Worker}s rather than individual
-     * actions. Generally each {@link Flowable} uses its own {@link Worker}.
-     * This means that this will essentially limit the number of concurrent
-     * subscribes. The danger comes from using operators like
-     * {@link Flowable#zip(org.reactivestreams.Publisher, org.reactivestreams.Publisher, io.reactivex.functions.BiFunction)} where
-     * subscribing to the first {@link Flowable} could deadlock the
-     * subscription to the second.
-     * 
-     * <pre>
-     * Scheduler limitScheduler = Schedulers.computation().when(workers -> {
-     *  // use merge max concurrent to limit the number of concurrent
-     *  // Flowables two at a time
-     *  return Completable.merge(Flowable.merge(workers, 2));
-     * });
-     * </pre>
-     * 
-     * Slowing down the rate to no more than than 1 a second. This suffers from
-     * the same problem as the one above I could find an {@link Flowable}
-     * operator that limits the rate without dropping the values (aka leaky
-     * bucket algorithm).
-     * 
-     * <pre>
-     * Scheduler slowScheduler = Schedulers.computation().when(workers -> {
-     *  // use concatenate to make each worker happen one at a time.
-     *  return Completable.concat(workers.map(actions -> {
-     *      // delay the starting of the next worker by 1 second.
-     *      return Completable.merge(actions.delaySubscription(1, TimeUnit.SECONDS));
-     *  }));
-     * });
-     * </pre>
-     * 
-     * @param <S> a Scheduler and a Subscription
-     * @param combine the function that takes a two-level nested Flowable sequence of a Completable and returns
-     * the Completable that will be subscribed to and should trigger the execution of the scheduled Actions.
-     * @return the Scheduler with the customized execution behavior
-     */
-    @SuppressWarnings("unchecked")
-    @Experimental
-    @NonNull
-    public <S extends Scheduler & Disposable> S when(@NonNull Function<Flowable<Flowable<Completable>>, Completable> combine) {
-        return (S) new SchedulerWhen(combine, this);
     }
 
     /**
@@ -324,7 +243,7 @@ public abstract class Scheduler {
             Disposable d = schedule(new PeriodicTask(firstStartInNanoseconds, decoratedRun, firstNowNanoseconds, sd,
                     periodInNanoseconds), initialDelay, unit);
 
-            if (d == EmptyDisposable.INSTANCE) {
+            if (d == REJECTED) {
                 return d;
             }
             first.replace(d);

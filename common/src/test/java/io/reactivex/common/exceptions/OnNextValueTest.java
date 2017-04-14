@@ -13,17 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.reactivex.exceptions;
-
-import static org.junit.Assert.*;
-
-import java.io.*;
+package io.reactivex.common.exceptions;
 
 import org.junit.*;
-
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 
 /**
  * ```java
@@ -39,91 +31,6 @@ import io.reactivex.functions.Function;
  * There is an added danger that if there is a bug in the toString method it will cause inconsistent exception creation. If the object throws an exception while rendering a string it will actually end up not seeing the real exception.
  */
 public final class OnNextValueTest {
-    private static final class BadToString {
-
-        private final boolean throwDuringToString;
-
-        private BadToString(boolean throwDuringToString) {
-            this.throwDuringToString = throwDuringToString;
-        }
-
-        @Override
-        public String toString() {
-            if (throwDuringToString) {
-                throw new IllegalArgumentException("Error Making toString");
-            } else {
-                return "BadToString";
-            }
-        }
-    }
-
-    private static class BadToStringObserver implements Observer<BadToString> {
-        @Override
-        public void onComplete() {
-            System.out.println("On Complete");
-            fail("OnComplete shouldn't be reached");
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            String trace = stackTraceAsString(e);
-            System.out.println("On Error: " + trace);
-
-            assertTrue(trace, trace.contains("OnNextValue"));
-
-            assertTrue("No Cause on throwable" + e, e.getCause() != null);
-//            assertTrue(e.getCause().getClass().getSimpleName() + " no OnNextValue",
-//                    e.getCause() instanceof OnErrorThrowable.OnNextValue);
-        }
-
-        @Override
-        public void onNext(BadToString badToString) {
-            System.out.println("On Next");
-            fail("OnNext shouldn't be reached");
-
-        }
-
-        @Override
-        public void onSubscribe(Disposable d) {
-
-        }
-    }
-
-    public static String stackTraceAsString(Throwable e) {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        return sw.toString();
-    }
-
-    @Ignore("Not sure what this does")
-    @Test
-    public void addOnNextValueExceptionAdded() throws Exception {
-        Observer<BadToString> observer = new BadToStringObserver();
-
-        Observable.just(new BadToString(false))
-                .map(new Function<BadToString, BadToString>() {
-                    @Override
-                    public BadToString apply(BadToString badToString) {
-                        throw new IllegalArgumentException("Failure while handling");
-                    }
-                }).subscribe(observer);
-
-    }
-
-    @Ignore("Not sure what this does")
-    @Test
-    public void addOnNextValueExceptionNotAddedWithBadString() throws Exception {
-        Observer<BadToString> observer = new BadToStringObserver();
-
-        Observable.just(new BadToString(true))
-                .map(new Function<BadToString, BadToString>() {
-                    @Override
-                    public BadToString apply(BadToString badToString) {
-                        throw new IllegalArgumentException("Failure while handling");
-                    }
-                }).subscribe(observer);
-
-    }
 
     @Ignore("OnNextValue not ported")
     @Test

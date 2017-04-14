@@ -19,4 +19,4 @@
  * (Disposable container types) and utility classes to construct
  * Disposables from callbacks and other types.
  */
-package io.reactivex.disposables;
+package io.reactivex.common.disposables;

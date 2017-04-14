@@ -11,10 +11,10 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.exceptions;
+package io.reactivex.common.exceptions;
 
-import io.reactivex.annotations.*;
-import io.reactivex.internal.util.ExceptionHelper;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.internal.utils.ExceptionHelper;
 
 /**
  * Utility class to help propagate checked exceptions and rethrow exceptions

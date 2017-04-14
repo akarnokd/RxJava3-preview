@@ -10,16 +10,14 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.schedulers;
-
-import io.reactivex.Scheduler;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.plugins.RxJavaPlugins;
+package io.reactivex.common.internal.schedulers;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
+
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.disposables.CompositeDisposable;
 
 /**
  * A scheduler with a shared, single threaded underlying ScheduledExecutorService.
@@ -118,7 +116,7 @@ public final class SingleScheduler extends Scheduler {
             return task;
         } catch (RejectedExecutionException ex) {
             RxJavaPlugins.onError(ex);
-            return EmptyDisposable.INSTANCE;
+            return REJECTED;
         }
     }
 
@@ -132,7 +130,7 @@ public final class SingleScheduler extends Scheduler {
             return task;
         } catch (RejectedExecutionException ex) {
             RxJavaPlugins.onError(ex);
-            return EmptyDisposable.INSTANCE;
+            return REJECTED;
         }
     }
 
@@ -153,7 +151,7 @@ public final class SingleScheduler extends Scheduler {
         @Override
         public Disposable schedule(@NonNull Runnable run, long delay, @NonNull TimeUnit unit) {
             if (disposed) {
-                return EmptyDisposable.INSTANCE;
+                return REJECTED;
             }
 
             Runnable decoratedRun = RxJavaPlugins.onSchedule(run);
@@ -173,7 +171,7 @@ public final class SingleScheduler extends Scheduler {
             } catch (RejectedExecutionException ex) {
                 dispose();
                 RxJavaPlugins.onError(ex);
-                return EmptyDisposable.INSTANCE;
+                return REJECTED;
             }
 
             return sr;

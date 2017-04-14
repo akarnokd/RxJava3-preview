@@ -16,13 +16,12 @@
  * https://github.com/JCTools/JCTools/blob/master/jctools-core/src/main/java/org/jctools/queues/atomic
  */
 
-package io.reactivex.internal.queue;
+package io.reactivex.common.internal.queues;
 
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.annotations.Nullable;
-import io.reactivex.internal.fuseable.SimplePlainQueue;
-import io.reactivex.internal.util.Pow2;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.internal.utils.Pow2;
 
 /**
  * A Single-Producer-Single-Consumer queue backed by a pre-allocated buffer.
@@ -38,7 +37,7 @@ import io.reactivex.internal.util.Pow2;
  *
  * @param <E> the element type of the queue
  */
-public final class SpscArrayQueue<E> extends AtomicReferenceArray<E> implements SimplePlainQueue<E> {
+public abstract class SpscArrayQueue<E> extends AtomicReferenceArray<E> {
     private static final long serialVersionUID = -1296597691183856449L;
     private static final Integer MAX_LOOK_AHEAD_STEP = Integer.getInteger("jctools.spsc.max.lookahead.step", 4096);
     final int mask;
@@ -55,8 +54,7 @@ public final class SpscArrayQueue<E> extends AtomicReferenceArray<E> implements 
         lookAheadStep = Math.min(capacity / 4, MAX_LOOK_AHEAD_STEP);
     }
 
-    @Override
-    public boolean offer(E e) {
+    public final boolean offer(E e) {
         if (null == e) {
             throw new NullPointerException("Null is not a valid element");
         }
@@ -77,15 +75,13 @@ public final class SpscArrayQueue<E> extends AtomicReferenceArray<E> implements 
         return true;
     }
 
-    @Override
-    public boolean offer(E v1, E v2) {
+    public final boolean offer(E v1, E v2) {
         // FIXME
         return offer(v1) && offer(v2);
     }
 
     @Nullable
-    @Override
-    public E poll() {
+    public final E poll() {
         final long index = consumerIndex.get();
         final int offset = calcElementOffset(index);
         // local load of field to avoid repeated loads after volatile reads
@@ -98,38 +94,36 @@ public final class SpscArrayQueue<E> extends AtomicReferenceArray<E> implements 
         return e;
     }
 
-    @Override
-    public boolean isEmpty() {
+    public final boolean isEmpty() {
         return producerIndex.get() == consumerIndex.get();
     }
 
-    void soProducerIndex(long newIndex) {
+    final void soProducerIndex(long newIndex) {
         producerIndex.lazySet(newIndex);
     }
 
-    void soConsumerIndex(long newIndex) {
+    final void soConsumerIndex(long newIndex) {
         consumerIndex.lazySet(newIndex);
     }
 
-    @Override
-    public void clear() {
+    public final void clear() {
         // we have to test isEmpty because of the weaker poll() guarantee
         while (poll() != null || !isEmpty()) { } // NOPMD
     }
 
-    int calcElementOffset(long index, int mask) {
+    final int calcElementOffset(long index, int mask) {
         return (int)index & mask;
     }
 
-    int calcElementOffset(long index) {
+    final int calcElementOffset(long index) {
         return (int)index & mask;
     }
 
-    void soElement(int offset, E value) {
+    final void soElement(int offset, E value) {
         lazySet(offset, value);
     }
 
-    E lvElement(int offset) {
+    final E lvElement(int offset) {
         return get(offset);
     }
 }

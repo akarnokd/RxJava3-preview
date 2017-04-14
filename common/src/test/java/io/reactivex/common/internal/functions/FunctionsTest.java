@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.functions;
+package io.reactivex.common.internal.functions;
 
 import static org.junit.Assert.*;
 
@@ -19,10 +19,10 @@ import java.lang.reflect.Method;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions.*;
-import io.reactivex.internal.util.ExceptionHelper;
+import io.reactivex.common.TestHelper;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions.*;
+import io.reactivex.common.internal.utils.ExceptionHelper;
 
 public class FunctionsTest {
     @Test

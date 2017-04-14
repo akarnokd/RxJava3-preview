@@ -11,58 +11,23 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
-
-import io.reactivex.Flowable;
-import io.reactivex.Scheduler;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.subscribers.TestSubscriber;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-import org.junit.Test;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
+package io.reactivex.common.schedulers;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import java.util.*;
+
+import org.junit.Test;
+
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.disposables.CompositeDisposable;
 
 public class TrampolineSchedulerTest extends AbstractSchedulerTests {
 
     @Override
     protected Scheduler getScheduler() {
         return Schedulers.trampoline();
-    }
-
-    @Test
-    public final void testMergeWithCurrentThreadScheduler1() {
-
-        final String currentThreadName = Thread.currentThread().getName();
-
-        Flowable<Integer> o1 = Flowable.<Integer> just(1, 2, 3, 4, 5);
-        Flowable<Integer> o2 = Flowable.<Integer> just(6, 7, 8, 9, 10);
-        Flowable<String> o = Flowable.<Integer> merge(o1, o2).subscribeOn(Schedulers.trampoline()).map(new Function<Integer, String>() {
-
-            @Override
-            public String apply(Integer t) {
-                assertTrue(Thread.currentThread().getName().equals(currentThreadName));
-                return "Value_" + t + "_Thread_" + Thread.currentThread().getName();
-            }
-        });
-
-        o.blockingForEach(new Consumer<String>() {
-
-            @Override
-            public void accept(String t) {
-                System.out.println("t: " + t);
-            }
-        });
     }
 
     @Test
@@ -99,39 +64,6 @@ public class TrampolineSchedulerTest extends AbstractSchedulerTests {
         } finally {
             workers.dispose();
         }
-    }
-
-    /**
-     * This is a regression test for #1702. Concurrent work scheduling that is improperly synchronized can cause an
-     * action to be added or removed onto the priority queue during a poll, which can result in NPEs during queue
-     * sifting. While it is difficult to isolate the issue directly, we can easily trigger the behavior by spamming the
-     * trampoline with enqueue requests from multiple threads concurrently.
-     */
-    @Test
-    public void testTrampolineWorkerHandlesConcurrentScheduling() {
-        final Worker trampolineWorker = Schedulers.trampoline().createWorker();
-        final Subscriber<Object> observer = TestHelper.mockSubscriber();
-        final TestSubscriber<Disposable> ts = new TestSubscriber<Disposable>(observer);
-
-        // Spam the trampoline with actions.
-        Flowable.range(0, 50)
-                .flatMap(new Function<Integer, Publisher<Disposable>>() {
-                    @Override
-                    public Publisher<Disposable> apply(Integer count) {
-                        return Flowable
-                                .interval(1, TimeUnit.MICROSECONDS)
-                                .map(new Function<Long, Disposable>() {
-                                    @Override
-                                    public Disposable apply(Long ount1) {
-                                        return trampolineWorker.schedule(Functions.EMPTY_RUNNABLE);
-                                    }
-                                }).take(100);
-                    }
-                })
-                .subscribeOn(Schedulers.computation())
-                .subscribe(ts);
-        ts.awaitTerminalEvent();
-        ts.assertNoErrors();
     }
 
     private static Worker doWorkOnNewTrampoline(final String key, final ArrayList<String> workDone) {

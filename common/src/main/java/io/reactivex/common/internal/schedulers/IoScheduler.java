@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package io.reactivex.internal.schedulers;
+package io.reactivex.common.internal.schedulers;
 
-import io.reactivex.Scheduler;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.disposables.EmptyDisposable;
-
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.disposables.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
@@ -224,7 +222,7 @@ public final class IoScheduler extends Scheduler {
         public Disposable schedule(@NonNull Runnable action, long delayTime, @NonNull TimeUnit unit) {
             if (tasks.isDisposed()) {
                 // don't schedule, we are unsubscribed
-                return EmptyDisposable.INSTANCE;
+                return REJECTED;
             }
 
             return threadWorker.scheduleActual(action, delayTime, unit, tasks);

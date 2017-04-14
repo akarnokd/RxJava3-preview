@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.annotations;
+package io.reactivex.common.annotations;
 
 /**
  * Indicates the feature is in beta state: it will be most likely stay but

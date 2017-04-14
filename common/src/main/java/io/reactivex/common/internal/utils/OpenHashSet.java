@@ -16,7 +16,7 @@
  * https://github.com/vigna/fastutil/blob/master/drv/OpenHashSet.drv
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.common.internal.utils;
 
 /**
  * A simple open hash set with add, remove and clear capabilities only.

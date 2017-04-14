@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
+package io.reactivex.common.schedulers;
 
 import static org.junit.Assert.*;
 
@@ -20,15 +20,12 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.*;
+import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.schedulers.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.common.internal.schedulers.*;
 
 public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
 
@@ -37,17 +34,6 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
     @Override
     protected Scheduler getScheduler() {
         return Schedulers.from(executor);
-    }
-
-    @Test
-    @Ignore("Unhandled errors are no longer thrown")
-    public final void testUnhandledErrorIsDeliveredToThreadHandler() throws InterruptedException {
-        SchedulerTestHelper.testUnhandledErrorIsDeliveredToThreadHandler(getScheduler());
-    }
-
-    @Test
-    public final void testHandledErrorIsNotDeliveredToThreadHandler() throws InterruptedException {
-        SchedulerTestHelper.testHandledErrorIsNotDeliveredToThreadHandler(getScheduler());
     }
 
     public static void testCancelledRetention(Scheduler.Worker w, boolean periodic) throws InterruptedException {
@@ -339,11 +325,11 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
         List<Throwable> errors = TestHelper.trackPluginErrors();
 
         try {
-            assertSame(EmptyDisposable.INSTANCE, s.scheduleDirect(Functions.EMPTY_RUNNABLE));
+            assertSame(Scheduler.REJECTED, s.scheduleDirect(Functions.EMPTY_RUNNABLE));
 
-            assertSame(EmptyDisposable.INSTANCE, s.scheduleDirect(Functions.EMPTY_RUNNABLE, 10, TimeUnit.MILLISECONDS));
+            assertSame(Scheduler.REJECTED, s.scheduleDirect(Functions.EMPTY_RUNNABLE, 10, TimeUnit.MILLISECONDS));
 
-            assertSame(EmptyDisposable.INSTANCE, s.schedulePeriodicallyDirect(Functions.EMPTY_RUNNABLE, 10, 10, TimeUnit.MILLISECONDS));
+            assertSame(Scheduler.REJECTED, s.schedulePeriodicallyDirect(Functions.EMPTY_RUNNABLE, 10, 10, TimeUnit.MILLISECONDS));
 
             TestHelper.assertUndeliverable(errors, 0, RejectedExecutionException.class);
             TestHelper.assertUndeliverable(errors, 1, RejectedExecutionException.class);
@@ -362,13 +348,13 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
 
         try {
             Worker s = Schedulers.from(exec).createWorker();
-            assertSame(EmptyDisposable.INSTANCE, s.schedule(Functions.EMPTY_RUNNABLE));
+            assertSame(Scheduler.REJECTED, s.schedule(Functions.EMPTY_RUNNABLE));
 
             s = Schedulers.from(exec).createWorker();
-            assertSame(EmptyDisposable.INSTANCE, s.schedule(Functions.EMPTY_RUNNABLE, 10, TimeUnit.MILLISECONDS));
+            assertSame(Scheduler.REJECTED, s.schedule(Functions.EMPTY_RUNNABLE, 10, TimeUnit.MILLISECONDS));
 
             s = Schedulers.from(exec).createWorker();
-            assertSame(EmptyDisposable.INSTANCE, s.schedulePeriodically(Functions.EMPTY_RUNNABLE, 10, 10, TimeUnit.MILLISECONDS));
+            assertSame(Scheduler.REJECTED, s.schedulePeriodically(Functions.EMPTY_RUNNABLE, 10, 10, TimeUnit.MILLISECONDS));
 
             TestHelper.assertUndeliverable(errors, 0, RejectedExecutionException.class);
             TestHelper.assertUndeliverable(errors, 1, RejectedExecutionException.class);

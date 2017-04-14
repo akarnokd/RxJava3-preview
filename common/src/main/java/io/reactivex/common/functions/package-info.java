@@ -18,4 +18,4 @@
  * Functional interfaces of functions and actions of arity 0 to 9 and related
  * utility classes.
  */
-package io.reactivex.functions;
+package io.reactivex.common.functions;

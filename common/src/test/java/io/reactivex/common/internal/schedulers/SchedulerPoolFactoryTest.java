@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.reactivex.internal.schedulers;
+package io.reactivex.common.internal.schedulers;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
+import io.reactivex.common.TestHelper;
 
 public class SchedulerPoolFactoryTest {
 

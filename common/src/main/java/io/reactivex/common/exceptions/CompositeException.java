@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.reactivex.exceptions;
+package io.reactivex.common.exceptions;
 
 import java.io.*;
 import java.util.*;
 
-import io.reactivex.annotations.NonNull;
+import io.reactivex.common.annotations.NonNull;
 
 /**
  * Represents an exception that is a composite of one or more other exceptions. A {@code CompositeException}

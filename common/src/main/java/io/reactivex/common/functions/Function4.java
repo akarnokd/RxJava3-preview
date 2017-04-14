@@ -11,9 +11,9 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.functions;
+package io.reactivex.common.functions;
 
-import io.reactivex.annotations.NonNull;
+import io.reactivex.common.annotations.NonNull;
 
 /**
  * A functional interface (callback) that computes a value based on multiple input values.

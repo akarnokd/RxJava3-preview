@@ -11,14 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.disposables;
+package io.reactivex.common.disposables;
+
+import static org.junit.Assert.*;
 
 import java.util.concurrent.FutureTask;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.disposables.FutureDisposable;
+import io.reactivex.common.internal.functions.Functions;
 
 public class FutureDisposableTest {
 

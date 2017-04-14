@@ -11,20 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
+package io.reactivex.common.schedulers;
 
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.concurrent.*;
 
-import org.junit.*;
+import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.functions.*;
-import io.reactivex.internal.schedulers.ComputationScheduler;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.internal.schedulers.ComputationScheduler;
 
 public class ComputationSchedulerTests extends AbstractSchedulerConcurrencyTests {
 
@@ -87,66 +85,6 @@ public class ComputationSchedulerTests extends AbstractSchedulerConcurrencyTests
         } finally {
             inner.dispose();
         }
-    }
-
-    @Test
-    public final void testComputationThreadPool1() {
-        Flowable<Integer> o1 = Flowable.<Integer> just(1, 2, 3, 4, 5);
-        Flowable<Integer> o2 = Flowable.<Integer> just(6, 7, 8, 9, 10);
-        Flowable<String> o = Flowable.<Integer> merge(o1, o2).map(new Function<Integer, String>() {
-
-            @Override
-            public String apply(Integer t) {
-                assertTrue(Thread.currentThread().getName().startsWith("RxComputationThreadPool"));
-                return "Value_" + t + "_Thread_" + Thread.currentThread().getName();
-            }
-        });
-
-        o.subscribeOn(Schedulers.computation()).blockingForEach(new Consumer<String>() {
-
-            @Override
-            public void accept(String t) {
-                System.out.println("t: " + t);
-            }
-        });
-    }
-
-
-    @Test
-    public final void testMergeWithExecutorScheduler() {
-
-        final String currentThreadName = Thread.currentThread().getName();
-
-        Flowable<Integer> o1 = Flowable.<Integer> just(1, 2, 3, 4, 5);
-        Flowable<Integer> o2 = Flowable.<Integer> just(6, 7, 8, 9, 10);
-        Flowable<String> o = Flowable.<Integer> merge(o1, o2).subscribeOn(Schedulers.computation()).map(new Function<Integer, String>() {
-
-            @Override
-            public String apply(Integer t) {
-                assertFalse(Thread.currentThread().getName().equals(currentThreadName));
-                assertTrue(Thread.currentThread().getName().startsWith("RxComputationThreadPool"));
-                return "Value_" + t + "_Thread_" + Thread.currentThread().getName();
-            }
-        });
-
-        o.blockingForEach(new Consumer<String>() {
-
-            @Override
-            public void accept(String t) {
-                System.out.println("t: " + t);
-            }
-        });
-    }
-
-    @Test
-    @Ignore("Unhandled errors are no longer thrown")
-    public final void testUnhandledErrorIsDeliveredToThreadHandler() throws InterruptedException {
-        SchedulerTestHelper.testUnhandledErrorIsDeliveredToThreadHandler(getScheduler());
-    }
-
-    @Test
-    public final void testHandledErrorIsNotDeliveredToThreadHandler() throws InterruptedException {
-        SchedulerTestHelper.testHandledErrorIsNotDeliveredToThreadHandler(getScheduler());
     }
 
     @Test(timeout = 60000)

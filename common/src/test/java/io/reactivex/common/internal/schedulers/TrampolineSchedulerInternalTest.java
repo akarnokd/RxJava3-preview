@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.reactivex.internal.schedulers;
+package io.reactivex.common.internal.schedulers;
 
 import static org.junit.Assert.*;
 
@@ -22,10 +22,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.internal.functions.Functions;
 
 public class TrampolineSchedulerInternalTest {
 
@@ -35,7 +34,7 @@ public class TrampolineSchedulerInternalTest {
 
         final int[] calls = { 0 };
 
-        assertSame(EmptyDisposable.INSTANCE, Schedulers.trampoline().scheduleDirect(new Runnable() {
+        assertSame(TrampolineScheduler.DONE, Schedulers.trampoline().scheduleDirect(new Runnable() {
             @Override
             public void run() {
                 calls[0]++;
@@ -57,7 +56,7 @@ public class TrampolineSchedulerInternalTest {
 
         assertTrue(w.isDisposed());
 
-        assertEquals(EmptyDisposable.INSTANCE, w.schedule(Functions.EMPTY_RUNNABLE));
+        assertEquals(TrampolineScheduler.DONE, w.schedule(Functions.EMPTY_RUNNABLE));
     }
 
     @Test
@@ -124,7 +123,7 @@ public class TrampolineSchedulerInternalTest {
                     calls[0]++;
                     w.dispose();
 
-                    assertSame(EmptyDisposable.INSTANCE, w.schedule(new Runnable() {
+                    assertSame(TrampolineScheduler.DONE, w.schedule(new Runnable() {
                         @Override
                         public void run() {
                             calls[1]++;

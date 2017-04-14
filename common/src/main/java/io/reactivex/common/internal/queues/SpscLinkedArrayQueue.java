@@ -16,20 +16,19 @@
  * https://github.com/JCTools/JCTools/blob/master/jctools-core/src/main/java/org/jctools/queues/atomic
  */
 
-package io.reactivex.internal.queue;
+package io.reactivex.common.internal.queues;
 
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.annotations.Nullable;
-import io.reactivex.internal.fuseable.SimplePlainQueue;
-import io.reactivex.internal.util.Pow2;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.internal.utils.Pow2;
 
 /**
  * A single-producer single-consumer array-backed queue which can allocate new arrays in case the consumer is slower
  * than the producer.
  * @param <T> the contained value type
  */
-public final class SpscLinkedArrayQueue<T> implements SimplePlainQueue<T> {
+public abstract class SpscLinkedArrayQueue<T> {
     static final int MAX_LOOK_AHEAD_STEP = Integer.getInteger("jctools.spsc.max.lookahead.step", 4096);
     final AtomicLong producerIndex = new AtomicLong();
 
@@ -63,8 +62,7 @@ public final class SpscLinkedArrayQueue<T> implements SimplePlainQueue<T> {
      * <p>
      * This implementation is correct for single producer thread use only.
      */
-    @Override
-    public boolean offer(final T e) {
+    public final boolean offer(final T e) {
         if (null == e) {
             throw new NullPointerException("Null is not a valid element");
         }
@@ -124,8 +122,7 @@ public final class SpscLinkedArrayQueue<T> implements SimplePlainQueue<T> {
      */
     @Nullable
     @SuppressWarnings("unchecked")
-    @Override
-    public T poll() {
+    public final T poll() {
         // local load of field to avoid repeated loads after volatile reads
         final AtomicReferenceArray<Object> buffer = consumerBuffer;
         final long index = lpConsumerIndex();
@@ -176,12 +173,12 @@ public final class SpscLinkedArrayQueue<T> implements SimplePlainQueue<T> {
         final int offsetInNew = calcWrappedOffset(index, mask);
         return (T) lvElement(nextBuffer, offsetInNew);// LoadLoad
     }
-    @Override
-    public void clear() {
+
+    public final void clear() {
         while (poll() != null || !isEmpty()) { } // NOPMD
     }
 
-    public int size() {
+    public final int size() {
         /*
          * It is possible for a thread to be interrupted or reschedule between the read of the producer and
          * consumer indices, therefore protection is required to ensure size is within valid range. In the
@@ -199,8 +196,7 @@ public final class SpscLinkedArrayQueue<T> implements SimplePlainQueue<T> {
         }
     }
 
-    @Override
-    public boolean isEmpty() {
+    public final boolean isEmpty() {
         return lvProducerIndex() == lvConsumerIndex();
     }
 
@@ -253,8 +249,7 @@ public final class SpscLinkedArrayQueue<T> implements SimplePlainQueue<T> {
      * @param second the second value, not null
      * @return true if the queue accepted the two new values
      */
-    @Override
-    public boolean offer(T first, T second) {
+    public final boolean offer(T first, T second) {
         final AtomicReferenceArray<Object> buffer = producerBuffer;
         final long p = lvProducerIndex();
         final int m = producerMask;

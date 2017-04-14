@@ -10,9 +10,9 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.functions;
+package io.reactivex.common.internal.functions;
 
-import io.reactivex.functions.BiPredicate;
+import io.reactivex.common.functions.BiPredicate;
 
 /**
  * Utility methods containing the backport of Java 7's Objects utility class.

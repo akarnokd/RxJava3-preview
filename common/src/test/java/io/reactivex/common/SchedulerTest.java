@@ -11,23 +11,20 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
+package io.reactivex.common;
 
 import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.annotations.NonNull;
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.internal.disposables.SequentialDisposable;
+import io.reactivex.common.internal.functions.Functions;
 
 public class SchedulerTest {
 
@@ -256,7 +253,7 @@ public class SchedulerTest {
                     @NonNull
                     @Override
                     public Disposable schedule(@NonNull Runnable run, long delay, @NonNull TimeUnit unit) {
-                        return EmptyDisposable.INSTANCE;
+                        return Scheduler.REJECTED;
                     }
 
                     @Override
@@ -272,7 +269,7 @@ public class SchedulerTest {
             }
         };
 
-        assertSame(EmptyDisposable.INSTANCE, s.schedulePeriodicallyDirect(Functions.EMPTY_RUNNABLE, 1, 1, TimeUnit.MILLISECONDS));
+        assertSame(Scheduler.REJECTED, s.schedulePeriodicallyDirect(Functions.EMPTY_RUNNABLE, 1, 1, TimeUnit.MILLISECONDS));
     }
 
     @Test

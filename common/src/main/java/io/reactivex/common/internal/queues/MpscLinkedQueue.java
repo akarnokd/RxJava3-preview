@@ -16,18 +16,17 @@
  * https://github.com/JCTools/JCTools/blob/master/jctools-core/src/main/java/org/jctools/queues/atomic
  */
 
-package io.reactivex.internal.queue;
+package io.reactivex.common.internal.queues;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.annotations.Nullable;
-import io.reactivex.internal.fuseable.SimplePlainQueue;
+import io.reactivex.common.annotations.Nullable;
 
 /**
  * A multi-producer single consumer unbounded queue.
  * @param <T> the contained value type
  */
-public final class MpscLinkedQueue<T> implements SimplePlainQueue<T> {
+public abstract class MpscLinkedQueue<T> {
     private final AtomicReference<LinkedQueueNode<T>> producerNode;
     private final AtomicReference<LinkedQueueNode<T>> consumerNode;
 
@@ -54,8 +53,7 @@ public final class MpscLinkedQueue<T> implements SimplePlainQueue<T> {
      *
      * @see java.util.Queue#offer(java.lang.Object)
      */
-    @Override
-    public boolean offer(final T e) {
+    public final boolean offer(final T e) {
         if (null == e) {
             throw new NullPointerException("Null is not a valid element");
         }
@@ -83,8 +81,7 @@ public final class MpscLinkedQueue<T> implements SimplePlainQueue<T> {
      * @see java.util.Queue#poll()
      */
     @Nullable
-    @Override
-    public T poll() {
+    public final T poll() {
         LinkedQueueNode<T> currConsumerNode = lpConsumerNode(); // don't load twice, it's alright
         LinkedQueueNode<T> nextNode = currConsumerNode.lvNext();
         if (nextNode != null) {
@@ -106,31 +103,29 @@ public final class MpscLinkedQueue<T> implements SimplePlainQueue<T> {
         return null;
     }
 
-    @Override
-    public boolean offer(T v1, T v2) {
+    public final boolean offer(T v1, T v2) {
         offer(v1);
         offer(v2);
         return true;
     }
 
-    @Override
-    public void clear() {
+    public final void clear() {
         while (poll() != null && !isEmpty()) { } // NOPMD
     }
-    LinkedQueueNode<T> lvProducerNode() {
+    final LinkedQueueNode<T> lvProducerNode() {
         return producerNode.get();
     }
-    LinkedQueueNode<T> xchgProducerNode(LinkedQueueNode<T> node) {
+    final LinkedQueueNode<T> xchgProducerNode(LinkedQueueNode<T> node) {
         return producerNode.getAndSet(node);
     }
-    LinkedQueueNode<T> lvConsumerNode() {
+    final LinkedQueueNode<T> lvConsumerNode() {
         return consumerNode.get();
     }
 
-    LinkedQueueNode<T> lpConsumerNode() {
+    final LinkedQueueNode<T> lpConsumerNode() {
         return consumerNode.get();
     }
-    void spConsumerNode(LinkedQueueNode<T> node) {
+    final void spConsumerNode(LinkedQueueNode<T> node) {
         consumerNode.lazySet(node);
     }
 
@@ -142,8 +137,7 @@ public final class MpscLinkedQueue<T> implements SimplePlainQueue<T> {
      * the producerNode.value is null, which also means an empty queue because only the consumerNode.value is allowed to
      * be null.
      */
-    @Override
-    public boolean isEmpty() {
+    final public boolean isEmpty() {
         return lvConsumerNode() == lvProducerNode();
     }
 

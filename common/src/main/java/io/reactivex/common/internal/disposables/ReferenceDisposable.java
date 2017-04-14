@@ -11,12 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.disposables;
+package io.reactivex.common.internal.disposables;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.internal.functions.ObjectHelper;
 
 /**
  * Base class for Disposable containers that manage some other type that
@@ -24,11 +25,11 @@ import io.reactivex.internal.functions.ObjectHelper;
  *
  * @param <T> the type contained
  */
-abstract class ReferenceDisposable<T> extends AtomicReference<T> implements Disposable {
+public abstract class ReferenceDisposable<T> extends AtomicReference<T> implements Disposable {
 
     private static final long serialVersionUID = 6537757548749041217L;
 
-    ReferenceDisposable(T value) {
+    public ReferenceDisposable(T value) {
         super(ObjectHelper.requireNonNull(value, "value is null"));
     }
 

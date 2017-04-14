@@ -10,21 +10,23 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.disposables;
+package io.reactivex.common.internal.disposables;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
+import io.reactivex.common.Disposable;
+
 /**
  * A Disposable container that cancels a Future instance.
  */
-final class FutureDisposable extends AtomicReference<Future<?>> implements Disposable {
+public final class FutureDisposable extends AtomicReference<Future<?>> implements Disposable {
 
     private static final long serialVersionUID = 6545242830671168775L;
 
     private final boolean allowInterrupt;
 
-    FutureDisposable(Future<?> run, boolean allowInterrupt) {
+    public FutureDisposable(Future<?> run, boolean allowInterrupt) {
         super(run);
         this.allowInterrupt = allowInterrupt;
     }

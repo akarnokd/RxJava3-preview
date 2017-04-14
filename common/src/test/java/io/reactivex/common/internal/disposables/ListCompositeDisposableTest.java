@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.disposables;
+package io.reactivex.common.internal.disposables;
 
 import static org.junit.Assert.*;
 
@@ -19,10 +19,8 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
 
 public class ListCompositeDisposableTest {
 

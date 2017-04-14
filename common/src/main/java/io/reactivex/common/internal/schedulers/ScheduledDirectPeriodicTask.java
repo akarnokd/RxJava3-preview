@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.reactivex.internal.schedulers;
+package io.reactivex.common.internal.schedulers;
 
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.RxJavaPlugins;
 
 /**
  * A Callable to be submitted to an ExecutorService that runs a Runnable

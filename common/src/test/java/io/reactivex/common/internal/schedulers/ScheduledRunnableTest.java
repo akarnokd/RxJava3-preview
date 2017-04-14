@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.schedulers;
+package io.reactivex.common.internal.schedulers;
 
 import static org.junit.Assert.*;
 
@@ -21,11 +21,10 @@ import java.util.concurrent.FutureTask;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.internal.functions.Functions;
 
 public class ScheduledRunnableTest {
 

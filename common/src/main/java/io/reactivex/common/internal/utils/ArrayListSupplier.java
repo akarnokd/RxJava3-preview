@@ -11,12 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.common.internal.utils;
 
 import java.util.*;
 import java.util.concurrent.Callable;
 
-import io.reactivex.functions.Function;
+import io.reactivex.common.functions.Function;
 
 public enum ArrayListSupplier implements Callable<List<Object>>, Function<Object, List<Object>> {
     INSTANCE;

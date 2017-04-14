@@ -11,12 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.functions;
+package io.reactivex.common.internal.functions;
+
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-import io.reactivex.TestHelper;
+import io.reactivex.common.TestHelper;
 
 public class ObjectHelperTest {
 

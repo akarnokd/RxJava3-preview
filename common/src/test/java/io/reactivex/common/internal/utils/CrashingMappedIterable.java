@@ -11,12 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.common.internal.utils;
 
 import java.util.Iterator;
 
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
 
 /**
  * An Iterable and Iterator that crashes with TestException after the given number

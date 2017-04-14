@@ -11,16 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.schedulers;
+package io.reactivex.common.internal.schedulers;
 
 import java.util.concurrent.*;
 
-import io.reactivex.Scheduler;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.internal.disposables.DisposableContainer;
 
 /**
  * Base class that manages a single-threaded ScheduledExecutorService as a
@@ -46,7 +43,7 @@ public class NewThreadWorker extends Scheduler.Worker implements Disposable {
     @Override
     public Disposable schedule(@NonNull final Runnable action, long delayTime, @NonNull TimeUnit unit) {
         if (disposed) {
-            return EmptyDisposable.INSTANCE;
+            return Scheduler.REJECTED;
         }
         return scheduleActual(action, delayTime, unit, null);
     }
@@ -72,7 +69,7 @@ public class NewThreadWorker extends Scheduler.Worker implements Disposable {
             return task;
         } catch (RejectedExecutionException ex) {
             RxJavaPlugins.onError(ex);
-            return EmptyDisposable.INSTANCE;
+            return Scheduler.REJECTED;
         }
     }
 
@@ -93,7 +90,7 @@ public class NewThreadWorker extends Scheduler.Worker implements Disposable {
             return task;
         } catch (RejectedExecutionException ex) {
             RxJavaPlugins.onError(ex);
-            return EmptyDisposable.INSTANCE;
+            return Scheduler.REJECTED;
         }
     }
 

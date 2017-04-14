@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.functions;
+package io.reactivex.common.functions;
 
 /**
  * A functional interface that has a single cancel method

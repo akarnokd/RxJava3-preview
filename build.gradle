@@ -20,6 +20,13 @@ description = 'Preview for version 3 of RxJava, the modern ReactiveX style libra
 
 ext.githubProjectName = 'RxJava3-preview' 
 
+allprojects {
+    apply plugin: 'java'
+
+    sourceCompatibility = JavaVersion.VERSION_1_6
+    targetCompatibility = JavaVersion.VERSION_1_6
+}
+
 subprojects {
 
     repositories {
@@ -27,15 +34,12 @@ subprojects {
 		jcenter()
     }
 
-    apply plugin: 'java'
+    apply plugin: 'eclipse'
     apply plugin: 'checkstyle'
     apply plugin: 'jacoco'
     apply plugin: 'ru.vyarus.animalsniffer'
     apply plugin: "me.champeau.gradle.jmh" 
     apply plugin: "com.github.hierynomus.license" 
-
-    sourceCompatibility = JavaVersion.VERSION_1_6
-    targetCompatibility = JavaVersion.VERSION_1_6
 
 	group = 'com.github.akarnokd.rxjava3'
 

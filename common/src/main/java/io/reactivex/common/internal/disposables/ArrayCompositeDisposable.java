@@ -11,11 +11,11 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.disposables;
+package io.reactivex.common.internal.disposables;
 
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
-import io.reactivex.disposables.Disposable;
+import io.reactivex.common.Disposable;
 
 /**
  * A composite disposable with a fixed number of slots.

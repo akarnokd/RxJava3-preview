@@ -11,9 +11,10 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
+package io.reactivex.common;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 import java.util.concurrent.TimeUnit;
@@ -21,15 +22,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 import org.mockito.*;
-import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.schedulers.TestScheduler.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.TestScheduler.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.utils.ExceptionHelper;
 
 public class TestSchedulerTest {
 
@@ -182,58 +179,11 @@ public class TestSchedulerTest {
     }
 
     @Test
-    public final void testNestedSchedule() {
-        final TestScheduler scheduler = new TestScheduler();
-        final Scheduler.Worker inner = scheduler.createWorker();
-
-        try {
-            final Runnable calledOp = mock(Runnable.class);
-
-            Flowable<Object> poller;
-            poller = Flowable.unsafeCreate(new Publisher<Object>() {
-                @Override
-                public void subscribe(final Subscriber<? super Object> aSubscriber) {
-                    final BooleanSubscription bs = new BooleanSubscription();
-                    aSubscriber.onSubscribe(bs);
-                    inner.schedule(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!bs.isCancelled()) {
-                                calledOp.run();
-                                inner.schedule(this, 5, TimeUnit.SECONDS);
-                            }
-                        }
-                    });
-                }
-            });
-
-            InOrder inOrder = Mockito.inOrder(calledOp);
-
-            Disposable sub;
-            sub = poller.subscribe();
-
-            scheduler.advanceTimeTo(6, TimeUnit.SECONDS);
-            inOrder.verify(calledOp, times(2)).run();
-
-            sub.dispose();
-            scheduler.advanceTimeTo(11, TimeUnit.SECONDS);
-            inOrder.verify(calledOp, never()).run();
-
-            sub = poller.subscribe();
-            scheduler.advanceTimeTo(12, TimeUnit.SECONDS);
-            inOrder.verify(calledOp, times(1)).run();
-        } finally {
-            inner.dispose();
-        }
-    }
-
-    @Test
     public void timedRunnableToString() {
         TimedRunnable r = new TimedRunnable((TestWorker) new TestScheduler().createWorker(), 5, new Runnable() {
             @Override
             public void run() {
-                // TODO Auto-generated method stub
-
+                
             }
             @Override
             public String toString() {

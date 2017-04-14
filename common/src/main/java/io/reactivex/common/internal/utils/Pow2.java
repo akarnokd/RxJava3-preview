@@ -16,7 +16,7 @@
  * Original License: https://github.com/JCTools/JCTools/blob/master/LICENSE
  * Original location: https://github.com/JCTools/JCTools/blob/master/jctools-core/src/main/java/org/jctools/util/Pow2.java
  */
-package io.reactivex.internal.util;
+package io.reactivex.common.internal.utils;
 
 public final class Pow2 {
     private Pow2() {

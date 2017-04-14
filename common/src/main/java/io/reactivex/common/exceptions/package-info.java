@@ -18,4 +18,4 @@
  * Exception handling utilities, safe subscriber exception classes,
  * lifecycle exception classes.
  */
-package io.reactivex.exceptions;
+package io.reactivex.common.exceptions;

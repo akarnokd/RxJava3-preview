@@ -11,12 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
+package io.reactivex.common;
 
-import io.reactivex.Scheduler;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.internal.schedulers.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.Scheduler;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.internal.schedulers.*;
+import io.reactivex.common.RxJavaPlugins;
 
 import java.util.concurrent.*;
 
@@ -99,7 +99,7 @@ public final class Schedulers {
      * <p>
      * Unhandled errors will be delivered to the scheduler Thread's {@link java.lang.Thread.UncaughtExceptionHandler}.
      * <p>
-     * This type of scheduler is less sensitive to leaking {@link io.reactivex.Scheduler.Worker} instances, although
+     * This type of scheduler is less sensitive to leaking {@link io.reactivex.common.Scheduler.Worker} instances, although
      * not disposing a worker that has timed/delayed tasks not cancelled by other means may leak resources and/or
      * execute those tasks "unexpectedly".
      * <p>
@@ -115,18 +115,18 @@ public final class Schedulers {
      * </ul>
      * <p>
      * The default value of this scheduler can be overridden at initialization time via the
-     * {@link RxJavaPlugins#setInitComputationSchedulerHandler(io.reactivex.functions.Function)} plugin method.
+     * {@link RxJavaPlugins#setInitComputationSchedulerHandler(io.reactivex.common.functions.Function)} plugin method.
      * Note that due to possible initialization cycles, using any of the other scheduler-returning methods will
      * result in a {@code NullPointerException}.
      * Once the {@link Schedulers} class has been initialized, you can override the returned {@link Scheduler} instance
-     * via the {@link RxJavaPlugins#setComputationSchedulerHandler(io.reactivex.functions.Function)} method.
+     * via the {@link RxJavaPlugins#setComputationSchedulerHandler(io.reactivex.common.functions.Function)} method.
      * <p>
      * It is possible to create a fresh instance of this scheduler with a custom ThreadFactory, via the
      * {@link RxJavaPlugins#createComputationScheduler(ThreadFactory)} method. Note that such custom
      * instances require a manual call to {@link Scheduler#shutdown()} to allow the JVM to exit or the
      * (J2EE) container to unload properly.
      * <p>Operators on the base reactive classes that use this scheduler are marked with the
-     * &#64;{@link io.reactivex.annotations.SchedulerSupport SchedulerSupport}({@link io.reactivex.annotations.SchedulerSupport#COMPUTATION COMPUTATION})
+     * &#64;{@link io.reactivex.common.annotations.SchedulerSupport SchedulerSupport}({@link io.reactivex.common.annotations.SchedulerSupport#COMPUTATION COMPUTATION})
      * annotation.
      * @return a {@link Scheduler} meant for computation-bound work
      */
@@ -142,10 +142,10 @@ public final class Schedulers {
      * <p>
      * The implementation is backed by a pool of single-threaded {link ScheduledExecutorService} instances
      * that will try to reuse previoulsy started instances used by the worker
-     * returned by {@link io.reactivex.Scheduler#createWorker()} but otherwise will start a new backing
+     * returned by {@link io.reactivex.common.Scheduler#createWorker()} but otherwise will start a new backing
      * {link ScheduledExecutorService} instance. Note that this scheduler may create an unbounded number
      * of worker threads that can result in system slowdowns or {@code OutOfMemoryError}. Therefore, for casual uses
-     * or when implementing an operator, the Worker instances must be disposed via {@link io.reactivex.Scheduler.Worker#dispose()}.
+     * or when implementing an operator, the Worker instances must be disposed via {@link io.reactivex.common.Scheduler.Worker#dispose()}.
      * <p>
      * It is not recommended to perform computational work on this scheduler. Use {@link #computation()} instead.
      * <p>
@@ -159,18 +159,18 @@ public final class Schedulers {
      * </ul>
      * <p>
      * The default value of this scheduler can be overridden at initialization time via the
-     * {@link RxJavaPlugins#setInitIoSchedulerHandler(io.reactivex.functions.Function)} plugin method.
+     * {@link RxJavaPlugins#setInitIoSchedulerHandler(io.reactivex.common.functions.Function)} plugin method.
      * Note that due to possible initialization cycles, using any of the other scheduler-returning methods will
      * result in a {@code NullPointerException}.
      * Once the {@link Schedulers} class has been initialized, you can override the returned {@link Scheduler} instance
-     * via the {@link RxJavaPlugins#setIoSchedulerHandler(io.reactivex.functions.Function)} method.
+     * via the {@link RxJavaPlugins#setIoSchedulerHandler(io.reactivex.common.functions.Function)} method.
      * <p>
      * It is possible to create a fresh instance of this scheduler with a custom ThreadFactory, via the
      * {@link RxJavaPlugins#createIoScheduler(ThreadFactory)} method. Note that such custom
      * instances require a manual call to {@link Scheduler#shutdown()} to allow the JVM to exit or the
      * (J2EE) container to unload properly.
      * <p>Operators on the base reactive classes that use this scheduler are marked with the
-     * &#64;{@link io.reactivex.annotations.SchedulerSupport SchedulerSupport}({@link io.reactivex.annotations.SchedulerSupport#IO IO})
+     * &#64;{@link io.reactivex.common.annotations.SchedulerSupport SchedulerSupport}({@link io.reactivex.common.annotations.SchedulerSupport#IO IO})
      * annotation.
      * @return a {@link Scheduler} meant for IO-bound work
      */
@@ -180,7 +180,7 @@ public final class Schedulers {
     }
 
     /**
-     * Returns a default, shared {@link Scheduler} instance whose {@link io.reactivex.Scheduler.Worker}
+     * Returns a default, shared {@link Scheduler} instance whose {@link io.reactivex.common.Scheduler.Worker}
      * instances queue work and execute them in a FIFO manner on one of the participating threads.
      * <p>
      * The default implementation's {@link Scheduler#scheduleDirect(Runnable)} methods execute the tasks on the current thread
@@ -205,7 +205,7 @@ public final class Schedulers {
      * each invocation of the {@link Scheduler#scheduleDirect(Runnable)} (plus its overloads) and {@link Scheduler#createWorker()}
      * methods, thus an unbounded number of worker threads may be created that can
      * result in system slowdowns or {@code OutOfMemoryError}. Therefore, for casual uses or when implementing an operator,
-     * the Worker instances must be disposed via {@link io.reactivex.Scheduler.Worker#dispose()}.
+     * the Worker instances must be disposed via {@link io.reactivex.common.Scheduler.Worker#dispose()}.
      * <p>
      * Unhandled errors will be delivered to the scheduler Thread's {@link java.lang.Thread.UncaughtExceptionHandler}.
      * <p>
@@ -217,18 +217,18 @@ public final class Schedulers {
      * </ul>
      * <p>
      * The default value of this scheduler can be overridden at initialization time via the
-     * {@link RxJavaPlugins#setInitNewThreadSchedulerHandler(io.reactivex.functions.Function)} plugin method.
+     * {@link RxJavaPlugins#setInitNewThreadSchedulerHandler(io.reactivex.common.functions.Function)} plugin method.
      * Note that due to possible initialization cycles, using any of the other scheduler-returning methods will
      * result in a {@code NullPointerException}.
      * Once the {@link Schedulers} class has been initialized, you can override the returned {@link Scheduler} instance
-     * via the {@link RxJavaPlugins#setNewThreadSchedulerHandler(io.reactivex.functions.Function)} method.
+     * via the {@link RxJavaPlugins#setNewThreadSchedulerHandler(io.reactivex.common.functions.Function)} method.
      * <p>
      * It is possible to create a fresh instance of this scheduler with a custom ThreadFactory, via the
      * {@link RxJavaPlugins#createNewThreadScheduler(ThreadFactory)} method. Note that such custom
      * instances require a manual call to {@link Scheduler#shutdown()} to allow the JVM to exit or the
      * (J2EE) container to unload properly.
      * <p>Operators on the base reactive classes that use this scheduler are marked with the
-     * &#64;{@link io.reactivex.annotations.SchedulerSupport SchedulerSupport}({@link io.reactivex.annotations.SchedulerSupport#NEW_THREAD NEW_TRHEAD})
+     * &#64;{@link io.reactivex.common.annotations.SchedulerSupport SchedulerSupport}({@link io.reactivex.common.annotations.SchedulerSupport#NEW_THREAD NEW_TRHEAD})
      * annotation.
      * @return a {@link Scheduler} that creates new threads
      */
@@ -251,7 +251,7 @@ public final class Schedulers {
      * <p>
      * Unhandled errors will be delivered to the scheduler Thread's {@link java.lang.Thread.UncaughtExceptionHandler}.
      * <p>
-     * This type of scheduler is less sensitive to leaking {@link io.reactivex.Scheduler.Worker} instances, although
+     * This type of scheduler is less sensitive to leaking {@link io.reactivex.common.Scheduler.Worker} instances, although
      * not disposing a worker that has timed/delayed tasks not cancelled by other means may leak resources and/or
      * execute those tasks "unexpectedly".
      * <p>
@@ -266,18 +266,18 @@ public final class Schedulers {
      * </ul>
      * <p>
      * The default value of this scheduler can be overridden at initialization time via the
-     * {@link RxJavaPlugins#setInitSingleSchedulerHandler(io.reactivex.functions.Function)} plugin method.
+     * {@link RxJavaPlugins#setInitSingleSchedulerHandler(io.reactivex.common.functions.Function)} plugin method.
      * Note that due to possible initialization cycles, using any of the other scheduler-returning methods will
      * result in a {@code NullPointerException}.
      * Once the {@link Schedulers} class has been initialized, you can override the returned {@link Scheduler} instance
-     * via the {@link RxJavaPlugins#setSingleSchedulerHandler(io.reactivex.functions.Function)} method.
+     * via the {@link RxJavaPlugins#setSingleSchedulerHandler(io.reactivex.common.functions.Function)} method.
      * <p>
      * It is possible to create a fresh instance of this scheduler with a custom ThreadFactory, via the
      * {@link RxJavaPlugins#createSingleScheduler(ThreadFactory)} method. Note that such custom
      * instances require a manual call to {@link Scheduler#shutdown()} to allow the JVM to exit or the
      * (J2EE) container to unload properly.
      * <p>Operators on the base reactive classes that use this scheduler are marked with the
-     * &#64;{@link io.reactivex.annotations.SchedulerSupport SchedulerSupport}({@link io.reactivex.annotations.SchedulerSupport#SINGLE SINGLE})
+     * &#64;{@link io.reactivex.common.annotations.SchedulerSupport SchedulerSupport}({@link io.reactivex.common.annotations.SchedulerSupport#SINGLE SINGLE})
      * annotation.
      * @return a {@link Scheduler} that shares a single backing thread.
      * @since 2.0
@@ -299,13 +299,13 @@ public final class Schedulers {
      * <p>
      * If the provided executor supports the standard Java {@link ExecutorService} API,
      * cancelling tasks scheduled by this scheduler can be cancelled/interrupted by calling
-     * {@link io.reactivex.disposables.Disposable#dispose()}. In addition, tasks scheduled with
+     * {@link io.reactivex.common.Disposable#dispose()}. In addition, tasks scheduled with
      * a time delay or periodically will use the {@link #single()} scheduler for the timed waiting
      * before posting the actual task to the given executor.
      * <p>
      * If the provided executor supports the standard Java {@link ScheduledExecutorService} API,
      * cancelling tasks scheduled by this scheduler can be cancelled/interrupted by calling
-     * {@link io.reactivex.disposables.Disposable#dispose()}. In addition, tasks scheduled with
+     * {@link io.reactivex.common.Disposable#dispose()}. In addition, tasks scheduled with
      * a time delay or periodically will use the provided executor. Note, however, if the provided
      * {@code ScheduledExecutorService} instance is not single threaded, tasks scheduled
      * with a time delay close to each other may end up executing in different order than
@@ -327,7 +327,7 @@ public final class Schedulers {
      * }
      * </pre></code>
      * <p>
-     * This type of scheduler is less sensitive to leaking {@link io.reactivex.Scheduler.Worker} instances, although
+     * This type of scheduler is less sensitive to leaking {@link io.reactivex.common.Scheduler.Worker} instances, although
      * not disposing a worker that has timed/delayed tasks not cancelled by other means may leak resources and/or
      * execute those tasks "unexpectedly".
      * <p>

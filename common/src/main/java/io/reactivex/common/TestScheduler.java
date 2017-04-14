@@ -11,16 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
+package io.reactivex.common;
 
 import java.util.Queue;
 import java.util.concurrent.*;
 
-import io.reactivex.Scheduler;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.internal.functions.ObjectHelper;
 
 /**
  * A special, non thread-safe scheduler for testing operators that require
@@ -143,7 +140,7 @@ public final class TestScheduler extends Scheduler {
         @Override
         public Disposable schedule(@NonNull Runnable run, long delayTime, @NonNull TimeUnit unit) {
             if (disposed) {
-                return EmptyDisposable.INSTANCE;
+                return REJECTED;
             }
             final TimedRunnable timedAction = new TimedRunnable(this, time + unit.toNanos(delayTime), run, counter++);
             queue.add(timedAction);
@@ -155,7 +152,7 @@ public final class TestScheduler extends Scheduler {
         @Override
         public Disposable schedule(@NonNull Runnable run) {
             if (disposed) {
-                return EmptyDisposable.INSTANCE;
+                return REJECTED;
             }
             final TimedRunnable timedAction = new TimedRunnable(this, 0, run, counter++);
             queue.add(timedAction);

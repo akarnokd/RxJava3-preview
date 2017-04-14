@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.common.internal.utils;
 
 import static org.junit.Assert.*;
 
@@ -19,9 +19,7 @@ import java.util.concurrent.*;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.*;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
 
 public class BlockingHelperTest {
 

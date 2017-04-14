@@ -10,18 +10,18 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.disposables;
+package io.reactivex.common.internal.disposables;
 
-import io.reactivex.annotations.NonNull;
+import io.reactivex.common.annotations.NonNull;
 
 /**
  * A disposable container that manages a Runnable instance.
  */
-final class RunnableDisposable extends ReferenceDisposable<Runnable> {
+public final class RunnableDisposable extends ReferenceDisposable<Runnable> {
 
     private static final long serialVersionUID = -8219729196779211169L;
 
-    RunnableDisposable(Runnable value) {
+    public RunnableDisposable(Runnable value) {
         super(value);
     }
 

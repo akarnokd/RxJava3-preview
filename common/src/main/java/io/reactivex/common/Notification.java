@@ -11,11 +11,10 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.common;
 
-import io.reactivex.annotations.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.util.NotificationLite;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.internal.functions.ObjectHelper;
 
 /**
  * Represents the reactive signal types: onNext, onError and onComplete and
@@ -46,7 +45,7 @@ public final class Notification<T> {
      * @see #getError()
      */
     public boolean isOnError() {
-        return NotificationLite.isError(value);
+        return isError(value);
     }
 
     /**
@@ -57,7 +56,7 @@ public final class Notification<T> {
      */
     public boolean isOnNext() {
         Object o = value;
-        return o != null && !NotificationLite.isError(o);
+        return o != null && !isError(o);
     }
 
     /**
@@ -70,7 +69,7 @@ public final class Notification<T> {
     @Nullable
     public T getValue() {
         Object o = value;
-        if (o != null && !NotificationLite.isError(o)) {
+        if (o != null && !isError(o)) {
             return (T)value;
         }
         return null;
@@ -85,8 +84,8 @@ public final class Notification<T> {
     @Nullable
     public Throwable getError() {
         Object o = value;
-        if (NotificationLite.isError(o)) {
-            return NotificationLite.getError(o);
+        if (isError(o)) {
+            return getError(o);
         }
         return null;
     }
@@ -112,8 +111,8 @@ public final class Notification<T> {
         if (o == null) {
             return "OnCompleteNotification";
         }
-        if (NotificationLite.isError(o)) {
-            return "OnErrorNotification[" + NotificationLite.getError(o) + "]";
+        if (isError(o)) {
+            return "OnErrorNotification[" + getError(o) + "]";
         }
         return "OnNextNotification[" + value + "]";
     }
@@ -141,7 +140,7 @@ public final class Notification<T> {
     @NonNull
     public static <T> Notification<T> createOnError(@NonNull Throwable error) {
         ObjectHelper.requireNonNull(error, "error is null");
-        return new Notification<T>(NotificationLite.error(error));
+        return new Notification<T>(error(error));
     }
 
     /**
@@ -158,4 +157,63 @@ public final class Notification<T> {
 
     /** The singleton instance for createOnComplete. */
     static final Notification<Object> COMPLETE = new Notification<Object>(null);
+    
+    /**
+     * Wraps a Throwable.
+     */
+    static final class ErrorNotification implements java.io.Serializable {
+
+        private static final long serialVersionUID = -8759979445933046293L;
+        final Throwable e;
+        ErrorNotification(Throwable e) {
+            this.e = e;
+        }
+
+        @Override
+        public String toString() {
+            return "NotificationLite.Error[" + e + "]";
+        }
+
+        @Override
+        public int hashCode() {
+            return e.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof ErrorNotification) {
+                ErrorNotification n = (ErrorNotification) obj;
+                return ObjectHelper.equals(e, n.e);
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Converts a Throwable into a notification value.
+     * @param e the Throwable to convert
+     * @return the notification representing the Throwable
+     */
+    static Object error(Throwable e) {
+        return new ErrorNotification(e);
+    }
+    
+    /**
+     * Checks if the given object represents a error notification.
+     * @param o the object to check
+     * @return true if the object represents a error notification
+     */
+    static boolean isError(Object o) {
+        return o instanceof ErrorNotification;
+    }
+
+    /**
+     * Extracts the Throwable from the notification object.
+     * @param o the notification object
+     * @return the extracted Throwable
+     */
+    static Throwable getError(Object o) {
+        return ((ErrorNotification)o).e;
+    }
+
 }

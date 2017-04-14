@@ -11,25 +11,23 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observers;
+package io.reactivex.common;
 
 import java.util.*;
 import java.util.concurrent.*;
 
-import io.reactivex.Notification;
-import io.reactivex.annotations.Experimental;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.CompositeException;
-import io.reactivex.functions.Predicate;
-import io.reactivex.internal.functions.*;
-import io.reactivex.internal.util.*;
+import io.reactivex.common.annotations.Experimental;
+import io.reactivex.common.exceptions.CompositeException;
+import io.reactivex.common.functions.Predicate;
+import io.reactivex.common.internal.functions.*;
+import io.reactivex.common.internal.utils.*;
 
 /**
  * Base class with shared infrastructure to support TestSubscriber and TestObserver.
  * @param <T> the value type consumed
  * @param <U> the subclass of this BaseTestConsumer
  */
-public abstract class BaseTestConsumer<T, U extends BaseTestConsumer<T, U>> implements Disposable {
+public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements Disposable {
     /** The latch that indicates an onError or onComplete has been called. */
     protected final CountDownLatch done;
     /** The list of values received. */
@@ -59,7 +57,7 @@ public abstract class BaseTestConsumer<T, U extends BaseTestConsumer<T, U>> impl
      */
     protected boolean timeout;
 
-    public BaseTestConsumer() {
+    public TestConsumer() {
         this.values = new VolatileSizeArrayList<T>();
         this.errors = new VolatileSizeArrayList<Throwable>();
         this.done = new CountDownLatch(1);
@@ -795,7 +793,7 @@ public abstract class BaseTestConsumer<T, U extends BaseTestConsumer<T, U>> impl
 
     /**
      * Enumeration of default wait strategies when waiting for a specific number of
-     * items in {@link BaseTestConsumer#awaitCount(int, Runnable)}.
+     * items in {@link TestConsumer#awaitCount(int, Runnable)}.
      * @since 2.0.7 - experimental
      */
     @Experimental

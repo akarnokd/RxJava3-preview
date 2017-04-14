@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.reactivex.exceptions;
+package io.reactivex.common.exceptions;
 
 import static org.junit.Assert.*;
 
@@ -22,7 +22,7 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.exceptions.CompositeException.CompositeExceptionCausalChain;
+import io.reactivex.common.exceptions.CompositeException.CompositeExceptionCausalChain;
 
 public class CompositeExceptionTest {
 

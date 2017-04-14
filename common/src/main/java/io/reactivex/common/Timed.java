@@ -11,12 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
+package io.reactivex.common;
 
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.internal.functions.ObjectHelper;
 
 /**
  * Holds onto a value along with time information.

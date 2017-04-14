@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.disposables;
+package io.reactivex.common.disposables;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -23,7 +23,8 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import io.reactivex.internal.disposables.SequentialDisposable;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.disposables.SequentialDisposable;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SequentialDisposableTest {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.reactivex.internal.schedulers;
+package io.reactivex.common.internal.schedulers;
 
 import java.util.concurrent.Callable;
 

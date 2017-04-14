@@ -10,18 +10,16 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.functions;
+package io.reactivex.common.internal.functions;
 
 import java.util.*;
 import java.util.concurrent.*;
 
-import org.reactivestreams.Subscription;
-
-import io.reactivex.*;
-import io.reactivex.exceptions.OnErrorNotImplementedException;
-import io.reactivex.functions.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Timed;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.OnErrorNotImplementedException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.RxJavaPlugins;
+import io.reactivex.common.Timed;
 
 /**
  * Utility methods to convert the BiFunction, Function3..Function9 instances to Function of Object array.
@@ -511,8 +509,6 @@ public final class Functions {
         return new ListSorter<T>(comparator);
     }
 
-    public static final Consumer<Subscription> REQUEST_MAX = new MaxRequestSubscription();
-
     static final class Array2Func<T1, T2, R> implements Function<Object[], R> {
         final BiFunction<? super T1, ? super T2, ? extends R> f;
 
@@ -739,10 +735,4 @@ public final class Functions {
         }
     }
 
-    static final class MaxRequestSubscription implements Consumer<Subscription> {
-        @Override
-        public void accept(Subscription t) throws Exception {
-            t.request(Long.MAX_VALUE);
-        }
-    }
 }

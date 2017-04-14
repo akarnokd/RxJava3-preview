@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.reactivex.internal.schedulers;
-
-import io.reactivex.Scheduler;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.disposables.*;
+package io.reactivex.common.internal.schedulers;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
+
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.internal.disposables.ListCompositeDisposable;
 
 /**
  * Holds a fixed pool of worker threads and assigns them
@@ -196,7 +196,7 @@ public final class ComputationScheduler extends Scheduler {
         @Override
         public Disposable schedule(@NonNull Runnable action) {
             if (disposed) {
-                return EmptyDisposable.INSTANCE;
+                return REJECTED;
             }
 
             return poolWorker.scheduleActual(action, 0, TimeUnit.MILLISECONDS, serial);
@@ -205,7 +205,7 @@ public final class ComputationScheduler extends Scheduler {
         @Override
         public Disposable schedule(@NonNull Runnable action, long delayTime, @NonNull TimeUnit unit) {
             if (disposed) {
-                return EmptyDisposable.INSTANCE;
+                return REJECTED;
             }
 
             return poolWorker.scheduleActual(action, delayTime, unit, timed);

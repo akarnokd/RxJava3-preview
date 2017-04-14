@@ -11,11 +11,11 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.annotations;
+package io.reactivex.common.annotations;
 
 import java.lang.annotation.*;
 
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.Schedulers;
 
 /**
  * Indicates what kind of scheduler the class or method uses.

@@ -11,19 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.schedulers;
+package io.reactivex.common.internal.schedulers;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.Scheduler;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.queue.MpscLinkedQueue;
-import io.reactivex.internal.schedulers.ExecutorScheduler.ExecutorWorker.BooleanRunnable;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.internal.disposables.*;
+import io.reactivex.common.internal.queues.MpscLinkedQueue;
+import io.reactivex.common.internal.schedulers.ExecutorScheduler.ExecutorWorker.BooleanRunnable;
 
 /**
  * Wraps an Executor and provides the Scheduler API over it.
@@ -62,7 +60,7 @@ public final class ExecutorScheduler extends Scheduler {
             return br;
         } catch (RejectedExecutionException ex) {
             RxJavaPlugins.onError(ex);
-            return EmptyDisposable.INSTANCE;
+            return REJECTED;
         }
     }
 
@@ -78,7 +76,7 @@ public final class ExecutorScheduler extends Scheduler {
                 return task;
             } catch (RejectedExecutionException ex) {
                 RxJavaPlugins.onError(ex);
-                return EmptyDisposable.INSTANCE;
+                return REJECTED;
             }
         }
 
@@ -103,7 +101,7 @@ public final class ExecutorScheduler extends Scheduler {
                 return task;
             } catch (RejectedExecutionException ex) {
                 RxJavaPlugins.onError(ex);
-                return EmptyDisposable.INSTANCE;
+                return REJECTED;
             }
         }
         return super.schedulePeriodicallyDirect(run, initialDelay, period, unit);
@@ -122,14 +120,14 @@ public final class ExecutorScheduler extends Scheduler {
 
         public ExecutorWorker(Executor executor) {
             this.executor = executor;
-            this.queue = new MpscLinkedQueue<Runnable>();
+            this.queue = new MpscLinkedQueue<Runnable>() { };
         }
 
         @NonNull
         @Override
         public Disposable schedule(@NonNull Runnable run) {
             if (disposed) {
-                return EmptyDisposable.INSTANCE;
+                return REJECTED;
             }
 
             Runnable decoratedRun = RxJavaPlugins.onSchedule(run);
@@ -144,7 +142,7 @@ public final class ExecutorScheduler extends Scheduler {
                     disposed = true;
                     queue.clear();
                     RxJavaPlugins.onError(ex);
-                    return EmptyDisposable.INSTANCE;
+                    return REJECTED;
                 }
             }
 
@@ -158,7 +156,7 @@ public final class ExecutorScheduler extends Scheduler {
                 return schedule(run);
             }
             if (disposed) {
-                return EmptyDisposable.INSTANCE;
+                return REJECTED;
             }
 
 
@@ -178,7 +176,7 @@ public final class ExecutorScheduler extends Scheduler {
                 } catch (RejectedExecutionException ex) {
                     disposed = true;
                     RxJavaPlugins.onError(ex);
-                    return EmptyDisposable.INSTANCE;
+                    return REJECTED;
                 }
             } else {
                 final Disposable d = HELPER.scheduleDirect(sr, delay, unit);

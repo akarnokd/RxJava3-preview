@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.common.internal.utils;
 
 import static org.junit.Assert.*;
 
@@ -19,9 +19,9 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.functions.*;
-import io.reactivex.internal.util.AppendOnlyLinkedArrayList.NonThrowingPredicate;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.BiPredicate;
+import io.reactivex.common.internal.utils.AppendOnlyLinkedArrayList.NonThrowingPredicate;
 
 public class MiscUtilTest {
     @Test
@@ -67,7 +67,7 @@ public class MiscUtilTest {
 
     @Test
     public void appendOnlyLinkedArrayListForEachWhile() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(2);
+        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(2) { };
 
         list.add(1);
         list.add(2);
@@ -89,7 +89,7 @@ public class MiscUtilTest {
 
     @Test
     public void appendOnlyLinkedArrayListForEachWhilePreGrow() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(12);
+        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(12) { };
 
         list.add(1);
         list.add(2);
@@ -110,7 +110,7 @@ public class MiscUtilTest {
 
     @Test
     public void appendOnlyLinkedArrayListForEachWhileExact() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(3);
+        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(3) { };
 
         list.add(1);
         list.add(2);
@@ -131,7 +131,7 @@ public class MiscUtilTest {
 
     @Test
     public void appendOnlyLinkedArrayListForEachWhileAll() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(2);
+        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(2) { };
 
         list.add(1);
         list.add(2);
@@ -152,7 +152,7 @@ public class MiscUtilTest {
 
     @Test
     public void appendOnlyLinkedArrayListForEachWhileBigger() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(4);
+        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(4) { };
 
         list.add(1);
         list.add(2);
@@ -173,7 +173,7 @@ public class MiscUtilTest {
 
     @Test
     public void appendOnlyLinkedArrayListForEachWhileBiPreGrow() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(12);
+        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(12) { };
 
         list.add(1);
         list.add(2);
@@ -194,7 +194,7 @@ public class MiscUtilTest {
 
     @Test
     public void appendOnlyLinkedArrayListForEachWhileBiExact() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(3);
+        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(3) { };
 
         list.add(1);
         list.add(2);
@@ -215,7 +215,7 @@ public class MiscUtilTest {
 
     @Test
     public void appendOnlyLinkedArrayListForEachWhileBiAll() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(2);
+        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(2) { };
 
         list.add(1);
         list.add(2);
@@ -232,10 +232,5 @@ public class MiscUtilTest {
         });
 
         assertEquals(Arrays.asList(1, 2, 3), out);
-    }
-
-    @Test
-    public void queueDrainHelperUtility() {
-        TestHelper.checkUtilityClass(QueueDrainHelper.class);
     }
 }

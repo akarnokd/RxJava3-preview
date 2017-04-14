@@ -10,15 +10,16 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.disposables;
+package io.reactivex.common.disposables;
 
 import java.util.*;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.exceptions.*;
-import io.reactivex.internal.disposables.DisposableContainer;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.util.*;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.internal.disposables.DisposableContainer;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.*;
 
 /**
  * A disposable container that can hold onto multiple other disposables and

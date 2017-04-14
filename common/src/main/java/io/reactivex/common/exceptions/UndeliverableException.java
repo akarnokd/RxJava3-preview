@@ -11,9 +11,9 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.exceptions;
+package io.reactivex.common.exceptions;
 
-import io.reactivex.annotations.Experimental;
+import io.reactivex.common.annotations.Experimental;
 
 /**
  * Wrapper for Throwable errors that are sent to `RxJavaPlugins.onError`.

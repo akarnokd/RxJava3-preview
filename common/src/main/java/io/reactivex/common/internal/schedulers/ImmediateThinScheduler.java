@@ -11,13 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.schedulers;
+package io.reactivex.common.internal.schedulers;
 
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Scheduler;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.*;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.NonNull;
 
 /**
  * A Scheduler partially implementing the API by allowing only non-delayed, non-periodic

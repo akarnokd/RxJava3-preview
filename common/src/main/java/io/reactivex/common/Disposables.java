@@ -11,15 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.disposables;
+package io.reactivex.common;
 
 import java.util.concurrent.Future;
 
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Action;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.internal.functions.*;
-import org.reactivestreams.Subscription;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.functions.Action;
+import io.reactivex.common.internal.disposables.*;
+import io.reactivex.common.internal.functions.*;
 
 /**
  * Utility class to help create disposables by wrapping
@@ -82,18 +81,6 @@ public final class Disposables {
     }
 
     /**
-     * Construct a Disposable by wrapping a Subscription that is
-     * cancelled exactly once when the Disposable is disposed.
-     * @param subscription the Runnable to wrap
-     * @return the new Disposable instance
-     */
-    @NonNull
-    public static Disposable fromSubscription(@NonNull Subscription subscription) {
-        ObjectHelper.requireNonNull(subscription, "subscription is null");
-        return new SubscriptionDisposable(subscription);
-    }
-
-    /**
      * Returns a new, non-disposed Disposable instance.
      * @return a new, non-disposed Disposable instance
      */
@@ -108,6 +95,6 @@ public final class Disposables {
      */
     @NonNull
     public static Disposable disposed() {
-        return EmptyDisposable.INSTANCE;
+        return DisposedDisposable.INSTANCE;
     }
 }

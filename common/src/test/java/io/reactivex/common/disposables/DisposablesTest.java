@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.disposables;
+package io.reactivex.common.disposables;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -21,13 +21,10 @@ import java.util.List;
 import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
-import org.reactivestreams.Subscription;
 
-import io.reactivex.TestHelper;
-import io.reactivex.functions.Action;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.Action;
+import io.reactivex.common.internal.disposables.DisposableHelper;
 
 public class DisposablesTest {
 
@@ -135,21 +132,6 @@ public class DisposablesTest {
 
             TestHelper.race(r, r, Schedulers.io());
         }
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void fromSubscriptionNull() {
-        Disposables.fromSubscription(null);
-    }
-
-    @Test
-    public void fromSubscription() {
-        Subscription s = mock(Subscription.class);
-
-        Disposables.fromSubscription(s).dispose();
-
-        verify(s).cancel();
-        verify(s, never()).request(anyInt());
     }
 
     @Test

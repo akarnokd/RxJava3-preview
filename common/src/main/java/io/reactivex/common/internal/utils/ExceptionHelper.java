@@ -11,12 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.common.internal.utils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.exceptions.CompositeException;
+import io.reactivex.common.exceptions.CompositeException;
 
 /**
  * Terminal atomics for Throwable containers.

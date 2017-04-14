@@ -11,35 +11,24 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
+package io.reactivex.common.schedulers;
 
 import static org.junit.Assert.*;
 
 import java.util.concurrent.TimeUnit;
 
-import org.junit.*;
+import org.junit.Test;
 
-import io.reactivex.Scheduler;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.schedulers.NewThreadWorker;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.internal.schedulers.NewThreadWorker;
 
 public class NewThreadSchedulerTest extends AbstractSchedulerConcurrencyTests {
 
     @Override
     protected Scheduler getScheduler() {
         return Schedulers.newThread();
-    }
-
-    @Test
-    @Ignore("Unhandled errors are no longer thrown")
-    public final void testUnhandledErrorIsDeliveredToThreadHandler() throws InterruptedException {
-        SchedulerTestHelper.testUnhandledErrorIsDeliveredToThreadHandler(getScheduler());
-    }
-
-    @Test
-    public final void testHandledErrorIsNotDeliveredToThreadHandler() throws InterruptedException {
-        SchedulerTestHelper.testHandledErrorIsNotDeliveredToThreadHandler(getScheduler());
     }
 
     // FIXME no longer testable due to internal changes

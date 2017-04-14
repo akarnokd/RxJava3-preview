@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package io.reactivex.internal.schedulers;
+package io.reactivex.common.internal.schedulers;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.reactivex.Scheduler;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.internal.functions.ObjectHelper;
 
 /**
  * Schedules work on the current thread but does not execute immediately. Work is put in a queue and executed
@@ -33,6 +30,16 @@ import io.reactivex.plugins.RxJavaPlugins;
 public final class TrampolineScheduler extends Scheduler {
     private static final TrampolineScheduler INSTANCE = new TrampolineScheduler();
 
+    static final Disposable DONE = new Disposable() {
+        @Override
+        public void dispose() {
+        }
+        @Override
+        public boolean isDisposed() {
+            return true;
+        }
+    };
+    
     public static TrampolineScheduler instance() {
         return INSTANCE;
     }
@@ -50,7 +57,7 @@ public final class TrampolineScheduler extends Scheduler {
     @Override
     public Disposable scheduleDirect(@NonNull Runnable run) {
         run.run();
-        return EmptyDisposable.INSTANCE;
+        return DONE;
     }
 
     @NonNull
@@ -63,7 +70,7 @@ public final class TrampolineScheduler extends Scheduler {
             Thread.currentThread().interrupt();
             RxJavaPlugins.onError(ex);
         }
-        return EmptyDisposable.INSTANCE;
+        return DONE;
     }
 
     static final class TrampolineWorker extends Scheduler.Worker implements Disposable {
@@ -91,7 +98,7 @@ public final class TrampolineScheduler extends Scheduler {
 
         Disposable enqueue(Runnable action, long execTime) {
             if (disposed) {
-                return EmptyDisposable.INSTANCE;
+                return DONE;
             }
             final TimedRunnable timedRunnable = new TimedRunnable(action, execTime, counter.incrementAndGet());
             queue.add(timedRunnable);
@@ -114,7 +121,7 @@ public final class TrampolineScheduler extends Scheduler {
                     }
                 }
 
-                return EmptyDisposable.INSTANCE;
+                return DONE;
             } else {
                 // queue wasn't empty, a parent is already processing so we just add to the end of the queue
                 return Disposables.fromRunnable(new AppendToQueueTask(timedRunnable));

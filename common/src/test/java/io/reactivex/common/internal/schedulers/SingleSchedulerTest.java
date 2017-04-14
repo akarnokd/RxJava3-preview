@@ -11,20 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.schedulers;
+package io.reactivex.common.internal.schedulers;
 
 import static org.junit.Assert.*;
 
-import java.util.concurrent.*;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.schedulers.SingleScheduler.ScheduledWorker;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.common.internal.schedulers.SingleScheduler.ScheduledWorker;
 
 public class SingleSchedulerTest {
 

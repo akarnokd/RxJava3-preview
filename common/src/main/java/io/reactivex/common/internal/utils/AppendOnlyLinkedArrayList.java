@@ -11,23 +11,20 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.common.internal.utils;
 
-import org.reactivestreams.Subscriber;
-
-import io.reactivex.Observer;
-import io.reactivex.functions.*;
+import io.reactivex.common.functions.*;
 
 /**
  * A linked-array-list implementation that only supports appending and consumption.
  *
  * @param <T> the value type
  */
-public class AppendOnlyLinkedArrayList<T> {
-    final int capacity;
-    final Object[] head;
-    Object[] tail;
-    int offset;
+public abstract class AppendOnlyLinkedArrayList<T> {
+    protected final int capacity;
+    protected final Object[] head;
+    protected Object[] tail;
+    protected int offset;
 
     /**
      * Constructs an empty list with a per-link capacity.
@@ -98,60 +95,6 @@ public class AppendOnlyLinkedArrayList<T> {
         }
     }
 
-    /**
-     * Interprets the contents as NotificationLite objects and calls
-     * the appropriate Subscriber method.
-     * 
-     * @param <U> the target type
-     * @param subscriber the subscriber to emit the events to
-     * @return true if a terminal event has been reached
-     */
-    public <U> boolean accept(Subscriber<? super U> subscriber) {
-        Object[] a = head;
-        final int c = capacity;
-        while (a != null) {
-            for (int i = 0; i < c; i++) {
-                Object o = a[i];
-                if (o == null) {
-                    break;
-                }
-
-                if (NotificationLite.acceptFull(o, subscriber)) {
-                    return true;
-                }
-            }
-            a = (Object[])a[c];
-        }
-        return false;
-    }
-
-
-    /**
-     * Interprets the contents as NotificationLite objects and calls
-     * the appropriate Observer method.
-     * 
-     * @param <U> the target type
-     * @param observer the observer to emit the events to
-     * @return true if a terminal event has been reached
-     */
-    public <U> boolean accept(Observer<? super U> observer) {
-        Object[] a = head;
-        final int c = capacity;
-        while (a != null) {
-            for (int i = 0; i < c; i++) {
-                Object o = a[i];
-                if (o == null) {
-                    break;
-                }
-
-                if (NotificationLite.acceptFull(o, observer)) {
-                    return true;
-                }
-            }
-            a = (Object[])a[c];
-        }
-        return false;
-    }
 
     /**
      * Loops over all elements of the array until a null element is encountered or
@@ -178,4 +121,5 @@ public class AppendOnlyLinkedArrayList<T> {
             a = (Object[])a[c];
         }
     }
+
 }

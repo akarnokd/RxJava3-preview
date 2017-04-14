@@ -11,11 +11,11 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.common.internal.utils;
 
 import java.util.*;
 
-import io.reactivex.functions.Function;
+import io.reactivex.common.functions.Function;
 
 public final class SorterFunction<T> implements Function<List<T>, List<T>> {
 

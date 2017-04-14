@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
+package io.reactivex.common.schedulers;
 
 import static org.junit.Assert.fail;
 
@@ -20,8 +20,9 @@ import java.util.concurrent.*;
 
 import org.junit.*;
 
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.disposables.CompositeDisposable;
 
 public class SchedulerLifecycleTest {
     @Test

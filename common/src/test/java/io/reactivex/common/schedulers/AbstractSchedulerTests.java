@@ -11,27 +11,21 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
+package io.reactivex.common.schedulers;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.util.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.schedulers.TrampolineScheduler;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.subscribers.DefaultSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.schedulers.TrampolineScheduler;
 
 /**
  * Base tests for all schedulers including Immediate/Current.
@@ -101,37 +95,6 @@ public abstract class AbstractSchedulerTests {
         } finally {
             inner.dispose();
         }
-    }
-
-    @Test
-    public final void testNestedScheduling() {
-
-        Flowable<Integer> ids = Flowable.fromIterable(Arrays.asList(1, 2)).subscribeOn(getScheduler());
-
-        Flowable<String> m = ids.flatMap(new Function<Integer, Flowable<String>>() {
-
-            @Override
-            public Flowable<String> apply(Integer id) {
-                return Flowable.fromIterable(Arrays.asList("a-" + id, "b-" + id)).subscribeOn(getScheduler())
-                        .map(new Function<String, String>() {
-
-                            @Override
-                            public String apply(String s) {
-                                return "names=>" + s;
-                            }
-                        });
-            }
-
-        });
-
-        List<String> strings = m.toList().blockingGet();
-
-        assertEquals(4, strings.size());
-        // because flatMap does a merge there is no guarantee of order
-        assertTrue(strings.contains("names=>a-1"));
-        assertTrue(strings.contains("names=>a-2"));
-        assertTrue(strings.contains("names=>b-1"));
-        assertTrue(strings.contains("names=>b-2"));
     }
 
     /**
@@ -319,187 +282,6 @@ public abstract class AbstractSchedulerTests {
         } finally {
             inner.dispose();
         }
-    }
-
-    @Test
-    public final void testRecursiveSchedulerInObservable() {
-        Flowable<Integer> obs = Flowable.unsafeCreate(new Publisher<Integer>() {
-            @Override
-            public void subscribe(final Subscriber<? super Integer> observer) {
-                final Scheduler.Worker inner = getScheduler().createWorker();
-
-                AsyncSubscription as = new AsyncSubscription();
-                observer.onSubscribe(as);
-                as.setResource(inner);
-
-                inner.schedule(new Runnable() {
-                    int i;
-
-                    @Override
-                    public void run() {
-                        if (i > 42) {
-                            try {
-                                observer.onComplete();
-                            } finally {
-                                inner.dispose();
-                            }
-                            return;
-                        }
-
-                        observer.onNext(i++);
-
-                        inner.schedule(this);
-                    }
-                });
-            }
-        });
-
-        final AtomicInteger lastValue = new AtomicInteger();
-        obs.blockingForEach(new Consumer<Integer>() {
-
-            @Override
-            public void accept(Integer v) {
-                System.out.println("Value: " + v);
-                lastValue.set(v);
-            }
-        });
-
-        assertEquals(42, lastValue.get());
-    }
-
-    @Test
-    public final void testConcurrentOnNextFailsValidation() throws InterruptedException {
-        final int count = 10;
-        final CountDownLatch latch = new CountDownLatch(count);
-        Flowable<String> o = Flowable.unsafeCreate(new Publisher<String>() {
-
-            @Override
-            public void subscribe(final Subscriber<? super String> observer) {
-                observer.onSubscribe(new BooleanSubscription());
-                for (int i = 0; i < count; i++) {
-                    final int v = i;
-                    new Thread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            observer.onNext("v: " + v);
-
-                            latch.countDown();
-                        }
-                    }).start();
-                }
-            }
-        });
-
-        ConcurrentObserverValidator<String> observer = new ConcurrentObserverValidator<String>();
-        // this should call onNext concurrently
-        o.subscribe(observer);
-
-        if (!observer.completed.await(3000, TimeUnit.MILLISECONDS)) {
-            fail("timed out");
-        }
-
-        if (observer.error.get() == null) {
-            fail("We expected error messages due to concurrency");
-        }
-    }
-
-    @Test
-    public final void testObserveOn() throws InterruptedException {
-        final Scheduler scheduler = getScheduler();
-
-        Flowable<String> o = Flowable.fromArray("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten");
-
-        ConcurrentObserverValidator<String> observer = new ConcurrentObserverValidator<String>();
-
-        o.observeOn(scheduler).subscribe(observer);
-
-        if (!observer.completed.await(3000, TimeUnit.MILLISECONDS)) {
-            fail("timed out");
-        }
-
-        if (observer.error.get() != null) {
-            observer.error.get().printStackTrace();
-            fail("Error: " + observer.error.get().getMessage());
-        }
-    }
-
-    @Test
-    public final void testSubscribeOnNestedConcurrency() throws InterruptedException {
-        final Scheduler scheduler = getScheduler();
-
-        Flowable<String> o = Flowable.fromArray("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
-                .flatMap(new Function<String, Flowable<String>>() {
-
-                    @Override
-                    public Flowable<String> apply(final String v) {
-                        return Flowable.unsafeCreate(new Publisher<String>() {
-
-                            @Override
-                            public void subscribe(Subscriber<? super String> observer) {
-                                observer.onSubscribe(new BooleanSubscription());
-                                observer.onNext("value_after_map-" + v);
-                                observer.onComplete();
-                            }
-                        }).subscribeOn(scheduler);
-                    }
-                });
-
-        ConcurrentObserverValidator<String> observer = new ConcurrentObserverValidator<String>();
-
-        o.subscribe(observer);
-
-        if (!observer.completed.await(3000, TimeUnit.MILLISECONDS)) {
-            fail("timed out");
-        }
-
-        if (observer.error.get() != null) {
-            observer.error.get().printStackTrace();
-            fail("Error: " + observer.error.get().getMessage());
-        }
-    }
-
-    /**
-     * Used to determine if onNext is being invoked concurrently.
-     *
-     * @param <T>
-     */
-    private static class ConcurrentObserverValidator<T> extends DefaultSubscriber<T> {
-
-        final AtomicInteger concurrentCounter = new AtomicInteger();
-        final AtomicReference<Throwable> error = new AtomicReference<Throwable>();
-        final CountDownLatch completed = new CountDownLatch(1);
-
-        @Override
-        public void onComplete() {
-            completed.countDown();
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            error.set(e);
-            completed.countDown();
-        }
-
-        @Override
-        public void onNext(T args) {
-            int count = concurrentCounter.incrementAndGet();
-            System.out.println("ConcurrentObserverValidator.onNext: " + args);
-            if (count > 1) {
-                onError(new RuntimeException("we should not have concurrent execution of onNext"));
-            }
-            try {
-                try {
-                    // take some time so other onNext calls could pile up (I haven't yet thought of a way to do this without sleeping)
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    // ignore
-                }
-            } finally {
-                concurrentCounter.decrementAndGet();
-            }
-        }
-
     }
 
     @Test
