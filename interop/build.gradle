@@ -1,0 +1,6 @@
+description = "interop"
+dependencies {
+    compile project(':rxjava3-common')
+    compile project(':rxjava3-flowable')
+    compile project(':rxjava3-observable')
+}

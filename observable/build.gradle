@@ -1,0 +1,4 @@
+description = "observable"
+dependencies {
+    compile project(':rxjava3-common')
+}

@@ -1,0 +1,11 @@
+description = "flowable"
+
+dependencies {
+    compile project(':rxjava3-common')
+
+    compile 'org.reactivestreams:reactive-streams:1.0.0'
+    compile 'com.github.akarnokd:reactive-streams-extensions:0.2.0'
+
+    testCompile 'org.reactivestreams:reactive-streams-tck:1.0.0'
+    testCompile 'com.github.akarnokd:reactive-streams-extensions-tck:0.2.0'
+}

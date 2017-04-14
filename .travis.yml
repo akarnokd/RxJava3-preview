@@ -1,0 +1,23 @@
+language: java
+
+jdk:
+  - oraclejdk7
+
+# script will call assemble
+install: true
+
+before_install:
+  - chmod +x gradlew
+
+script:
+  - ./gradlew assemble --stacktrace
+  - ./gradlew check jacocoFullReport --stacktrace
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+ 
+ # cache between builds
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.gradle

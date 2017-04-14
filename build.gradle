@@ -1,0 +1,243 @@
+buildscript {
+  repositories { 
+    jcenter() 
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.1.0'
+    classpath 'gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1'
+        
+    classpath "me.champeau.gradle:jmh-gradle-plugin:0.2.0" 
+    classpath 'com.palantir:jacoco-coverage:0.4.0'
+  }
+}
+
+group = 'com.github.akarnokd.rxjava3'
+
+description = 'Preview for version 3 of RxJava, the modern ReactiveX style library for composing (a)synchronous sequences of data and events.'
+
+ext.githubProjectName = 'RxJava3-preview' 
+
+subprojects {
+
+    repositories {
+        mavenCentral()
+		jcenter()
+    }
+
+    apply plugin: 'java'
+    apply plugin: 'checkstyle'
+    apply plugin: 'jacoco'
+    apply plugin: 'ru.vyarus.animalsniffer'
+    apply plugin: "me.champeau.gradle.jmh" 
+    apply plugin: "com.github.hierynomus.license" 
+
+    sourceCompatibility = JavaVersion.VERSION_1_6
+    targetCompatibility = JavaVersion.VERSION_1_6
+
+	group = 'com.github.akarnokd.rxjava3'
+
+    ext.githubProjectName = 'RxJava3-preview' 
+
+	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+    if (!hasProperty('mainClass')) {
+        ext.mainClass = ''
+    }
+    
+    
+	apply from: file("$rootDir/gradle/maven.gradle")
+    apply plugin: 'maven'
+    apply plugin: 'osgi' 
+    
+    dependencies {
+        testCompile 'junit:junit:4.12'
+        testCompile 'org.mockito:mockito-core:2.1.0'
+        testCompile group: 'org.testng', name: 'testng', version: '6.9.10'
+    }
+
+    javadoc {
+        failOnError = false 
+
+        exclude "**/internal/**"
+        exclude "**/test/**"
+        exclude "**/perf/**"
+        options {
+            windowTitle = "RxJava Javadoc ${project.version}"
+        }
+        // Clear the following options to make the docs consistent with the old format
+        options.addStringOption('top').value = ''
+        options.addStringOption('doctitle').value = ''
+        options.addStringOption('header').value = ''
+        if (JavaVersion.current().isJava7()) {
+            // "./gradle/stylesheet.css" only supports Java 7
+            options.addStringOption('stylesheetfile', rootProject.file('./gradle/stylesheet.css').toString())
+        }
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+		classifier = 'sources'
+		from sourceSets.main.allSource
+	}
+
+	task javadocJar(type: Jar, dependsOn: javadoc) {
+		classifier = 'javadoc'
+		from javadoc.destinationDir
+	}
+
+	artifacts {
+		archives jar
+		archives sourcesJar
+		archives javadocJar
+	}
+
+	jar {
+		manifest {
+			name = 'reactive-streams-jvm-extensions-xp'
+			instruction 'Bundle-Vendor', 'akarnokd'
+			instruction 'Bundle-DocURL', 'https://github.com/akarnokd/reactive-streams-jvm-extensions-xp'
+			instruction 'Import-Package', '!org.junit,!junit.framework,!org.mockito.*,*'
+			instruction 'Eclipse-ExtensibleAPI', 'true'
+		}
+	}
+
+	apply plugin: 'maven-publish'
+
+	publishing {
+		publications {
+			mavenJava(MavenPublication) {
+				from components.java
+				artifact (sourcesJar) { 
+					classifier = 'sources'
+				}
+			}
+		}
+	}
+
+    jmh {    
+        jmhVersion = '1.17.4'
+    
+        humanOutputFile = null
+    
+        if (project.hasProperty('jmh')) {
+    
+        include = ".*" + project.jmh + ".*"
+    
+        } else {
+        
+            include = ".*"
+    
+        }
+    
+    }
+
+    license {
+        header rootProject.file('HEADER')
+        ext.year = Calendar.getInstance().get(Calendar.YEAR)
+        skipExistingHeaders true
+        ignoreFailures true
+        excludes(["**/*.md", "**/*.txt"])
+    } 
+
+    plugins.withType(EclipsePlugin) {
+
+        project.eclipse.classpath.plusConfigurations += [ configurations.jmh ]
+    
+    } 
+
+    animalsniffer {
+        annotation = 'io.reactivex.common.internal.SuppressAnimalSniffer'
+    }
+
+    test {
+        
+        testLogging  {
+            // showing skipped occasionally should prevent CI timeout due to lack of standard output
+            events=['skipped', 'failed'] // "started", "passed"
+            // showStandardStreams = true
+            exceptionFormat="full"
+    
+            debug.events = ["skipped", "failed"]
+            debug.exceptionFormat="full"
+    
+            info.events = ["failed", "skipped"]
+            info.exceptionFormat="full"
+            
+            warn.events = ["failed", "skipped"]
+            warn.exceptionFormat="full"
+        }
+    
+        maxHeapSize = "1200m"
+    
+        if (System.getenv('CI') == null) {
+            maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+        }
+    }
+    
+    task testng(type: Test) { 
+         useTestNG()
+         testLogging  {
+            events=['skipped', 'failed']
+            exceptionFormat="full"
+    
+            debug.events = ["skipped", "failed"]
+            debug.exceptionFormat="full"
+    
+            info.events = ["failed", "skipped"]
+            info.exceptionFormat="full"
+            
+            warn.events = ["failed", "skipped"]
+            warn.exceptionFormat="full"
+         }
+    } 
+    
+    check.dependsOn testng 
+
+	task GCandMem(dependsOn: 'check') << {
+        System.gc()
+        Thread.sleep(200)
+        print("Memory usage: ")
+        println(java.lang.management.ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1024.0 / 1024.0)
+    }
+
+	
+    checkstyle {
+        configFile rootProject.file('checkstyle.xml')
+        ignoreFailures = true
+        toolVersion ="6.19" 
+    }
+    
+	jacoco {
+		toolVersion = '0.7.9' // See http://www.eclemma.org/jacoco/.
+	}
+
+	jacocoTestReport {
+		reports {
+			xml.enabled = true
+			html.enabled = true
+		}
+	}
+
+	build.dependsOn jacocoTestReport
+
+	check.dependsOn jacocoTestReport
+	
+	publishing.publications.all {
+      pom.withXml {
+        asNode().dependencies.'*'.findAll() {
+          it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+            dep.name == it.artifactId.text()
+          }
+        }.each { it.scope*.value = 'compile'}
+      }
+	}
+}
+
+apply plugin: 'com.palantir.jacoco-full-report'
+
+    
+jacoco {
+    toolVersion = '0.7.9' // See http://www.eclemma.org/jacoco/.
+}

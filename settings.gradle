@@ -1,0 +1,11 @@
+rootProject.name = 'rxjava3'
+
+include ':rxjava3-common'
+include ':rxjava3-flowable'
+include ':rxjava3-observable'
+include ':rxjava3-interop'
+
+project(':rxjava3-common').projectDir = "$rootDir/common" as File
+project(':rxjava3-flowable').projectDir = "$rootDir/flowable" as File
+project(':rxjava3-observable').projectDir = "$rootDir/observable" as File
+project(':rxjava3-interop').projectDir = "$rootDir/interop" as File

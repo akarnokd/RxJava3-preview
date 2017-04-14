@@ -3,7 +3,7 @@ Preview for version 3 of RxJava, the modern ReactiveX style library for composin
 
 This is an unofficial preparation place for RxJava 3 where the major change is the repackaging of certain components into separate libraries:
 
-- `rxjava3-commons`
+- `rxjava3-common`
   - Disposable
   - Scheduler
   - concurrent queues 
