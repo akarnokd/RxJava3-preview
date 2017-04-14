@@ -55,7 +55,7 @@ subprojects {
     dependencies {
         testCompile 'junit:junit:4.12'
         testCompile 'org.mockito:mockito-core:2.1.0'
-        testCompile group: 'org.testng', name: 'testng', version: '6.9.10'
+        testCompile group: 'org.testng', name: 'testng', version: '6.10'
     }
 
     javadoc {
