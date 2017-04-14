@@ -64,6 +64,7 @@ subprojects {
         exclude "**/internal/**"
         exclude "**/test/**"
         exclude "**/perf/**"
+        exclude "**/jmh/**"
         options {
             windowTitle = "RxJava Javadoc ${project.version}"
         }
