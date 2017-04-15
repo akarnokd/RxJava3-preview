@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.single;
+package io.reactivex.observable.internal.operators;
 
 import static org.junit.Assert.*;
 
@@ -286,13 +286,13 @@ public class SingleFlatMapIterableFlowableTest {
                         return Arrays.asList(1, 2, 3);
                     }
         }).subscribe(new FlowableSubscriber<Integer>() {
-            QueueSubscription<Integer> qd;
+            QueueDisposable<Integer> qd;
             @SuppressWarnings("unchecked")
             @Override
             public void onSubscribe(Subscription d) {
-                qd = (QueueSubscription<Integer>)d;
+                qd = (QueueDisposable<Integer>)d;
 
-                assertEquals(QueueSubscription.ASYNC, qd.requestFusion(QueueSubscription.ANY));
+                assertEquals(QueueDisposable.ASYNC, qd.requestFusion(QueueDisposable.ANY));
             }
 
             @Override

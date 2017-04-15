@@ -11,13 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.fuseable.HasUpstreamMaybeSource;
-import io.reactivex.internal.observers.DeferredScalarDisposable;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.HasUpstreamMaybeSource;
+import io.reactivex.observable.internal.observers.DeferredScalarDisposable;
 
 /**
  * Wraps a MaybeSource and exposes it as an Observable, relaying signals in a backpressure-aware manner
@@ -25,7 +26,8 @@ import io.reactivex.internal.observers.DeferredScalarDisposable;
  *
  * @param <T> the value type
  */
-public final class MaybeToObservable<T> extends Observable<T> implements HasUpstreamMaybeSource<T> {
+public final class MaybeToObservable<T> extends Observable<T>
+implements HasUpstreamMaybeSource<T> {
 
     final MaybeSource<T> source;
 
@@ -82,6 +84,20 @@ public final class MaybeToObservable<T> extends Observable<T> implements HasUpst
         public void dispose() {
             super.dispose();
             d.dispose();
+        }
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static <T> Function<MaybeSource<T>, Observable<T>> instance() {
+        return (Function)MaybeToObservableConverter.INSTANCE;
+    }
+    
+    enum MaybeToObservableConverter implements Function<MaybeSource<Object>, Observable<Object>> {
+        INSTANCE;
+        
+        @Override
+        public Observable<Object> apply(MaybeSource<Object> t) {
+            return new MaybeToObservable<Object>(t);
         }
     }
 }

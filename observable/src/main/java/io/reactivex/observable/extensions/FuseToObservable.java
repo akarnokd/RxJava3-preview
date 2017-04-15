@@ -11,9 +11,9 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.fuseable;
+package io.reactivex.observable.extensions;
 
-import io.reactivex.Observable;
+import io.reactivex.observable.Observable;
 
 /**
  * Interface indicating a operator implementation can be macro-fused back to Observable in case

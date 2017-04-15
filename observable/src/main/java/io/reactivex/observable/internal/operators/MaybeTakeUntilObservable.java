@@ -11,17 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.reactivestreams.*;
-
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
 
 /**
  * Relays the main source's event unless the other Publisher signals an item first or just completes
@@ -30,11 +26,11 @@ import io.reactivex.plugins.RxJavaPlugins;
  * @param <T> the value type
  * @param <U> the other's value type
  */
-public final class MaybeTakeUntilPublisher<T, U> extends AbstractMaybeWithUpstream<T, T> {
+public final class MaybeTakeUntilObservable<T, U> extends AbstractMaybeWithUpstream<T, T> {
 
-    final Publisher<U> other;
+    final ObservableSource<U> other;
 
-    public MaybeTakeUntilPublisher(MaybeSource<T> source, Publisher<U> other) {
+    public MaybeTakeUntilObservable(MaybeSource<T> source, ObservableSource<U> other) {
         super(source);
         this.other = other;
     }
@@ -66,7 +62,7 @@ public final class MaybeTakeUntilPublisher<T, U> extends AbstractMaybeWithUpstre
         @Override
         public void dispose() {
             DisposableHelper.dispose(this);
-            SubscriptionHelper.cancel(other);
+            DisposableHelper.dispose(other);
         }
 
         @Override
@@ -81,7 +77,7 @@ public final class MaybeTakeUntilPublisher<T, U> extends AbstractMaybeWithUpstre
 
         @Override
         public void onSuccess(T value) {
-            SubscriptionHelper.cancel(other);
+            DisposableHelper.dispose(other);
             if (getAndSet(DisposableHelper.DISPOSED) != DisposableHelper.DISPOSED) {
                 actual.onSuccess(value);
             }
@@ -89,17 +85,17 @@ public final class MaybeTakeUntilPublisher<T, U> extends AbstractMaybeWithUpstre
 
         @Override
         public void onError(Throwable e) {
-            SubscriptionHelper.cancel(other);
+            DisposableHelper.dispose(other);
             if (getAndSet(DisposableHelper.DISPOSED) != DisposableHelper.DISPOSED) {
                 actual.onError(e);
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
         @Override
         public void onComplete() {
-            SubscriptionHelper.cancel(other);
+            DisposableHelper.dispose(other);
             if (getAndSet(DisposableHelper.DISPOSED) != DisposableHelper.DISPOSED) {
                 actual.onComplete();
             }
@@ -109,7 +105,7 @@ public final class MaybeTakeUntilPublisher<T, U> extends AbstractMaybeWithUpstre
             if (DisposableHelper.dispose(this)) {
                 actual.onError(e);
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -120,7 +116,7 @@ public final class MaybeTakeUntilPublisher<T, U> extends AbstractMaybeWithUpstre
         }
 
         static final class TakeUntilOtherMaybeObserver<U>
-        extends AtomicReference<Subscription> implements FlowableSubscriber<U> {
+        extends AtomicReference<Disposable> implements Observer<U> {
 
             private static final long serialVersionUID = -1266041316834525931L;
 
@@ -131,10 +127,8 @@ public final class MaybeTakeUntilPublisher<T, U> extends AbstractMaybeWithUpstre
             }
 
             @Override
-            public void onSubscribe(Subscription s) {
-                if (SubscriptionHelper.setOnce(this, s)) {
-                    s.request(Long.MAX_VALUE);
-                }
+            public void onSubscribe(Disposable s) {
+                DisposableHelper.setOnce(this, s);
             }
 
             @Override

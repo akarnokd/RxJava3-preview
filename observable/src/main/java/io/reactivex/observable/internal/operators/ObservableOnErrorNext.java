@@ -11,14 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.disposables.SequentialDisposable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.disposables.SequentialDisposable;
+import io.reactivex.observable.*;
 
 public final class ObservableOnErrorNext<T> extends AbstractObservableWithUpstream<T, T> {
     final Function<? super Throwable, ? extends ObservableSource<? extends T>> nextSupplier;
@@ -72,7 +71,7 @@ public final class ObservableOnErrorNext<T> extends AbstractObservableWithUpstre
         public void onError(Throwable t) {
             if (once) {
                 if (done) {
-                    RxJavaPlugins.onError(t);
+                    RxJavaCommonPlugins.onError(t);
                     return;
                 }
                 actual.onError(t);

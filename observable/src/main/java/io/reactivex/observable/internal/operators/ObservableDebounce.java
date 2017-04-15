@@ -11,18 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.internal.functions.ObjectHelper;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.observers.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.*;
 
 public final class ObservableDebounce<T, U> extends AbstractObservableWithUpstream<T, T> {
     final Function<? super T, ? extends ObservableSource<U>> debounceSelector;
@@ -169,7 +168,7 @@ public final class ObservableDebounce<T, U> extends AbstractObservableWithUpstre
             @Override
             public void onError(Throwable t) {
                 if (done) {
-                    RxJavaPlugins.onError(t);
+                    RxJavaCommonPlugins.onError(t);
                     return;
                 }
                 done = true;

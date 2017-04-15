@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.Callable;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.observers.DeferredScalarDisposable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.observers.DeferredScalarDisposable;
 
 /**
  * Calls a Callable and emits its resulting single value or signals its exception.
@@ -45,7 +45,7 @@ public final class ObservableFromCallable<T> extends Observable<T> implements Ca
             if (!d.isDisposed()) {
                 s.onError(e);
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
             return;
         }

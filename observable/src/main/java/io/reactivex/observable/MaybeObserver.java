@@ -11,10 +11,10 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.observable;
 
-import io.reactivex.annotations.*;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.annotations.NonNull;
 
 /**
  * Provides a mechanism for receiving push-based notifications.

@@ -11,18 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
-import org.reactivestreams.*;
-
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.SequentialDisposable;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.disposables.SequentialDisposable;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.utils.NotificationLite;
 
 /**
  * Concatenate values of each MaybeSource provided in an array and delays
@@ -30,7 +27,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  *
  * @param <T> the value type
  */
-public final class MaybeConcatArrayDelayError<T> extends Flowable<T> {
+public final class MaybeConcatArrayDelayError<T> extends Observable<T> {
 
     final MaybeSource<? extends T>[] sources;
 
@@ -39,7 +36,7 @@ public final class MaybeConcatArrayDelayError<T> extends Flowable<T> {
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super T> s) {
+    protected void subscribeActual(Observer<? super T> s) {
         ConcatMaybeObserver<T> parent = new ConcatMaybeObserver<T>(s, sources);
         s.onSubscribe(parent);
         parent.drain();
@@ -47,13 +44,11 @@ public final class MaybeConcatArrayDelayError<T> extends Flowable<T> {
 
     static final class ConcatMaybeObserver<T>
     extends AtomicInteger
-    implements MaybeObserver<T>, Subscription {
+    implements MaybeObserver<T>, Disposable {
 
         private static final long serialVersionUID = 3520831347801429610L;
 
-        final Subscriber<? super T> actual;
-
-        final AtomicLong requested;
+        final Observer<? super T> actual;
 
         final AtomicReference<Object> current;
 
@@ -65,28 +60,22 @@ public final class MaybeConcatArrayDelayError<T> extends Flowable<T> {
 
         int index;
 
-        long produced;
-
-        ConcatMaybeObserver(Subscriber<? super T> actual, MaybeSource<? extends T>[] sources) {
+        ConcatMaybeObserver(Observer<? super T> actual, MaybeSource<? extends T>[] sources) {
             this.actual = actual;
             this.sources = sources;
-            this.requested = new AtomicLong();
             this.disposables = new SequentialDisposable();
             this.current = new AtomicReference<Object>(NotificationLite.COMPLETE); // as if a previous completed
             this.errors = new AtomicThrowable();
         }
 
         @Override
-        public void request(long n) {
-            if (SubscriptionHelper.validate(n)) {
-                BackpressureHelper.add(requested, n);
-                drain();
-            }
-        }
-
-        @Override
-        public void cancel() {
+        public void dispose() {
             disposables.dispose();
+        }
+        
+        @Override
+        public boolean isDisposed() {
+            return disposables.isDisposed();
         }
 
         @Override
@@ -106,7 +95,7 @@ public final class MaybeConcatArrayDelayError<T> extends Flowable<T> {
             if (errors.addThrowable(e)) {
                 drain();
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -123,7 +112,7 @@ public final class MaybeConcatArrayDelayError<T> extends Flowable<T> {
             }
 
             AtomicReference<Object> c = current;
-            Subscriber<? super T> a = actual;
+            Observer<? super T> a = actual;
             Disposable cancelled = disposables;
 
             for (;;) {
@@ -135,24 +124,15 @@ public final class MaybeConcatArrayDelayError<T> extends Flowable<T> {
                 Object o = c.get();
 
                 if (o != null) {
-                    boolean goNextSource;
                     if (o != NotificationLite.COMPLETE) {
-                        long p = produced;
-                        if (p != requested.get()) {
-                            produced = p + 1;
-                            c.lazySet(null);
-                            goNextSource = true;
+                        c.lazySet(null);
 
-                            a.onNext((T)o);
-                        } else {
-                            goNextSource = false;
-                        }
+                        a.onNext((T)o);
                     } else {
-                        goNextSource = true;
                         c.lazySet(null);
                     }
 
-                    if (goNextSource && !cancelled.isDisposed()) {
+                    if (!cancelled.isDisposed()) {
                         int i = index;
                         if (i == sources.length) {
                             Throwable ex = errors.get();

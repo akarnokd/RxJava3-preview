@@ -11,14 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.observers;
+package io.reactivex.observable.internal.observers;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
 
 public final class DisposableLambdaObserver<T> implements Observer<T>, Disposable {
     final Observer<? super T> actual;
@@ -63,7 +63,7 @@ public final class DisposableLambdaObserver<T> implements Observer<T>, Disposabl
         if (s != DisposableHelper.DISPOSED) {
             actual.onError(t);
         } else {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
         }
     }
 
@@ -81,7 +81,7 @@ public final class DisposableLambdaObserver<T> implements Observer<T>, Disposabl
             onDispose.run();
         } catch (Throwable e) {
             Exceptions.throwIfFatal(e);
-            RxJavaPlugins.onError(e);
+            RxJavaCommonPlugins.onError(e);
         }
         s.dispose();
     }

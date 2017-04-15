@@ -11,18 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.single;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.reactivestreams.*;
-
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
 
 /**
  * Signals the events of the source Single or signals a CancellationException if the
@@ -34,9 +30,9 @@ public final class SingleTakeUntil<T, U> extends Single<T> {
 
     final SingleSource<T> source;
 
-    final Publisher<U> other;
+    final ObservableSource<U> other;
 
-    public SingleTakeUntil(SingleSource<T> source, Publisher<U> other) {
+    public SingleTakeUntil(SingleSource<T> source, ObservableSource<U> other) {
         this.source = source;
         this.other = other;
     }
@@ -106,7 +102,7 @@ public final class SingleTakeUntil<T, U> extends Single<T> {
                     return;
                 }
             }
-            RxJavaPlugins.onError(e);
+            RxJavaCommonPlugins.onError(e);
         }
 
         void otherError(Throwable e) {
@@ -121,13 +117,13 @@ public final class SingleTakeUntil<T, U> extends Single<T> {
                     return;
                 }
             }
-            RxJavaPlugins.onError(e);
+            RxJavaCommonPlugins.onError(e);
         }
     }
 
     static final class TakeUntilOtherSubscriber
-    extends AtomicReference<Subscription>
-    implements FlowableSubscriber<Object> {
+    extends AtomicReference<Disposable>
+    implements Observer<Object> {
 
         private static final long serialVersionUID = 5170026210238877381L;
 
@@ -138,15 +134,13 @@ public final class SingleTakeUntil<T, U> extends Single<T> {
         }
 
         @Override
-        public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.setOnce(this, s)) {
-                s.request(Long.MAX_VALUE);
-            }
+        public void onSubscribe(Disposable s) {
+            DisposableHelper.setOnce(this, s);
         }
 
         @Override
         public void onNext(Object t) {
-            if (SubscriptionHelper.cancel(this)) {
+            if (DisposableHelper.dispose(this)) {
                 parent.otherError(new CancellationException());
             }
         }
@@ -158,14 +152,14 @@ public final class SingleTakeUntil<T, U> extends Single<T> {
 
         @Override
         public void onComplete() {
-            if (get() != SubscriptionHelper.CANCELLED) {
-                lazySet(SubscriptionHelper.CANCELLED);
+            if (get() != DisposableHelper.DISPOSED) {
+                lazySet(DisposableHelper.DISPOSED);
                 parent.otherError(new CancellationException());
             }
         }
 
         public void dispose() {
-            SubscriptionHelper.cancel(this);
+            DisposableHelper.dispose(this);
         }
     }
 }

@@ -11,14 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observers;
+package io.reactivex.observable.observers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.SingleObserver;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.SingleObserver;
 
 /**
  * An abstract {@link SingleObserver} that allows asynchronous cancellation by implementing Disposable.

@@ -11,14 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 
 import java.util.*;
 
-import io.reactivex.ObservableSource;
-import io.reactivex.internal.util.*;
-import io.reactivex.observers.DefaultObserver;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.observable.ObservableSource;
+import io.reactivex.observable.internal.utils.NotificationLite;
+import io.reactivex.observable.observers.DefaultObserver;
 
 /**
  * Returns an Iterable that always returns the item most recently emitted by an Observable, or a

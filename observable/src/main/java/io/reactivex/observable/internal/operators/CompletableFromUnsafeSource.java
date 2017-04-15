@@ -11,9 +11,9 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.completable;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
+import io.reactivex.observable.*;
 
 public final class CompletableFromUnsafeSource extends Completable {
 

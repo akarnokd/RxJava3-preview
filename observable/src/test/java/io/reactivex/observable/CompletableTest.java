@@ -1155,7 +1155,7 @@ public class CompletableTest {
 
             @Override
             public void onError(Throwable e) {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         });
 

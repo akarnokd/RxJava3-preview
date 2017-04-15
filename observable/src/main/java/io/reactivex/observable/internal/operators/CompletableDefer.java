@@ -11,14 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.completable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.Callable;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
 
 public final class CompletableDefer extends Completable {
 

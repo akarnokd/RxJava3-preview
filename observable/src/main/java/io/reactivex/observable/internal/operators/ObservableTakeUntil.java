@@ -11,14 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.observers.SerializedObserver;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.internal.disposables.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.SerializedObserver;
 
 public final class ObservableTakeUntil<T, U> extends AbstractObservableWithUpstream<T, T> {
     final ObservableSource<? extends U> other;

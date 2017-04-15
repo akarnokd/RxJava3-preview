@@ -11,16 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.SequentialDisposable;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.internal.disposables.SequentialDisposable;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.LinkedArrayList;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.utils.NotificationLite;
 
 /**
  * An observable which auto-connects to another observable, caches the elements

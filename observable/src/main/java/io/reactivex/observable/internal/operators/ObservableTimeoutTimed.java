@@ -11,18 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.observers.FullArbiterObserver;
-import io.reactivex.observers.SerializedObserver;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.disposables.ObserverFullArbiter;
+import io.reactivex.observable.internal.observers.FullArbiterObserver;
+import io.reactivex.observable.observers.SerializedObserver;
 
 public final class ObservableTimeoutTimed<T> extends AbstractObservableWithUpstream<T, T> {
     final long timeout;
@@ -31,7 +31,7 @@ public final class ObservableTimeoutTimed<T> extends AbstractObservableWithUpstr
     final ObservableSource<? extends T> other;
 
 
-    static final Disposable NEW_TIMER = new EmptyDisposable();
+    static final Disposable NEW_TIMER = new NewTimerEmptyDisposable();
 
     public ObservableTimeoutTimed(ObservableSource<T> source,
             long timeout, TimeUnit unit, Scheduler scheduler, ObservableSource<? extends T> other) {
@@ -129,7 +129,7 @@ public final class ObservableTimeoutTimed<T> extends AbstractObservableWithUpstr
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -242,7 +242,7 @@ public final class ObservableTimeoutTimed<T> extends AbstractObservableWithUpstr
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -295,7 +295,7 @@ public final class ObservableTimeoutTimed<T> extends AbstractObservableWithUpstr
         }
     }
 
-    static final class EmptyDisposable implements Disposable {
+    static final class NewTimerEmptyDisposable implements Disposable {
         @Override
         public void dispose() { }
 

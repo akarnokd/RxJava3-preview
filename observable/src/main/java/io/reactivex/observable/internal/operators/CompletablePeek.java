@@ -11,14 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.completable;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
 
 public final class CompletablePeek extends Completable {
 
@@ -82,7 +82,7 @@ public final class CompletablePeek extends Completable {
         @Override
         public void onError(Throwable e) {
             if (d == DisposableHelper.DISPOSED) {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
                 return;
             }
             try {
@@ -123,7 +123,7 @@ public final class CompletablePeek extends Completable {
                 onAfterTerminate.run();
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
         }
 
@@ -133,7 +133,7 @@ public final class CompletablePeek extends Completable {
                 onDispose.run();
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
             d.dispose();
         }

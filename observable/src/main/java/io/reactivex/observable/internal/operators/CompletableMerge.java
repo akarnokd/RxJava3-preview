@@ -11,25 +11,22 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.completable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
-import org.reactivestreams.*;
-
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.observable.*;
 
 public final class CompletableMerge extends Completable {
-    final Publisher<? extends CompletableSource> source;
+    final ObservableSource<? extends CompletableSource> source;
     final int maxConcurrency;
     final boolean delayErrors;
 
-    public CompletableMerge(Publisher<? extends CompletableSource> source, int maxConcurrency, boolean delayErrors) {
+    public CompletableMerge(ObservableSource<? extends CompletableSource> source, int maxConcurrency, boolean delayErrors) {
         this.source = source;
         this.maxConcurrency = maxConcurrency;
         this.delayErrors = delayErrors;
@@ -37,13 +34,13 @@ public final class CompletableMerge extends Completable {
 
     @Override
     public void subscribeActual(CompletableObserver s) {
-        CompletableMergeSubscriber parent = new CompletableMergeSubscriber(s, maxConcurrency, delayErrors);
+        CompletableMergeObserver parent = new CompletableMergeObserver(s, maxConcurrency, delayErrors);
         source.subscribe(parent);
     }
 
-    static final class CompletableMergeSubscriber
+    static final class CompletableMergeObserver
     extends AtomicInteger
-    implements FlowableSubscriber<CompletableSource>, Disposable {
+    implements Observer<CompletableSource>, Disposable {
 
         private static final long serialVersionUID = -2108443387387077490L;
 
@@ -55,9 +52,9 @@ public final class CompletableMerge extends Completable {
 
         final CompositeDisposable set;
 
-        Subscription s;
+        Disposable s;
 
-        CompletableMergeSubscriber(CompletableObserver actual, int maxConcurrency, boolean delayErrors) {
+        CompletableMergeObserver(CompletableObserver actual, int maxConcurrency, boolean delayErrors) {
             this.actual = actual;
             this.maxConcurrency = maxConcurrency;
             this.delayErrors = delayErrors;
@@ -68,7 +65,7 @@ public final class CompletableMerge extends Completable {
 
         @Override
         public void dispose() {
-            s.cancel();
+            s.dispose();
             set.dispose();
         }
 
@@ -78,15 +75,10 @@ public final class CompletableMerge extends Completable {
         }
 
         @Override
-        public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
+        public void onSubscribe(Disposable s) {
+            if (DisposableHelper.validate(this.s, s)) {
                 this.s = s;
                 actual.onSubscribe(this);
-                if (maxConcurrency == Integer.MAX_VALUE) {
-                    s.request(Long.MAX_VALUE);
-                } else {
-                    s.request(maxConcurrency);
-                }
             }
         }
 
@@ -109,7 +101,7 @@ public final class CompletableMerge extends Completable {
                         actual.onError(error.terminate());
                     }
                 } else {
-                    RxJavaPlugins.onError(t);
+                    RxJavaCommonPlugins.onError(t);
                 }
             } else {
                 if (error.addThrowable(t)) {
@@ -117,7 +109,7 @@ public final class CompletableMerge extends Completable {
                         actual.onError(error.terminate());
                     }
                 } else {
-                    RxJavaPlugins.onError(t);
+                    RxJavaCommonPlugins.onError(t);
                 }
             }
         }
@@ -137,7 +129,7 @@ public final class CompletableMerge extends Completable {
         void innerError(MergeInnerObserver inner, Throwable t) {
             set.delete(inner);
             if (!delayErrors) {
-                s.cancel();
+                s.dispose();
                 set.dispose();
 
                 if (error.addThrowable(t)) {
@@ -145,7 +137,7 @@ public final class CompletableMerge extends Completable {
                         actual.onError(error.terminate());
                     }
                 } else {
-                    RxJavaPlugins.onError(t);
+                    RxJavaCommonPlugins.onError(t);
                 }
             } else {
                 if (error.addThrowable(t)) {
@@ -153,11 +145,11 @@ public final class CompletableMerge extends Completable {
                         actual.onError(error.terminate());
                     } else {
                         if (maxConcurrency != Integer.MAX_VALUE) {
-                            s.request(1);
+                            // FIXME proper maxConcurrency
                         }
                     }
                 } else {
-                    RxJavaPlugins.onError(t);
+                    RxJavaCommonPlugins.onError(t);
                 }
             }
         }
@@ -173,7 +165,7 @@ public final class CompletableMerge extends Completable {
                 }
             } else {
                 if (maxConcurrency != Integer.MAX_VALUE) {
-                    s.request(1);
+                    // FIXME proper maxConcurrency
                 }
             }
         }

@@ -11,11 +11,11 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.observers;
+package io.reactivex.observable.internal.observers;
 
-import io.reactivex.Observer;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.observable.Observer;
 
 /**
  * Represents a fuseable container for a single value.
@@ -92,7 +92,7 @@ public class DeferredScalarDisposable<T> extends BasicIntQueueDisposable<T> {
      public final void error(Throwable t) {
         int state = get();
         if ((state & (FUSED_READY | FUSED_CONSUMED | TERMINATED | DISPOSED)) != 0) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         lazySet(TERMINATED);

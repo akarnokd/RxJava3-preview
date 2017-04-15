@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.observers;
+package io.reactivex.observable.internal.observers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.util.QueueDrainHelper;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.extensions.*;
+import io.reactivex.observable.internal.utils.QueueDrainHelper;
 
 /**
  * Subscriber that can fuse with the upstream and calls a support interface
@@ -57,7 +57,7 @@ implements Observer<T>, Disposable {
                 QueueDisposable<T> qs = (QueueDisposable<T>) s;
 
                 int m = qs.requestFusion(QueueDisposable.ANY);
-                if (m == QueueSubscription.SYNC) {
+                if (m == QueueDisposable.SYNC) {
                     fusionMode = m;
                     queue = qs;
                     done = true;

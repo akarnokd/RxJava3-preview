@@ -11,14 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observers;
+package io.reactivex.observable.observers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.Observer;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.Observer;
 
 /**
  * An abstract {@link Observer} that allows asynchronous cancellation by implementing Disposable.
@@ -34,7 +34,7 @@ import io.reactivex.internal.disposables.DisposableHelper;
  *
  * <p>Implementation of {@link #onStart()}, {@link #onNext(Object)}, {@link #onError(Throwable)}
  * and {@link #onComplete()} are not allowed to throw any unchecked exceptions.
- * If for some reason this can't be avoided, use {@link io.reactivex.Observable#safeSubscribe(io.reactivex.Observer)}
+ * If for some reason this can't be avoided, use {@link io.reactivex.observable.Observable#safeSubscribe(io.reactivex.observable.Observer)}
  * instead of the standard {@code subscribe()} method.
  *
  * <p>Example<code><pre>

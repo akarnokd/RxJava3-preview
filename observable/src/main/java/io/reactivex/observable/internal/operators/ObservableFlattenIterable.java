@@ -11,17 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.Iterator;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.observable.*;
 
 /**
  * Maps a sequence into an Iterable and emits its values.
@@ -118,7 +117,7 @@ public final class ObservableFlattenIterable<T, R> extends AbstractObservableWit
         @Override
         public void onError(Throwable e) {
             if (d == DisposableHelper.DISPOSED) {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
                 return;
             }
             d = DisposableHelper.DISPOSED;

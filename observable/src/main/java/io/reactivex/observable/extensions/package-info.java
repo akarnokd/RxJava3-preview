@@ -14,4 +14,4 @@
 /**
  * Base interfaces and types for supporting operator-fusion.
  */
-package io.reactivex.internal.fuseable;
+package io.reactivex.observable.extensions;

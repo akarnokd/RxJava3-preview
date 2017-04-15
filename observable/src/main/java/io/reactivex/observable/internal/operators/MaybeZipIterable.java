@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
 import java.util.Arrays;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.internal.operators.maybe.MaybeZipArray.ZipCoordinator;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
+import io.reactivex.observable.internal.operators.MaybeZipArray.ZipCoordinator;
 
 public final class MaybeZipIterable<T, R> extends Maybe<R> {
 

@@ -11,24 +11,23 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.fuseable.HasUpstreamObservableSource;
-import io.reactivex.internal.util.*;
-import io.reactivex.observables.ConnectableObservable;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Timed;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.extensions.HasUpstreamObservableSource;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
+import io.reactivex.observable.internal.utils.NotificationLite;
 
 public final class ObservableReplay<T> extends ConnectableObservable<T> implements HasUpstreamObservableSource<T>, Disposable {
     /** The source observable. */
@@ -379,7 +378,7 @@ public final class ObservableReplay<T> extends ConnectableObservable<T> implemen
                 buffer.error(e);
                 replayFinal();
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
         @Override

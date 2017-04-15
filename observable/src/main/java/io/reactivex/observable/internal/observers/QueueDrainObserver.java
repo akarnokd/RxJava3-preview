@@ -11,14 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.observers;
+package io.reactivex.observable.internal.observers;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.util.*;
+import io.reactivex.common.Disposable;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.extensions.SimplePlainQueue;
+import io.reactivex.observable.internal.utils.*;
 
 /**
  * Abstract base class for subscribers that hold another subscriber, a queue

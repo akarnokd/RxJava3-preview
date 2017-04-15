@@ -2243,14 +2243,14 @@ public enum TestHelper {
             @Override
             public void onSubscribe(Subscription d) {
                 try {
-                    if (d instanceof QueueSubscription) {
+                    if (d instanceof QueueDisposable) {
                         @SuppressWarnings("unchecked")
-                        QueueSubscription<Object> qd = (QueueSubscription<Object>) d;
+                        QueueDisposable<Object> qd = (QueueDisposable<Object>) d;
                         state[0] = true;
 
-                        int m = qd.requestFusion(QueueSubscription.ANY);
+                        int m = qd.requestFusion(QueueDisposable.ANY);
 
-                        if (m != QueueSubscription.NONE) {
+                        if (m != QueueDisposable.NONE) {
                             state[1] = true;
 
                             state[2] = qd.isEmpty();

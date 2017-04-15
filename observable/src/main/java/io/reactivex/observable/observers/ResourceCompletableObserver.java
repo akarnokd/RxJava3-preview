@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observers;
+package io.reactivex.observable.observers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.CompletableObserver;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.internal.disposables.*;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.observable.CompletableObserver;
 
 /**
  * An abstract {@link CompletableObserver} that allows asynchronous cancellation of its subscription and associated resources.
@@ -35,10 +35,10 @@ import io.reactivex.internal.functions.ObjectHelper;
  * <p>To release the associated resources, one has to call {@link #dispose()}
  * in {@code onError()} and {@code onComplete()} explicitly.
  *
- * <p>Use {@link #add(Disposable)} to associate resources (as {@link io.reactivex.disposables.Disposable Disposable}s)
+ * <p>Use {@link #add(Disposable)} to associate resources (as {@link io.reactivex.common.Disposable Disposable}s)
  * with this {@code ResourceCompletableObserver} that will be cleaned up when {@link #dispose()} is called.
  * Removing previously associated resources is not possible but one can create a
- * {@link io.reactivex.disposables.CompositeDisposable CompositeDisposable}, associate it with this
+ * {@link io.reactivex.common.disposables.CompositeDisposable CompositeDisposable}, associate it with this
  * {@code ResourceCompletableObserver} and then add/remove resources to/from the {@code CompositeDisposable}
  * freely.
  *

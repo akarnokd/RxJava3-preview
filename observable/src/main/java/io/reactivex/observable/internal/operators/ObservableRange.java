@@ -10,11 +10,11 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.internal.observers.BasicIntQueueDisposable;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.observers.BasicIntQueueDisposable;
 
 /**
  * Emits a range of integer values from start to end.

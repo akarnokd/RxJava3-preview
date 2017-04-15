@@ -11,18 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.reactivestreams.*;
-
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
 
 /**
  * Switches to the fallback Maybe if the other Publisher signals a success or completes, or
@@ -31,13 +27,13 @@ import io.reactivex.plugins.RxJavaPlugins;
  * @param <T> the main value type
  * @param <U> the other value type
  */
-public final class MaybeTimeoutPublisher<T, U> extends AbstractMaybeWithUpstream<T, T> {
+public final class MaybeTimeoutObservable<T, U> extends AbstractMaybeWithUpstream<T, T> {
 
-    final Publisher<U> other;
+    final ObservableSource<U> other;
 
     final MaybeSource<? extends T> fallback;
 
-    public MaybeTimeoutPublisher(MaybeSource<T> source, Publisher<U> other, MaybeSource<? extends T> fallback) {
+    public MaybeTimeoutObservable(MaybeSource<T> source, ObservableSource<U> other, MaybeSource<? extends T> fallback) {
         super(source);
         this.other = other;
         this.fallback = fallback;
@@ -78,7 +74,7 @@ public final class MaybeTimeoutPublisher<T, U> extends AbstractMaybeWithUpstream
         @Override
         public void dispose() {
             DisposableHelper.dispose(this);
-            SubscriptionHelper.cancel(other);
+            DisposableHelper.dispose(other);
             TimeoutFallbackMaybeObserver<T> oo = otherObserver;
             if (oo != null) {
                 DisposableHelper.dispose(oo);
@@ -97,7 +93,7 @@ public final class MaybeTimeoutPublisher<T, U> extends AbstractMaybeWithUpstream
 
         @Override
         public void onSuccess(T value) {
-            SubscriptionHelper.cancel(other);
+            DisposableHelper.dispose(other);
             if (getAndSet(DisposableHelper.DISPOSED) != DisposableHelper.DISPOSED) {
                 actual.onSuccess(value);
             }
@@ -105,17 +101,17 @@ public final class MaybeTimeoutPublisher<T, U> extends AbstractMaybeWithUpstream
 
         @Override
         public void onError(Throwable e) {
-            SubscriptionHelper.cancel(other);
+            DisposableHelper.dispose(other);
             if (getAndSet(DisposableHelper.DISPOSED) != DisposableHelper.DISPOSED) {
                 actual.onError(e);
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
         @Override
         public void onComplete() {
-            SubscriptionHelper.cancel(other);
+            DisposableHelper.dispose(other);
             if (getAndSet(DisposableHelper.DISPOSED) != DisposableHelper.DISPOSED) {
                 actual.onComplete();
             }
@@ -125,7 +121,7 @@ public final class MaybeTimeoutPublisher<T, U> extends AbstractMaybeWithUpstream
             if (DisposableHelper.dispose(this)) {
                 actual.onError(e);
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -141,8 +137,8 @@ public final class MaybeTimeoutPublisher<T, U> extends AbstractMaybeWithUpstream
     }
 
     static final class TimeoutOtherMaybeObserver<T, U>
-    extends AtomicReference<Subscription>
-    implements FlowableSubscriber<Object> {
+    extends AtomicReference<Disposable>
+    implements Observer<Object> {
 
 
         private static final long serialVersionUID = 8663801314800248617L;
@@ -154,15 +150,13 @@ public final class MaybeTimeoutPublisher<T, U> extends AbstractMaybeWithUpstream
         }
 
         @Override
-        public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.setOnce(this, s)) {
-                s.request(Long.MAX_VALUE);
-            }
+        public void onSubscribe(Disposable s) {
+            DisposableHelper.setOnce(this, s);
         }
 
         @Override
         public void onNext(Object value) {
-            get().cancel();
+            get().dispose();
             parent.otherComplete();
         }
 

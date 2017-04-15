@@ -11,18 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.annotations.Experimental;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Action;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.observers.BasicIntQueueDisposable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Action;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.QueueDisposable;
+import io.reactivex.observable.internal.observers.BasicIntQueueDisposable;
 
 /**
  * Execute an action after an onError, onComplete or a dispose event.
@@ -144,7 +142,7 @@ public final class ObservableDoFinally<T> extends AbstractObservableWithUpstream
                     onFinally.run();
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    RxJavaPlugins.onError(ex);
+                    RxJavaCommonPlugins.onError(ex);
                 }
             }
         }

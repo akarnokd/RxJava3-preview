@@ -11,15 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.disposables;
+package io.reactivex.observable.internal.disposables;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.util.NotificationLite;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.internal.queues.SpscLinkedArrayQueue;
+import io.reactivex.observable.internal.utils.NotificationLite;
 
 /**
  * Performs full arbitration of Subscriber events with strict drain (i.e., old emissions of another
@@ -88,7 +87,7 @@ public final class ObserverFullArbiter<T> extends FullArbiterPad1 implements Dis
 
     public void onError(Throwable value, Disposable s) {
         if (cancelled) {
-            RxJavaPlugins.onError(value);
+            RxJavaCommonPlugins.onError(value);
             return;
         }
         queue.offer(s, NotificationLite.error(value));
@@ -138,7 +137,7 @@ public final class ObserverFullArbiter<T> extends FullArbiterPad1 implements Dis
                             cancelled = true;
                             a.onError(ex);
                         } else {
-                            RxJavaPlugins.onError(ex);
+                            RxJavaCommonPlugins.onError(ex);
                         }
                     } else if (NotificationLite.isComplete(v)) {
                         q.clear();

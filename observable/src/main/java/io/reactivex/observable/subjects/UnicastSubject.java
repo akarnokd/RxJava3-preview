@@ -11,21 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subjects;
+package io.reactivex.observable.subjects;
 
-import io.reactivex.annotations.Experimental;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.plugins.RxJavaPlugins;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.Observer;
-import io.reactivex.annotations.CheckReturnValue;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.SimpleQueue;
-import io.reactivex.internal.observers.BasicIntQueueDisposable;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.extensions.SimpleQueue;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
+import io.reactivex.observable.internal.observers.BasicIntQueueDisposable;
+import io.reactivex.observable.internal.queues.SpscLinkedArrayQueue;
 
 /**
  * Subject that allows only a single Subscriber to subscribe to it during its lifetime.
@@ -241,7 +238,7 @@ public final class UnicastSubject<T> extends Subject<T> {
     @Override
     public void onError(Throwable t) {
         if (done || disposed) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         if (t == null) {

@@ -11,17 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.observers.SerializedObserver;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.SerializedObserver;
 
 public final class ObservableThrottleFirstTimed<T> extends AbstractObservableWithUpstream<T, T> {
     final long timeout;
@@ -99,7 +98,7 @@ public final class ObservableThrottleFirstTimed<T> extends AbstractObservableWit
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             } else {
                 done = true;
                 actual.onError(t);

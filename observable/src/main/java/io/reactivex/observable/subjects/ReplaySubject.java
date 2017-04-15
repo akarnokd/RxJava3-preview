@@ -11,20 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subjects;
+package io.reactivex.observable.subjects;
 
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.Observer;
-import io.reactivex.Scheduler;
-import io.reactivex.annotations.CheckReturnValue;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.util.NotificationLite;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.CheckReturnValue;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.internal.utils.NotificationLite;
 
 /**
  * Replays events to Observers.
@@ -275,7 +273,7 @@ public final class ReplaySubject<T> extends Subject<T> {
             t = new NullPointerException("onError called with null. Null values are generally not allowed in 2.x operators and sources.");
         }
         if (done) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         done = true;

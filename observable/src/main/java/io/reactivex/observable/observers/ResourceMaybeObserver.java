@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observers;
+package io.reactivex.observable.observers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.MaybeObserver;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.internal.disposables.*;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.observable.MaybeObserver;
 
 /**
  * An abstract {@link MaybeObserver} that allows asynchronous cancellation of its subscription and associated resources.
@@ -27,7 +27,7 @@ import io.reactivex.internal.functions.ObjectHelper;
  * <p>All pre-implemented final methods are thread-safe.
  *
  * <p>Note that {@link #onSuccess(Object)}, {@link #onError(Throwable)} and {@link #onComplete()} are
- * exclusive to each other, unlike a regular {@link io.reactivex.Observer Observer}, and
+ * exclusive to each other, unlike a regular {@link io.reactivex.observable.Observer Observer}, and
  * {@code onComplete()} is never called after an {@code onSuccess()}.
  *
  * <p>Override the protected {@link #onStart()} to perform initialization when this
@@ -39,10 +39,10 @@ import io.reactivex.internal.functions.ObjectHelper;
  * <p>To release the associated resources, one has to call {@link #dispose()}
  * in {@code onSuccess()}, {@code onError()} and {@code onComplete()} explicitly.
  *
- * <p>Use {@link #add(Disposable)} to associate resources (as {@link io.reactivex.disposables.Disposable Disposable}s)
+ * <p>Use {@link #add(Disposable)} to associate resources (as {@link io.reactivex.common.Disposable Disposable}s)
  * with this {@code ResourceMaybeObserver} that will be cleaned up when {@link #dispose()} is called.
  * Removing previously associated resources is not possible but one can create a
- * {@link io.reactivex.disposables.CompositeDisposable CompositeDisposable}, associate it with this
+ * {@link io.reactivex.common.disposables.CompositeDisposable CompositeDisposable}, associate it with this
  * {@code ResourceMaybeObserver} and then add/remove resources to/from the {@code CompositeDisposable}
  * freely.
  *

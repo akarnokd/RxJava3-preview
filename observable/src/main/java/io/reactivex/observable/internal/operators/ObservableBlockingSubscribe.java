@@ -11,15 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.*;
 
-import io.reactivex.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.*;
-import io.reactivex.internal.observers.*;
-import io.reactivex.internal.util.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.*;
+import io.reactivex.common.internal.utils.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.observers.*;
+import io.reactivex.observable.internal.utils.NotificationLite;
 
 /**
  * Utility methods to consume an Observable in a blocking manner with callbacks or Observer.

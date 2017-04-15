@@ -10,11 +10,11 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.fuseable;
+package io.reactivex.observable.extensions;
 
 import java.util.Queue;
 
-import io.reactivex.disposables.Disposable;
+import io.reactivex.common.Disposable;
 
 /**
  * An interface extending Queue and Disposable and allows negotiating

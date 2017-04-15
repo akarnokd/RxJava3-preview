@@ -11,14 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
 
 /**
  * Peeks into the lifecycle of a Maybe and MaybeObserver.
@@ -74,7 +74,7 @@ public final class MaybePeek<T> extends AbstractMaybeWithUpstream<T, T> {
                 parent.onDisposeCall.run();
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
 
             d.dispose();
@@ -127,7 +127,7 @@ public final class MaybePeek<T> extends AbstractMaybeWithUpstream<T, T> {
         @Override
         public void onError(Throwable e) {
             if (this.d == DisposableHelper.DISPOSED) {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
                 return;
             }
 
@@ -174,7 +174,7 @@ public final class MaybePeek<T> extends AbstractMaybeWithUpstream<T, T> {
                 parent.onAfterTerminate.run();
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
         }
     }

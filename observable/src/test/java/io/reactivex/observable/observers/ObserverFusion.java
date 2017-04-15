@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observers;
+package io.reactivex.observable.observers;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.*;
@@ -154,7 +154,7 @@ public enum ObserverFusion {
     /**
      * Constructs a TestObserver with the given required fusion mode.
      * @param <T> the value type
-     * @param mode the requested fusion mode, see {@link QueueSubscription} constants
+     * @param mode the requested fusion mode, see {@link QueueDisposable} constants
      * @return the new TestSubscriber
      */
     public static <T> TestObserver<T> newTest(int mode) {
@@ -164,7 +164,7 @@ public enum ObserverFusion {
     }
 
     /**
-     * Assert that the TestSubscriber received a fuseabe QueueSubscription and
+     * Assert that the TestSubscriber received a fuseabe QueueDisposable and
      * is in the given fusion mode.
      * @param <T> the value type
      * @param ts the TestSubscriber instance

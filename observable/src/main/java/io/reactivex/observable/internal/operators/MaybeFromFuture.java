@@ -11,12 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
+import io.reactivex.common.*;
+import io.reactivex.observable.*;
 
 /**
  * Waits until the source Future completes or the wait times out; treats a {@code null}

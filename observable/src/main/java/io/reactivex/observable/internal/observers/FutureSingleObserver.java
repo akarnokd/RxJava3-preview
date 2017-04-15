@@ -11,16 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.observers;
+package io.reactivex.observable.internal.observers;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.SingleObserver;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.util.BlockingHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.utils.BlockingHelper;
+import io.reactivex.observable.SingleObserver;
 
 /**
  * An Observer + Future that expects exactly one upstream value and provides it
@@ -127,7 +126,7 @@ implements SingleObserver<T>, Future<T>, Disposable {
         for (;;) {
             Disposable a = s.get();
             if (a == DisposableHelper.DISPOSED) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             error = t;

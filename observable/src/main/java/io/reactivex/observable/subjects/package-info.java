@@ -18,4 +18,4 @@
  * Classes extending the Observable base reactive class and implementing
  * the Observer interface at the same time (aka hot Observables).
  */
-package io.reactivex.subjects;
+package io.reactivex.observable.subjects;

@@ -11,17 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.reactivestreams.*;
-
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.CompositeException;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.exceptions.CompositeException;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
 
 /**
  * Delay the emission of the main signal until the other signals an item or completes.
@@ -29,11 +26,11 @@ import io.reactivex.internal.subscriptions.SubscriptionHelper;
  * @param <T> the main value type
  * @param <U> the other value type
  */
-public final class MaybeDelayOtherPublisher<T, U> extends AbstractMaybeWithUpstream<T, T> {
+public final class MaybeDelayOtherObservable<T, U> extends AbstractMaybeWithUpstream<T, T> {
 
-    final Publisher<U> other;
+    final ObservableSource<U> other;
 
-    public MaybeDelayOtherPublisher(MaybeSource<T> source, Publisher<U> other) {
+    public MaybeDelayOtherObservable(MaybeSource<T> source, ObservableSource<U> other) {
         super(source);
         this.other = other;
     }
@@ -47,11 +44,11 @@ public final class MaybeDelayOtherPublisher<T, U> extends AbstractMaybeWithUpstr
     implements MaybeObserver<T>, Disposable {
         final OtherSubscriber<T> other;
 
-        final Publisher<U> otherSource;
+        final ObservableSource<U> otherSource;
 
         Disposable d;
 
-        DelayMaybeObserver(MaybeObserver<? super T> actual, Publisher<U> otherSource) {
+        DelayMaybeObserver(MaybeObserver<? super T> actual, ObservableSource<U> otherSource) {
             this.other = new OtherSubscriber<T>(actual);
             this.otherSource = otherSource;
         }
@@ -60,12 +57,12 @@ public final class MaybeDelayOtherPublisher<T, U> extends AbstractMaybeWithUpstr
         public void dispose() {
             d.dispose();
             d = DisposableHelper.DISPOSED;
-            SubscriptionHelper.cancel(other);
+            DisposableHelper.dispose(other);
         }
 
         @Override
         public boolean isDisposed() {
-            return SubscriptionHelper.isCancelled(other.get());
+            return DisposableHelper.isDisposed(other.get());
         }
 
         @Override
@@ -103,8 +100,8 @@ public final class MaybeDelayOtherPublisher<T, U> extends AbstractMaybeWithUpstr
     }
 
     static final class OtherSubscriber<T> extends
-    AtomicReference<Subscription>
-    implements FlowableSubscriber<Object> {
+    AtomicReference<Disposable>
+    implements Observer<Object> {
 
         private static final long serialVersionUID = -1215060610805418006L;
 
@@ -119,18 +116,16 @@ public final class MaybeDelayOtherPublisher<T, U> extends AbstractMaybeWithUpstr
         }
 
         @Override
-        public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.setOnce(this, s)) {
-                s.request(Long.MAX_VALUE);
-            }
+        public void onSubscribe(Disposable s) {
+            DisposableHelper.setOnce(this, s);
         }
 
         @Override
         public void onNext(Object t) {
-            Subscription s = get();
-            if (s != SubscriptionHelper.CANCELLED) {
-                lazySet(SubscriptionHelper.CANCELLED);
-                s.cancel();
+            Disposable s = get();
+            if (s != DisposableHelper.DISPOSED) {
+                lazySet(DisposableHelper.DISPOSED);
+                s.dispose();
                 onComplete();
             }
         }

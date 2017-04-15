@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import static org.junit.Assert.*;
 
@@ -24,7 +24,7 @@ import io.reactivex.TestHelper;
 import io.reactivex.exceptions.TestException;
 import io.reactivex.functions.Consumer;
 import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.internal.fuseable.QueueDisposable;
 import io.reactivex.observers.*;
 import io.reactivex.processors.UnicastProcessor;
 import io.reactivex.subscribers.*;
@@ -90,13 +90,13 @@ public class ObservableDoAfterNextTest {
 
     @Test
     public void syncFused() {
-        TestObserver<Integer> ts0 = ObserverFusion.newTest(QueueSubscription.SYNC);
+        TestObserver<Integer> ts0 = ObserverFusion.newTest(QueueDisposable.SYNC);
 
         Observable.range(1, 5)
         .doAfterNext(afterNext)
         .subscribe(ts0);
 
-        ObserverFusion.assertFusion(ts0, QueueSubscription.SYNC)
+        ObserverFusion.assertFusion(ts0, QueueDisposable.SYNC)
         .assertResult(1, 2, 3, 4, 5);
 
         assertEquals(Arrays.asList(-1, -2, -3, -4, -5), values);
@@ -104,13 +104,13 @@ public class ObservableDoAfterNextTest {
 
     @Test
     public void asyncFusedRejected() {
-        TestObserver<Integer> ts0 = ObserverFusion.newTest(QueueSubscription.ASYNC);
+        TestObserver<Integer> ts0 = ObserverFusion.newTest(QueueDisposable.ASYNC);
 
         Observable.range(1, 5)
         .doAfterNext(afterNext)
         .subscribe(ts0);
 
-        ObserverFusion.assertFusion(ts0, QueueSubscription.NONE)
+        ObserverFusion.assertFusion(ts0, QueueDisposable.NONE)
         .assertResult(1, 2, 3, 4, 5);
 
         assertEquals(Arrays.asList(-1, -2, -3, -4, -5), values);
@@ -118,7 +118,7 @@ public class ObservableDoAfterNextTest {
 
     @Test
     public void asyncFused() {
-        TestSubscriber<Integer> ts0 = SubscriberFusion.newTest(QueueSubscription.ASYNC);
+        TestSubscriber<Integer> ts0 = SubscriberFusion.newTest(QueueDisposable.ASYNC);
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
 
@@ -128,7 +128,7 @@ public class ObservableDoAfterNextTest {
         .doAfterNext(afterNext)
         .subscribe(ts0);
 
-        SubscriberFusion.assertFusion(ts0, QueueSubscription.ASYNC)
+        SubscriberFusion.assertFusion(ts0, QueueDisposable.ASYNC)
         .assertResult(1, 2, 3, 4, 5);
 
         assertEquals(Arrays.asList(-1, -2, -3, -4, -5), values);
@@ -185,14 +185,14 @@ public class ObservableDoAfterNextTest {
 
     @Test
     public void syncFusedConditional() {
-        TestObserver<Integer> ts0 = ObserverFusion.newTest(QueueSubscription.SYNC);
+        TestObserver<Integer> ts0 = ObserverFusion.newTest(QueueDisposable.SYNC);
 
         Observable.range(1, 5)
         .doAfterNext(afterNext)
         .filter(Functions.alwaysTrue())
         .subscribe(ts0);
 
-        ObserverFusion.assertFusion(ts0, QueueSubscription.SYNC)
+        ObserverFusion.assertFusion(ts0, QueueDisposable.SYNC)
         .assertResult(1, 2, 3, 4, 5);
 
         assertEquals(Arrays.asList(-1, -2, -3, -4, -5), values);
@@ -200,14 +200,14 @@ public class ObservableDoAfterNextTest {
 
     @Test
     public void asyncFusedRejectedConditional() {
-        TestObserver<Integer> ts0 = ObserverFusion.newTest(QueueSubscription.ASYNC);
+        TestObserver<Integer> ts0 = ObserverFusion.newTest(QueueDisposable.ASYNC);
 
         Observable.range(1, 5)
         .doAfterNext(afterNext)
         .filter(Functions.alwaysTrue())
         .subscribe(ts0);
 
-        ObserverFusion.assertFusion(ts0, QueueSubscription.NONE)
+        ObserverFusion.assertFusion(ts0, QueueDisposable.NONE)
         .assertResult(1, 2, 3, 4, 5);
 
         assertEquals(Arrays.asList(-1, -2, -3, -4, -5), values);
@@ -215,7 +215,7 @@ public class ObservableDoAfterNextTest {
 
     @Test
     public void asyncFusedConditional() {
-        TestSubscriber<Integer> ts0 = SubscriberFusion.newTest(QueueSubscription.ASYNC);
+        TestSubscriber<Integer> ts0 = SubscriberFusion.newTest(QueueDisposable.ASYNC);
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
 
@@ -226,7 +226,7 @@ public class ObservableDoAfterNextTest {
         .filter(Functions.alwaysTrue())
         .subscribe(ts0);
 
-        SubscriberFusion.assertFusion(ts0, QueueSubscription.ASYNC)
+        SubscriberFusion.assertFusion(ts0, QueueDisposable.ASYNC)
         .assertResult(1, 2, 3, 4, 5);
 
         assertEquals(Arrays.asList(-1, -2, -3, -4, -5), values);

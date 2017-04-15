@@ -11,23 +11,23 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.observers.QueueDrainObserver;
-import io.reactivex.internal.queue.MpscLinkedQueue;
-import io.reactivex.internal.util.NotificationLite;
-import io.reactivex.observers.SerializedObserver;
-import io.reactivex.subjects.UnicastSubject;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.ObservableSource;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.internal.observers.QueueDrainObserver;
+import io.reactivex.observable.internal.queues.MpscLinkedQueue;
+import io.reactivex.observable.internal.utils.NotificationLite;
+import io.reactivex.observable.observers.SerializedObserver;
+import io.reactivex.observable.subjects.UnicastSubject;
 
 public final class ObservableWindowTimed<T> extends AbstractObservableWithUpstream<T, Observable<T>> {
     final long timespan;

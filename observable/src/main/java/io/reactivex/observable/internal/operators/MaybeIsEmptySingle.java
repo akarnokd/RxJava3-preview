@@ -11,13 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.*;
 
 /**
  * Signals true if the source Maybe signals onComplete, signals false if the source Maybe

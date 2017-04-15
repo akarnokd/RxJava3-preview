@@ -10,22 +10,21 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.util.*;
-import io.reactivex.observers.SerializedObserver;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.disposables.*;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.*;
+import io.reactivex.observable.internal.queues.SpscLinkedArrayQueue;
+import io.reactivex.observable.observers.SerializedObserver;
 
 public final class ObservableConcatMap<T, U> extends AbstractObservableWithUpstream<T, U> {
     final Function<? super T, ? extends ObservableSource<? extends U>> mapper;
@@ -132,7 +131,7 @@ public final class ObservableConcatMap<T, U> extends AbstractObservableWithUpstr
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -355,7 +354,7 @@ public final class ObservableConcatMap<T, U> extends AbstractObservableWithUpstr
                 done = true;
                 drain();
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -506,7 +505,7 @@ public final class ObservableConcatMap<T, U> extends AbstractObservableWithUpstr
                     p.active = false;
                     p.drain();
                 } else {
-                    RxJavaPlugins.onError(e);
+                    RxJavaCommonPlugins.onError(e);
                 }
             }
 

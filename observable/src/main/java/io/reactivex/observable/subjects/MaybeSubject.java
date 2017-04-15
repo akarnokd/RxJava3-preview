@@ -11,14 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subjects;
+package io.reactivex.observable.subjects;
 
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.*;
-import io.reactivex.annotations.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.*;
+import io.reactivex.observable.*;
 
 /**
  * Represents a hot Maybe-like source and consumer of events similar to Subjects.
@@ -97,7 +96,7 @@ public final class MaybeSubject<T> extends Maybe<T> implements MaybeObserver<T> 
                 md.actual.onError(e);
             }
         } else {
-            RxJavaPlugins.onError(e);
+            RxJavaCommonPlugins.onError(e);
         }
     }
 

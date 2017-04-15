@@ -11,25 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.observable.internal.utils;
 
-import org.reactivestreams.*;
-
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.observable.*;
 
 /**
  * Singleton implementing many interfaces as empty.
  */
-public enum EmptyComponent implements FlowableSubscriber<Object>, Observer<Object>, MaybeObserver<Object>,
-SingleObserver<Object>, CompletableObserver, Subscription, Disposable {
+public enum EmptyComponent implements Observer<Object>, MaybeObserver<Object>,
+SingleObserver<Object>, CompletableObserver, Disposable {
     INSTANCE;
-
-    @SuppressWarnings("unchecked")
-    public static <T> Subscriber<T> asSubscriber() {
-        return (Subscriber<T>)INSTANCE;
-    }
 
     @SuppressWarnings("unchecked")
     public static <T> Observer<T> asObserver() {
@@ -47,23 +39,8 @@ SingleObserver<Object>, CompletableObserver, Subscription, Disposable {
     }
 
     @Override
-    public void request(long n) {
-        // deliberately no-op
-    }
-
-    @Override
-    public void cancel() {
-        // deliberately no-op
-    }
-
-    @Override
     public void onSubscribe(Disposable d) {
         d.dispose();
-    }
-
-    @Override
-    public void onSubscribe(Subscription s) {
-        s.cancel();
     }
 
     @Override
@@ -73,7 +50,7 @@ SingleObserver<Object>, CompletableObserver, Subscription, Disposable {
 
     @Override
     public void onError(Throwable t) {
-        RxJavaPlugins.onError(t);
+        RxJavaCommonPlugins.onError(t);
     }
 
     @Override

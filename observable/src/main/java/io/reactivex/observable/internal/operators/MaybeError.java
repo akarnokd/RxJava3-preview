@@ -11,10 +11,10 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposables;
+import io.reactivex.common.Disposables;
+import io.reactivex.observable.*;
 
 /**
  * Signals a constant Throwable.

@@ -11,10 +11,10 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.internal.fuseable.HasUpstreamObservableSource;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.HasUpstreamObservableSource;
 
 /**
  * Base class for operators with a source consumable.

@@ -11,13 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.completable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.*;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.disposables.*;
+import io.reactivex.observable.*;
 
 public final class CompletableSubscribeOn extends Completable {
     final CompletableSource source;

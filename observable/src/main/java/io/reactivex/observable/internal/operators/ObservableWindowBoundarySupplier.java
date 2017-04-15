@@ -11,22 +11,21 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.observers.QueueDrainObserver;
-import io.reactivex.internal.queue.MpscLinkedQueue;
-import io.reactivex.internal.util.NotificationLite;
-import io.reactivex.observers.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.UnicastSubject;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.observers.QueueDrainObserver;
+import io.reactivex.observable.internal.queues.MpscLinkedQueue;
+import io.reactivex.observable.internal.utils.NotificationLite;
+import io.reactivex.observable.observers.*;
+import io.reactivex.observable.subjects.UnicastSubject;
 
 public final class ObservableWindowBoundarySupplier<T, B> extends AbstractObservableWithUpstream<T, Observable<T>> {
     final Callable<? extends ObservableSource<B>> other;
@@ -130,7 +129,7 @@ public final class ObservableWindowBoundarySupplier<T, B> extends AbstractObserv
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             error = t;
@@ -282,7 +281,7 @@ public final class ObservableWindowBoundarySupplier<T, B> extends AbstractObserv
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;

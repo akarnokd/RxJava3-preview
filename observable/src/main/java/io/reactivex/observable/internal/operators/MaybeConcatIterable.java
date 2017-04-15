@@ -11,27 +11,25 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
 import java.util.Iterator;
 import java.util.concurrent.atomic.*;
 
-import org.reactivestreams.*;
-
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.disposables.SequentialDisposable;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.*;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.internal.disposables.SequentialDisposable;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
+import io.reactivex.observable.internal.utils.NotificationLite;
 
 /**
  * Concatenate values of each MaybeSource provided by an Iterable.
  *
  * @param <T> the value type
  */
-public final class MaybeConcatIterable<T> extends Flowable<T> {
+public final class MaybeConcatIterable<T> extends Observable<T> {
 
     final Iterable<? extends MaybeSource<? extends T>> sources;
 
@@ -40,7 +38,7 @@ public final class MaybeConcatIterable<T> extends Flowable<T> {
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super T> s) {
+    protected void subscribeActual(Observer<? super T> s) {
 
         Iterator<? extends MaybeSource<? extends T>> it;
 
@@ -48,7 +46,7 @@ public final class MaybeConcatIterable<T> extends Flowable<T> {
             it = ObjectHelper.requireNonNull(sources.iterator(), "The sources Iterable returned a null Iterator");
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
-            EmptySubscription.error(ex, s);
+            EmptyDisposable.error(ex, s);
             return;
         }
 
@@ -59,13 +57,11 @@ public final class MaybeConcatIterable<T> extends Flowable<T> {
 
     static final class ConcatMaybeObserver<T>
     extends AtomicInteger
-    implements MaybeObserver<T>, Subscription {
+    implements MaybeObserver<T>, Disposable {
 
         private static final long serialVersionUID = 3520831347801429610L;
 
-        final Subscriber<? super T> actual;
-
-        final AtomicLong requested;
+        final Observer<? super T> actual;
 
         final AtomicReference<Object> current;
 
@@ -73,27 +69,21 @@ public final class MaybeConcatIterable<T> extends Flowable<T> {
 
         final Iterator<? extends MaybeSource<? extends T>> sources;
 
-        long produced;
-
-        ConcatMaybeObserver(Subscriber<? super T> actual, Iterator<? extends MaybeSource<? extends T>> sources) {
+        ConcatMaybeObserver(Observer<? super T> actual, Iterator<? extends MaybeSource<? extends T>> sources) {
             this.actual = actual;
             this.sources = sources;
-            this.requested = new AtomicLong();
             this.disposables = new SequentialDisposable();
             this.current = new AtomicReference<Object>(NotificationLite.COMPLETE); // as if a previous completed
         }
 
         @Override
-        public void request(long n) {
-            if (SubscriptionHelper.validate(n)) {
-                BackpressureHelper.add(requested, n);
-                drain();
-            }
-        }
-
-        @Override
-        public void cancel() {
+        public void dispose() {
             disposables.dispose();
+        }
+        
+        @Override
+        public boolean isDisposed() {
+            return disposables.isDisposed();
         }
 
         @Override
@@ -125,7 +115,7 @@ public final class MaybeConcatIterable<T> extends Flowable<T> {
             }
 
             AtomicReference<Object> c = current;
-            Subscriber<? super T> a = actual;
+            Observer<? super T> a = actual;
             Disposable cancelled = disposables;
 
             for (;;) {
@@ -137,24 +127,15 @@ public final class MaybeConcatIterable<T> extends Flowable<T> {
                 Object o = c.get();
 
                 if (o != null) {
-                    boolean goNextSource;
                     if (o != NotificationLite.COMPLETE) {
-                        long p = produced;
-                        if (p != requested.get()) {
-                            produced = p + 1;
-                            c.lazySet(null);
-                            goNextSource = true;
+                        c.lazySet(null);
 
-                            a.onNext((T)o);
-                        } else {
-                            goNextSource = false;
-                        }
+                        a.onNext((T)o);
                     } else {
-                        goNextSource = true;
                         c.lazySet(null);
                     }
 
-                    if (goNextSource && !cancelled.isDisposed()) {
+                    if (!cancelled.isDisposed()) {
                         boolean b;
 
                         try {

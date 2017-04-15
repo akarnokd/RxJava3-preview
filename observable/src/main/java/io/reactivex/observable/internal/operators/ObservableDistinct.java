@@ -11,19 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.Collection;
 import java.util.concurrent.Callable;
 
-import io.reactivex.*;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.observers.BasicFuseableObserver;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
+import io.reactivex.observable.internal.observers.BasicFuseableObserver;
 
 public final class ObservableDistinct<T, K> extends AbstractObservableWithUpstream<T, T> {
 
@@ -92,7 +92,7 @@ public final class ObservableDistinct<T, K> extends AbstractObservableWithUpstre
         @Override
         public void onError(Throwable e) {
             if (done) {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             } else {
                 done = true;
                 collection.clear();

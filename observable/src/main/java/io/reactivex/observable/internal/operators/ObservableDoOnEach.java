@@ -11,14 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
 
 public final class ObservableDoOnEach<T> extends AbstractObservableWithUpstream<T, T> {
     final Consumer<? super T> onNext;
@@ -106,7 +105,7 @@ public final class ObservableDoOnEach<T> extends AbstractObservableWithUpstream<
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -122,7 +121,7 @@ public final class ObservableDoOnEach<T> extends AbstractObservableWithUpstream<
                 onAfterTerminate.run();
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -146,7 +145,7 @@ public final class ObservableDoOnEach<T> extends AbstractObservableWithUpstream<
                 onAfterTerminate.run();
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
     }

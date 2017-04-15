@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.operators.observable.ObservableGroupJoin.*;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.observable.ObservableSource;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.internal.operators.ObservableGroupJoin.*;
+import io.reactivex.observable.internal.queues.SpscLinkedArrayQueue;
 
 public final class ObservableJoin<TLeft, TRight, TLeftEnd, TRightEnd, R> extends AbstractObservableWithUpstream<TLeft, R> {
 
@@ -323,7 +323,7 @@ public final class ObservableJoin<TLeft, TRight, TLeftEnd, TRightEnd, R> extends
                 active.decrementAndGet();
                 drain();
             } else {
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
         }
 
@@ -355,7 +355,7 @@ public final class ObservableJoin<TLeft, TRight, TLeftEnd, TRightEnd, R> extends
             if (ExceptionHelper.addThrowable(error, ex)) {
                 drain();
             } else {
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
         }
     }

@@ -11,23 +11,20 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observables;
+package io.reactivex.observable;
 
-import io.reactivex.annotations.NonNull;
-import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.operators.observable.*;
-import io.reactivex.internal.util.ConnectConsumer;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.common.internal.utils.ConnectConsumer;
+import io.reactivex.observable.internal.operators.*;
 
 /**
- * A {@code ConnectableObservable} resembles an ordinary {@link Flowable}, except that it does not begin
+ * A {@code ConnectableObservable} resembles an ordinary {@link Observable}, except that it does not begin
  * emitting items when it is subscribed to, but only when its {@link #connect} method is called. In this way you
- * can wait for all intended {@link Subscriber}s to {@link Flowable#subscribe} to the {@code Observable}
+ * can wait for all intended {@link Observer}s to {@link Observable#subscribe} to the {@code Observable}
  * before the {@code Observable} begins emitting items.
  * <p>
  * <img width="640" height="510" src="https://github.com/ReactiveX/RxJava/wiki/images/rx-operators/publishConnect.png" alt="">
@@ -41,7 +38,7 @@ public abstract class ConnectableObservable<T> extends Observable<T> {
 
     /**
      * Instructs the {@code ConnectableObservable} to begin emitting the items from its underlying
-     * {@link Flowable} to its {@link Subscriber}s.
+     * {@link Observable} to its {@link Observer}s.
      *
      * @param connection
      *          the action that receives the connection subscription before the subscription to source happens
@@ -52,7 +49,7 @@ public abstract class ConnectableObservable<T> extends Observable<T> {
 
     /**
      * Instructs the {@code ConnectableObservable} to begin emitting the items from its underlying
-     * {@link Flowable} to its {@link Subscriber}s.
+     * {@link Observable} to its {@link Observer}s.
      * <p>
      * To disconnect from a synchronous source, use the {@link #connect(Consumer)} method.
      *

@@ -1029,7 +1029,7 @@ public class RxJavaPluginsTest {
                 }
             });
 
-            RxJavaPlugins.onError(new TestException("Forced failure"));
+            RxJavaCommonPlugins.onError(new TestException("Forced failure"));
 
             assertEquals(1, list.size());
             assertUndeliverableTestException(list, 0, "Forced failure");
@@ -1079,12 +1079,12 @@ public class RxJavaPluginsTest {
                 }
             });
 
-            RxJavaPlugins.onError(new TestException("Forced failure"));
+            RxJavaCommonPlugins.onError(new TestException("Forced failure"));
 
             Thread.currentThread().setUncaughtExceptionHandler(null);
 
             // this will be printed on the console and should not crash
-            RxJavaPlugins.onError(new TestException("Forced failure 3"));
+            RxJavaCommonPlugins.onError(new TestException("Forced failure 3"));
 
             assertEquals(1, list.size());
             assertUndeliverableTestException(list, 0, "Forced failure");
@@ -1115,7 +1115,7 @@ public class RxJavaPluginsTest {
                 }
             });
 
-            RxJavaPlugins.onError(new TestException("Forced failure"));
+            RxJavaCommonPlugins.onError(new TestException("Forced failure"));
 
             assertEquals(2, list.size());
             assertTestException(list, 0, "Forced failure 2");
@@ -1150,7 +1150,7 @@ public class RxJavaPluginsTest {
                 }
             });
 
-            RxJavaPlugins.onError(null);
+            RxJavaCommonPlugins.onError(null);
 
             assertEquals(2, list.size());
             assertTestException(list, 0, "Forced failure 2");
@@ -1158,7 +1158,7 @@ public class RxJavaPluginsTest {
 
             RxJavaPlugins.reset();
 
-            RxJavaPlugins.onError(null);
+            RxJavaCommonPlugins.onError(null);
 
             assertNPE(list, 2);
 
@@ -2048,7 +2048,7 @@ public class RxJavaPluginsTest {
                 }
             });
 
-            RxJavaPlugins.onError(null);
+            RxJavaCommonPlugins.onError(null);
 
             final Throwable throwable = t.get();
             assertEquals("onError called with null. Null values are generally not allowed in 2.x operators and sources.", throwable.getMessage());

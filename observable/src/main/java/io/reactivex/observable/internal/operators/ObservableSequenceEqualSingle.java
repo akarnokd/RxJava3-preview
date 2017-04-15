@@ -11,18 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BiPredicate;
-import io.reactivex.internal.disposables.ArrayCompositeDisposable;
-import io.reactivex.internal.fuseable.FuseToObservable;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.BiPredicate;
+import io.reactivex.common.internal.disposables.ArrayCompositeDisposable;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.FuseToObservable;
+import io.reactivex.observable.internal.queues.SpscLinkedArrayQueue;
 
 public final class ObservableSequenceEqualSingle<T> extends Single<Boolean> implements FuseToObservable<Boolean> {
     final ObservableSource<? extends T> first;

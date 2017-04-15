@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.observers;
+package io.reactivex.observable.internal.observers;
 
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.util.NotificationLite;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.internal.utils.NotificationLite;
 
 public final class BlockingObserver<T> extends AtomicReference<Disposable> implements Observer<T>, Disposable {
 

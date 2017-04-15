@@ -11,17 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.completable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.reactivex.*;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.operators.completable.CompletableMergeDelayErrorArray.MergeInnerCompletableObserver;
-import io.reactivex.internal.util.AtomicThrowable;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.operators.CompletableMergeDelayErrorArray.MergeInnerCompletableObserver;
 
 public final class CompletableMergeDelayErrorIterable extends Completable {
 

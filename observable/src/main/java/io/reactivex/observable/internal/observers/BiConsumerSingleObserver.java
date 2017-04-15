@@ -11,16 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.observers;
+package io.reactivex.observable.internal.observers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.SingleObserver;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.BiConsumer;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.BiConsumer;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.SingleObserver;
 
 public final class BiConsumerSingleObserver<T>
 extends AtomicReference<Disposable>
@@ -41,7 +40,7 @@ implements SingleObserver<T>, Disposable {
             onCallback.accept(null, e);
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
-            RxJavaPlugins.onError(new CompositeException(e, ex));
+            RxJavaCommonPlugins.onError(new CompositeException(e, ex));
         }
     }
 
@@ -57,7 +56,7 @@ implements SingleObserver<T>, Disposable {
             onCallback.accept(value, null);
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
-            RxJavaPlugins.onError(ex);
+            RxJavaCommonPlugins.onError(ex);
         }
     }
 

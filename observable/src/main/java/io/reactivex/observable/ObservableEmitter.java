@@ -11,11 +11,11 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.observable;
 
-import io.reactivex.annotations.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Cancellable;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.functions.Cancellable;
 
 /**
  * Abstraction over an RxJava {@link Observer} that allows associating

@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subjects;
+package io.reactivex.observable.subjects;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -27,7 +27,7 @@ import io.reactivex.*;
 import io.reactivex.disposables.*;
 import io.reactivex.exceptions.TestException;
 import io.reactivex.functions.Consumer;
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.internal.fuseable.QueueDisposable;
 import io.reactivex.observers.*;
 import io.reactivex.schedulers.Schedulers;
 
@@ -387,13 +387,13 @@ public class AsyncSubjectTest {
     public void fusionLive() {
         AsyncSubject<Integer> ap = new AsyncSubject<Integer>();
 
-        TestObserver<Integer> ts = ObserverFusion.newTest(QueueSubscription.ANY);
+        TestObserver<Integer> ts = ObserverFusion.newTest(QueueDisposable.ANY);
 
         ap.subscribe(ts);
 
         ts
         .assertOf(ObserverFusion.<Integer>assertFuseable())
-        .assertOf(ObserverFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC));
+        .assertOf(ObserverFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC));
 
         ts.assertNoValues().assertNoErrors().assertNotComplete();
 
@@ -412,13 +412,13 @@ public class AsyncSubjectTest {
         ap.onNext(1);
         ap.onComplete();
 
-        TestObserver<Integer> ts = ObserverFusion.newTest(QueueSubscription.ANY);
+        TestObserver<Integer> ts = ObserverFusion.newTest(QueueDisposable.ANY);
 
         ap.subscribe(ts);
 
         ts
         .assertOf(ObserverFusion.<Integer>assertFuseable())
-        .assertOf(ObserverFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(ObserverFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
         .assertResult(1);
     }
 

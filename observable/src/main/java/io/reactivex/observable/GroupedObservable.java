@@ -10,10 +10,9 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.observables;
+package io.reactivex.observable;
 
-import io.reactivex.Observable;
-import io.reactivex.annotations.Nullable;
+import io.reactivex.common.annotations.Nullable;
 
 /**
  * An {@link Observable} that has been grouped by key, the value of which can be obtained with {@link #getKey()}.
@@ -27,7 +26,7 @@ import io.reactivex.annotations.Nullable;
  *            the type of the key
  * @param <T>
  *            the type of the items emitted by the {@code GroupedObservable}
- * @see Observable#groupBy(io.reactivex.functions.Function)
+ * @see Observable#groupBy(io.reactivex.common.functions.Function)
  * @see <a href="http://reactivex.io/documentation/operators/groupby.html">ReactiveX documentation: GroupBy</a>
  */
 public abstract class GroupedObservable<K, T> extends Observable<T> {

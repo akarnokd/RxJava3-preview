@@ -11,18 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.completable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
 
 public final class CompletableUsing<R> extends Completable {
 
@@ -76,7 +76,7 @@ public final class CompletableUsing<R> extends Completable {
                     disposer.accept(resource);
                 } catch (Throwable exc) {
                     Exceptions.throwIfFatal(exc);
-                    RxJavaPlugins.onError(exc);
+                    RxJavaCommonPlugins.onError(exc);
                 }
             }
             return;
@@ -122,7 +122,7 @@ public final class CompletableUsing<R> extends Completable {
                     disposer.accept((R)resource);
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    RxJavaPlugins.onError(ex);
+                    RxJavaCommonPlugins.onError(ex);
                 }
             }
         }

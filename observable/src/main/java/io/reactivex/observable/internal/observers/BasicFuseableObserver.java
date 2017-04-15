@@ -11,14 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.observers;
+package io.reactivex.observable.internal.observers;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.fuseable.QueueDisposable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.extensions.QueueDisposable;
 
 /**
  * Base class for a fuseable intermediate observer.
@@ -93,7 +92,7 @@ public abstract class BasicFuseableObserver<T, R> implements Observer<T>, QueueD
     @Override
     public void onError(Throwable t) {
         if (done) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         done = true;

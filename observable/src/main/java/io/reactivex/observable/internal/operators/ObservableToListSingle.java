@@ -11,21 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.internal.functions.ObjectHelper;
-import java.util.*;
+import java.util.Collection;
 import java.util.concurrent.Callable;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.FuseToObservable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.functions.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.FuseToObservable;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
 
 public final class ObservableToListSingle<T, U extends Collection<? super T>>
 extends Single<U> implements FuseToObservable<U> {

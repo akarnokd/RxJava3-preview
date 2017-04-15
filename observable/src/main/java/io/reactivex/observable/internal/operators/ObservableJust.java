@@ -11,11 +11,11 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.internal.fuseable.ScalarCallable;
-import io.reactivex.internal.operators.observable.ObservableScalarXMap.ScalarDisposable;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.ScalarCallable;
+import io.reactivex.observable.internal.operators.ObservableScalarXMap.ScalarDisposable;
 
 /**
  * Represents a constant scalar value.

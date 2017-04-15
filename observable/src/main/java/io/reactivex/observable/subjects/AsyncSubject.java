@@ -11,16 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subjects;
+package io.reactivex.observable.subjects;
 
-import io.reactivex.annotations.CheckReturnValue;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.observers.DeferredScalarDisposable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.CheckReturnValue;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.internal.observers.DeferredScalarDisposable;
 
 /**
  * An Subject that emits the very last value followed by a completion event or the received error to Observers.
@@ -102,7 +101,7 @@ public final class AsyncSubject<T> extends Subject<T> {
             t = new NullPointerException("onError called with null. Null values are generally not allowed in 2.x operators and sources.");
         }
         if (subscribers.get() == TERMINATED) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         value = null;
@@ -318,7 +317,7 @@ public final class AsyncSubject<T> extends Subject<T> {
 
         void onError(Throwable t) {
             if (isDisposed()) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             } else {
                 actual.onError(t);
             }

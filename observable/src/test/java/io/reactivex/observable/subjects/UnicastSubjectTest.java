@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subjects;
+package io.reactivex.observable.subjects;
 
 import static org.junit.Assert.*;
 
@@ -387,7 +387,7 @@ public class UnicastSubjectTest {
         for (int i = 0; i < 500; i++) {
             final UnicastSubject<Object> p = UnicastSubject.create();
 
-            final TestObserver<Object> ts = ObserverFusion.newTest(QueueSubscription.ANY);
+            final TestObserver<Object> ts = ObserverFusion.newTest(QueueDisposable.ANY);
 
             p.subscribe(ts);
 

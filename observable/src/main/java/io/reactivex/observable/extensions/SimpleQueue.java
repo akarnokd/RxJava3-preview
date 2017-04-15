@@ -11,9 +11,9 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.fuseable;
+package io.reactivex.observable.extensions;
 
-import io.reactivex.annotations.*;
+import io.reactivex.common.annotations.*;
 
 /**
  * A minimalist queue interface without the method bloat of java.util.Collection and java.util.Queue.

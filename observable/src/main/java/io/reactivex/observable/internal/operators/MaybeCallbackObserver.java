@@ -11,16 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.MaybeObserver;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.MaybeObserver;
 
 /**
  * MaybeObserver that delegates the onSuccess, onError and onComplete method calls to callbacks.
@@ -70,7 +69,7 @@ implements MaybeObserver<T>, Disposable {
             onSuccess.accept(value);
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
-            RxJavaPlugins.onError(ex);
+            RxJavaCommonPlugins.onError(ex);
         }
     }
 
@@ -81,7 +80,7 @@ implements MaybeObserver<T>, Disposable {
             onError.accept(e);
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
-            RxJavaPlugins.onError(new CompositeException(e, ex));
+            RxJavaCommonPlugins.onError(new CompositeException(e, ex));
         }
     }
 
@@ -92,7 +91,7 @@ implements MaybeObserver<T>, Disposable {
             onComplete.run();
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
-            RxJavaPlugins.onError(ex);
+            RxJavaCommonPlugins.onError(ex);
         }
     }
 

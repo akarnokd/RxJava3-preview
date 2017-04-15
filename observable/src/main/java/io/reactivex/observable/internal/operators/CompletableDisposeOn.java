@@ -11,12 +11,11 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.completable;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
 
 public final class CompletableDisposeOn extends Completable {
 
@@ -59,7 +58,7 @@ public final class CompletableDisposeOn extends Completable {
         @Override
         public void onError(Throwable e) {
             if (disposed) {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
                 return;
             }
             s.onError(e);

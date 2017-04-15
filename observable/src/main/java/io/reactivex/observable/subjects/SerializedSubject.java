@@ -11,13 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subjects;
+package io.reactivex.observable.subjects;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.util.*;
-import io.reactivex.internal.util.AppendOnlyLinkedArrayList.NonThrowingPredicate;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.utils.AbstractAppendOnlyLinkedArrayList.NonThrowingPredicate;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.internal.utils.*;
 
 /**
  * Serializes calls to the Subscriber methods.
@@ -108,7 +107,7 @@ import io.reactivex.plugins.RxJavaPlugins;
     @Override
     public void onError(Throwable t) {
         if (done) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         boolean reportError;
@@ -131,7 +130,7 @@ import io.reactivex.plugins.RxJavaPlugins;
             }
         }
         if (reportError) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         actual.onError(t);

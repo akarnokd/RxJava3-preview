@@ -11,14 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.Callable;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.observable.*;
 
 /**
  * Executes an Runnable and signals its exception or completes normally.
@@ -47,7 +46,7 @@ public final class MaybeFromRunnable<T> extends Maybe<T> implements Callable<T> 
                 if (!d.isDisposed()) {
                     observer.onError(ex);
                 } else {
-                    RxJavaPlugins.onError(ex);
+                    RxJavaCommonPlugins.onError(ex);
                 }
                 return;
             }

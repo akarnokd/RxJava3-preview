@@ -11,19 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subjects;
+package io.reactivex.observable.subjects;
 
-import io.reactivex.annotations.CheckReturnValue;
 import java.lang.reflect.Array;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.*;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.internal.util.AppendOnlyLinkedArrayList.NonThrowingPredicate;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.CheckReturnValue;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.AbstractAppendOnlyLinkedArrayList.NonThrowingPredicate;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.internal.utils.*;
 
 /**
  * Subject that emits the most recent item it has observed and all subsequent observed items to each subscribed
@@ -192,7 +192,7 @@ public final class BehaviorSubject<T> extends Subject<T> {
             t = new NullPointerException("onError called with null. Null values are generally not allowed in 2.x operators and sources.");
         }
         if (!terminalEvent.compareAndSet(null, t)) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         Object o = NotificationLite.error(t);

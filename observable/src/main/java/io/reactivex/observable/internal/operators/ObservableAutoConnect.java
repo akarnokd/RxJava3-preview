@@ -11,14 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.observables.ConnectableObservable;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.observable.*;
 
 /**
  * Wraps a ConnectableObservable and calls its connect() method once

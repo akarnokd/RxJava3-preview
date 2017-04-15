@@ -11,17 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.*;
 
-import io.reactivex.ObservableSource;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.util.*;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.utils.*;
+import io.reactivex.observable.ObservableSource;
+import io.reactivex.observable.internal.queues.SpscLinkedArrayQueue;
 
 public final class BlockingObservableIterable<T> implements Iterable<T> {
     final ObservableSource<? extends T> source;
@@ -42,7 +42,7 @@ public final class BlockingObservableIterable<T> implements Iterable<T> {
 
     static final class BlockingObservableIterator<T>
     extends AtomicReference<Disposable>
-    implements io.reactivex.Observer<T>, Iterator<T>, Disposable {
+    implements io.reactivex.observable.Observer<T>, Iterator<T>, Disposable {
 
 
         private static final long serialVersionUID = 6695226475494099826L;

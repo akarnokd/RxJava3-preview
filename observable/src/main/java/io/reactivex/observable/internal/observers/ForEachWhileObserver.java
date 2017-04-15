@@ -11,16 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.observers;
+package io.reactivex.observable.internal.observers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.Observer;
 
 public final class ForEachWhileObserver<T>
 extends AtomicReference<Disposable>
@@ -74,7 +73,7 @@ implements Observer<T>, Disposable {
     @Override
     public void onError(Throwable t) {
         if (done) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         done = true;
@@ -82,7 +81,7 @@ implements Observer<T>, Disposable {
             onError.accept(t);
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
-            RxJavaPlugins.onError(new CompositeException(t, ex));
+            RxJavaCommonPlugins.onError(new CompositeException(t, ex));
         }
     }
 
@@ -96,7 +95,7 @@ implements Observer<T>, Disposable {
             onComplete.run();
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
-            RxJavaPlugins.onError(ex);
+            RxJavaCommonPlugins.onError(ex);
         }
     }
 

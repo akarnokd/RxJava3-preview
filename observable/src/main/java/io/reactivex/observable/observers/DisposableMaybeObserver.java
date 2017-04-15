@@ -11,14 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observers;
+package io.reactivex.observable.observers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.MaybeObserver;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.MaybeObserver;
 
 /**
  * An abstract {@link MaybeObserver} that allows asynchronous cancellation by implementing Disposable.
@@ -26,7 +26,7 @@ import io.reactivex.internal.disposables.DisposableHelper;
  * <p>All pre-implemented final methods are thread-safe.
  *
  * <p>Note that {@link #onSuccess(Object)}, {@link #onError(Throwable)} and {@link #onComplete()} are
- * exclusive to each other, unlike a regular {@link io.reactivex.Observer Observer}, and
+ * exclusive to each other, unlike a regular {@link io.reactivex.observable.Observer Observer}, and
  * {@code onComplete()} is never called after an {@code onSuccess()}.
  *
  * <p>Like all other consumers, {@code DisposableMaybeObserver} can be subscribed only once.

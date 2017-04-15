@@ -11,17 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.reactivestreams.*;
-
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
 
 /**
  * Delay the subscription to the main Maybe until the other signals an item or completes.
@@ -29,11 +25,11 @@ import io.reactivex.plugins.RxJavaPlugins;
  * @param <T> the main value type
  * @param <U> the other value type
  */
-public final class MaybeDelaySubscriptionOtherPublisher<T, U> extends AbstractMaybeWithUpstream<T, T> {
+public final class MaybeDelaySubscriptionOtherObservable<T, U> extends AbstractMaybeWithUpstream<T, T> {
 
-    final Publisher<U> other;
+    final ObservableSource<U> other;
 
-    public MaybeDelaySubscriptionOtherPublisher(MaybeSource<T> source, Publisher<U> other) {
+    public MaybeDelaySubscriptionOtherObservable(MaybeSource<T> source, ObservableSource<U> other) {
         super(source);
         this.other = other;
     }
@@ -43,12 +39,12 @@ public final class MaybeDelaySubscriptionOtherPublisher<T, U> extends AbstractMa
         other.subscribe(new OtherSubscriber<T>(observer, source));
     }
 
-    static final class OtherSubscriber<T> implements FlowableSubscriber<Object>, Disposable {
+    static final class OtherSubscriber<T> implements Observer<Object>, Disposable {
         final DelayMaybeObserver<T> main;
 
         MaybeSource<T> source;
 
-        Subscription s;
+        Disposable s;
 
         OtherSubscriber(MaybeObserver<? super T> actual, MaybeSource<T> source) {
             this.main = new DelayMaybeObserver<T>(actual);
@@ -56,21 +52,19 @@ public final class MaybeDelaySubscriptionOtherPublisher<T, U> extends AbstractMa
         }
 
         @Override
-        public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
+        public void onSubscribe(Disposable s) {
+            if (DisposableHelper.validate(this.s, s)) {
                 this.s = s;
 
                 main.actual.onSubscribe(this);
-
-                s.request(Long.MAX_VALUE);
             }
         }
 
         @Override
         public void onNext(Object t) {
-            if (s != SubscriptionHelper.CANCELLED) {
-                s.cancel();
-                s = SubscriptionHelper.CANCELLED;
+            if (s != DisposableHelper.DISPOSED) {
+                s.dispose();
+                s = DisposableHelper.DISPOSED;
 
                 subscribeNext();
             }
@@ -78,19 +72,19 @@ public final class MaybeDelaySubscriptionOtherPublisher<T, U> extends AbstractMa
 
         @Override
         public void onError(Throwable t) {
-            if (s != SubscriptionHelper.CANCELLED) {
-                s = SubscriptionHelper.CANCELLED;
+            if (s != DisposableHelper.DISPOSED) {
+                s = DisposableHelper.DISPOSED;
 
                 main.actual.onError(t);
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 
         @Override
         public void onComplete() {
-            if (s != SubscriptionHelper.CANCELLED) {
-                s = SubscriptionHelper.CANCELLED;
+            if (s != DisposableHelper.DISPOSED) {
+                s = DisposableHelper.DISPOSED;
 
                 subscribeNext();
             }
@@ -110,8 +104,8 @@ public final class MaybeDelaySubscriptionOtherPublisher<T, U> extends AbstractMa
 
         @Override
         public void dispose() {
-            s.cancel();
-            s = SubscriptionHelper.CANCELLED;
+            s.dispose();
+            s = DisposableHelper.DISPOSED;
             DisposableHelper.dispose(main);
         }
     }

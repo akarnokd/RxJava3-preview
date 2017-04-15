@@ -11,14 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.single;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
 
 /**
  * Calls a callback when the upstream calls onSubscribe with a disposable.
@@ -80,7 +79,7 @@ public final class SingleDoOnSubscribe<T> extends Single<T> {
         @Override
         public void onError(Throwable e) {
             if (done) {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
                 return;
             }
             actual.onError(e);

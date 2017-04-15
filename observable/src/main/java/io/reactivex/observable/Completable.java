@@ -10,28 +10,20 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex;
+package io.reactivex.observable;
 
 import java.util.concurrent.*;
 
-import org.reactivestreams.Publisher;
-
-import io.reactivex.annotations.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.*;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.observers.*;
-import io.reactivex.internal.operators.completable.*;
-import io.reactivex.internal.operators.flowable.FlowableDelaySubscriptionOther;
-import io.reactivex.internal.operators.maybe.*;
-import io.reactivex.internal.operators.observable.ObservableDelaySubscriptionOther;
-import io.reactivex.internal.operators.single.SingleDelayWithCompletable;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.*;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.observable.extensions.*;
+import io.reactivex.observable.internal.observers.*;
+import io.reactivex.observable.internal.operators.*;
+import io.reactivex.observable.observers.TestObserver;
 
 /**
  * Represents a deferred computation without any value but only indication for completion or exception.
@@ -143,9 +135,6 @@ public abstract class Completable implements CompletableSource {
     /**
      * Returns a Completable which completes only when all sources complete, one after another.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
-     *  <dd>The returned {@code Completable} honors the backpressure of the downstream consumer
-     *  and expects the other {@code Publisher} to honor it as well.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code concat} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
@@ -155,17 +144,13 @@ public abstract class Completable implements CompletableSource {
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    @BackpressureSupport(BackpressureKind.FULL)
-    public static Completable concat(Publisher<? extends CompletableSource> sources) {
+    public static Completable concat(ObservableSource<? extends CompletableSource> sources) {
         return concat(sources, 2);
     }
 
     /**
      * Returns a Completable which completes only when all sources complete, one after another.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
-     *  <dd>The returned {@code Completable} honors the backpressure of the downstream consumer
-     *  and expects the other {@code Publisher} to honor it as well.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code concat} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
@@ -176,8 +161,7 @@ public abstract class Completable implements CompletableSource {
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    @BackpressureSupport(BackpressureKind.FULL)
-    public static Completable concat(Publisher<? extends CompletableSource> sources, int prefetch) {
+    public static Completable concat(ObservableSource<? extends CompletableSource> sources, int prefetch) {
         ObjectHelper.requireNonNull(sources, "sources is null");
         ObjectHelper.verifyPositive(prefetch, "prefetch");
         return RxJavaPlugins.onAssembly(new CompletableConcat(sources, prefetch));
@@ -383,36 +367,13 @@ public abstract class Completable implements CompletableSource {
      * @param <T> the type of the Observable
      * @param observable the Observable instance to subscribe to, not null
      * @return the new Completable instance
-     * @throws NullPointerException if flowable is null
+     * @throws NullPointerException if Observable is null
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Completable fromObservable(final ObservableSource<T> observable) {
         ObjectHelper.requireNonNull(observable, "observable is null");
         return RxJavaPlugins.onAssembly(new CompletableFromObservable<T>(observable));
-    }
-
-    /**
-     * Returns a Completable instance that subscribes to the given publisher, ignores all values and
-     * emits only the terminal event.
-     * <dl>
-     *  <dt><b>Backpressure:</b><dt>
-     *  <dd>The returned {@code Completable} honors the backpressure of the downstream consumer
-     *  and expects the other {@code Publisher} to honor it as well.</dd>
-     *  <dt><b>Scheduler:</b></dt>
-     *  <dd>{@code fromPublisher} does not operate by default on a particular {@link Scheduler}.</dd>
-     * </dl>
-     * @param <T> the type of the publisher
-     * @param publisher the Publisher instance to subscribe to, not null
-     * @return the new Completable instance
-     * @throws NullPointerException if publisher is null
-     */
-    @CheckReturnValue
-    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
-    @SchedulerSupport(SchedulerSupport.NONE)
-    public static <T> Completable fromPublisher(final Publisher<T> publisher) {
-        ObjectHelper.requireNonNull(publisher, "publisher is null");
-        return RxJavaPlugins.onAssembly(new CompletableFromPublisher<T>(publisher));
     }
 
     /**
@@ -480,9 +441,6 @@ public abstract class Completable implements CompletableSource {
      * Returns a Completable instance that subscribes to all sources at once and
      * completes only when all source Completables complete or one of them emits an error.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
-     *  <dd>The returned {@code Completable} honors the backpressure of the downstream consumer
-     *  and expects the other {@code Publisher} to honor it as well.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code merge} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
@@ -492,8 +450,7 @@ public abstract class Completable implements CompletableSource {
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
-    public static Completable merge(Publisher<? extends CompletableSource> sources) {
+    public static Completable merge(ObservableSource<? extends CompletableSource> sources) {
         return merge0(sources, Integer.MAX_VALUE, false);
     }
 
@@ -501,9 +458,6 @@ public abstract class Completable implements CompletableSource {
      * Returns a Completable instance that keeps subscriptions to a limited number of sources at once and
      * completes only when all source Completables complete or one of them emits an error.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
-     *  <dd>The returned {@code Completable} honors the backpressure of the downstream consumer
-     *  and expects the other {@code Publisher} to honor it as well.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code merge} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
@@ -515,8 +469,7 @@ public abstract class Completable implements CompletableSource {
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    @BackpressureSupport(BackpressureKind.FULL)
-    public static Completable merge(Publisher<? extends CompletableSource> sources, int maxConcurrency) {
+    public static Completable merge(ObservableSource<? extends CompletableSource> sources, int maxConcurrency) {
         return merge0(sources, maxConcurrency, false);
     }
 
@@ -525,9 +478,6 @@ public abstract class Completable implements CompletableSource {
      * completes only when all source Completables terminate in one way or another, combining any exceptions
      * thrown by either the sources Observable or the inner Completable instances.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
-     *  <dd>The returned {@code Flowable} honors the backpressure of the downstream consumer
-     *  and expects the other {@code Publisher} to honor it as well.
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code merge0} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
@@ -540,8 +490,7 @@ public abstract class Completable implements CompletableSource {
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    @BackpressureSupport(BackpressureKind.FULL)
-    private static Completable merge0(Publisher<? extends CompletableSource> sources, int maxConcurrency, boolean delayErrors) {
+    private static Completable merge0(ObservableSource<? extends CompletableSource> sources, int maxConcurrency, boolean delayErrors) {
         ObjectHelper.requireNonNull(sources, "sources is null");
         ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
         return RxJavaPlugins.onAssembly(new CompletableMerge(sources, maxConcurrency, delayErrors));
@@ -591,9 +540,6 @@ public abstract class Completable implements CompletableSource {
      * any error emitted by either the sources observable or any of the inner Completables until all of
      * them terminate in a way or another.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
-     *  <dd>The returned {@code Completable} honors the backpressure of the downstream consumer
-     *  and expects the other {@code Publisher} to honor it as well.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code mergeDelayError} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
@@ -603,8 +549,7 @@ public abstract class Completable implements CompletableSource {
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
-    public static Completable mergeDelayError(Publisher<? extends CompletableSource> sources) {
+    public static Completable mergeDelayError(ObservableSource<? extends CompletableSource> sources) {
         return merge0(sources, Integer.MAX_VALUE, true);
     }
 
@@ -614,9 +559,6 @@ public abstract class Completable implements CompletableSource {
      * observable or any of the inner Completables until all of
      * them terminate in a way or another.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
-     *  <dd>The returned {@code Completable} honors the backpressure of the downstream consumer
-     *  and expects the other {@code Publisher} to honor it as well.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code mergeDelayError} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
@@ -627,8 +569,7 @@ public abstract class Completable implements CompletableSource {
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    @BackpressureSupport(BackpressureKind.FULL)
-    public static Completable mergeDelayError(Publisher<? extends CompletableSource> sources, int maxConcurrency) {
+    public static Completable mergeDelayError(ObservableSource<? extends CompletableSource> sources, int maxConcurrency) {
         return merge0(sources, maxConcurrency, true);
     }
 
@@ -791,16 +732,16 @@ public abstract class Completable implements CompletableSource {
     }
 
     /**
-     * Returns an Observable which will subscribe to this Completable and once that is completed then
-     * will subscribe to the {@code next} ObservableSource. An error event from this Completable will be
+     * Returns a Observable which will subscribe to this Completable and once that is completed then
+     * will subscribe to the {@code next} Observable. An error event from this Completable will be
      * propagated to the downstream subscriber and will result in skipping the subscription of the
-     * Observable.
+     * ObservableSource.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code andThen} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      * @param <T> the value type of the next ObservableSource
-     * @param next the Observable to subscribe after this Completable is completed, not null
+     * @param next the ObservableSource to subscribe after this Completable is completed, not null
      * @return Observable that composes this Completable and next
      * @throws NullPointerException if next is null
      */
@@ -809,31 +750,6 @@ public abstract class Completable implements CompletableSource {
     public final <T> Observable<T> andThen(ObservableSource<T> next) {
         ObjectHelper.requireNonNull(next, "next is null");
         return RxJavaPlugins.onAssembly(new ObservableDelaySubscriptionOther<T, Object>(next, toObservable()));
-    }
-
-    /**
-     * Returns a Flowable which will subscribe to this Completable and once that is completed then
-     * will subscribe to the {@code next} Flowable. An error event from this Completable will be
-     * propagated to the downstream subscriber and will result in skipping the subscription of the
-     * Publisher.
-     * <dl>
-     *  <dt><b>Backpressure:</b><dt>
-     *  <dd>The returned {@code Flowable} honors the backpressure of the downstream consumer
-     *  and expects the other {@code Publisher} to honor it as well.</dd>
-     *  <dt><b>Scheduler:</b></dt>
-     *  <dd>{@code andThen} does not operate by default on a particular {@link Scheduler}.</dd>
-     * </dl>
-     * @param <T> the value type of the next Publisher
-     * @param next the Publisher to subscribe after this Completable is completed, not null
-     * @return Flowable that composes this Completable and next
-     * @throws NullPointerException if next is null
-     */
-    @CheckReturnValue
-    @BackpressureSupport(BackpressureKind.FULL)
-    @SchedulerSupport(SchedulerSupport.NONE)
-    public final <T> Flowable<T> andThen(Publisher<T> next) {
-        ObjectHelper.requireNonNull(next, "next is null");
-        return RxJavaPlugins.onAssembly(new FlowableDelaySubscriptionOther<T, Object>(next, toFlowable()));
     }
 
     /**
@@ -1391,7 +1307,7 @@ public abstract class Completable implements CompletableSource {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Completable repeat() {
-        return fromPublisher(toFlowable().repeat());
+        return fromObservable(toObservable().repeat());
     }
 
     /**
@@ -1407,7 +1323,7 @@ public abstract class Completable implements CompletableSource {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Completable repeat(long times) {
-        return fromPublisher(toFlowable().repeat(times));
+        return fromObservable(toObservable().repeat(times));
     }
 
     /**
@@ -1424,26 +1340,26 @@ public abstract class Completable implements CompletableSource {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Completable repeatUntil(BooleanSupplier stop) {
-        return fromPublisher(toFlowable().repeatUntil(stop));
+        return fromObservable(toObservable().repeatUntil(stop));
     }
 
     /**
-     * Returns a Completable instance that repeats when the Publisher returned by the handler
-     * emits an item or completes when this Publisher emits a completed event.
+     * Returns a Completable instance that repeats when the ObservableSource returned by the handler
+     * emits an item or completes when this ObservableSource emits a completed event.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code repeatWhen} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      * @param handler the function that transforms the stream of values indicating the completion of
-     * this Completable and returns a Publisher that emits items for repeating or completes to indicate the
+     * this Completable and returns a ObservableSource that emits items for repeating or completes to indicate the
      * repetition should stop
      * @return the new Completable instance
      * @throws NullPointerException if stop is null
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    public final Completable repeatWhen(Function<? super Flowable<Object>, ? extends Publisher<?>> handler) {
-        return fromPublisher(toFlowable().repeatWhen(handler));
+    public final Completable repeatWhen(Function<? super Observable<Object>, ? extends ObservableSource<?>> handler) {
+        return fromObservable(toObservable().repeatWhen(handler));
     }
 
     /**
@@ -1457,7 +1373,7 @@ public abstract class Completable implements CompletableSource {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Completable retry() {
-        return fromPublisher(toFlowable().retry());
+        return fromObservable(toObservable().retry());
     }
 
     /**
@@ -1474,7 +1390,7 @@ public abstract class Completable implements CompletableSource {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Completable retry(BiPredicate<? super Integer, ? super Throwable> predicate) {
-        return fromPublisher(toFlowable().retry(predicate));
+        return fromObservable(toObservable().retry(predicate));
     }
 
     /**
@@ -1491,7 +1407,7 @@ public abstract class Completable implements CompletableSource {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Completable retry(long times) {
-        return fromPublisher(toFlowable().retry(times));
+        return fromObservable(toObservable().retry(times));
     }
 
     /**
@@ -1509,26 +1425,26 @@ public abstract class Completable implements CompletableSource {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Completable retry(Predicate<? super Throwable> predicate) {
-        return fromPublisher(toFlowable().retry(predicate));
+        return fromObservable(toObservable().retry(predicate));
     }
 
     /**
-     * Returns a Completable which given a Publisher and when this Completable emits an error, delivers
-     * that error through a Flowable and the Publisher should signal a value indicating a retry in response
+     * Returns a Completable which given a ObservableSource and when this Completable emits an error, delivers
+     * that error through a Observable and the ObservableSource should signal a value indicating a retry in response
      * or a terminal event indicating a termination.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code retryWhen} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
-     * @param handler the handler that receives a Flowable delivering Throwables and should return a Publisher that
+     * @param handler the handler that receives a Observable delivering Throwables and should return a ObservableSource that
      * emits items to indicate retries or emits terminal events to indicate termination.
      * @return the new Completable instance
      * @throws NullPointerException if handler is null
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    public final Completable retryWhen(Function<? super Flowable<Throwable>, ? extends Publisher<?>> handler) {
-        return fromPublisher(toFlowable().retryWhen(handler));
+    public final Completable retryWhen(Function<? super Observable<Throwable>, ? extends ObservableSource<?>> handler) {
+        return fromObservable(toObservable().retryWhen(handler));
     }
 
     /**
@@ -1568,26 +1484,22 @@ public abstract class Completable implements CompletableSource {
         return other.concatWith(this.<T>toObservable());
     }
     /**
-     * Returns a Flowable which first delivers the events
-     * of the other Publisher then runs this Completable.
+     * Returns a Observable which first delivers the events
+     * of the other ObservableSource then runs this Completable.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
-     *  <dd>The returned {@code Flowable} honors the backpressure of the downstream consumer
-     *  and expects the other {@code Publisher} to honor it as well.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code startWith} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      * @param <T> the value type
-     * @param other the other Publisher to run first
-     * @return the new Flowable instance
+     * @param other the other ObservableSource to run first
+     * @return the new Observable instance
      * @throws NullPointerException if other is null
      */
     @CheckReturnValue
-    @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
-    public final <T> Flowable<T> startWith(Publisher<T> other) {
+    public final <T> Observable<T> startWith(ObservableSource<T> other) {
         ObjectHelper.requireNonNull(other, "other is null");
-        return this.<T>toFlowable().startWith(other);
+        return this.<T>toObservable().startWith(other);
     }
 
     /**
@@ -1637,7 +1549,7 @@ public abstract class Completable implements CompletableSource {
             throw ex;
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
-            RxJavaPlugins.onError(ex);
+            RxJavaCommonPlugins.onError(ex);
             throw toNpe(ex);
         }
     }
@@ -1707,8 +1619,8 @@ public abstract class Completable implements CompletableSource {
      * completes normally.
      * <p>
      * If the Completable emits an error, it is wrapped into an
-     * {@link io.reactivex.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
-     * and routed to the RxJavaPlugins.onError handler.
+     * {@link io.reactivex.common.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
+     * and routed to the RxJavaCommonPlugins.onError handler.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code subscribe} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -1871,29 +1783,6 @@ public abstract class Completable implements CompletableSource {
             Exceptions.throwIfFatal(ex);
             throw ExceptionHelper.wrapOrThrow(ex);
         }
-    }
-
-    /**
-     * Returns a Flowable which when subscribed to subscribes to this Completable and
-     * relays the terminal events to the subscriber.
-     * <dl>
-     *  <dt><b>Backpressure:</b><dt>
-     *  <dd>The returned {@code Flowable} honors the backpressure of the downstream consumer.</dd>
-     *  <dt><b>Scheduler:</b></dt>
-     *  <dd>{@code toFlowable} does not operate by default on a particular {@link Scheduler}.</dd>
-     * </dl>
-     * @param <T> the value type
-     * @return the new Flowable instance
-     */
-    @CheckReturnValue
-    @SuppressWarnings("unchecked")
-    @BackpressureSupport(BackpressureKind.FULL)
-    @SchedulerSupport(SchedulerSupport.NONE)
-    public final <T> Flowable<T> toFlowable() {
-        if (this instanceof FuseToFlowable) {
-            return ((FuseToFlowable<T>)this).fuseToFlowable();
-        }
-        return RxJavaPlugins.onAssembly(new CompletableToFlowable<T>(this));
     }
 
     /**

@@ -11,26 +11,22 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.completable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
-import org.reactivestreams.*;
-
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.*;
+import io.reactivex.observable.internal.queues.*;
 
 public final class CompletableConcat extends Completable {
-    final Publisher<? extends CompletableSource> sources;
+    final ObservableSource<? extends CompletableSource> sources;
     final int prefetch;
 
-    public CompletableConcat(Publisher<? extends CompletableSource> sources, int prefetch) {
+    public CompletableConcat(ObservableSource<? extends CompletableSource> sources, int prefetch) {
         this.sources = sources;
         this.prefetch = prefetch;
     }
@@ -42,14 +38,12 @@ public final class CompletableConcat extends Completable {
 
     static final class CompletableConcatSubscriber
     extends AtomicInteger
-    implements FlowableSubscriber<CompletableSource>, Disposable {
+    implements Observer<CompletableSource>, Disposable {
         private static final long serialVersionUID = 9032184911934499404L;
 
         final CompletableObserver actual;
 
         final int prefetch;
-
-        final int limit;
 
         final ConcatInnerObserver inner;
 
@@ -61,7 +55,7 @@ public final class CompletableConcat extends Completable {
 
         SimpleQueue<CompletableSource> queue;
 
-        Subscription s;
+        Disposable s;
 
         volatile boolean done;
 
@@ -72,23 +66,20 @@ public final class CompletableConcat extends Completable {
             this.prefetch = prefetch;
             this.inner = new ConcatInnerObserver(this);
             this.once = new AtomicBoolean();
-            this.limit = prefetch - (prefetch >> 2);
         }
 
         @Override
-        public void onSubscribe(Subscription s) {
-            if (SubscriptionHelper.validate(this.s, s)) {
+        public void onSubscribe(Disposable s) {
+            if (DisposableHelper.validate(this.s, s)) {
                 this.s = s;
 
-                long r = prefetch == Integer.MAX_VALUE ? Long.MAX_VALUE : prefetch;
-
-                if (s instanceof QueueSubscription) {
+                if (s instanceof QueueDisposable) {
                     @SuppressWarnings("unchecked")
-                    QueueSubscription<CompletableSource> qs = (QueueSubscription<CompletableSource>) s;
+                    QueueDisposable<CompletableSource> qs = (QueueDisposable<CompletableSource>) s;
 
-                    int m = qs.requestFusion(QueueSubscription.ANY);
+                    int m = qs.requestFusion(QueueDisposable.ANY);
 
-                    if (m == QueueSubscription.SYNC) {
+                    if (m == QueueDisposable.SYNC) {
                         sourceFused = m;
                         queue = qs;
                         done = true;
@@ -96,30 +87,27 @@ public final class CompletableConcat extends Completable {
                         drain();
                         return;
                     }
-                    if (m == QueueSubscription.ASYNC) {
+                    if (m == QueueDisposable.ASYNC) {
                         sourceFused = m;
                         queue = qs;
                         actual.onSubscribe(this);
-                        s.request(r);
                         return;
                     }
                 }
 
                 if (prefetch == Integer.MAX_VALUE) {
-                    queue = new SpscLinkedArrayQueue<CompletableSource>(Flowable.bufferSize());
+                    queue = new SpscLinkedArrayQueue<CompletableSource>(Observable.bufferSize());
                 } else {
                     queue = new SpscArrayQueue<CompletableSource>(prefetch);
                 }
 
                 actual.onSubscribe(this);
-
-                s.request(r);
             }
         }
 
         @Override
         public void onNext(CompletableSource t) {
-            if (sourceFused == QueueSubscription.NONE) {
+            if (sourceFused == QueueDisposable.NONE) {
                 if (!queue.offer(t)) {
                     onError(new MissingBackpressureException());
                     return;
@@ -134,7 +122,7 @@ public final class CompletableConcat extends Completable {
                 DisposableHelper.dispose(inner);
                 actual.onError(t);
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 
@@ -146,7 +134,7 @@ public final class CompletableConcat extends Completable {
 
         @Override
         public void dispose() {
-            s.cancel();
+            s.dispose();
             DisposableHelper.dispose(inner);
         }
 
@@ -191,7 +179,6 @@ public final class CompletableConcat extends Completable {
                     if (!empty) {
                         active = true;
                         cs.subscribe(inner);
-                        request();
                     }
                 }
 
@@ -201,24 +188,12 @@ public final class CompletableConcat extends Completable {
             }
         }
 
-        void request() {
-            if (sourceFused != QueueSubscription.SYNC) {
-                int p = consumed + 1;
-                if (p == limit) {
-                    consumed = 0;
-                    s.request(p);
-                } else {
-                    consumed = p;
-                }
-            }
-        }
-
         void innerError(Throwable e) {
             if (once.compareAndSet(false, true)) {
-                s.cancel();
+                s.dispose();
                 actual.onError(e);
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 

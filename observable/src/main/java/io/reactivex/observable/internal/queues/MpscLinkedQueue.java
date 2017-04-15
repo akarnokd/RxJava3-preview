@@ -11,24 +11,24 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.completable;
+/*
+ * The code was inspired by the similarly named JCTools class:
+ * https://github.com/JCTools/JCTools/blob/master/jctools-core/src/main/java/org/jctools/queues/atomic
+ */
 
-import org.reactivestreams.Subscriber;
+package io.reactivex.observable.internal.queues;
 
-import io.reactivex.*;
-import io.reactivex.internal.observers.SubscriberCompletableObserver;
+import io.reactivex.common.internal.queues.AbstractMpscLinkedQueue;
+import io.reactivex.observable.extensions.SimplePlainQueue;
 
-public final class CompletableToFlowable<T> extends Flowable<T> {
+/**
+ * A multi-producer single consumer unbounded queue.
+ * @param <T> the contained value type
+ */
+public final class MpscLinkedQueue<T> extends AbstractMpscLinkedQueue<T> implements SimplePlainQueue<T> {
 
-    final CompletableSource source;
-
-    public CompletableToFlowable(CompletableSource source) {
-        this.source = source;
+    public MpscLinkedQueue() {
+        super();
     }
 
-    @Override
-    protected void subscribeActual(Subscriber<? super T> s) {
-        SubscriberCompletableObserver<T> os = new SubscriberCompletableObserver<T>(s);
-        source.subscribe(os);
-    }
 }

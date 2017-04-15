@@ -30,7 +30,7 @@ import io.reactivex.disposables.*;
 import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.internal.fuseable.QueueDisposable;
 import io.reactivex.internal.operators.flowable.FlowableZipTest.ArgsToString;
 import io.reactivex.internal.operators.maybe.*;
 import io.reactivex.observers.TestObserver;
@@ -2059,13 +2059,13 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayFused() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueDisposable.ANY);
 
         Maybe.mergeArray(Maybe.just(1), Maybe.just(2), Maybe.just(3)).subscribe(ts);
 
         ts.assertSubscribed()
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
         .assertResult(1, 2, 3);
     }
 
@@ -2076,13 +2076,13 @@ public class MaybeTest {
             final PublishProcessor<Integer> pp1 = PublishProcessor.create();
             final PublishProcessor<Integer> pp2 = PublishProcessor.create();
 
-            TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+            TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueDisposable.ANY);
 
             Maybe.mergeArray(pp1.singleElement(), pp2.singleElement()).subscribe(ts);
 
             ts.assertSubscribed()
             .assertOf(SubscriberFusion.<Integer>assertFuseable())
-            .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+            .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
             ;
 
             TestHelper.race(new Runnable() {
@@ -2193,14 +2193,14 @@ public class MaybeTest {
         Maybe<Integer>[] sources = new Maybe[Flowable.bufferSize() * 2];
         Arrays.fill(sources, Maybe.just(1));
 
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueDisposable.ANY);
 
         Maybe.mergeArray(sources).subscribe(ts);
 
         ts
         .assertSubscribed()
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
         .assertValueCount(sources.length)
         .assertNoErrors()
         .assertComplete();

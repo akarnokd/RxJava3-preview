@@ -10,16 +10,16 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.observers;
+package io.reactivex.observable.observers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.fuseable.QueueDisposable;
-import io.reactivex.internal.util.*;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.QueueDisposable;
 
 /**
  * An Observer that records events and allows making assertions about them.
@@ -32,7 +32,7 @@ import io.reactivex.internal.util.*;
  * @param <T> the value type
  */
 public class TestObserver<T>
-extends BaseTestConsumer<T, TestObserver<T>>
+extends TestConsumer<T, TestObserver<T>>
 implements Observer<T>, Disposable, MaybeObserver<T>, SingleObserver<T>, CompletableObserver {
     /** The actual observer to forward events to. */
     private final Observer<? super T> actual;

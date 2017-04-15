@@ -11,15 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.single;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.Single;
-import io.reactivex.SingleObserver;
-import io.reactivex.SingleSource;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.CompositeException;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BiConsumer;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.BiConsumer;
+import io.reactivex.observable.*;
 
 public final class SingleDoOnEvent<T> extends Single<T> {
     final SingleSource<T> source;

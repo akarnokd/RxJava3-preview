@@ -11,14 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subjects;
+package io.reactivex.observable.subjects;
 
-import io.reactivex.annotations.CheckReturnValue;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.CheckReturnValue;
+import io.reactivex.observable.Observer;
 
 /**
  * Subject that, once an {@link Observer} has subscribed, emits all subsequently observed items to the
@@ -189,7 +188,7 @@ public final class PublishSubject<T> extends Subject<T> {
     @Override
     public void onError(Throwable t) {
         if (subscribers.get() == TERMINATED) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         if (t == null) {
@@ -268,7 +267,7 @@ public final class PublishSubject<T> extends Subject<T> {
 
         public void onError(Throwable t) {
             if (get()) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             } else {
                 actual.onError(t);
             }

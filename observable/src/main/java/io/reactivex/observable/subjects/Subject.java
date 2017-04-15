@@ -11,10 +11,10 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subjects;
+package io.reactivex.observable.subjects;
 
-import io.reactivex.*;
-import io.reactivex.annotations.*;
+import io.reactivex.common.annotations.*;
+import io.reactivex.observable.*;
 
 /**
  * Represents an Observer and an Observable at the same time, allowing

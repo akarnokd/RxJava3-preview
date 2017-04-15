@@ -11,16 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.Callable;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
 
 public final class ObservableGenerate<T, S> extends Observable<T> {
     final Callable<S> stateSupplier;
@@ -122,7 +121,7 @@ public final class ObservableGenerate<T, S> extends Observable<T> {
                 disposeState.accept(s);
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
         }
 
@@ -156,7 +155,7 @@ public final class ObservableGenerate<T, S> extends Observable<T> {
         @Override
         public void onError(Throwable t) {
             if (terminate) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             } else {
                 if (t == null) {
                     t = new NullPointerException("onError called with null. Null values are generally not allowed in 2.x operators and sources.");

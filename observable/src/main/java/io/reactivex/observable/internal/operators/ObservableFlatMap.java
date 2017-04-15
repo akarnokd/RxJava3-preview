@@ -11,23 +11,22 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.*;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.*;
+import io.reactivex.observable.ObservableSource;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.extensions.*;
+import io.reactivex.observable.internal.queues.*;
 
 public final class ObservableFlatMap<T, U> extends AbstractObservableWithUpstream<T, U> {
     final Function<? super T, ? extends ObservableSource<? extends U>> mapper;
@@ -280,14 +279,14 @@ public final class ObservableFlatMap<T, U> extends AbstractObservableWithUpstrea
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             if (errors.addThrowable(t)) {
                 done = true;
                 drain();
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 
@@ -307,7 +306,7 @@ public final class ObservableFlatMap<T, U> extends AbstractObservableWithUpstrea
                 if (disposeAll()) {
                     Throwable ex = errors.terminate();
                     if (ex != null && ex != ExceptionHelper.TERMINATED) {
-                        RxJavaPlugins.onError(ex);
+                        RxJavaCommonPlugins.onError(ex);
                     }
                 }
             }
@@ -570,7 +569,7 @@ public final class ObservableFlatMap<T, U> extends AbstractObservableWithUpstrea
                 done = true;
                 parent.drain();
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
         @Override

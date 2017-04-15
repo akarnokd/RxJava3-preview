@@ -11,9 +11,9 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.observable.internal.utils;
 
-import io.reactivex.Observer;
+import io.reactivex.observable.Observer;
 
 public interface ObservableQueueDrain<T, U> {
 

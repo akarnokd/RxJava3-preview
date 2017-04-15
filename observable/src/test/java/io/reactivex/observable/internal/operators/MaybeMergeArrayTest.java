@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
 import static org.junit.Assert.*;
 
@@ -23,7 +23,7 @@ import org.reactivestreams.*;
 import io.reactivex.*;
 import io.reactivex.disposables.Disposables;
 import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.internal.fuseable.QueueDisposable;
 import io.reactivex.internal.operators.maybe.MaybeMergeArray.MergeMaybeObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
@@ -35,26 +35,26 @@ public class MaybeMergeArrayTest {
     @SuppressWarnings("unchecked")
     @Test
     public void normal() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.SYNC);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueDisposable.SYNC);
 
         Maybe.mergeArray(Maybe.just(1), Maybe.just(2))
         .subscribe(ts);
         ts
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.NONE))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.NONE))
         .assertResult(1, 2);
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void fusedPollMixed() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueDisposable.ANY);
 
         Maybe.mergeArray(Maybe.just(1), Maybe.<Integer>empty(), Maybe.just(2))
         .subscribe(ts);
         ts
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
         .assertResult(1, 2);
     }
 
@@ -63,12 +63,12 @@ public class MaybeMergeArrayTest {
     public void fusedEmptyCheck() {
         Maybe.mergeArray(Maybe.just(1), Maybe.<Integer>empty(), Maybe.just(2))
         .subscribe(new FlowableSubscriber<Integer>() {
-            QueueSubscription<Integer> qd;
+            QueueDisposable<Integer> qd;
             @Override
             public void onSubscribe(Subscription d) {
-                qd = (QueueSubscription<Integer>)d;
+                qd = (QueueDisposable<Integer>)d;
 
-                assertEquals(QueueSubscription.ASYNC, qd.requestFusion(QueueSubscription.ANY));
+                assertEquals(QueueDisposable.ASYNC, qd.requestFusion(QueueDisposable.ANY));
             }
 
             @Override
@@ -120,13 +120,13 @@ public class MaybeMergeArrayTest {
     @SuppressWarnings("unchecked")
     @Test
     public void errorFused() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueDisposable.ANY);
 
         Maybe.mergeArray(Maybe.<Integer>error(new TestException()), Maybe.just(2))
         .subscribe(ts);
         ts
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
         .assertFailure(TestException.class);
     }
 

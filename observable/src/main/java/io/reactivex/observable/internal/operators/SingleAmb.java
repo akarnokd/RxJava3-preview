@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.single;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
 
 public final class SingleAmb<T> extends Single<T> {
     private final SingleSource<? extends T>[] sources;
@@ -76,7 +76,7 @@ public final class SingleAmb<T> extends Single<T> {
                 if (shared.compareAndSet(false, true)) {
                     s.onError(e);
                 } else {
-                    RxJavaPlugins.onError(e);
+                    RxJavaCommonPlugins.onError(e);
                 }
                 return;
             }
@@ -117,7 +117,7 @@ public final class SingleAmb<T> extends Single<T> {
                 set.dispose();
                 s.onError(e);
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
     }

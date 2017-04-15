@@ -11,12 +11,11 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.SequentialDisposable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.disposables.SequentialDisposable;
+import io.reactivex.observable.*;
 
 /**
  * Delays the subscription to the main source until the other
@@ -66,7 +65,7 @@ public final class ObservableDelaySubscriptionOther<T, U> extends Observable<T> 
         @Override
         public void onError(Throwable e) {
             if (done) {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
                 return;
             }
             done = true;

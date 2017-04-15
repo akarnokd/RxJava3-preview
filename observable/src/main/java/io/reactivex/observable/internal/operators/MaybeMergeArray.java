@@ -11,28 +11,27 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.annotations.Nullable;
-import org.reactivestreams.Subscriber;
-
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.SimpleQueue;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.SimpleQueue;
+import io.reactivex.observable.internal.observers.BasicIntQueueDisposable;
+import io.reactivex.observable.internal.utils.NotificationLite;
 
 /**
  * Run all MaybeSources of an array at once and signal their values as they become available.
  *
  * @param <T> the value type
  */
-public final class MaybeMergeArray<T> extends Flowable<T> {
+public final class MaybeMergeArray<T> extends Observable<T> {
 
     final MaybeSource<? extends T>[] sources;
 
@@ -41,7 +40,7 @@ public final class MaybeMergeArray<T> extends Flowable<T> {
     }
 
     @Override
-    protected void subscribeActual(Subscriber<? super T> s) {
+    protected void subscribeActual(Observer<? super T> s) {
         MaybeSource<? extends T>[] maybes = sources;
         int n = maybes.length;
 
@@ -68,15 +67,13 @@ public final class MaybeMergeArray<T> extends Flowable<T> {
     }
 
     static final class MergeMaybeObserver<T>
-    extends BasicIntQueueSubscription<T> implements MaybeObserver<T> {
+    extends BasicIntQueueDisposable<T> implements MaybeObserver<T> {
 
         private static final long serialVersionUID = -660395290758764731L;
 
-        final Subscriber<? super T> actual;
+        final Observer<? super T> actual;
 
         final CompositeDisposable set;
-
-        final AtomicLong requested;
 
         final SimpleQueueWithConsumerIndex<Object> queue;
 
@@ -88,13 +85,10 @@ public final class MaybeMergeArray<T> extends Flowable<T> {
 
         boolean outputFused;
 
-        long consumed;
-
-        MergeMaybeObserver(Subscriber<? super T> actual, int sourceCount, SimpleQueueWithConsumerIndex<Object> queue) {
+        MergeMaybeObserver(Observer<? super T> actual, int sourceCount, SimpleQueueWithConsumerIndex<Object> queue) {
             this.actual = actual;
             this.sourceCount = sourceCount;
             this.set = new CompositeDisposable();
-            this.requested = new AtomicLong();
             this.error = new AtomicThrowable();
             this.queue = queue;
         }
@@ -131,15 +125,7 @@ public final class MaybeMergeArray<T> extends Flowable<T> {
         }
 
         @Override
-        public void request(long n) {
-            if (SubscriptionHelper.validate(n)) {
-                BackpressureHelper.add(requested, n);
-                drain();
-            }
-        }
-
-        @Override
-        public void cancel() {
+        public void dispose() {
             if (!cancelled) {
                 cancelled = true;
                 set.dispose();
@@ -147,6 +133,11 @@ public final class MaybeMergeArray<T> extends Flowable<T> {
                     queue.clear();
                 }
             }
+        }
+
+        @Override
+        public boolean isDisposed() {
+            return cancelled;
         }
 
         @Override
@@ -167,7 +158,7 @@ public final class MaybeMergeArray<T> extends Flowable<T> {
                 queue.offer(NotificationLite.COMPLETE);
                 drain();
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -184,15 +175,12 @@ public final class MaybeMergeArray<T> extends Flowable<T> {
         @SuppressWarnings("unchecked")
         void drainNormal() {
             int missed = 1;
-            Subscriber<? super T> a = actual;
+            Observer<? super T> a = actual;
             SimpleQueueWithConsumerIndex<Object> q = queue;
-            long e = consumed;
 
             for (;;) {
 
-                long r = requested.get();
-
-                while (e != r) {
+                for (;;) {
                     if (cancelled) {
                         q.clear();
                         return;
@@ -218,30 +206,9 @@ public final class MaybeMergeArray<T> extends Flowable<T> {
 
                     if (v != NotificationLite.COMPLETE) {
                         a.onNext((T)v);
-
-                        e++;
                     }
                 }
 
-                if (e == r) {
-                    Throwable ex = error.get();
-                    if (ex != null) {
-                        q.clear();
-                        a.onError(error.terminate());
-                        return;
-                    }
-
-                    while (q.peek() == NotificationLite.COMPLETE) {
-                        q.drop();
-                    }
-
-                    if (q.consumerIndex() == sourceCount) {
-                        a.onComplete();
-                        return;
-                    }
-                }
-
-                consumed = e;
                 missed = addAndGet(-missed);
                 if (missed == 0) {
                     break;
@@ -252,7 +219,7 @@ public final class MaybeMergeArray<T> extends Flowable<T> {
 
         void drainFused() {
             int missed = 1;
-            Subscriber<? super T> a = actual;
+            Observer<? super T> a = actual;
             SimpleQueueWithConsumerIndex<Object> q = queue;
 
             for (;;) {

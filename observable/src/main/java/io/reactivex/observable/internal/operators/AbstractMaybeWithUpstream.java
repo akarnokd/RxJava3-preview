@@ -11,10 +11,10 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.maybe;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.*;
-import io.reactivex.internal.fuseable.HasUpstreamMaybeSource;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.HasUpstreamMaybeSource;
 
 /**
  * Abstract base class for intermediate Maybe operators that take an upstream MaybeSource.

@@ -11,14 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.single;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.observable.*;
 
 public final class SingleEquals<T> extends Single<Boolean> {
 
@@ -76,7 +76,7 @@ public final class SingleEquals<T> extends Single<Boolean> {
             for (;;) {
                 int state = count.get();
                 if (state >= 2) {
-                    RxJavaPlugins.onError(e);
+                    RxJavaCommonPlugins.onError(e);
                     return;
                 }
                 if (count.compareAndSet(state, 2)) {

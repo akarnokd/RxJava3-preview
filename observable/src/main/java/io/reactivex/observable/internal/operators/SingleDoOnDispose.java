@@ -11,16 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.single;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Action;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Action;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
 
 public final class SingleDoOnDispose<T> extends Single<T> {
     final SingleSource<T> source;
@@ -60,7 +59,7 @@ public final class SingleDoOnDispose<T> extends Single<T> {
                     a.run();
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    RxJavaPlugins.onError(ex);
+                    RxJavaCommonPlugins.onError(ex);
                 }
                 d.dispose();
             }

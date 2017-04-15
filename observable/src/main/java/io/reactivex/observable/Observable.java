@@ -11,27 +11,21 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.observable;
 
 import java.util.*;
 import java.util.concurrent.*;
 
-import org.reactivestreams.Publisher;
-
-import io.reactivex.annotations.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.*;
-import io.reactivex.internal.fuseable.ScalarCallable;
-import io.reactivex.internal.observers.*;
-import io.reactivex.internal.operators.flowable.*;
-import io.reactivex.internal.operators.observable.*;
-import io.reactivex.internal.util.*;
-import io.reactivex.observables.*;
-import io.reactivex.observers.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.*;
+import io.reactivex.common.internal.utils.*;
+import io.reactivex.observable.extensions.ScalarCallable;
+import io.reactivex.observable.internal.observers.*;
+import io.reactivex.observable.internal.operators.*;
+import io.reactivex.observable.observers.*;
 
 /**
  * The Observable class that is designed similar to the Reactive-Streams Pattern, minus the backpressure,
@@ -41,7 +35,7 @@ import io.reactivex.schedulers.*;
  * therefore accept general {@code ObservableSource}s directly and allow direct interoperation with other
  * Reactive-Streams implementations.
  * <p>
- * The Observable's operators, by default, run with a buffer size of 128 elements (see {@link Flowable#bufferSize()},
+ * The Observable's operators, by default, run with a buffer size of 128 elements,
  * that can be overridden globally via the system parameter {@code rx2.buffer-size}. Most operators, however, have
  * overloads that allow setting their internal buffer size explicitly.
  * <p>
@@ -56,6 +50,11 @@ import io.reactivex.schedulers.*;
  *            the type of the items emitted by the Observable
  */
 public abstract class Observable<T> implements ObservableSource<T> {
+    /** The default buffer size. */
+    static final int BUFFER_SIZE;
+    static {
+        BUFFER_SIZE = Math.max(16, Integer.getInteger("rx2.buffer-size", 128));
+    }
 
     /**
      * Mirrors the one ObservableSource in an Iterable of several ObservableSources that first either emits an item or sends
@@ -117,13 +116,12 @@ public abstract class Observable<T> implements ObservableSource<T> {
 
     /**
      * Returns the default 'island' size or capacity-increment hint for unbounded buffers.
-     * <p>Delegates to {@link Flowable#bufferSize} but is public for convenience.
      * <p>The value can be overridden via system parameter {@code rx2.buffer-size}
-     * <em>before</em> the {@link Flowable} class is loaded.
+     * <em>before</em> the {@link Observable} class is loaded.
      * @return the default 'island' size or capacity-increment hint
      */
     public static int bufferSize() {
-        return Flowable.bufferSize();
+        return BUFFER_SIZE;
     }
 
     /**
@@ -1813,28 +1811,6 @@ public abstract class Observable<T> implements ObservableSource<T> {
     public static <T> Observable<T> fromIterable(Iterable<? extends T> source) {
         ObjectHelper.requireNonNull(source, "source is null");
         return RxJavaPlugins.onAssembly(new ObservableFromIterable<T>(source));
-    }
-
-    /**
-     * Converts an arbitrary Reactive-Streams Publisher into an Observable.
-     * <dl>
-     *  <dt><b>Backpressure:</b></dt>
-     *  <dd>The source {@code publisher} is consumed in an unbounded fashion without applying any
-     *  backpressure to it.</dd>
-     *  <dt><b>Scheduler:</b></dt>
-     *  <dd>{@code fromPublisher} does not operate by default on a particular {@link Scheduler}.</dd>
-     * </dl>
-     * @param <T> the value type of the flow
-     * @param publisher the Publisher to convert
-     * @return the new Observable instance
-     * @throws NullPointerException if publisher is null
-     */
-    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
-    @CheckReturnValue
-    @SchedulerSupport(SchedulerSupport.NONE)
-    public static <T> Observable<T> fromPublisher(Publisher<? extends T> publisher) {
-        ObjectHelper.requireNonNull(publisher, "publisher is null");
-        return RxJavaPlugins.onAssembly(new ObservableFromPublisher<T>(publisher));
     }
 
     /**
@@ -5040,8 +5016,8 @@ public abstract class Observable<T> implements ObservableSource<T> {
      * Subscribes to the source and calls the given callbacks <strong>on the current thread</strong>.
      * <p>
      * If the Observable emits an error, it is wrapped into an
-     * {@link io.reactivex.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
-     * and routed to the RxJavaPlugins.onError handler.
+     * {@link io.reactivex.common.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
+     * and routed to the RxJavaCommonPlugins.onError handler.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code blockingSubscribe} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -7921,8 +7897,8 @@ public abstract class Observable<T> implements ObservableSource<T> {
      * onNext Predicate returns false.
      * <p>
      * If the Observable emits an error, it is wrapped into an
-     * {@link io.reactivex.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
-     * and routed to the RxJavaPlugins.onError handler.
+     * {@link io.reactivex.common.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
+     * and routed to the RxJavaCommonPlugins.onError handler.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code forEachWhile} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -8249,7 +8225,7 @@ public abstract class Observable<T> implements ObservableSource<T> {
 
     /**
      * Hides the identity of this Observable and its Disposable.
-     * <p>Allows hiding extra features such as {@link io.reactivex.subjects.Subject}'s
+     * <p>Allows hiding extra features such as {@link io.reactivex.observable.subjects.Subject}'s
      * {@link Observer} methods or preventing certain identity-based
      * optimizations (fusion).
      * <dl>
@@ -8518,7 +8494,7 @@ public abstract class Observable<T> implements ObservableSource<T> {
 
     /**
      * Modifies an ObservableSource to perform its emissions and notifications on a specified {@link Scheduler},
-     * asynchronously with an unbounded buffer with {@link Flowable#bufferSize()} "island size".
+     * asynchronously with an unbounded buffer with {@link Observable#bufferSize()} "island size".
      *
      * <p>Note that onError notifications will cut ahead of onNext notifications on the emission thread if Scheduler is truly
      * asynchronous. If strict event ordering is required, consider using the {@link #observeOn(Scheduler, boolean)} overload.
@@ -8549,7 +8525,7 @@ public abstract class Observable<T> implements ObservableSource<T> {
 
     /**
      * Modifies an ObservableSource to perform its emissions and notifications on a specified {@link Scheduler},
-     * asynchronously with an unbounded buffer with {@link Flowable#bufferSize()} "island size" and optionally delays onError notifications.
+     * asynchronously with an unbounded buffer with {@link Observable#bufferSize()} "island size" and optionally delays onError notifications.
      * <p>
      * <img width="640" height="308" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/observeOn.png" alt="">
      * <dl>
@@ -10692,8 +10668,8 @@ public abstract class Observable<T> implements ObservableSource<T> {
      * Subscribes to an ObservableSource and ignores {@code onNext} and {@code onComplete} emissions.
      * <p>
      * If the Observable emits an error, it is wrapped into an
-     * {@link io.reactivex.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
-     * and routed to the RxJavaPlugins.onError handler.
+     * {@link io.reactivex.common.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
+     * and routed to the RxJavaCommonPlugins.onError handler.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code subscribe} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -10712,8 +10688,8 @@ public abstract class Observable<T> implements ObservableSource<T> {
      * Subscribes to an ObservableSource and provides a callback to handle the items it emits.
      * <p>
      * If the Observable emits an error, it is wrapped into an
-     * {@link io.reactivex.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
-     * and routed to the RxJavaPlugins.onError handler.
+     * {@link io.reactivex.common.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
+     * and routed to the RxJavaCommonPlugins.onError handler.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code subscribe} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -10848,7 +10824,7 @@ public abstract class Observable<T> implements ObservableSource<T> {
             Exceptions.throwIfFatal(e);
             // can't call onError because no way to know if a Disposable has been set or not
             // can't call onSubscribe because the call might have set a Subscription already
-            RxJavaPlugins.onError(e);
+            RxJavaCommonPlugins.onError(e);
 
             NullPointerException npe = new NullPointerException("Actually not, but can't throw other exceptions due to RS");
             npe.initCause(e);
@@ -12550,38 +12526,6 @@ public abstract class Observable<T> implements ObservableSource<T> {
             Callable<Map<K, Collection<V>>> mapSupplier
             ) {
         return toMultimap(keySelector, valueSelector, mapSupplier, ArrayListSupplier.<V, K>asFunction());
-    }
-
-    /**
-     * Converts the current Observable into a Flowable by applying the specified backpressure strategy.
-     * <dl>
-     *  <dt><b>Backpressure:</b></dt>
-     *  <dd>The operator applies the chosen backpressure strategy of {@link BackpressureStrategy} enum.</dd>
-     *  <dt><b>Scheduler:</b></dt>
-     *  <dd>{@code toFlowable} does not operate by default on a particular {@link Scheduler}.</dd>
-     * </dl>
-     *
-     * @param strategy the backpressure strategy to apply
-     * @return the new Flowable instance
-     */
-    @BackpressureSupport(BackpressureKind.SPECIAL)
-    @CheckReturnValue
-    @SchedulerSupport(SchedulerSupport.NONE)
-    public final Flowable<T> toFlowable(BackpressureStrategy strategy) {
-        Flowable<T> o = new FlowableFromObservable<T>(this);
-
-        switch (strategy) {
-            case DROP:
-                return o.onBackpressureDrop();
-            case LATEST:
-                return o.onBackpressureLatest();
-            case MISSING:
-                return o;
-            case ERROR:
-                return RxJavaPlugins.onAssembly(new FlowableOnBackpressureError<T>(o));
-            default:
-                return o.onBackpressureBuffer();
-        }
     }
 
     /**

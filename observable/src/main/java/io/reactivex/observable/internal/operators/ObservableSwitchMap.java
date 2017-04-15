@@ -11,19 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.queue.*;
-import io.reactivex.internal.util.AtomicThrowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.queues.SpscLinkedArrayQueue;
 
 public final class ObservableSwitchMap<T, R> extends AbstractObservableWithUpstream<T, R> {
     final Function<? super T, ? extends ObservableSource<? extends R>> mapper;
@@ -135,7 +134,7 @@ public final class ObservableSwitchMap<T, R> extends AbstractObservableWithUpstr
                 if (!delayErrors) {
                     disposeInner();
                 }
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -296,7 +295,7 @@ public final class ObservableSwitchMap<T, R> extends AbstractObservableWithUpstr
                 inner.done = true;
                 drain();
             } else {
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
         }
     }

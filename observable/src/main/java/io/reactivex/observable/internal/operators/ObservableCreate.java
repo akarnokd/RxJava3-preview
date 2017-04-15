@@ -10,19 +10,18 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Cancellable;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.fuseable.SimpleQueue;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.util.AtomicThrowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Cancellable;
+import io.reactivex.common.internal.disposables.*;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.SimpleQueue;
+import io.reactivex.observable.internal.queues.SpscLinkedArrayQueue;
 
 public final class ObservableCreate<T> extends Observable<T> {
     final ObservableOnSubscribe<T> source;
@@ -80,7 +79,7 @@ public final class ObservableCreate<T> extends Observable<T> {
                     dispose();
                 }
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 
@@ -175,7 +174,7 @@ public final class ObservableCreate<T> extends Observable<T> {
         @Override
         public void onError(Throwable t) {
             if (emitter.isDisposed() || done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             if (t == null) {
@@ -185,7 +184,7 @@ public final class ObservableCreate<T> extends Observable<T> {
                 done = true;
                 drain();
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 

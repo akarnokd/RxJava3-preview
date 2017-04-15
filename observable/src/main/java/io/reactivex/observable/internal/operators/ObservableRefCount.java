@@ -11,16 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 import java.util.concurrent.locks.ReentrantLock;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.observables.ConnectableObservable;
+import io.reactivex.common.*;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.*;
 
 /**
  * Returns an observable sequence that stays connected to the source as long as

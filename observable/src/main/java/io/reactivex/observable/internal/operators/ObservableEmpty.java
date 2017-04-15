@@ -10,12 +10,11 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.internal.fuseable.ScalarCallable;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.ScalarCallable;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
 
 public final class ObservableEmpty extends Observable<Object> implements ScalarCallable<Object> {
     public static final Observable<Object> INSTANCE = new ObservableEmpty();

@@ -11,16 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.observers;
+package io.reactivex.observable.internal.observers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.Observer;
 
 public final class LambdaObserver<T> extends AtomicReference<Disposable> implements Observer<T>, Disposable {
 
@@ -74,7 +73,7 @@ public final class LambdaObserver<T> extends AtomicReference<Disposable> impleme
                 onError.accept(t);
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
-                RxJavaPlugins.onError(new CompositeException(t, e));
+                RxJavaCommonPlugins.onError(new CompositeException(t, e));
             }
         }
     }
@@ -87,7 +86,7 @@ public final class LambdaObserver<T> extends AtomicReference<Disposable> impleme
                 onComplete.run();
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
     }

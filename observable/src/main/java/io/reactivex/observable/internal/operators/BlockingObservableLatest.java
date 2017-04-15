@@ -11,17 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.observable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.internal.util.*;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.utils.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.ObservableSource;
+import io.reactivex.observable.observers.DisposableObserver;
 
 /**
  * Wait for and iterate over the latest values of the source observable. If the source works faster than the
@@ -64,7 +64,7 @@ public final class BlockingObservableLatest<T> implements Iterable<T> {
 
         @Override
         public void onError(Throwable e) {
-            RxJavaPlugins.onError(e);
+            RxJavaCommonPlugins.onError(e);
         }
 
         @Override

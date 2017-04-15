@@ -10,14 +10,13 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.util;
+package io.reactivex.observable.internal.utils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.reactivestreams.Subscriber;
-
-import io.reactivex.Observer;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.observable.Observer;
 
 /**
  * Utility methods to perform half-serialization: a form of serialization
@@ -28,69 +27,6 @@ public final class HalfSerializer {
     /** Utility class. */
     private HalfSerializer() {
         throw new IllegalStateException("No instances!");
-    }
-
-    /**
-     * Emits the given value if possible and terminates if there was an onComplete or onError
-     * while emitting, drops the value otherwise.
-     * @param <T> the value type
-     * @param subscriber the target Subscriber to emit to
-     * @param value the value to emit
-     * @param wip the serialization work-in-progress counter/indicator
-     * @param error the holder of Throwables
-     */
-    public static <T> void onNext(Subscriber<? super T> subscriber, T value,
-            AtomicInteger wip, AtomicThrowable error) {
-        if (wip.get() == 0 && wip.compareAndSet(0, 1)) {
-            subscriber.onNext(value);
-            if (wip.decrementAndGet() != 0) {
-                Throwable ex = error.terminate();
-                if (ex != null) {
-                    subscriber.onError(ex);
-                } else {
-                    subscriber.onComplete();
-                }
-            }
-        }
-    }
-
-    /**
-     * Emits the given exception if possible or adds it to the given error container to
-     * be emitted by a concurrent onNext if one is running.
-     * Undeliverable exceptions are sent to the RxJavaPlugins.onError.
-     * @param subscriber the target Subscriber to emit to
-     * @param ex the Throwable to emit
-     * @param wip the serialization work-in-progress counter/indicator
-     * @param error the holder of Throwables
-     */
-    public static void onError(Subscriber<?> subscriber, Throwable ex,
-            AtomicInteger wip, AtomicThrowable error) {
-        if (error.addThrowable(ex)) {
-            if (wip.getAndIncrement() == 0) {
-                subscriber.onError(error.terminate());
-            }
-        } else {
-            RxJavaPlugins.onError(ex);
-        }
-    }
-
-
-    /**
-     * Emits an onComplete signal or an onError signal with the given error or indicates
-     * the concurrently running onNext should do that.
-     * @param subscriber the target Subscriber to emit to
-     * @param wip the serialization work-in-progress counter/indicator
-     * @param error the holder of Throwables
-     */
-    public static void onComplete(Subscriber<?> subscriber, AtomicInteger wip, AtomicThrowable error) {
-        if (wip.getAndIncrement() == 0) {
-            Throwable ex = error.terminate();
-            if (ex != null) {
-                subscriber.onError(ex);
-            } else {
-                subscriber.onComplete();
-            }
-        }
     }
 
     /**
@@ -120,7 +56,7 @@ public final class HalfSerializer {
     /**
      * Emits the given exception if possible or adds it to the given error container to
      * be emitted by a concurrent onNext if one is running.
-     * Undeliverable exceptions are sent to the RxJavaPlugins.onError.
+     * Undeliverable exceptions are sent to the RxJavaCommonPlugins.onError.
      * @param observer the target Subscriber to emit to
      * @param ex the Throwable to emit
      * @param wip the serialization work-in-progress counter/indicator
@@ -133,7 +69,7 @@ public final class HalfSerializer {
                 observer.onError(error.terminate());
             }
         } else {
-            RxJavaPlugins.onError(ex);
+            RxJavaCommonPlugins.onError(ex);
         }
     }
 

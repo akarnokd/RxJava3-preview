@@ -11,15 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.observers;
+package io.reactivex.observable.internal.observers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.CompletableObserver;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.OnErrorNotImplementedException;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.OnErrorNotImplementedException;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.observable.CompletableObserver;
 
 public final class EmptyCompletableObserver
 extends AtomicReference<Disposable>
@@ -47,7 +46,7 @@ implements CompletableObserver, Disposable {
     @Override
     public void onError(Throwable e) {
         lazySet(DisposableHelper.DISPOSED);
-        RxJavaPlugins.onError(new OnErrorNotImplementedException(e));
+        RxJavaCommonPlugins.onError(new OnErrorNotImplementedException(e));
     }
 
     @Override

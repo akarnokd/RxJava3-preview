@@ -18,4 +18,4 @@
  * Default wrappers and implementations for Observer-based consumer classes and interfaces;
  * utility classes for creating them from callbacks.
  */
-package io.reactivex.observers;
+package io.reactivex.observable.observers;

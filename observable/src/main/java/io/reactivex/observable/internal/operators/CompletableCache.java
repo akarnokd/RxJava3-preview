@@ -11,13 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.completable;
+package io.reactivex.observable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.*;
-import io.reactivex.annotations.Experimental;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.annotations.Experimental;
+import io.reactivex.observable.*;
 
 /**
  * Consume the upstream source exactly once and cache its terminal event.
