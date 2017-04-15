@@ -17,12 +17,12 @@ import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.operators.observable.ObservableMapNotification.MapNotificationObserver;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.Disposables;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.operators.ObservableMapNotification.MapNotificationObserver;
+import io.reactivex.observable.observers.TestObserver;
 
 public class ObservableMapNotificationTest {
     @Test

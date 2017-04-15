@@ -20,16 +20,13 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.observers.BlockingFirstObserver;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.internal.observers.BlockingFirstObserver;
+import io.reactivex.observable.observers.TestObserver;
 
 public class ObservableBlockingTest {
 

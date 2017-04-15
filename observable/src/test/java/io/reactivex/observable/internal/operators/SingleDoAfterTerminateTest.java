@@ -13,21 +13,19 @@
 
 package io.reactivex.observable.internal.operators;
 
-import io.reactivex.Single;
-import io.reactivex.SingleSource;
-import io.reactivex.TestHelper;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.PublishSubject;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
+import io.reactivex.plugins.RxJavaPlugins;
 
 public class SingleDoAfterTerminateTest {
 
@@ -91,7 +89,7 @@ public class SingleDoAfterTerminateTest {
 
     @Test
     public void actionThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Single.just(1)
             .doAfterTerminate(new Action() {
@@ -103,7 +101,7 @@ public class SingleDoAfterTerminateTest {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

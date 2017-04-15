@@ -19,21 +19,23 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.junit.*;
 import org.mockito.MockitoAnnotations;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.operators.ObservableGroupJoinTest.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
 
 public class ObservableGroupJoinTest {
 
@@ -511,7 +513,7 @@ public class ObservableGroupJoinTest {
             final PublishSubject<Object> ps1 = PublishSubject.create();
             final PublishSubject<Object> ps2 = PublishSubject.create();
 
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
             try {
                 TestObserver<Observable<Integer>> to = Observable.just(1)
@@ -554,7 +556,7 @@ public class ObservableGroupJoinTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 to.assertError(Throwable.class).assertSubscribed().assertNotComplete().assertValueCount(1);
 
@@ -569,7 +571,7 @@ public class ObservableGroupJoinTest {
                 }
 
                 if (!errors.isEmpty()) {
-                    TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                    TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
                 RxJavaPlugins.reset();
@@ -583,7 +585,7 @@ public class ObservableGroupJoinTest {
             final PublishSubject<Object> ps1 = PublishSubject.create();
             final PublishSubject<Object> ps2 = PublishSubject.create();
 
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
             try {
                 TestObserver<Object> to = ps1
@@ -627,7 +629,7 @@ public class ObservableGroupJoinTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 to.assertError(Throwable.class).assertSubscribed().assertNotComplete().assertNoValues();
 
@@ -642,7 +644,7 @@ public class ObservableGroupJoinTest {
                 }
 
                 if (!errors.isEmpty()) {
-                    TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                    TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
                 RxJavaPlugins.reset();

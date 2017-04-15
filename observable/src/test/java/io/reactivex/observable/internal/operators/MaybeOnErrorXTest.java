@@ -17,10 +17,10 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
 import io.reactivex.processors.PublishProcessor;
 
 public class MaybeOnErrorXTest {

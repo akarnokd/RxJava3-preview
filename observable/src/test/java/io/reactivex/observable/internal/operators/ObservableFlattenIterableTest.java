@@ -17,9 +17,9 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.functions.Function;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class ObservableFlattenIterableTest {
 

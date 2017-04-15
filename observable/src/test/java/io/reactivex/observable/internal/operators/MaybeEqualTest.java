@@ -15,9 +15,9 @@ package io.reactivex.observable.internal.operators;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.BiPredicate;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.BiPredicate;
+import io.reactivex.observable.*;
 
 public class MaybeEqualTest {
 

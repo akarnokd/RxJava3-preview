@@ -14,6 +14,7 @@
 package io.reactivex.observable;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
@@ -23,15 +24,10 @@ import java.util.concurrent.atomic.*;
 import org.junit.*;
 import org.mockito.InOrder;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.*;
-import io.reactivex.observables.ConnectableObservable;
-import io.reactivex.observers.*;
-import io.reactivex.schedulers.*;
-import io.reactivex.subjects.*;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.observers.*;
+import io.reactivex.observable.subjects.*;
 
 public class ObservableTest {
 

@@ -17,11 +17,11 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.fuseable.HasUpstreamMaybeSource;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.HasUpstreamMaybeSource;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.processors.PublishProcessor;
 
 public class MaybeCountTest {

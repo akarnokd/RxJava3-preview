@@ -16,9 +16,8 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import io.reactivex.Observable;
-import io.reactivex.internal.fuseable.QueueDisposable;
-import io.reactivex.observers.ObserverFusion;
+import io.reactivex.observable.extensions.QueueDisposable;
+import io.reactivex.observable.observers.ObserverFusion;
 
 public class ObservableFuseableTest {
 

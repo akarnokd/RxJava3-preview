@@ -17,8 +17,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.functions.BiFunction;
+import io.reactivex.common.functions.BiFunction;
 import io.reactivex.observable.ObservableCovarianceTest.*;
 
 public class ObservableReduceTests {

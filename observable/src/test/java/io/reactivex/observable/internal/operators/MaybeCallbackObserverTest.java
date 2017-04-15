@@ -19,11 +19,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.TestHelper;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public class MaybeCallbackObserverTest {
@@ -47,7 +47,7 @@ public class MaybeCallbackObserverTest {
 
     @Test
     public void onSuccessCrashes() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             MaybeCallbackObserver<Object> mo = new MaybeCallbackObserver<Object>(
                     new Consumer<Object>() {
@@ -63,7 +63,7 @@ public class MaybeCallbackObserverTest {
 
             mo.onSuccess(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -71,7 +71,7 @@ public class MaybeCallbackObserverTest {
 
     @Test
     public void onErrorCrashes() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             MaybeCallbackObserver<Object> mo = new MaybeCallbackObserver<Object>(
                     Functions.emptyConsumer(),
@@ -100,7 +100,7 @@ public class MaybeCallbackObserverTest {
 
     @Test
     public void onCompleteCrashes() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             MaybeCallbackObserver<Object> mo = new MaybeCallbackObserver<Object>(
                     Functions.emptyConsumer(),
@@ -116,7 +116,7 @@ public class MaybeCallbackObserverTest {
 
             mo.onComplete();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

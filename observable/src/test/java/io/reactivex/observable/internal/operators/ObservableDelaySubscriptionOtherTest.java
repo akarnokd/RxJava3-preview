@@ -18,13 +18,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class ObservableDelaySubscriptionOtherTest {
     @Test

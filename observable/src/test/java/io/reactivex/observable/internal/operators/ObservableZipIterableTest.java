@@ -18,20 +18,20 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.*;
 import org.mockito.InOrder;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.util.CrashingIterable;
+import io.reactivex.common.Disposables;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.utils.CrashingIterable;
+import io.reactivex.observable.*;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.PublishSubject;
 
 public class ObservableZipIterableTest {
     BiFunction<String, String, String> concat2Strings;
@@ -403,7 +403,7 @@ public class ObservableZipIterableTest {
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Observable<Integer>() {
                 @Override
@@ -425,7 +425,7 @@ public class ObservableZipIterableTest {
             .test()
             .assertResult(2);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

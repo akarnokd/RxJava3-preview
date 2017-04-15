@@ -15,9 +15,8 @@ package io.reactivex.observable.internal.operators;
 
 import org.junit.Test;
 
-import io.reactivex.Single;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.BiPredicate;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.BiPredicate;
 
 public class SingleContainstTest {
 

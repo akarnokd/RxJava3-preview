@@ -20,10 +20,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.Consumer;
-import io.reactivex.observers.DefaultObserver;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.DefaultObserver;
 
 
 public class ObservableSwitchIfEmptyTest {

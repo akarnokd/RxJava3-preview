@@ -20,7 +20,6 @@ import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
-import io.reactivex.Observable;
 import io.reactivex.observable.ObservableCovarianceTest.*;
 
 public class ObservableMergeTests {

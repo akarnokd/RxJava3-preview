@@ -21,11 +21,11 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.*;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class ObservableTakeLastTimedTest {
 
@@ -273,7 +273,7 @@ public class ObservableTakeLastTimedTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 }

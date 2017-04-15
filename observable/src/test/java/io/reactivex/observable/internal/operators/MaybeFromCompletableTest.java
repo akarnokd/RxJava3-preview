@@ -14,13 +14,14 @@
 package io.reactivex.observable.internal.operators;
 
 
-import io.reactivex.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.fuseable.HasUpstreamCompletableSource;
-import io.reactivex.processors.PublishProcessor;
+import static org.junit.Assert.assertSame;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.HasUpstreamCompletableSource;
+import io.reactivex.processors.PublishProcessor;
 
 public class MaybeFromCompletableTest {
     @Test(expected = NullPointerException.class)

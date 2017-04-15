@@ -17,8 +17,7 @@ import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
-import io.reactivex.Single;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.exceptions.TestException;
 
 public class SingleErrorTest {
 

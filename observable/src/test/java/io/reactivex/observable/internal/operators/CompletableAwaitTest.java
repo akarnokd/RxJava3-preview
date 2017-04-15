@@ -19,8 +19,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.Completable;
 import io.reactivex.processors.PublishProcessor;
 
 public class CompletableAwaitTest {

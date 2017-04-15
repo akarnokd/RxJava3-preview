@@ -35,7 +35,7 @@ public final class ObservableAllSingle<T> extends Single<Boolean> implements Fus
 
     @Override
     public Observable<Boolean> fuseToObservable() {
-        return RxJavaPlugins.onAssembly(new ObservableAll<T>(source, predicate));
+        return RxJavaObservablePlugins.onAssembly(new ObservableAll<T>(source, predicate));
     }
 
     static final class AllObserver<T> implements Observer<T>, Disposable {

@@ -25,19 +25,18 @@ import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
 import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueDisposable;
-import io.reactivex.internal.operators.observable.ObservableScalarXMap.ScalarDisposable;
 import io.reactivex.internal.subscriptions.EmptySubscription;
+import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.extensions.QueueDisposable;
+import io.reactivex.observable.internal.operators.ObservableScalarXMap.ScalarDisposable;
+import io.reactivex.observable.subjects.UnicastSubject;
 import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.UnicastSubject;
 import io.reactivex.subscribers.TestSubscriber;
 
 public class TestObserverTest {

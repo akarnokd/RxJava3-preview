@@ -14,6 +14,7 @@
 package io.reactivex.observable.internal.operators;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -21,12 +22,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.*;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.*;
 
 public class ObservableOnErrorReturnTest {
 

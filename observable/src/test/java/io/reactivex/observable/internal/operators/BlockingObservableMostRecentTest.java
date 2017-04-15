@@ -20,10 +20,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.*;
 
-import io.reactivex.Observable;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.schedulers.TestScheduler;
-import io.reactivex.subjects.*;
+import io.reactivex.common.TestScheduler;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.subjects.*;
 
 public class BlockingObservableMostRecentTest {
     @Test

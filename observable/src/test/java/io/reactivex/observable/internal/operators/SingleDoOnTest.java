@@ -19,14 +19,14 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.PublishSubject;
 
 public class SingleDoOnTest {
 
@@ -135,7 +135,7 @@ public class SingleDoOnTest {
 
     @Test
     public void doOnSubscribeErrorCrash() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Single.error(new TestException("Outer")).doOnSubscribe(new Consumer<Disposable>() {
@@ -147,7 +147,7 @@ public class SingleDoOnTest {
             .test()
             .assertFailureAndMessage(TestException.class, "Inner");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Outer");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Outer");
         } finally {
             RxJavaPlugins.reset();
         }
@@ -279,7 +279,7 @@ public class SingleDoOnTest {
 
     @Test
     public void doOnDisposeCrash() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             PublishSubject<Integer> ps = PublishSubject.create();
 
@@ -292,7 +292,7 @@ public class SingleDoOnTest {
             .test()
             .cancel();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -330,7 +330,7 @@ public class SingleDoOnTest {
 
     @Test
     public void onSubscribeCrash() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             final Disposable bs = Disposables.empty();
 
@@ -353,7 +353,7 @@ public class SingleDoOnTest {
 
             assertTrue(bs.isDisposed());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
             RxJavaPlugins.reset();
         }

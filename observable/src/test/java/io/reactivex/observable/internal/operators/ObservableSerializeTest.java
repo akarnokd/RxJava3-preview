@@ -14,6 +14,7 @@
 package io.reactivex.observable.internal.operators;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.concurrent.*;
@@ -21,9 +22,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.observers.DefaultObserver;
+import io.reactivex.common.Disposables;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.DefaultObserver;
 
 public class ObservableSerializeTest {
 

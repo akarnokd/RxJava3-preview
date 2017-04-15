@@ -46,7 +46,7 @@ public final class ObservablePublish<T> extends ConnectableObservable<T> impleme
         // the current connection to source needs to be shared between the operator and its onSubscribe call
         final AtomicReference<PublishObserver<T>> curr = new AtomicReference<PublishObserver<T>>();
         ObservableSource<T> onSubscribe = new PublishSource<T>(curr);
-        return RxJavaPlugins.onAssembly(new ObservablePublish<T>(onSubscribe, source, curr));
+        return RxJavaObservablePlugins.onAssembly(new ObservablePublish<T>(onSubscribe, source, curr));
     }
 
     private ObservablePublish(ObservableSource<T> onSubscribe, ObservableSource<T> source,

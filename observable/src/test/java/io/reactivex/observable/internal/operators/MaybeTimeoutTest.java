@@ -19,12 +19,12 @@ import java.util.concurrent.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
 
 public class MaybeTimeoutTest {
 
@@ -277,7 +277,7 @@ public class MaybeTimeoutTest {
     @Test
     public void onErrorRace() {
         for (int i = 0; i < 500; i++) {
-            TestHelper.trackPluginErrors();
+            TestCommonHelper.trackPluginErrors();
             try {
                 final PublishProcessor<Integer> pp1 = PublishProcessor.create();
                 final PublishProcessor<Integer> pp2 = PublishProcessor.create();
@@ -299,7 +299,7 @@ public class MaybeTimeoutTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 to.assertFailure(TestException.class);
             } finally {
@@ -329,7 +329,7 @@ public class MaybeTimeoutTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             to.assertSubscribed().assertNoValues();
 

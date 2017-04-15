@@ -19,8 +19,6 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.Observable;
-
 public class ObservableStartWithTests {
 
     @Test

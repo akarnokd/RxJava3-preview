@@ -11,16 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.maybe;
+package io.reactivex.observable;
 
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Cancellable;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Cancellable;
 
 public class MaybeCreateTest {
     @Test(expected = NullPointerException.class)

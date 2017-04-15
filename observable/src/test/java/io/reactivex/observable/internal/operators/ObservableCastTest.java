@@ -13,11 +13,12 @@
 
 package io.reactivex.observable.internal.operators;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
+import io.reactivex.observable.*;
 
 public class ObservableCastTest {
 

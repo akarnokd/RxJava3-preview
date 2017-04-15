@@ -19,10 +19,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
 import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.processors.PublishProcessor;
 
 public class MaybeDelayOtherTest {

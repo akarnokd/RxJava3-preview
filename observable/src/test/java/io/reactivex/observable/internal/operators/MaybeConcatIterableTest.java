@@ -19,12 +19,12 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.util.CrashingMappedIterable;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.utils.CrashingMappedIterable;
+import io.reactivex.observable.*;
 import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
 
 public class MaybeConcatIterableTest {
@@ -84,7 +84,7 @@ public class MaybeConcatIterableTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 

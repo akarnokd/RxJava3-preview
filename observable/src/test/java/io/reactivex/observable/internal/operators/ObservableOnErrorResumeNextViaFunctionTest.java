@@ -24,12 +24,11 @@ import org.junit.*;
 import org.mockito.Mockito;
 import org.reactivestreams.Subscription;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.observers.*;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.*;
 
 public class ObservableOnErrorResumeNextViaFunctionTest {
 

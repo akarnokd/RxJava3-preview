@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.observable.internal.utils;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.observers.TestObserver;
 
 public class NotificationLiteTest {
 

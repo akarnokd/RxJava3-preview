@@ -315,7 +315,7 @@ public final class ObservableInternalHelper {
 
         @Override
         public Observable<R> apply(T t) throws Exception {
-            return RxJavaPlugins.onAssembly(new SingleToObservable<R>(
+            return RxJavaObservablePlugins.onAssembly(new SingleToObservable<R>(
                 ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null value")));
         }
 

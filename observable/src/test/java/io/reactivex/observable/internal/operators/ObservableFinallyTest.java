@@ -17,9 +17,9 @@ import static org.mockito.Mockito.*;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.functions.Action;
-import io.reactivex.internal.util.ExceptionHelper;
+import io.reactivex.common.functions.Action;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.observable.*;
 
 public class ObservableFinallyTest {
 

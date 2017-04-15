@@ -32,7 +32,7 @@ public final class ObservableIgnoreElementsCompletable<T> extends Completable im
 
     @Override
     public Observable<T> fuseToObservable() {
-        return RxJavaPlugins.onAssembly(new ObservableIgnoreElements<T>(source));
+        return RxJavaObservablePlugins.onAssembly(new ObservableIgnoreElements<T>(source));
     }
 
     static final class IgnoreObservable<T> implements Observer<T>, Disposable {

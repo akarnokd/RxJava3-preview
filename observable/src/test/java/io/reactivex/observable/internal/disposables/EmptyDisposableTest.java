@@ -11,13 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.common.internal.disposables;
+package io.reactivex.observable.internal.disposables;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.internal.fuseable.QueueDisposable;
+import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.extensions.QueueDisposable;
 
 public class EmptyDisposableTest {
 

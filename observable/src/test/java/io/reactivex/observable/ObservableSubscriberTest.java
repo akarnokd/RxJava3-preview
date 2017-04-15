@@ -20,14 +20,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.observers.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.observers.*;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.PublishSubject;
 
 public class ObservableSubscriberTest {
     @Test
@@ -222,7 +219,7 @@ public class ObservableSubscriberTest {
 
     @Test
     public void subscribeActualThrows() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
         try {
             try {
                 new BadObservable().test();

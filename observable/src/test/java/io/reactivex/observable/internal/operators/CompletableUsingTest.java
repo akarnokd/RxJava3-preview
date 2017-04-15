@@ -20,14 +20,13 @@ import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
 
 public class CompletableUsingTest {
 
@@ -221,7 +220,7 @@ public class CompletableUsingTest {
 
     @Test
     public void supplierAndDisposerCrashNonEager() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Completable.using(new Callable<Object>() {
                 @Override
@@ -242,7 +241,7 @@ public class CompletableUsingTest {
             .test()
             .assertFailureAndMessage(TestException.class, "Main");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Disposer");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Disposer");
         } finally {
             RxJavaPlugins.reset();
         }
@@ -277,7 +276,7 @@ public class CompletableUsingTest {
 
     @Test
     public void disposeCrashes() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Void> to = Completable.using(new Callable<Object>() {
                 @Override
@@ -299,7 +298,7 @@ public class CompletableUsingTest {
 
             to.cancel();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -399,7 +398,7 @@ public class CompletableUsingTest {
 
     @Test
     public void doubleOnSubscribe() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Completable.using(new Callable<Object>() {
                 @Override
@@ -477,7 +476,7 @@ public class CompletableUsingTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -520,7 +519,7 @@ public class CompletableUsingTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -562,7 +561,7 @@ public class CompletableUsingTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 

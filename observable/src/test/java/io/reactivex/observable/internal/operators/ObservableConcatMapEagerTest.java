@@ -17,20 +17,20 @@ import static org.junit.Assert.*;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.Observable;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.*;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.*;
 
 public class ObservableConcatMapEagerTest {
 
@@ -808,7 +808,7 @@ public class ObservableConcatMapEagerTest {
     @Test
     public void innerOuterRace() {
         for (int i = 0; i < 500; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
                 final PublishSubject<Integer> ps1 = PublishSubject.create();
                 final PublishSubject<Integer> ps2 = PublishSubject.create();
@@ -838,7 +838,7 @@ public class ObservableConcatMapEagerTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 to.assertSubscribed().assertNoValues().assertNotComplete();
 
@@ -851,7 +851,7 @@ public class ObservableConcatMapEagerTest {
                 } else {
                     to.assertError(TestException.class);
                     if (!errors.isEmpty()) {
-                        TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                        TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                     }
                 }
             } finally {
@@ -885,7 +885,7 @@ public class ObservableConcatMapEagerTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             to.assertEmpty();
         }

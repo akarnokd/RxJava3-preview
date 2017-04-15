@@ -16,8 +16,6 @@ import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-
 public class SingleConcatPublisherTest {
 
     @Test

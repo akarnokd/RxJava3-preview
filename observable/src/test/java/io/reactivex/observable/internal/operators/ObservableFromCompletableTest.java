@@ -20,9 +20,9 @@ import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableFromCompletableTest {
@@ -61,7 +61,7 @@ public class ObservableFromCompletableTest {
 
     @Test
     public void disposedOnCallThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             final TestObserver<Integer> to = new TestObserver<Integer>();
 
@@ -76,7 +76,7 @@ public class ObservableFromCompletableTest {
 
             to.assertEmpty();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

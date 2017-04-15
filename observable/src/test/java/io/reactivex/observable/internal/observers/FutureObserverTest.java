@@ -20,14 +20,13 @@ import java.util.concurrent.*;
 
 import org.junit.*;
 
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.internal.subscribers.FutureSubscriber;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
+import io.reactivex.observable.TestHelper;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
 
 public class FutureObserverTest {
     FutureObserver<Integer> fo;
@@ -54,7 +53,7 @@ public class FutureObserverTest {
             assertTrue(fo.isDone());
         }
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             fo.onNext(1);
             fo.onError(new TestException("First"));
@@ -65,8 +64,8 @@ public class FutureObserverTest {
             assertTrue(fo.isDisposed());
             assertTrue(fo.isDone());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
-            TestHelper.assertUndeliverable(errors, 1, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 1, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -101,7 +100,7 @@ public class FutureObserverTest {
 
     @Test
     public void onError() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             fo.onError(new TestException("One"));
@@ -115,7 +114,7 @@ public class FutureObserverTest {
                 assertEquals("One", ex.getCause().getMessage());
             }
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Two");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Two");
         } finally {
             RxJavaPlugins.reset();
         }
@@ -131,7 +130,7 @@ public class FutureObserverTest {
 
     @Test
     public void onSubscribe() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
 
@@ -164,7 +163,7 @@ public class FutureObserverTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.single());
+            TestCommonHelper.race(r, r, Schedulers.single());
         }
     }
 
@@ -204,7 +203,7 @@ public class FutureObserverTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
             }
         } finally {
             RxJavaPlugins.reset();
@@ -238,7 +237,7 @@ public class FutureObserverTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 

@@ -15,8 +15,8 @@ package io.reactivex.observable.internal.operators;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.common.Disposable;
+import io.reactivex.observable.*;
 
 public class SingleLiftTest {
 

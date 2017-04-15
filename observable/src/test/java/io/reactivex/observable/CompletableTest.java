@@ -11,9 +11,10 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.completable;
+package io.reactivex.observable;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
@@ -21,24 +22,16 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
 import org.junit.*;
-import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.*;
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.disposables.SequentialDisposable;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.*;
 
 /**
  * Test Completable methods and operators.
@@ -300,14 +293,14 @@ public class CompletableTest {
 
     @Test(timeout = 5000)
     public void concatObservableEmpty() {
-        Completable c = Completable.concat(Flowable.<Completable>empty());
+        Completable c = Completable.concat(Observable.<Completable>empty());
 
         c.blockingAwait();
     }
 
     @Test(timeout = 5000, expected = TestException.class)
     public void concatObservableError() {
-        Completable c = Completable.concat(Flowable.<Completable>error(new Callable<Throwable>() {
+        Completable c = Completable.concat(Observable.<Completable>error(new Callable<Throwable>() {
             @Override
             public Throwable call() {
                 return new TestException();
@@ -319,7 +312,7 @@ public class CompletableTest {
 
     @Test(timeout = 5000)
     public void concatObservableSingle() {
-        Completable c = Completable.concat(Flowable.just(normal.completable));
+        Completable c = Completable.concat(Observable.just(normal.completable));
 
         c.blockingAwait();
 
@@ -328,14 +321,14 @@ public class CompletableTest {
 
     @Test(timeout = 5000, expected = TestException.class)
     public void concatObservableSingleThrows() {
-        Completable c = Completable.concat(Flowable.just(error.completable));
+        Completable c = Completable.concat(Observable.just(error.completable));
 
         c.blockingAwait();
     }
 
     @Test(timeout = 5000)
     public void concatObservableMany() {
-        Completable c = Completable.concat(Flowable.just(normal.completable).repeat(3));
+        Completable c = Completable.concat(Observable.just(normal.completable).repeat(3));
 
         c.blockingAwait();
 
@@ -344,29 +337,9 @@ public class CompletableTest {
 
     @Test(timeout = 5000, expected = TestException.class)
     public void concatObservableManyOneThrows() {
-        Completable c = Completable.concat(Flowable.just(normal.completable, error.completable));
+        Completable c = Completable.concat(Observable.just(normal.completable, error.completable));
 
         c.blockingAwait();
-    }
-
-    @Test(timeout = 5000)
-    public void concatObservablePrefetch() {
-        final List<Long> requested = new ArrayList<Long>();
-        Flowable<Completable> cs = Flowable
-                .just(normal.completable)
-                .repeat(10)
-                .doOnRequest(new LongConsumer() {
-                    @Override
-                    public void accept(long v) {
-                        requested.add(v);
-                    }
-                });
-
-        Completable c = Completable.concat(cs, 5);
-
-        c.blockingAwait();
-
-        Assert.assertEquals(Arrays.asList(5L, 4L, 4L), requested);
     }
 
     @Test(expected = NullPointerException.class)
@@ -538,39 +511,6 @@ public class CompletableTest {
             @Override
             public Object call() throws Exception { throw new TestException(); }
         });
-
-        c.blockingAwait();
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void fromFlowableNull() {
-        Completable.fromPublisher(null);
-    }
-
-    @Test(timeout = 5000)
-    public void fromFlowableEmpty() {
-        Completable c = Completable.fromPublisher(Flowable.empty());
-
-        c.blockingAwait();
-    }
-
-    @Test(timeout = 5000)
-    public void fromFlowableSome() {
-        for (int n = 1; n < 10000; n *= 10) {
-            Completable c = Completable.fromPublisher(Flowable.range(1, n));
-
-            c.blockingAwait();
-        }
-    }
-
-    @Test(timeout = 5000, expected = TestException.class)
-    public void fromFlowableError() {
-        Completable c = Completable.fromPublisher(Flowable.error(new Callable<Throwable>() {
-            @Override
-            public Throwable call() {
-                return new TestException();
-            }
-        }));
 
         c.blockingAwait();
     }
@@ -805,14 +745,14 @@ public class CompletableTest {
 
     @Test(timeout = 5000)
     public void mergeObservableEmpty() {
-        Completable c = Completable.merge(Flowable.<Completable>empty());
+        Completable c = Completable.merge(Observable.<Completable>empty());
 
         c.blockingAwait();
     }
 
     @Test(timeout = 5000, expected = TestException.class)
     public void mergeObservableError() {
-        Completable c = Completable.merge(Flowable.<Completable>error(new Callable<Throwable>() {
+        Completable c = Completable.merge(Observable.<Completable>error(new Callable<Throwable>() {
             @Override
             public Throwable call() {
                 return new TestException();
@@ -824,7 +764,7 @@ public class CompletableTest {
 
     @Test(timeout = 5000)
     public void mergeObservableSingle() {
-        Completable c = Completable.merge(Flowable.just(normal.completable));
+        Completable c = Completable.merge(Observable.just(normal.completable));
 
         c.blockingAwait();
 
@@ -833,14 +773,14 @@ public class CompletableTest {
 
     @Test(timeout = 5000, expected = TestException.class)
     public void mergeObservableSingleThrows() {
-        Completable c = Completable.merge(Flowable.just(error.completable));
+        Completable c = Completable.merge(Observable.just(error.completable));
 
         c.blockingAwait();
     }
 
     @Test(timeout = 5000)
     public void mergeObservableMany() {
-        Completable c = Completable.merge(Flowable.just(normal.completable).repeat(3));
+        Completable c = Completable.merge(Observable.just(normal.completable).repeat(3));
 
         c.blockingAwait();
 
@@ -849,30 +789,9 @@ public class CompletableTest {
 
     @Test(timeout = 5000, expected = TestException.class)
     public void mergeObservableManyOneThrows() {
-        Completable c = Completable.merge(Flowable.just(normal.completable, error.completable));
+        Completable c = Completable.merge(Observable.just(normal.completable, error.completable));
 
         c.blockingAwait();
-    }
-
-    @Test(timeout = 5000)
-    public void mergeObservableMaxConcurrent() {
-        final List<Long> requested = new ArrayList<Long>();
-        Flowable<Completable> cs = Flowable
-                .just(normal.completable)
-                .repeat(10)
-                .doOnRequest(new LongConsumer() {
-                    @Override
-                    public void accept(long v) {
-                        requested.add(v);
-                    }
-                });
-
-        Completable c = Completable.merge(cs, 5);
-
-        c.blockingAwait();
-
-        // FIXME this request pattern looks odd because all 10 completions trigger 1 requests
-        Assert.assertEquals(Arrays.asList(5L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L), requested);
     }
 
     @Test(expected = NullPointerException.class)
@@ -1025,14 +944,14 @@ public class CompletableTest {
 
     @Test(timeout = 5000)
     public void mergeDelayErrorObservableEmpty() {
-        Completable c = Completable.mergeDelayError(Flowable.<Completable>empty());
+        Completable c = Completable.mergeDelayError(Observable.<Completable>empty());
 
         c.blockingAwait();
     }
 
     @Test(timeout = 5000, expected = TestException.class)
     public void mergeDelayErrorObservableError() {
-        Completable c = Completable.mergeDelayError(Flowable.<Completable>error(new Callable<Throwable>() {
+        Completable c = Completable.mergeDelayError(Observable.<Completable>error(new Callable<Throwable>() {
             @Override
             public Throwable call() {
                 return new TestException();
@@ -1044,7 +963,7 @@ public class CompletableTest {
 
     @Test(timeout = 5000)
     public void mergeDelayErrorObservableSingle() {
-        Completable c = Completable.mergeDelayError(Flowable.just(normal.completable));
+        Completable c = Completable.mergeDelayError(Observable.just(normal.completable));
 
         c.blockingAwait();
 
@@ -1053,14 +972,14 @@ public class CompletableTest {
 
     @Test(timeout = 5000, expected = TestException.class)
     public void mergeDelayErrorObservableSingleThrows() {
-        Completable c = Completable.mergeDelayError(Flowable.just(error.completable));
+        Completable c = Completable.mergeDelayError(Observable.just(error.completable));
 
         c.blockingAwait();
     }
 
     @Test(timeout = 5000)
     public void mergeDelayErrorObservableMany() {
-        Completable c = Completable.mergeDelayError(Flowable.just(normal.completable).repeat(3));
+        Completable c = Completable.mergeDelayError(Observable.just(normal.completable).repeat(3));
 
         c.blockingAwait();
 
@@ -1069,30 +988,9 @@ public class CompletableTest {
 
     @Test(timeout = 5000, expected = TestException.class)
     public void mergeDelayErrorObservableManyOneThrows() {
-        Completable c = Completable.mergeDelayError(Flowable.just(normal.completable, error.completable));
+        Completable c = Completable.mergeDelayError(Observable.just(normal.completable, error.completable));
 
         c.blockingAwait();
-    }
-
-    @Test(timeout = 5000)
-    public void mergeDelayErrorObservableMaxConcurrent() {
-        final List<Long> requested = new ArrayList<Long>();
-        Flowable<Completable> cs = Flowable
-                .just(normal.completable)
-                .repeat(10)
-                .doOnRequest(new LongConsumer() {
-                    @Override
-                    public void accept(long v) {
-                        requested.add(v);
-                    }
-                });
-
-        Completable c = Completable.mergeDelayError(cs, 5);
-
-        c.blockingAwait();
-
-        // FIXME this request pattern looks odd because all 10 completions trigger 1 requests
-        Assert.assertEquals(Arrays.asList(5L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 1L), requested);
     }
 
     @Test(timeout = 5000)
@@ -2449,11 +2347,11 @@ public class CompletableTest {
                     throw new TestException();
                 }
             }
-        }).retryWhen(new Function<Flowable<? extends Throwable>, Publisher<Object>>() {
+        }).retryWhen(new Function<Observable<? extends Throwable>, Observable<Object>>() {
             @SuppressWarnings({ "rawtypes", "unchecked" })
             @Override
-            public Publisher<Object> apply(Flowable<? extends Throwable> o) {
-                return (Publisher)o;
+            public Observable<Object> apply(Observable<? extends Throwable> o) {
+                return (Observable)o;
             }
         });
 
@@ -2566,7 +2464,7 @@ public class CompletableTest {
 
     @Test(timeout = 5000)
     public void subscribeTwoCallbacksCompleteThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             final AtomicReference<Throwable> err = new AtomicReference<Throwable>();
             normal.completable.subscribe(new Action() {
@@ -2580,9 +2478,9 @@ public class CompletableTest {
             });
 
             Assert.assertNull(err.get());
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -2653,11 +2551,6 @@ public class CompletableTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void subscribeSubscriberNull() {
-        normal.completable.toFlowable().subscribe((Subscriber<Object>)null);
-    }
-
-    @Test(expected = NullPointerException.class)
     public void subscribeObserverNull() {
         normal.completable.toObservable().subscribe((Observer<Object>)null);
     }
@@ -2665,28 +2558,6 @@ public class CompletableTest {
     @Test(expected = NullPointerException.class)
     public void subscribeCompletableSubscriberNull() {
         normal.completable.subscribe((CompletableObserver)null);
-    }
-
-    @Test(timeout = 5000)
-    public void subscribeSubscriberNormal() {
-        TestSubscriber<Object> ts = new TestSubscriber<Object>();
-
-        normal.completable.toFlowable().subscribe(ts);
-
-        ts.assertComplete();
-        ts.assertNoValues();
-        ts.assertNoErrors();
-    }
-
-    @Test(timeout = 5000)
-    public void subscribeSubscriberError() {
-        TestSubscriber<Object> ts = new TestSubscriber<Object>();
-
-        error.completable.toFlowable().subscribe(ts);
-
-        ts.assertNotComplete();
-        ts.assertNoValues();
-        ts.assertError(TestException.class);
     }
 
     @Test(expected = NullPointerException.class)
@@ -2783,10 +2654,10 @@ public class CompletableTest {
 
     @Test(timeout = 5000)
     public void toNormal() {
-        Flowable<Object> flow = normal.completable.to(new Function<Completable, Flowable<Object>>() {
+        Observable<Object> flow = normal.completable.to(new Function<Completable, Observable<Object>>() {
             @Override
-            public Flowable<Object> apply(Completable c) {
-                return c.toFlowable();
+            public Observable<Object> apply(Completable c) {
+                return c.toObservable();
             }
         });
 
@@ -2799,16 +2670,6 @@ public class CompletableTest {
     @Test(expected = NullPointerException.class)
     public void toNull() {
         normal.completable.to(null);
-    }
-
-    @Test(timeout = 5000)
-    public void toFlowableNormal() {
-        normal.completable.toFlowable().blockingForEach(Functions.emptyConsumer());
-    }
-
-    @Test(timeout = 5000, expected = TestException.class)
-    public void toFlowableError() {
-        error.completable.toFlowable().blockingForEach(Functions.emptyConsumer());
     }
 
     @Test(timeout = 5000)
@@ -2948,14 +2809,10 @@ public class CompletableTest {
 
     @Test(timeout = 5000)
     public void ambArrayOneFires() {
-        PublishProcessor<Object> ps1 = PublishProcessor.create();
-        PublishProcessor<Object> ps2 = PublishProcessor.create();
+        CompletableSubject ps1 = CompletableSubject.create();
+        CompletableSubject ps2 = CompletableSubject.create();
 
-        Completable c1 = Completable.fromPublisher(ps1);
-
-        Completable c2 = Completable.fromPublisher(ps2);
-
-        Completable c = Completable.ambArray(c1, c2);
+        Completable c = Completable.ambArray(ps1, ps2);
 
         final AtomicBoolean complete = new AtomicBoolean();
 
@@ -2966,27 +2823,23 @@ public class CompletableTest {
             }
         });
 
-        Assert.assertTrue("First subject no subscribers", ps1.hasSubscribers());
-        Assert.assertTrue("Second subject no subscribers", ps2.hasSubscribers());
+        Assert.assertTrue("First subject no subscribers", ps1.hasObservers());
+        Assert.assertTrue("Second subject no subscribers", ps2.hasObservers());
 
         ps1.onComplete();
 
-        Assert.assertFalse("First subject has subscribers", ps1.hasSubscribers());
-        Assert.assertFalse("Second subject has subscribers", ps2.hasSubscribers());
+        Assert.assertFalse("First subject has subscribers", ps1.hasObservers());
+        Assert.assertFalse("Second subject has subscribers", ps2.hasObservers());
 
         Assert.assertTrue("Not completed", complete.get());
     }
 
     @Test(timeout = 5000)
     public void ambArrayOneFiresError() {
-        PublishProcessor<Object> ps1 = PublishProcessor.create();
-        PublishProcessor<Object> ps2 = PublishProcessor.create();
+        CompletableSubject ps1 = CompletableSubject.create();
+        CompletableSubject ps2 = CompletableSubject.create();
 
-        Completable c1 = Completable.fromPublisher(ps1);
-
-        Completable c2 = Completable.fromPublisher(ps2);
-
-        Completable c = Completable.ambArray(c1, c2);
+        Completable c = Completable.ambArray(ps1, ps2);
 
         final AtomicReference<Throwable> complete = new AtomicReference<Throwable>();
 
@@ -2997,27 +2850,23 @@ public class CompletableTest {
             }
         });
 
-        Assert.assertTrue("First subject no subscribers", ps1.hasSubscribers());
-        Assert.assertTrue("Second subject no subscribers", ps2.hasSubscribers());
+        Assert.assertTrue("First subject no subscribers", ps1.hasObservers());
+        Assert.assertTrue("Second subject no subscribers", ps2.hasObservers());
 
         ps1.onError(new TestException());
 
-        Assert.assertFalse("First subject has subscribers", ps1.hasSubscribers());
-        Assert.assertFalse("Second subject has subscribers", ps2.hasSubscribers());
+        Assert.assertFalse("First subject has subscribers", ps1.hasObservers());
+        Assert.assertFalse("Second subject has subscribers", ps2.hasObservers());
 
         Assert.assertTrue("Not completed", complete.get() instanceof TestException);
     }
 
     @Test(timeout = 5000)
     public void ambArraySecondFires() {
-        PublishProcessor<Object> ps1 = PublishProcessor.create();
-        PublishProcessor<Object> ps2 = PublishProcessor.create();
+        CompletableSubject ps1 = CompletableSubject.create();
+        CompletableSubject ps2 = CompletableSubject.create();
 
-        Completable c1 = Completable.fromPublisher(ps1);
-
-        Completable c2 = Completable.fromPublisher(ps2);
-
-        Completable c = Completable.ambArray(c1, c2);
+        Completable c = Completable.ambArray(ps1, ps2);
 
         final AtomicBoolean complete = new AtomicBoolean();
 
@@ -3028,27 +2877,23 @@ public class CompletableTest {
             }
         });
 
-        Assert.assertTrue("First subject no subscribers", ps1.hasSubscribers());
-        Assert.assertTrue("Second subject no subscribers", ps2.hasSubscribers());
+        Assert.assertTrue("First subject no subscribers", ps1.hasObservers());
+        Assert.assertTrue("Second subject no subscribers", ps2.hasObservers());
 
         ps2.onComplete();
 
-        Assert.assertFalse("First subject has subscribers", ps1.hasSubscribers());
-        Assert.assertFalse("Second subject has subscribers", ps2.hasSubscribers());
+        Assert.assertFalse("First subject has subscribers", ps1.hasObservers());
+        Assert.assertFalse("Second subject has subscribers", ps2.hasObservers());
 
         Assert.assertTrue("Not completed", complete.get());
     }
 
     @Test(timeout = 5000)
     public void ambArraySecondFiresError() {
-        PublishProcessor<Object> ps1 = PublishProcessor.create();
-        PublishProcessor<Object> ps2 = PublishProcessor.create();
+        CompletableSubject ps1 = CompletableSubject.create();
+        CompletableSubject ps2 = CompletableSubject.create();
 
-        Completable c1 = Completable.fromPublisher(ps1);
-
-        Completable c2 = Completable.fromPublisher(ps2);
-
-        Completable c = Completable.ambArray(c1, c2);
+        Completable c = Completable.ambArray(ps1, ps2);
 
         final AtomicReference<Throwable> complete = new AtomicReference<Throwable>();
 
@@ -3059,13 +2904,13 @@ public class CompletableTest {
             }
         });
 
-        Assert.assertTrue("First subject no subscribers", ps1.hasSubscribers());
-        Assert.assertTrue("Second subject no subscribers", ps2.hasSubscribers());
+        Assert.assertTrue("First subject no subscribers", ps1.hasObservers());
+        Assert.assertTrue("Second subject no subscribers", ps2.hasObservers());
 
         ps2.onError(new TestException());
 
-        Assert.assertFalse("First subject has subscribers", ps1.hasSubscribers());
-        Assert.assertFalse("Second subject has subscribers", ps2.hasSubscribers());
+        Assert.assertFalse("First subject has subscribers", ps1.hasObservers());
+        Assert.assertFalse("Second subject has subscribers", ps2.hasObservers());
 
         Assert.assertTrue("Not completed", complete.get() instanceof TestException);
     }
@@ -3169,14 +3014,10 @@ public class CompletableTest {
 
     @Test(timeout = 5000)
     public void ambWithArrayOneFires() {
-        PublishProcessor<Object> ps1 = PublishProcessor.create();
-        PublishProcessor<Object> ps2 = PublishProcessor.create();
+        CompletableSubject ps1 = CompletableSubject.create();
+        CompletableSubject ps2 = CompletableSubject.create();
 
-        Completable c1 = Completable.fromPublisher(ps1);
-
-        Completable c2 = Completable.fromPublisher(ps2);
-
-        Completable c = c1.ambWith(c2);
+        Completable c = ps1.ambWith(ps2);
 
         final AtomicBoolean complete = new AtomicBoolean();
 
@@ -3187,27 +3028,23 @@ public class CompletableTest {
             }
         });
 
-        Assert.assertTrue("First subject no subscribers", ps1.hasSubscribers());
-        Assert.assertTrue("Second subject no subscribers", ps2.hasSubscribers());
+        Assert.assertTrue("First subject no subscribers", ps1.hasObservers());
+        Assert.assertTrue("Second subject no subscribers", ps2.hasObservers());
 
         ps1.onComplete();
 
-        Assert.assertFalse("First subject has subscribers", ps1.hasSubscribers());
-        Assert.assertFalse("Second subject has subscribers", ps2.hasSubscribers());
+        Assert.assertFalse("First subject has subscribers", ps1.hasObservers());
+        Assert.assertFalse("Second subject has subscribers", ps2.hasObservers());
 
         Assert.assertTrue("Not completed", complete.get());
     }
 
     @Test(timeout = 5000)
     public void ambWithArrayOneFiresError() {
-        PublishProcessor<Object> ps1 = PublishProcessor.create();
-        PublishProcessor<Object> ps2 = PublishProcessor.create();
+        CompletableSubject ps1 = CompletableSubject.create();
+        CompletableSubject ps2 = CompletableSubject.create();
 
-        Completable c1 = Completable.fromPublisher(ps1);
-
-        Completable c2 = Completable.fromPublisher(ps2);
-
-        Completable c = c1.ambWith(c2);
+        Completable c = ps1.ambWith(ps2);
 
         final AtomicReference<Throwable> complete = new AtomicReference<Throwable>();
 
@@ -3218,27 +3055,23 @@ public class CompletableTest {
             }
         });
 
-        Assert.assertTrue("First subject no subscribers", ps1.hasSubscribers());
-        Assert.assertTrue("Second subject no subscribers", ps2.hasSubscribers());
+        Assert.assertTrue("First subject no subscribers", ps1.hasObservers());
+        Assert.assertTrue("Second subject no subscribers", ps2.hasObservers());
 
         ps1.onError(new TestException());
 
-        Assert.assertFalse("First subject has subscribers", ps1.hasSubscribers());
-        Assert.assertFalse("Second subject has subscribers", ps2.hasSubscribers());
+        Assert.assertFalse("First subject has subscribers", ps1.hasObservers());
+        Assert.assertFalse("Second subject has subscribers", ps2.hasObservers());
 
         Assert.assertTrue("Not completed", complete.get() instanceof TestException);
     }
 
     @Test(timeout = 5000)
     public void ambWithArraySecondFires() {
-        PublishProcessor<Object> ps1 = PublishProcessor.create();
-        PublishProcessor<Object> ps2 = PublishProcessor.create();
+        CompletableSubject ps1 = CompletableSubject.create();
+        CompletableSubject ps2 = CompletableSubject.create();
 
-        Completable c1 = Completable.fromPublisher(ps1);
-
-        Completable c2 = Completable.fromPublisher(ps2);
-
-        Completable c = c1.ambWith(c2);
+        Completable c = ps1.ambWith(ps2);
 
         final AtomicBoolean complete = new AtomicBoolean();
 
@@ -3249,27 +3082,23 @@ public class CompletableTest {
             }
         });
 
-        Assert.assertTrue("First subject no subscribers", ps1.hasSubscribers());
-        Assert.assertTrue("Second subject no subscribers", ps2.hasSubscribers());
+        Assert.assertTrue("First subject no subscribers", ps1.hasObservers());
+        Assert.assertTrue("Second subject no subscribers", ps2.hasObservers());
 
         ps2.onComplete();
 
-        Assert.assertFalse("First subject has subscribers", ps1.hasSubscribers());
-        Assert.assertFalse("Second subject has subscribers", ps2.hasSubscribers());
+        Assert.assertFalse("First subject has subscribers", ps1.hasObservers());
+        Assert.assertFalse("Second subject has subscribers", ps2.hasObservers());
 
         Assert.assertTrue("Not completed", complete.get());
     }
 
     @Test(timeout = 5000)
     public void ambWithArraySecondFiresError() {
-        PublishProcessor<Object> ps1 = PublishProcessor.create();
-        PublishProcessor<Object> ps2 = PublishProcessor.create();
+        CompletableSubject ps1 = CompletableSubject.create();
+        CompletableSubject ps2 = CompletableSubject.create();
 
-        Completable c1 = Completable.fromPublisher(ps1);
-
-        Completable c2 = Completable.fromPublisher(ps2);
-
-        Completable c = c1.ambWith(c2);
+        Completable c = ps1.ambWith(ps2);
 
         final AtomicReference<Throwable> complete = new AtomicReference<Throwable>();
 
@@ -3280,13 +3109,13 @@ public class CompletableTest {
             }
         });
 
-        Assert.assertTrue("First subject no subscribers", ps1.hasSubscribers());
-        Assert.assertTrue("Second subject no subscribers", ps2.hasSubscribers());
+        Assert.assertTrue("First subject no subscribers", ps1.hasObservers());
+        Assert.assertTrue("Second subject no subscribers", ps2.hasObservers());
 
         ps2.onError(new TestException());
 
-        Assert.assertFalse("First subject has subscribers", ps1.hasSubscribers());
-        Assert.assertFalse("Second subject has subscribers", ps2.hasSubscribers());
+        Assert.assertFalse("First subject has subscribers", ps1.hasObservers());
+        Assert.assertFalse("Second subject has subscribers", ps2.hasObservers());
 
         Assert.assertTrue("Not completed", complete.get() instanceof TestException);
     }
@@ -3320,46 +3149,6 @@ public class CompletableTest {
             normal.assertSubscriptions(0);
             error.assertSubscriptions(1);
         }
-    }
-
-    @Test(timeout = 5000)
-    public void startWithFlowableNormal() {
-        final AtomicBoolean run = new AtomicBoolean();
-        Flowable<Object> c = normal.completable
-                .startWith(Flowable.fromCallable(new Callable<Object>() {
-                    @Override
-                    public Object call() throws Exception {
-                        run.set(normal.get() == 0);
-                        return 1;
-                    }
-                }));
-
-        TestSubscriber<Object> ts = new TestSubscriber<Object>();
-
-        c.subscribe(ts);
-
-        Assert.assertTrue("Did not start with other", run.get());
-        normal.assertSubscriptions(1);
-
-        ts.assertValue(1);
-        ts.assertComplete();
-        ts.assertNoErrors();
-    }
-
-    @Test(timeout = 5000)
-    public void startWithFlowableError() {
-        Flowable<Object> c = normal.completable
-                .startWith(Flowable.error(new TestException()));
-
-        TestSubscriber<Object> ts = new TestSubscriber<Object>();
-
-        c.subscribe(ts);
-
-        normal.assertSubscriptions(0);
-
-        ts.assertNoValues();
-        ts.assertError(TestException.class);
-        ts.assertNotComplete();
     }
 
     @Test(timeout = 5000)
@@ -3408,24 +3197,12 @@ public class CompletableTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void startWithFlowableNull() {
-        normal.completable.startWith((Flowable<Object>)null);
-    }
-
-    @Test(expected = NullPointerException.class)
     public void startWithObservableNull() {
         normal.completable.startWith((Observable<Object>)null);
     }
 
     @Test
     public void andThen() {
-        TestSubscriber<String> ts = new TestSubscriber<String>(0);
-        Completable.complete().andThen(Flowable.just("foo")).subscribe(ts);
-        ts.request(1);
-        ts.assertValue("foo");
-        ts.assertComplete();
-        ts.assertNoErrors();
-
         TestObserver<String> to = new TestObserver<String>();
         Completable.complete().andThen(Observable.just("foo")).subscribe(to);
         to.assertValue("foo");
@@ -3514,7 +3291,7 @@ public class CompletableTest {
             }
         };
 
-        TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
+        TestObserver<Integer> ts = new TestObserver<Integer>();
 
         Completable.using(new Callable<Integer>() {
             @Override
@@ -3527,7 +3304,7 @@ public class CompletableTest {
             public Completable apply(Integer t) {
                 return null;
             }
-        }, onDispose).<Integer>toFlowable().subscribe(ts);
+        }, onDispose).subscribe(ts);
 
         ts.assertNoValues();
         ts.assertNotComplete();
@@ -3652,11 +3429,10 @@ public class CompletableTest {
 
     @Test
     public void andThenSubscribeOn() {
-        TestSubscriber<String> ts = new TestSubscriber<String>(0);
+        TestObserver<String> ts = new TestObserver<String>();
         TestScheduler scheduler = new TestScheduler();
-        Completable.complete().andThen(Flowable.just("foo").delay(1, TimeUnit.SECONDS, scheduler)).subscribe(ts);
+        Completable.complete().andThen(Observable.just("foo").delay(1, TimeUnit.SECONDS, scheduler)).subscribe(ts);
 
-        ts.request(1);
         ts.assertNoValues();
         ts.assertNotTerminated();
 
@@ -3669,16 +3445,15 @@ public class CompletableTest {
 
     @Test
     public void andThenSingleNever() {
-        TestSubscriber<String> ts = new TestSubscriber<String>(0);
-        Completable.never().andThen(Single.just("foo")).toFlowable().subscribe(ts);
-        ts.request(1);
+        TestObserver<String> ts = new TestObserver<String>();
+        Completable.never().andThen(Single.just("foo")).subscribe(ts);
         ts.assertNoValues();
         ts.assertNotTerminated();
     }
 
     @Test
     public void andThenSingleError() {
-        TestSubscriber<String> ts = new TestSubscriber<String>(0);
+        TestObserver<String> ts = new TestObserver<String>();
         final AtomicBoolean hasRun = new AtomicBoolean(false);
         final Exception e = new Exception();
         Completable.error(e)
@@ -3689,7 +3464,7 @@ public class CompletableTest {
                     s.onSuccess("foo");
                 }
             })
-            .toFlowable().subscribe(ts);
+            .subscribe(ts);
         ts.assertNoValues();
         ts.assertError(e);
         Assert.assertFalse("Should not have subscribed to single when completable errors", hasRun.get());
@@ -3697,11 +3472,11 @@ public class CompletableTest {
 
     @Test
     public void andThenSingleSubscribeOn() {
-        TestSubscriber<String> ts = new TestSubscriber<String>(0);
+        TestObserver<String> ts = new TestObserver<String>();
         TestScheduler scheduler = new TestScheduler();
-        Completable.complete().andThen(Single.just("foo").delay(1, TimeUnit.SECONDS, scheduler)).toFlowable().subscribe(ts);
+        Completable.complete().andThen(Single.just("foo").delay(1, TimeUnit.SECONDS, scheduler))
+        .subscribe(ts);
 
-        ts.request(1);
         ts.assertNoValues();
         ts.assertNotTerminated();
 
@@ -3725,7 +3500,7 @@ public class CompletableTest {
             }
         });
 
-        RxJavaPlugins.setOnCompletableAssembly(onCreate);
+        RxJavaObservablePlugins.setOnCompletableAssembly(onCreate);
 
         onStart = spy(new BiFunction<Completable, CompletableObserver, CompletableObserver>() {
             @Override
@@ -3734,12 +3509,12 @@ public class CompletableTest {
             }
         });
 
-        RxJavaPlugins.setOnCompletableSubscribe(onStart);
+        RxJavaObservablePlugins.setOnCompletableSubscribe(onStart);
     }
 
     @After
     public void after() {
-        RxJavaPlugins.reset();
+        RxJavaObservablePlugins.reset();
     }
 
     @Test
@@ -3937,52 +3712,12 @@ public class CompletableTest {
         }
     }
 
-    @Test(timeout = 5000)
-    public void andThenFlowableNormal() {
-        final AtomicBoolean run = new AtomicBoolean();
-        Flowable<Object> c = normal.completable
-                .andThen(Flowable.fromCallable(new Callable<Object>() {
-                    @Override
-                    public Object call() throws Exception {
-                        run.set(normal.get() == 0);
-                        return 1;
-                    }
-                }));
-
-        TestSubscriber<Object> ts = new TestSubscriber<Object>();
-
-        c.subscribe(ts);
-
-        Assert.assertFalse("Start with other", run.get());
-        normal.assertSubscriptions(1);
-
-        ts.assertValue(1);
-        ts.assertComplete();
-        ts.assertNoErrors();
-    }
-
-    @Test(timeout = 5000)
-    public void andThenFlowableError() {
-        Flowable<Object> c = normal.completable
-                .andThen(Flowable.error(new TestException()));
-
-        TestSubscriber<Object> ts = new TestSubscriber<Object>();
-
-        c.subscribe(ts);
-
-        normal.assertSubscriptions(1);
-
-        ts.assertNoValues();
-        ts.assertError(TestException.class);
-        ts.assertNotComplete();
-    }
-
     @Test
     public void usingFactoryThrows() throws Exception {
         @SuppressWarnings("unchecked")
         Consumer<Integer> onDispose = mock(Consumer.class);
 
-        TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
+        TestObserver<Integer> ts = new TestObserver<Integer>();
 
         Completable.using(new Callable<Integer>() {
             @Override
@@ -3995,7 +3730,7 @@ public class CompletableTest {
             public Completable apply(Integer t) {
                 throw new TestException();
             }
-        }, onDispose).<Integer>toFlowable().subscribe(ts);
+        }, onDispose).subscribe(ts);
 
         verify(onDispose).accept(1);
 
@@ -4013,7 +3748,7 @@ public class CompletableTest {
             }
         };
 
-        TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
+        TestObserver<Integer> ts = new TestObserver<Integer>();
 
         Completable.using(new Callable<Integer>() {
             @Override
@@ -4026,7 +3761,7 @@ public class CompletableTest {
             public Completable apply(Integer t) {
                 throw new TestException();
             }
-        }, onDispose).<Integer>toFlowable().subscribe(ts);
+        }, onDispose).subscribe(ts);
 
         ts.assertNoValues();
         ts.assertNotComplete();
@@ -4047,7 +3782,7 @@ public class CompletableTest {
         @SuppressWarnings("unchecked")
         Consumer<Integer> onDispose = mock(Consumer.class);
 
-        TestSubscriber<Integer> ts = TestSubscriber.create();
+        TestObserver<Integer> ts = TestObserver.create();
 
         Completable.using(new Callable<Integer>() {
             @Override
@@ -4060,7 +3795,7 @@ public class CompletableTest {
             public Completable apply(Integer t) {
                 return null;
             }
-        }, onDispose).<Integer>toFlowable().subscribe(ts);
+        }, onDispose).subscribe(ts);
 
         verify(onDispose).accept(1);
 
@@ -4158,14 +3893,14 @@ public class CompletableTest {
 
     @Test
     public void testHookSubscribeStart() throws Exception {
-        TestSubscriber<String> ts = new TestSubscriber<String>();
+        TestObserver<String> ts = new TestObserver<String>();
 
         Completable completable = Completable.unsafeCreate(new CompletableSource() {
             @Override public void subscribe(CompletableObserver s) {
                 s.onComplete();
             }
         });
-        completable.<String>toFlowable().subscribe(ts);
+        completable.subscribe(ts);
 
         verify(onStart, times(1)).apply(eq(completable), any(CompletableObserver.class));
     }
@@ -4174,7 +3909,7 @@ public class CompletableTest {
     @Test
     public void testHookUnsafeSubscribeStart() {
         /*
-        TestSubscriber<String> ts = new TestSubscriber<String>();
+        TestObserver<String> ts = new TestObserver<String>();
         Completable completable = Completable.create(new CompletableOnSubscribe() {
             @Override public void call(CompletableSubscriber s) {
                 s.onComplete();
@@ -4186,27 +3921,11 @@ public class CompletableTest {
         */
     }
 
-    @Test
-    public void onStartCalledSafe() {
-        TestSubscriber<Object> ts = new TestSubscriber<Object>() {
-            @Override
-            public void onStart() {
-                onNext(1);
-            }
-        };
-
-        normal.completable.<Object>toFlowable().subscribe(ts);
-
-        ts.assertValue(1);
-        ts.assertNoErrors();
-        ts.assertComplete();
-    }
-
     @Ignore("No unsafeSubscribe")
     @Test
     public void onStartCalledUnsafeSafe() {
         /*
-        TestSubscriber<Object> ts = new TestSubscriber<Object>() {
+        TestObserver<Object> ts = new TestObserver<Object>() {
             @Override
             public void onStart() {
                 onNext(1);
@@ -4223,14 +3942,14 @@ public class CompletableTest {
 
     @Test
     public void onErrorCompleteFunctionThrows() {
-        TestSubscriber<String> ts = new TestSubscriber<String>();
+        TestObserver<String> ts = new TestObserver<String>();
 
         error.completable.onErrorComplete(new Predicate<Throwable>() {
             @Override
             public boolean test(Throwable t) {
                 throw new TestException("Forced inner failure");
             }
-        }).<String>toFlowable().subscribe(ts);
+        }).subscribe(ts);
 
         ts.assertNoValues();
         ts.assertNotComplete();
@@ -4383,16 +4102,15 @@ public class CompletableTest {
 
     @Test
     public void andThenNever() {
-        TestSubscriber<String> ts = new TestSubscriber<String>(0);
-        Completable.never().andThen(Flowable.just("foo")).subscribe(ts);
-        ts.request(1);
+        TestObserver<String> ts = new TestObserver<String>();
+        Completable.never().andThen(Observable.just("foo")).subscribe(ts);
         ts.assertNoValues();
         ts.assertNotTerminated();
     }
 
     @Test
     public void andThenError() {
-        TestSubscriber<String> ts = new TestSubscriber<String>(0);
+        TestObserver<String> ts = new TestObserver<String>();
         final AtomicBoolean hasRun = new AtomicBoolean(false);
         final Exception e = new Exception();
         Completable.unsafeCreate(new CompletableSource() {
@@ -4401,15 +4119,15 @@ public class CompletableTest {
                     cs.onError(e);
                 }
             })
-            .andThen(Flowable.<String>unsafeCreate(new Publisher<String>() {
+            .andThen(new Observable<String>() {
                 @Override
-                public void subscribe(Subscriber<? super String> s) {
+                public void subscribeActual(Observer<? super String> s) {
                     hasRun.set(true);
-                    s.onSubscribe(new BooleanSubscription());
+                    s.onSubscribe(new SequentialDisposable());
                     s.onNext("foo");
                     s.onComplete();
                 }
-            }))
+            })
             .subscribe(ts);
         ts.assertNoValues();
         ts.assertError(e);
@@ -4418,9 +4136,8 @@ public class CompletableTest {
 
     @Test
     public void andThenSingle() {
-        TestSubscriber<String> ts = new TestSubscriber<String>(0);
-        Completable.complete().andThen(Single.just("foo")).toFlowable().subscribe(ts);
-        ts.request(1);
+        TestObserver<String> ts = new TestObserver<String>();
+        Completable.complete().andThen(Single.just("foo")).subscribe(ts);
         ts.assertValue("foo");
         ts.assertComplete();
         ts.assertNoErrors();
@@ -4574,16 +4291,16 @@ public class CompletableTest {
 
     @Test(timeout = 5000)
     public void subscribeTwoCallbacksDispose() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        Disposable d = pp.ignoreElements().subscribe(Functions.EMPTY_ACTION, Functions.emptyConsumer());
+        CompletableSubject pp = CompletableSubject.create();
+        Disposable d = pp.subscribe(Functions.EMPTY_ACTION, Functions.emptyConsumer());
 
         assertFalse(d.isDisposed());
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         d.dispose();
 
         assertTrue(d.isDisposed());
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
     }
 
 }

@@ -14,16 +14,16 @@
 package io.reactivex.observable.internal.operators;
 
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import org.junit.*;
 import org.mockito.Mockito;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.*;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.*;
 
 public class ObservableOnErrorResumeNextViaObservableTest {
 

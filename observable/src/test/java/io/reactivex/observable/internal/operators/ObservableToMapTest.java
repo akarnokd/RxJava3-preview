@@ -13,17 +13,18 @@
 
 package io.reactivex.observable.internal.operators;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.Callable;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.functions.Function;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
 
 public class ObservableToMapTest {
     Observer<Object> objectObserver;

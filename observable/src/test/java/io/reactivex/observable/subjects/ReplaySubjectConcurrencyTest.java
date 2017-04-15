@@ -21,13 +21,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.functions.Consumer;
-import io.reactivex.observers.*;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.ObservableSource;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.observers.*;
 
 public class ReplaySubjectConcurrencyTest {
 

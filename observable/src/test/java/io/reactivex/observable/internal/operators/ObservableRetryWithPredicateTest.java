@@ -19,22 +19,21 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.observers.*;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.*;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class ObservableRetryWithPredicateTest {
     BiPredicate<Integer, Throwable> retryTwice = new BiPredicate<Integer, Throwable>() {
@@ -411,7 +410,7 @@ public class ObservableRetryWithPredicateTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             to.assertEmpty();
         }
@@ -464,7 +463,7 @@ public class ObservableRetryWithPredicateTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             to.assertEmpty();
         }

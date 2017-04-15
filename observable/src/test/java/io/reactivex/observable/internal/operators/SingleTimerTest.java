@@ -20,10 +20,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.observers.TestObserver;
 
 public class SingleTimerTest {
 

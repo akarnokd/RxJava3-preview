@@ -20,14 +20,14 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.Disposables;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.PublishSubject;
 ;
 
 public class ObservableTakeUntilPredicateTest {
@@ -170,7 +170,7 @@ public class ObservableTakeUntilPredicateTest {
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Observable<Integer>() {
                 @Override
@@ -186,7 +186,7 @@ public class ObservableTakeUntilPredicateTest {
             .test()
             .assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

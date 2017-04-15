@@ -20,15 +20,14 @@ import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
 
 public class SingleUsingTest {
 
@@ -114,14 +113,14 @@ public class SingleUsingTest {
     @Test
     public void noneagerMapperThrowsDisposerThrows() {
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Single.using(Functions.justCallable(Disposables.empty()), mapperThrows, disposerThrows, false)
             .test()
             .assertFailureAndMessage(TestException.class, "Mapper");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Disposer");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Disposer");
         } finally {
             RxJavaPlugins.reset();
         }
@@ -169,13 +168,13 @@ public class SingleUsingTest {
     @Test
     public void disposerThrowsNonEager() {
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Single.using(Functions.justCallable(Disposables.empty()), mapper, disposerThrows, false)
             .test()
             .assertResult(1);
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Disposer");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Disposer");
         } finally {
             RxJavaPlugins.reset();
         }
@@ -200,7 +199,7 @@ public class SingleUsingTest {
 
     @Test
     public void errorAndDisposerThrowsNonEager() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Single.using(Functions.justCallable(Disposables.empty()),
@@ -212,7 +211,7 @@ public class SingleUsingTest {
             }, disposerThrows, false)
             .test()
             .assertFailure(TestException.class);
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Disposer");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Disposer");
         } finally {
             RxJavaPlugins.reset();
         }
@@ -248,7 +247,7 @@ public class SingleUsingTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             assertTrue(d.isDisposed());
         }
@@ -256,7 +255,7 @@ public class SingleUsingTest {
 
     @Test
     public void doubleOnSubscribe() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Single.using(Functions.justCallable(1), new Function<Integer, SingleSource<Integer>>() {
@@ -323,7 +322,7 @@ public class SingleUsingTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             assertTrue(d.isDisposed());
         }

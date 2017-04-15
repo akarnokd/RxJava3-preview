@@ -14,6 +14,7 @@
 package io.reactivex.observable.internal.operators;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
@@ -21,9 +22,10 @@ import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.fuseable.QueueDisposable;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.QueueDisposable;
+import io.reactivex.observable.observers.*;
 import io.reactivex.observers.*;
 
 public class ObservableRangeTest {

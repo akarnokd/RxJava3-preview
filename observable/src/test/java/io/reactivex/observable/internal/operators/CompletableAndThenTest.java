@@ -13,9 +13,9 @@
 
 package io.reactivex.observable.internal.operators;
 
-import io.reactivex.Completable;
-import io.reactivex.Maybe;
 import org.junit.Test;
+
+import io.reactivex.observable.*;
 
 public class CompletableAndThenTest {
     @Test(expected = NullPointerException.class)

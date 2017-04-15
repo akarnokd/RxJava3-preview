@@ -20,9 +20,8 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import io.reactivex.*;
-import io.reactivex.schedulers.TestScheduler;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.common.TestScheduler;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class ObservableThrottleLastTests {
 

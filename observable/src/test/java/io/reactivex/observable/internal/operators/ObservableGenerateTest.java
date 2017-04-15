@@ -13,16 +13,17 @@
 
 package io.reactivex.observable.internal.operators;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableGenerateTest {
@@ -86,7 +87,7 @@ public class ObservableGenerateTest {
 
     @Test
     public void disposerThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Observable.generate(new Callable<Object>() {
                 @Override
@@ -107,7 +108,7 @@ public class ObservableGenerateTest {
             .test()
             .assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -163,7 +164,7 @@ public class ObservableGenerateTest {
 
     @Test
     public void multipleOnError() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Observable.generate(new Consumer<Emitter<Object>>() {
                 @Override
@@ -175,7 +176,7 @@ public class ObservableGenerateTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
             RxJavaPlugins.reset();
         }

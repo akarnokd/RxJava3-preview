@@ -19,22 +19,20 @@ import static org.mockito.Mockito.*;
 
 import java.lang.management.ManagementFactory;
 import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.observables.ConnectableObservable;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.*;
-import io.reactivex.subjects.ReplaySubject;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.ReplaySubject;
 
 public class ObservableRefCountTest {
 

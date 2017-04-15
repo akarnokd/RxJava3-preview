@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.observable.*;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public class SafeObserverTest {
@@ -680,7 +680,7 @@ public class SafeObserverTest {
 
     @Test
     public void onNextOnErrorCrash() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             CrashDummy cd = new CrashDummy(false, 1, true, false, false);
@@ -713,7 +713,7 @@ public class SafeObserverTest {
 
     @Test
     public void onSubscribeTwice() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             CrashDummy cd = new CrashDummy(false, 1, false, false, false);
@@ -729,14 +729,14 @@ public class SafeObserverTest {
 
     @Test
     public void onSubscribeCrashes() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             CrashDummy cd = new CrashDummy(true, 1, false, false, false);
             SafeObserver<Object> so = cd.toSafe();
             so.onSubscribe(cd);
 
-            TestHelper.assertUndeliverable(list, 0, TestException.class, "onSubscribe()");
+            TestCommonHelper.assertUndeliverable(list, 0, TestException.class, "onSubscribe()");
         } finally {
             RxJavaPlugins.reset();
         }
@@ -744,7 +744,7 @@ public class SafeObserverTest {
 
     @Test
     public void onSubscribeAndDisposeCrashes() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             CrashDummy cd = new CrashDummy(true, 1, false, false, true);
@@ -762,7 +762,7 @@ public class SafeObserverTest {
 
     @Test
     public void onNextOnSubscribeCrash() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             CrashDummy cd = new CrashDummy(true, 1, false, false, false);
@@ -793,7 +793,7 @@ public class SafeObserverTest {
 
     @Test
     public void noSubscribeOnErrorCrashes() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             CrashDummy cd = new CrashDummy(false, 1, true, false, false);
@@ -823,7 +823,7 @@ public class SafeObserverTest {
 
     @Test
     public void onErrorNoSubscribeCrash() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             CrashDummy cd = new CrashDummy(true, 1, false, false, false);
@@ -842,7 +842,7 @@ public class SafeObserverTest {
 
     @Test
     public void onErrorNoSubscribeOnErrorCrash() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             CrashDummy cd = new CrashDummy(false, 1, true, false, false);
@@ -862,7 +862,7 @@ public class SafeObserverTest {
 
     @Test
     public void onCompleteteCrash() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             CrashDummy cd = new CrashDummy(false, 1, false, true, false);
@@ -872,7 +872,7 @@ public class SafeObserverTest {
 
             so.onComplete();
 
-            TestHelper.assertUndeliverable(list, 0, TestException.class, "onComplete()");
+            TestCommonHelper.assertUndeliverable(list, 0, TestException.class, "onComplete()");
         } finally {
             RxJavaPlugins.reset();
         }
@@ -880,7 +880,7 @@ public class SafeObserverTest {
 
     @Test
     public void onCompleteteNoSubscribeCrash() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             CrashDummy cd = new CrashDummy(true, 1, false, true, false);
@@ -899,7 +899,7 @@ public class SafeObserverTest {
 
     @Test
     public void onCompleteteNoSubscribeOnErrorCrash() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             CrashDummy cd = new CrashDummy(false, 1, true, true, false);

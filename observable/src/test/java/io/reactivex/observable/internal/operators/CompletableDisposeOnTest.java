@@ -20,13 +20,13 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Action;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.TestScheduler;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Action;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.TestScheduler;
-import io.reactivex.subjects.PublishSubject;
 
 public class CompletableDisposeOnTest {
 
@@ -72,7 +72,7 @@ public class CompletableDisposeOnTest {
 
     @Test
     public void errorAfterCancel() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestScheduler scheduler = new TestScheduler();
 
@@ -88,7 +88,7 @@ public class CompletableDisposeOnTest {
 
             to.assertEmpty();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

@@ -16,21 +16,21 @@ package io.reactivex.observable.internal.operators;
 import static org.junit.Assert.*;
 
 import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.operators.observable.BlockingObservableNext.NextObserver;
+import io.reactivex.common.*;
+import io.reactivex.common.disposables.SerialDisposable;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.operators.BlockingObservableNext.NextObserver;
+import io.reactivex.observable.subjects.*;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.BehaviorProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.*;
 
 public class BlockingObservableNextTest {
 
@@ -358,11 +358,11 @@ public class BlockingObservableNextTest {
     public void nextObserverError() {
         NextObserver<Integer> no = new NextObserver<Integer>();
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             no.onError(new TestException());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

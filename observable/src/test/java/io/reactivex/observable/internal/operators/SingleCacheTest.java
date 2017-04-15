@@ -15,11 +15,10 @@ package io.reactivex.observable.internal.operators;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
 
 public class SingleCacheTest {
 
@@ -62,7 +61,7 @@ public class SingleCacheTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 

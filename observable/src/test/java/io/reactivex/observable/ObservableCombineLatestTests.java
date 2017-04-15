@@ -19,10 +19,9 @@ import static io.reactivex.Observable.combineLatest;
 
 import org.junit.*;
 
-import io.reactivex.Observable;
-import io.reactivex.functions.*;
+import io.reactivex.common.functions.*;
 import io.reactivex.observable.ObservableCovarianceTest.*;
-import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.observable.subjects.BehaviorSubject;
 
 public class ObservableCombineLatestTests {
     /**

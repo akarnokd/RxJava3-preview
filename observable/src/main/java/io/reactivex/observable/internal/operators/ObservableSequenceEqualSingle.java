@@ -46,7 +46,7 @@ public final class ObservableSequenceEqualSingle<T> extends Single<Boolean> impl
 
     @Override
     public Observable<Boolean> fuseToObservable() {
-        return RxJavaPlugins.onAssembly(new ObservableSequenceEqual<T>(first, second, comparer, bufferSize));
+        return RxJavaObservablePlugins.onAssembly(new ObservableSequenceEqual<T>(first, second, comparer, bufferSize));
     }
 
     static final class EqualCoordinator<T> extends AtomicInteger implements Disposable {

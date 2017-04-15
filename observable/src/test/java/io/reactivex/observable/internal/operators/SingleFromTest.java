@@ -17,8 +17,7 @@ import java.util.concurrent.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.Schedulers;
 
 public class SingleFromTest {
 

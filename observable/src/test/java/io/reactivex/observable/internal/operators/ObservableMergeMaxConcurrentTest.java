@@ -16,18 +16,17 @@ package io.reactivex.observable.internal.operators;
 import static org.junit.Assert.*;
 
 import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.internal.schedulers.IoScheduler;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.schedulers.IoScheduler;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 
 public class ObservableMergeMaxConcurrentTest {
 

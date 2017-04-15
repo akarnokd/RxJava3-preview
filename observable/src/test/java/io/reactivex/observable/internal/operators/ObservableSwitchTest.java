@@ -14,6 +14,7 @@
 package io.reactivex.observable.internal.operators;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -23,17 +24,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.*;
 import org.mockito.InOrder;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.TestScheduler;
-import io.reactivex.subjects.PublishSubject;
 
 public class ObservableSwitchTest {
 
@@ -722,7 +721,7 @@ public class ObservableSwitchTest {
     @Test
     public void nextSourceErrorRace() {
         for (int i = 0; i < 500; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
 
                 final PublishSubject<Integer> ps1 = PublishSubject.create();
@@ -755,7 +754,7 @@ public class ObservableSwitchTest {
                     }
                 };
 
-                TestHelper.race(r1, r2);
+                TestCommonHelper.race(r1, r2);
 
                 for (Throwable e : errors) {
                     assertTrue(e.toString(), e instanceof TestException);
@@ -769,7 +768,7 @@ public class ObservableSwitchTest {
     @Test
     public void outerInnerErrorRace() {
         for (int i = 0; i < 500; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
 
                 final PublishSubject<Integer> ps1 = PublishSubject.create();
@@ -804,7 +803,7 @@ public class ObservableSwitchTest {
                     }
                 };
 
-                TestHelper.race(r1, r2);
+                TestCommonHelper.race(r1, r2);
 
                 for (Throwable e : errors) {
                     assertTrue(e.toString(), e instanceof TestException);
@@ -842,7 +841,7 @@ public class ObservableSwitchTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -861,7 +860,7 @@ public class ObservableSwitchTest {
 
     @Test
     public void badMainSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Observable<Integer>() {
                 @Override
@@ -876,7 +875,7 @@ public class ObservableSwitchTest {
             .test()
             .assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -900,7 +899,7 @@ public class ObservableSwitchTest {
 
     @Test
     public void badInnerSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Observable.just(1).hide()
             .switchMap(Functions.justFunction(new Observable<Integer>() {
@@ -916,7 +915,7 @@ public class ObservableSwitchTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

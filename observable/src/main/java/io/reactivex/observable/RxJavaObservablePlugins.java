@@ -23,7 +23,7 @@ import io.reactivex.common.internal.utils.ExceptionHelper;
 /**
  * Utility class to inject handlers to certain standard RxJava operations.
  */
-public final class RxJavaPlugins {
+public final class RxJavaObservablePlugins {
 
     @SuppressWarnings("rawtypes")
     @Nullable
@@ -200,7 +200,7 @@ public final class RxJavaPlugins {
         if (lockdown) {
             throw new IllegalStateException("Plugins can't be changed anymore");
         }
-        RxJavaPlugins.onCompletableAssembly = onCompletableAssembly;
+        RxJavaObservablePlugins.onCompletableAssembly = onCompletableAssembly;
     }
 
     /**
@@ -212,7 +212,7 @@ public final class RxJavaPlugins {
         if (lockdown) {
             throw new IllegalStateException("Plugins can't be changed anymore");
         }
-        RxJavaPlugins.onCompletableSubscribe = onCompletableSubscribe;
+        RxJavaObservablePlugins.onCompletableSubscribe = onCompletableSubscribe;
     }
 
     /**
@@ -224,7 +224,7 @@ public final class RxJavaPlugins {
         if (lockdown) {
             throw new IllegalStateException("Plugins can't be changed anymore");
         }
-        RxJavaPlugins.onMaybeAssembly = onMaybeAssembly;
+        RxJavaObservablePlugins.onMaybeAssembly = onMaybeAssembly;
     }
 
     /**
@@ -236,7 +236,7 @@ public final class RxJavaPlugins {
         if (lockdown) {
             throw new IllegalStateException("Plugins can't be changed anymore");
         }
-        RxJavaPlugins.onMaybeSubscribe = onMaybeSubscribe;
+        RxJavaObservablePlugins.onMaybeSubscribe = onMaybeSubscribe;
     }
 
     /**
@@ -248,7 +248,7 @@ public final class RxJavaPlugins {
         if (lockdown) {
             throw new IllegalStateException("Plugins can't be changed anymore");
         }
-        RxJavaPlugins.onObservableAssembly = onObservableAssembly;
+        RxJavaObservablePlugins.onObservableAssembly = onObservableAssembly;
     }
 
     /**
@@ -260,7 +260,7 @@ public final class RxJavaPlugins {
         if (lockdown) {
             throw new IllegalStateException("Plugins can't be changed anymore");
         }
-        RxJavaPlugins.onConnectableObservableAssembly = onConnectableObservableAssembly;
+        RxJavaObservablePlugins.onConnectableObservableAssembly = onConnectableObservableAssembly;
     }
 
     /**
@@ -273,7 +273,7 @@ public final class RxJavaPlugins {
         if (lockdown) {
             throw new IllegalStateException("Plugins can't be changed anymore");
         }
-        RxJavaPlugins.onObservableSubscribe = onObservableSubscribe;
+        RxJavaObservablePlugins.onObservableSubscribe = onObservableSubscribe;
     }
 
     /**
@@ -285,7 +285,7 @@ public final class RxJavaPlugins {
         if (lockdown) {
             throw new IllegalStateException("Plugins can't be changed anymore");
         }
-        RxJavaPlugins.onSingleAssembly = onSingleAssembly;
+        RxJavaObservablePlugins.onSingleAssembly = onSingleAssembly;
     }
 
     /**
@@ -297,7 +297,7 @@ public final class RxJavaPlugins {
         if (lockdown) {
             throw new IllegalStateException("Plugins can't be changed anymore");
         }
-        RxJavaPlugins.onSingleSubscribe = onSingleSubscribe;
+        RxJavaObservablePlugins.onSingleSubscribe = onSingleSubscribe;
     }
 
     /**
@@ -568,7 +568,7 @@ public final class RxJavaPlugins {
     }
 
     /** Helper class, no instances. */
-    private RxJavaPlugins() {
+    private RxJavaObservablePlugins() {
         throw new IllegalStateException("No instances!");
     }
 }

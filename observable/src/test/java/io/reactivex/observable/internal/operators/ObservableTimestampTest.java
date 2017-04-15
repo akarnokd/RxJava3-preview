@@ -13,6 +13,7 @@
 
 package io.reactivex.observable.internal.operators;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.concurrent.TimeUnit;
@@ -20,11 +21,11 @@ import java.util.concurrent.TimeUnit;
 import org.junit.*;
 import org.mockito.InOrder;
 
-import io.reactivex.*;
-import io.reactivex.functions.Function;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.*;
-import io.reactivex.subjects.PublishSubject;
 
 public class ObservableTimestampTest {
     Observer<Object> observer;

@@ -14,6 +14,7 @@
 package io.reactivex.observable.internal.operators;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -23,13 +24,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.*;
 import org.mockito.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.observables.ConnectableObservable;
-import io.reactivex.observers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.*;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.*;
 
 public class ObservableTimerTest {
     @Mock
@@ -294,7 +294,7 @@ public class ObservableTimerTest {
 
     @Test
     public void timerDelayZero() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             for (int i = 0; i < 1000; i++) {
                 Observable.timer(0, TimeUnit.MILLISECONDS).blockingFirst();

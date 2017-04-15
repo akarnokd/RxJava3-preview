@@ -57,7 +57,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Maybe<T> amb(final Iterable<? extends MaybeSource<? extends T>> sources) {
         ObjectHelper.requireNonNull(sources, "sources is null");
-        return RxJavaPlugins.onAssembly(new MaybeAmb<T>(null, sources));
+        return RxJavaObservablePlugins.onAssembly(new MaybeAmb<T>(null, sources));
     }
 
     /**
@@ -82,7 +82,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
         if (sources.length == 1) {
             return wrap((MaybeSource<T>)sources[0]);
         }
-        return RxJavaPlugins.onAssembly(new MaybeAmb<T>(sources, null));
+        return RxJavaObservablePlugins.onAssembly(new MaybeAmb<T>(sources, null));
     }
 
     /**
@@ -100,7 +100,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Observable<T> concat(Iterable<? extends MaybeSource<? extends T>> sources) {
         ObjectHelper.requireNonNull(sources, "sources is null");
-        return RxJavaPlugins.onAssembly(new MaybeConcatIterable<T>(sources));
+        return RxJavaObservablePlugins.onAssembly(new MaybeConcatIterable<T>(sources));
     }
 
     /**
@@ -227,7 +227,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     public static <T> Observable<T> concat(ObservableSource<? extends MaybeSource<? extends T>> sources, int prefetch) {
         ObjectHelper.requireNonNull(sources, "sources is null");
         ObjectHelper.verifyPositive(prefetch, "prefetch");
-        return RxJavaPlugins.onAssembly(new ObservableConcatMap(sources, MaybeToObservable.instance(), prefetch, ErrorMode.IMMEDIATE));
+        return RxJavaObservablePlugins.onAssembly(new ObservableConcatMap(sources, MaybeToObservable.instance(), prefetch, ErrorMode.IMMEDIATE));
     }
 
     /**
@@ -248,9 +248,9 @@ public abstract class Maybe<T> implements MaybeSource<T> {
             return Observable.empty();
         }
         if (sources.length == 1) {
-            return RxJavaPlugins.onAssembly(new MaybeToObservable<T>((MaybeSource<T>)sources[0]));
+            return RxJavaObservablePlugins.onAssembly(new MaybeToObservable<T>((MaybeSource<T>)sources[0]));
         }
-        return RxJavaPlugins.onAssembly(new MaybeConcatArray<T>(sources));
+        return RxJavaObservablePlugins.onAssembly(new MaybeConcatArray<T>(sources));
     }
 
     /**
@@ -275,9 +275,9 @@ public abstract class Maybe<T> implements MaybeSource<T> {
             return Observable.empty();
         } else
         if (sources.length == 1) {
-            return RxJavaPlugins.onAssembly(new MaybeToObservable<T>((MaybeSource<T>)sources[0]));
+            return RxJavaObservablePlugins.onAssembly(new MaybeToObservable<T>((MaybeSource<T>)sources[0]));
         }
-        return RxJavaPlugins.onAssembly(new MaybeConcatArrayDelayError<T>(sources));
+        return RxJavaObservablePlugins.onAssembly(new MaybeConcatArrayDelayError<T>(sources));
     }
 
     /**
@@ -427,7 +427,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Maybe<T> create(MaybeOnSubscribe<T> onSubscribe) {
         ObjectHelper.requireNonNull(onSubscribe, "onSubscribe is null");
-        return RxJavaPlugins.onAssembly(new MaybeCreate<T>(onSubscribe));
+        return RxJavaObservablePlugins.onAssembly(new MaybeCreate<T>(onSubscribe));
     }
 
     /**
@@ -446,7 +446,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Maybe<T> defer(final Callable<? extends MaybeSource<? extends T>> maybeSupplier) {
         ObjectHelper.requireNonNull(maybeSupplier, "maybeSupplier is null");
-        return RxJavaPlugins.onAssembly(new MaybeDefer<T>(maybeSupplier));
+        return RxJavaObservablePlugins.onAssembly(new MaybeDefer<T>(maybeSupplier));
     }
 
     /**
@@ -465,7 +465,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     @SuppressWarnings("unchecked")
     public static <T> Maybe<T> empty() {
-        return RxJavaPlugins.onAssembly((Maybe<T>)MaybeEmpty.INSTANCE);
+        return RxJavaObservablePlugins.onAssembly((Maybe<T>)MaybeEmpty.INSTANCE);
     }
 
     /**
@@ -490,7 +490,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Maybe<T> error(Throwable exception) {
         ObjectHelper.requireNonNull(exception, "exception is null");
-        return RxJavaPlugins.onAssembly(new MaybeError<T>(exception));
+        return RxJavaObservablePlugins.onAssembly(new MaybeError<T>(exception));
     }
 
     /**
@@ -515,7 +515,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Maybe<T> error(Callable<? extends Throwable> supplier) {
         ObjectHelper.requireNonNull(supplier, "errorSupplier is null");
-        return RxJavaPlugins.onAssembly(new MaybeErrorCallable<T>(supplier));
+        return RxJavaObservablePlugins.onAssembly(new MaybeErrorCallable<T>(supplier));
     }
 
     /**
@@ -534,7 +534,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Maybe<T> fromAction(final Action run) {
         ObjectHelper.requireNonNull(run, "run is null");
-        return RxJavaPlugins.onAssembly(new MaybeFromAction<T>(run));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFromAction<T>(run));
     }
 
     /**
@@ -553,7 +553,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Maybe<T> fromCompletable(CompletableSource completableSource) {
         ObjectHelper.requireNonNull(completableSource, "completableSource is null");
-        return RxJavaPlugins.onAssembly(new MaybeFromCompletable<T>(completableSource));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFromCompletable<T>(completableSource));
     }
 
     /**
@@ -572,7 +572,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Maybe<T> fromSingle(SingleSource<T> singleSource) {
         ObjectHelper.requireNonNull(singleSource, "singleSource is null");
-        return RxJavaPlugins.onAssembly(new MaybeFromSingle<T>(singleSource));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFromSingle<T>(singleSource));
     }
 
     /**
@@ -597,7 +597,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Maybe<T> fromCallable(final Callable<? extends T> callable) {
         ObjectHelper.requireNonNull(callable, "callable is null");
-        return RxJavaPlugins.onAssembly(new MaybeFromCallable<T>(callable));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFromCallable<T>(callable));
     }
 
     /**
@@ -630,7 +630,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Maybe<T> fromFuture(Future<? extends T> future) {
         ObjectHelper.requireNonNull(future, "future is null");
-        return RxJavaPlugins.onAssembly(new MaybeFromFuture<T>(future, 0L, null));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFromFuture<T>(future, 0L, null));
     }
 
     /**
@@ -668,7 +668,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     public static <T> Maybe<T> fromFuture(Future<? extends T> future, long timeout, TimeUnit unit) {
         ObjectHelper.requireNonNull(future, "future is null");
         ObjectHelper.requireNonNull(unit, "unit is null");
-        return RxJavaPlugins.onAssembly(new MaybeFromFuture<T>(future, timeout, unit));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFromFuture<T>(future, timeout, unit));
     }
 
     /**
@@ -687,7 +687,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Maybe<T> fromRunnable(final Runnable run) {
         ObjectHelper.requireNonNull(run, "run is null");
-        return RxJavaPlugins.onAssembly(new MaybeFromRunnable<T>(run));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFromRunnable<T>(run));
     }
 
 
@@ -714,7 +714,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Maybe<T> just(T item) {
         ObjectHelper.requireNonNull(item, "item is null");
-        return RxJavaPlugins.onAssembly(new MaybeJust<T>(item));
+        return RxJavaObservablePlugins.onAssembly(new MaybeJust<T>(item));
     }
 
     /**
@@ -769,7 +769,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     public static <T> Observable<T> merge(ObservableSource<? extends MaybeSource<? extends T>> sources, int maxConcurrency) {
         ObjectHelper.requireNonNull(sources, "source is null");
         ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
-        return RxJavaPlugins.onAssembly(new ObservableFlatMap(sources, MaybeToObservable.instance(), false, maxConcurrency, Observable.bufferSize()));
+        return RxJavaObservablePlugins.onAssembly(new ObservableFlatMap(sources, MaybeToObservable.instance(), false, maxConcurrency, Observable.bufferSize()));
     }
 
     /**
@@ -795,7 +795,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static <T> Maybe<T> merge(MaybeSource<? extends MaybeSource<? extends T>> source) {
         ObjectHelper.requireNonNull(source, "source is null");
-        return RxJavaPlugins.onAssembly(new MaybeFlatten(source, Functions.identity()));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFlatten(source, Functions.identity()));
     }
 
     /**
@@ -922,9 +922,9 @@ public abstract class Maybe<T> implements MaybeSource<T> {
             return Observable.empty();
         }
         if (sources.length == 1) {
-            return RxJavaPlugins.onAssembly(new MaybeToObservable<T>((MaybeSource<T>)sources[0]));
+            return RxJavaObservablePlugins.onAssembly(new MaybeToObservable<T>((MaybeSource<T>)sources[0]));
         }
-        return RxJavaPlugins.onAssembly(new MaybeMergeArray<T>(sources));
+        return RxJavaObservablePlugins.onAssembly(new MaybeMergeArray<T>(sources));
     }
 
     /**
@@ -1168,7 +1168,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     @SuppressWarnings("unchecked")
     public static <T> Maybe<T> never() {
-        return RxJavaPlugins.onAssembly((Maybe<T>)MaybeNever.INSTANCE);
+        return RxJavaObservablePlugins.onAssembly((Maybe<T>)MaybeNever.INSTANCE);
     }
 
 
@@ -1227,7 +1227,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
         ObjectHelper.requireNonNull(source1, "source1 is null");
         ObjectHelper.requireNonNull(source2, "source2 is null");
         ObjectHelper.requireNonNull(isEqual, "isEqual is null");
-        return RxJavaPlugins.onAssembly(new MaybeEqualSingle<T>(source1, source2, isEqual));
+        return RxJavaObservablePlugins.onAssembly(new MaybeEqualSingle<T>(source1, source2, isEqual));
     }
 
     /**
@@ -1276,7 +1276,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
         ObjectHelper.requireNonNull(unit, "unit is null");
         ObjectHelper.requireNonNull(scheduler, "scheduler is null");
 
-        return RxJavaPlugins.onAssembly(new MaybeTimer(Math.max(0L, delay), unit, scheduler));
+        return RxJavaObservablePlugins.onAssembly(new MaybeTimer(Math.max(0L, delay), unit, scheduler));
     }
 
     /**
@@ -1297,7 +1297,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
             throw new IllegalArgumentException("unsafeCreate(Maybe) should be upgraded");
         }
         ObjectHelper.requireNonNull(onSubscribe, "onSubscribe is null");
-        return RxJavaPlugins.onAssembly(new MaybeUnsafeCreate<T>(onSubscribe));
+        return RxJavaObservablePlugins.onAssembly(new MaybeUnsafeCreate<T>(onSubscribe));
     }
 
     /**
@@ -1364,7 +1364,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
         ObjectHelper.requireNonNull(resourceSupplier, "resourceSupplier is null");
         ObjectHelper.requireNonNull(sourceSupplier, "sourceSupplier is null");
         ObjectHelper.requireNonNull(resourceDisposer, "disposer is null");
-        return RxJavaPlugins.onAssembly(new MaybeUsing<T, D>(resourceSupplier, sourceSupplier, resourceDisposer, eager));
+        return RxJavaObservablePlugins.onAssembly(new MaybeUsing<T, D>(resourceSupplier, sourceSupplier, resourceDisposer, eager));
     }
 
     /**
@@ -1382,10 +1382,10 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public static <T> Maybe<T> wrap(MaybeSource<T> source) {
         if (source instanceof Maybe) {
-            return RxJavaPlugins.onAssembly((Maybe<T>)source);
+            return RxJavaObservablePlugins.onAssembly((Maybe<T>)source);
         }
         ObjectHelper.requireNonNull(source, "onSubscribe is null");
-        return RxJavaPlugins.onAssembly(new MaybeUnsafeCreate<T>(source));
+        return RxJavaObservablePlugins.onAssembly(new MaybeUnsafeCreate<T>(source));
     }
 
     /**
@@ -1420,7 +1420,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     public static <T, R> Maybe<R> zip(Iterable<? extends MaybeSource<? extends T>> sources, Function<? super Object[], ? extends R> zipper) {
         ObjectHelper.requireNonNull(zipper, "zipper is null");
         ObjectHelper.requireNonNull(sources, "sources is null");
-        return RxJavaPlugins.onAssembly(new MaybeZipIterable<T, R>(sources, zipper));
+        return RxJavaObservablePlugins.onAssembly(new MaybeZipIterable<T, R>(sources, zipper));
     }
 
     /**
@@ -1869,7 +1869,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
             return empty();
         }
         ObjectHelper.requireNonNull(zipper, "zipper is null");
-        return RxJavaPlugins.onAssembly(new MaybeZipArray<T, R>(sources, zipper));
+        return RxJavaObservablePlugins.onAssembly(new MaybeZipArray<T, R>(sources, zipper));
     }
 
     // ------------------------------------------------------------------
@@ -1958,7 +1958,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> cache() {
-        return RxJavaPlugins.onAssembly(new MaybeCache<T>(this));
+        return RxJavaObservablePlugins.onAssembly(new MaybeCache<T>(this));
     }
 
     /**
@@ -2024,7 +2024,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final <R> Maybe<R> concatMap(Function<? super T, ? extends MaybeSource<? extends R>> mapper) {
         ObjectHelper.requireNonNull(mapper, "mapper is null");
-        return RxJavaPlugins.onAssembly(new MaybeFlatten<T, R>(this, mapper));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFlatten<T, R>(this, mapper));
     }
 
 
@@ -2071,7 +2071,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Single<Boolean> contains(final Object item) {
         ObjectHelper.requireNonNull(item, "item is null");
-        return RxJavaPlugins.onAssembly(new MaybeContains<T>(this, item));
+        return RxJavaObservablePlugins.onAssembly(new MaybeContains<T>(this, item));
     }
 
     /**
@@ -2092,7 +2092,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Single<Long> count() {
-        return RxJavaPlugins.onAssembly(new MaybeCount<T>(this));
+        return RxJavaObservablePlugins.onAssembly(new MaybeCount<T>(this));
     }
 
     /**
@@ -2166,7 +2166,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     public final Maybe<T> delay(long delay, TimeUnit unit, Scheduler scheduler) {
         ObjectHelper.requireNonNull(unit, "unit is null");
         ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return RxJavaPlugins.onAssembly(new MaybeDelay<T>(this, Math.max(0L, delay), unit, scheduler));
+        return RxJavaObservablePlugins.onAssembly(new MaybeDelay<T>(this, Math.max(0L, delay), unit, scheduler));
     }
 
     /**
@@ -2193,7 +2193,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final <U, V> Maybe<T> delay(ObservableSource<U> delayIndicator) {
         ObjectHelper.requireNonNull(delayIndicator, "delayIndicator is null");
-        return RxJavaPlugins.onAssembly(new MaybeDelayOtherObservable<T, U>(this, delayIndicator));
+        return RxJavaObservablePlugins.onAssembly(new MaybeDelayOtherObservable<T, U>(this, delayIndicator));
     }
 
     /**
@@ -2215,7 +2215,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final <U> Maybe<T> delaySubscription(ObservableSource<U> subscriptionIndicator) {
         ObjectHelper.requireNonNull(subscriptionIndicator, "subscriptionIndicator is null");
-        return RxJavaPlugins.onAssembly(new MaybeDelaySubscriptionOtherObservable<T, U>(this, subscriptionIndicator));
+        return RxJavaObservablePlugins.onAssembly(new MaybeDelaySubscriptionOtherObservable<T, U>(this, subscriptionIndicator));
     }
 
     /**
@@ -2283,7 +2283,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @Experimental
     public final Maybe<T> doAfterSuccess(Consumer<? super T> onAfterSuccess) {
         ObjectHelper.requireNonNull(onAfterSuccess, "doAfterSuccess is null");
-        return RxJavaPlugins.onAssembly(new MaybeDoAfterSuccess<T>(this, onAfterSuccess));
+        return RxJavaObservablePlugins.onAssembly(new MaybeDoAfterSuccess<T>(this, onAfterSuccess));
     }
 
     /**
@@ -2306,7 +2306,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> doAfterTerminate(Action onAfterTerminate) {
-        return RxJavaPlugins.onAssembly(new MaybePeek<T>(this,
+        return RxJavaObservablePlugins.onAssembly(new MaybePeek<T>(this,
                 Functions.emptyConsumer(), // onSubscribe
                 Functions.emptyConsumer(), // onSuccess
                 Functions.emptyConsumer(), // onError
@@ -2336,7 +2336,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @Experimental
     public final Maybe<T> doFinally(Action onFinally) {
         ObjectHelper.requireNonNull(onFinally, "onFinally is null");
-        return RxJavaPlugins.onAssembly(new MaybeDoFinally<T>(this, onFinally));
+        return RxJavaObservablePlugins.onAssembly(new MaybeDoFinally<T>(this, onFinally));
     }
 
     /**
@@ -2352,7 +2352,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> doOnDispose(Action onDispose) {
-        return RxJavaPlugins.onAssembly(new MaybePeek<T>(this,
+        return RxJavaObservablePlugins.onAssembly(new MaybePeek<T>(this,
                 Functions.emptyConsumer(), // onSubscribe
                 Functions.emptyConsumer(), // onSuccess
                 Functions.emptyConsumer(), // onError
@@ -2379,7 +2379,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> doOnComplete(Action onComplete) {
-        return RxJavaPlugins.onAssembly(new MaybePeek<T>(this,
+        return RxJavaObservablePlugins.onAssembly(new MaybePeek<T>(this,
                 Functions.emptyConsumer(), // onSubscribe
                 Functions.emptyConsumer(), // onSuccess
                 Functions.emptyConsumer(), // onError
@@ -2402,7 +2402,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> doOnError(Consumer<? super Throwable> onError) {
-        return RxJavaPlugins.onAssembly(new MaybePeek<T>(this,
+        return RxJavaObservablePlugins.onAssembly(new MaybePeek<T>(this,
                 Functions.emptyConsumer(), // onSubscribe
                 Functions.emptyConsumer(), // onSuccess
                 ObjectHelper.requireNonNull(onError, "onError is null"),
@@ -2430,7 +2430,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> doOnEvent(BiConsumer<? super T, ? super Throwable> onEvent) {
         ObjectHelper.requireNonNull(onEvent, "onEvent is null");
-        return RxJavaPlugins.onAssembly(new MaybeDoOnEvent<T>(this, onEvent));
+        return RxJavaObservablePlugins.onAssembly(new MaybeDoOnEvent<T>(this, onEvent));
     }
 
     /**
@@ -2446,7 +2446,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> doOnSubscribe(Consumer<? super Disposable> onSubscribe) {
-        return RxJavaPlugins.onAssembly(new MaybePeek<T>(this,
+        return RxJavaObservablePlugins.onAssembly(new MaybePeek<T>(this,
                 ObjectHelper.requireNonNull(onSubscribe, "onSubscribe is null"),
                 Functions.emptyConsumer(), // onSuccess
                 Functions.emptyConsumer(), // onError
@@ -2469,7 +2469,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> doOnSuccess(Consumer<? super T> onSuccess) {
-        return RxJavaPlugins.onAssembly(new MaybePeek<T>(this,
+        return RxJavaObservablePlugins.onAssembly(new MaybePeek<T>(this,
                 Functions.emptyConsumer(), // onSubscribe
                 ObjectHelper.requireNonNull(onSuccess, "onSubscribe is null"),
                 Functions.emptyConsumer(), // onError
@@ -2500,7 +2500,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> filter(Predicate<? super T> predicate) {
         ObjectHelper.requireNonNull(predicate, "predicate is null");
-        return RxJavaPlugins.onAssembly(new MaybeFilter<T>(this, predicate));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFilter<T>(this, predicate));
     }
 
     /**
@@ -2524,7 +2524,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final <R> Maybe<R> flatMap(Function<? super T, ? extends MaybeSource<? extends R>> mapper) {
         ObjectHelper.requireNonNull(mapper, "mapper is null");
-        return RxJavaPlugins.onAssembly(new MaybeFlatten<T, R>(this, mapper));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFlatten<T, R>(this, mapper));
     }
 
     /**
@@ -2557,7 +2557,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
         ObjectHelper.requireNonNull(onSuccessMapper, "onSuccessMapper is null");
         ObjectHelper.requireNonNull(onErrorMapper, "onErrorMapper is null");
         ObjectHelper.requireNonNull(onCompleteSupplier, "onCompleteSupplier is null");
-        return RxJavaPlugins.onAssembly(new MaybeFlatMapNotification<T, R>(this, onSuccessMapper, onErrorMapper, onCompleteSupplier));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFlatMapNotification<T, R>(this, onSuccessMapper, onErrorMapper, onCompleteSupplier));
     }
 
     /**
@@ -2588,7 +2588,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
             BiFunction<? super T, ? super U, ? extends R> resultSelector) {
         ObjectHelper.requireNonNull(mapper, "mapper is null");
         ObjectHelper.requireNonNull(resultSelector, "resultSelector is null");
-        return RxJavaPlugins.onAssembly(new MaybeFlatMapBiSelector<T, U, R>(this, mapper, resultSelector));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFlatMapBiSelector<T, U, R>(this, mapper, resultSelector));
     }
 
     /**
@@ -2612,7 +2612,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final <U> Observable<U> flattenAsObservable(final Function<? super T, ? extends Iterable<? extends U>> mapper) {
         ObjectHelper.requireNonNull(mapper, "mapper is null");
-        return RxJavaPlugins.onAssembly(new MaybeFlatMapIterableObservable<T, U>(this, mapper));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFlatMapIterableObservable<T, U>(this, mapper));
     }
 
     /**
@@ -2659,7 +2659,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final <R> Single<R> flatMapSingle(final Function<? super T, ? extends SingleSource<? extends R>> mapper) {
         ObjectHelper.requireNonNull(mapper, "mapper is null");
-        return RxJavaPlugins.onAssembly(new MaybeFlatMapSingle<T, R>(this, mapper));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFlatMapSingle<T, R>(this, mapper));
     }
 
     /**
@@ -2686,7 +2686,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @Experimental
     public final <R> Maybe<R> flatMapSingleElement(final Function<? super T, ? extends SingleSource<? extends R>> mapper) {
         ObjectHelper.requireNonNull(mapper, "mapper is null");
-        return RxJavaPlugins.onAssembly(new MaybeFlatMapSingleElement<T, R>(this, mapper));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFlatMapSingleElement<T, R>(this, mapper));
     }
 
     /**
@@ -2709,7 +2709,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Completable flatMapCompletable(final Function<? super T, ? extends CompletableSource> mapper) {
         ObjectHelper.requireNonNull(mapper, "mapper is null");
-        return RxJavaPlugins.onAssembly(new MaybeFlatMapCompletable<T>(this, mapper));
+        return RxJavaObservablePlugins.onAssembly(new MaybeFlatMapCompletable<T>(this, mapper));
     }
 
     /**
@@ -2725,7 +2725,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> hide() {
-        return RxJavaPlugins.onAssembly(new MaybeHide<T>(this));
+        return RxJavaObservablePlugins.onAssembly(new MaybeHide<T>(this));
     }
 
     /**
@@ -2744,7 +2744,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Completable ignoreElement() {
-        return RxJavaPlugins.onAssembly(new MaybeIgnoreElementCompletable<T>(this));
+        return RxJavaObservablePlugins.onAssembly(new MaybeIgnoreElementCompletable<T>(this));
     }
 
     /**
@@ -2762,7 +2762,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Single<Boolean> isEmpty() {
-        return RxJavaPlugins.onAssembly(new MaybeIsEmptySingle<T>(this));
+        return RxJavaObservablePlugins.onAssembly(new MaybeIsEmptySingle<T>(this));
     }
 
     /**
@@ -2792,7 +2792,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final <R> Maybe<R> lift(final MaybeOperator<? extends R, ? super T> lift) {
         ObjectHelper.requireNonNull(lift, "onLift is null");
-        return RxJavaPlugins.onAssembly(new MaybeLift<T, R>(this, lift));
+        return RxJavaObservablePlugins.onAssembly(new MaybeLift<T, R>(this, lift));
     }
 
     /**
@@ -2815,7 +2815,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final <R> Maybe<R> map(Function<? super T, ? extends R> mapper) {
         ObjectHelper.requireNonNull(mapper, "mapper is null");
-        return RxJavaPlugins.onAssembly(new MaybeMap<T, R>(this, mapper));
+        return RxJavaObservablePlugins.onAssembly(new MaybeMap<T, R>(this, mapper));
     }
 
     /**
@@ -2864,7 +2864,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public final Maybe<T> observeOn(final Scheduler scheduler) {
         ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return RxJavaPlugins.onAssembly(new MaybeObserveOn<T>(this, scheduler));
+        return RxJavaObservablePlugins.onAssembly(new MaybeObserveOn<T>(this, scheduler));
     }
 
     /**
@@ -2930,7 +2930,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
         if (this instanceof FuseToObservable) {
             return ((FuseToObservable<T>)this).fuseToObservable();
         }
-        return RxJavaPlugins.onAssembly(new MaybeToObservable<T>(this));
+        return RxJavaObservablePlugins.onAssembly(new MaybeToObservable<T>(this));
     }
 
     /**
@@ -2947,7 +2947,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Single<T> toSingle(T defaultValue) {
         ObjectHelper.requireNonNull(defaultValue, "defaultValue is null");
-        return RxJavaPlugins.onAssembly(new MaybeToSingle<T>(this, defaultValue));
+        return RxJavaObservablePlugins.onAssembly(new MaybeToSingle<T>(this, defaultValue));
     }
 
     /**
@@ -2962,7 +2962,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Single<T> toSingle() {
-        return RxJavaPlugins.onAssembly(new MaybeToSingle<T>(this, null));
+        return RxJavaObservablePlugins.onAssembly(new MaybeToSingle<T>(this, null));
     }
 
     /**
@@ -2996,7 +2996,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     public final Maybe<T> onErrorComplete(final Predicate<? super Throwable> predicate) {
         ObjectHelper.requireNonNull(predicate, "predicate is null");
 
-        return RxJavaPlugins.onAssembly(new MaybeOnErrorComplete<T>(this, predicate));
+        return RxJavaObservablePlugins.onAssembly(new MaybeOnErrorComplete<T>(this, predicate));
     }
 
     /**
@@ -3048,7 +3048,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> onErrorResumeNext(Function<? super Throwable, ? extends MaybeSource<? extends T>> resumeFunction) {
         ObjectHelper.requireNonNull(resumeFunction, "resumeFunction is null");
-        return RxJavaPlugins.onAssembly(new MaybeOnErrorNext<T>(this, resumeFunction, true));
+        return RxJavaObservablePlugins.onAssembly(new MaybeOnErrorNext<T>(this, resumeFunction, true));
     }
 
     /**
@@ -3074,7 +3074,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> onErrorReturn(Function<? super Throwable, ? extends T> valueSupplier) {
         ObjectHelper.requireNonNull(valueSupplier, "valueSupplier is null");
-        return RxJavaPlugins.onAssembly(new MaybeOnErrorReturn<T>(this, valueSupplier));
+        return RxJavaObservablePlugins.onAssembly(new MaybeOnErrorReturn<T>(this, valueSupplier));
     }
 
     /**
@@ -3128,7 +3128,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> onExceptionResumeNext(final MaybeSource<? extends T> next) {
         ObjectHelper.requireNonNull(next, "next is null");
-        return RxJavaPlugins.onAssembly(new MaybeOnErrorNext<T>(this, Functions.justFunction(next), false));
+        return RxJavaObservablePlugins.onAssembly(new MaybeOnErrorNext<T>(this, Functions.justFunction(next), false));
     }
     /**
      * Nulls out references to the upstream producer and downstream MaybeObserver if
@@ -3143,7 +3143,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> onTerminateDetach() {
-        return RxJavaPlugins.onAssembly(new MaybeDetach<T>(this));
+        return RxJavaObservablePlugins.onAssembly(new MaybeDetach<T>(this));
     }
 
     /**
@@ -3523,9 +3523,9 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     public final void subscribe(MaybeObserver<? super T> observer) {
         ObjectHelper.requireNonNull(observer, "observer is null");
 
-        observer = RxJavaPlugins.onSubscribe(this, observer);
+        observer = RxJavaObservablePlugins.onSubscribe(this, observer);
 
-        ObjectHelper.requireNonNull(observer, "observer returned by the RxJavaPlugins hook is null");
+        ObjectHelper.requireNonNull(observer, "observer returned by the RxJavaObservablePlugins hook is null");
 
         try {
             subscribeActual(observer);
@@ -3565,7 +3565,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public final Maybe<T> subscribeOn(Scheduler scheduler) {
         ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return RxJavaPlugins.onAssembly(new MaybeSubscribeOn<T>(this, scheduler));
+        return RxJavaObservablePlugins.onAssembly(new MaybeSubscribeOn<T>(this, scheduler));
     }
 
     /**
@@ -3618,7 +3618,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Maybe<T> switchIfEmpty(MaybeSource<? extends T> other) {
         ObjectHelper.requireNonNull(other, "other is null");
-        return RxJavaPlugins.onAssembly(new MaybeSwitchIfEmpty<T>(this, other));
+        return RxJavaObservablePlugins.onAssembly(new MaybeSwitchIfEmpty<T>(this, other));
     }
 
     /**
@@ -3643,7 +3643,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final <U> Maybe<T> takeUntil(MaybeSource<U> other) {
         ObjectHelper.requireNonNull(other, "other is null");
-        return RxJavaPlugins.onAssembly(new MaybeTakeUntilMaybe<T, U>(this, other));
+        return RxJavaObservablePlugins.onAssembly(new MaybeTakeUntilMaybe<T, U>(this, other));
     }
 
     /**
@@ -3668,7 +3668,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final <U> Maybe<T> takeUntil(ObservableSource<U> other) {
         ObjectHelper.requireNonNull(other, "other is null");
-        return RxJavaPlugins.onAssembly(new MaybeTakeUntilObservable<T, U>(this, other));
+        return RxJavaObservablePlugins.onAssembly(new MaybeTakeUntilObservable<T, U>(this, other));
     }
 
     /**
@@ -3794,7 +3794,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final <U> Maybe<T> timeout(MaybeSource<U> timeoutIndicator) {
         ObjectHelper.requireNonNull(timeoutIndicator, "timeoutIndicator is null");
-        return RxJavaPlugins.onAssembly(new MaybeTimeoutMaybe<T, U>(this, timeoutIndicator, null));
+        return RxJavaObservablePlugins.onAssembly(new MaybeTimeoutMaybe<T, U>(this, timeoutIndicator, null));
     }
 
     /**
@@ -3816,7 +3816,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     public final <U> Maybe<T> timeout(MaybeSource<U> timeoutIndicator, MaybeSource<? extends T> fallback) {
         ObjectHelper.requireNonNull(timeoutIndicator, "timeoutIndicator is null");
         ObjectHelper.requireNonNull(fallback, "fallback is null");
-        return RxJavaPlugins.onAssembly(new MaybeTimeoutMaybe<T, U>(this, timeoutIndicator, fallback));
+        return RxJavaObservablePlugins.onAssembly(new MaybeTimeoutMaybe<T, U>(this, timeoutIndicator, fallback));
     }
 
     /**
@@ -3835,7 +3835,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final <U> Maybe<T> timeout(ObservableSource<U> timeoutIndicator) {
         ObjectHelper.requireNonNull(timeoutIndicator, "timeoutIndicator is null");
-        return RxJavaPlugins.onAssembly(new MaybeTimeoutObservable<T, U>(this, timeoutIndicator, null));
+        return RxJavaObservablePlugins.onAssembly(new MaybeTimeoutObservable<T, U>(this, timeoutIndicator, null));
     }
 
     /**
@@ -3857,7 +3857,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     public final <U> Maybe<T> timeout(ObservableSource<U> timeoutIndicator, MaybeSource<? extends T> fallback) {
         ObjectHelper.requireNonNull(timeoutIndicator, "timeoutIndicator is null");
         ObjectHelper.requireNonNull(fallback, "fallback is null");
-        return RxJavaPlugins.onAssembly(new MaybeTimeoutObservable<T, U>(this, timeoutIndicator, fallback));
+        return RxJavaObservablePlugins.onAssembly(new MaybeTimeoutObservable<T, U>(this, timeoutIndicator, fallback));
     }
 
     /**
@@ -3875,7 +3875,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     @SchedulerSupport(SchedulerSupport.CUSTOM)
     public final Maybe<T> unsubscribeOn(final Scheduler scheduler) {
         ObjectHelper.requireNonNull(scheduler, "scheduler is null");
-        return RxJavaPlugins.onAssembly(new MaybeUnsubscribeOn<T>(this, scheduler));
+        return RxJavaObservablePlugins.onAssembly(new MaybeUnsubscribeOn<T>(this, scheduler));
     }
 
     /**

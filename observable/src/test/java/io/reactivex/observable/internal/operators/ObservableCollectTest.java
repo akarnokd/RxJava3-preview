@@ -17,14 +17,14 @@ import static io.reactivex.internal.util.TestingHelper.*;
 import static org.junit.Assert.*;
 
 import java.util.*;
+import java.util.Observable;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.functions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.*;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public final class ObservableCollectTest {

@@ -20,15 +20,16 @@ import java.util.*;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposables;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
 import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observers.*;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.*;
-import io.reactivex.schedulers.Schedulers;
 
 public class CompletableConcatTest {
 
@@ -69,7 +70,7 @@ public class CompletableConcatTest {
     @Test
     public void errorRace() {
         for (int i = 0; i < 500; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
             try {
                 final PublishProcessor<Integer> ps1 = PublishProcessor.create();
@@ -99,12 +100,12 @@ public class CompletableConcatTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 to.assertFailure(TestException.class);
 
                 if (!errors.isEmpty()) {
-                    TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                    TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
                 RxJavaPlugins.reset();
@@ -222,7 +223,7 @@ public class CompletableConcatTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -251,7 +252,7 @@ public class CompletableConcatTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 }

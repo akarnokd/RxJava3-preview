@@ -19,12 +19,12 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.Observable;
-import io.reactivex.TestHelper;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueDisposable;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.extensions.QueueDisposable;
+import io.reactivex.observable.observers.*;
 import io.reactivex.observers.*;
 import io.reactivex.processors.UnicastProcessor;
 import io.reactivex.subscribers.*;

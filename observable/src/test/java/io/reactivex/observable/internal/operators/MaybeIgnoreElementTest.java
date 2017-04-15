@@ -15,8 +15,8 @@ package io.reactivex.observable.internal.operators;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.functions.Function;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
 import io.reactivex.processors.PublishProcessor;
 
 public class MaybeIgnoreElementTest {

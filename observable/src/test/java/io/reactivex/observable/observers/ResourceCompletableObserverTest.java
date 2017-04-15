@@ -13,21 +13,16 @@
 
 package io.reactivex.observable.observers;
 
+import static org.junit.Assert.*;
+
+import java.util.*;
+
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import io.reactivex.Completable;
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.*;
 import io.reactivex.plugins.RxJavaPlugins;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class ResourceCompletableObserverTest {
     static final class TestResourceCompletableObserver extends ResourceCompletableObserver {
@@ -165,7 +160,7 @@ public class ResourceCompletableObserverTest {
     @Test
     public void startOnce() {
 
-        List<Throwable> error = TestHelper.trackPluginErrors();
+        List<Throwable> error = TestCommonHelper.trackPluginErrors();
 
         try {
             TestResourceCompletableObserver rco = new TestResourceCompletableObserver();

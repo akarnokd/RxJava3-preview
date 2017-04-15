@@ -17,9 +17,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.*;
 import io.reactivex.processors.PublishProcessor;
 
 public class MaybeFlatMapBiSelectorTest {

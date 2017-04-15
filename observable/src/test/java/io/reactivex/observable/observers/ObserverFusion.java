@@ -13,9 +13,9 @@
 
 package io.reactivex.observable.observers;
 
-import io.reactivex.Observable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.fuseable.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.extensions.QueueDisposable;
 
 /**
  * Utility methods that return functional interfaces to support assertions regarding fusion

@@ -57,7 +57,7 @@ extends Single<U> implements FuseToObservable<U> {
 
     @Override
     public Observable<U> fuseToObservable() {
-        return RxJavaPlugins.onAssembly(new ObservableToList<T, U>(source, collectionSupplier));
+        return RxJavaObservablePlugins.onAssembly(new ObservableToList<T, U>(source, collectionSupplier));
     }
 
     static final class ToListObserver<T, U extends Collection<? super T>> implements Observer<T>, Disposable {

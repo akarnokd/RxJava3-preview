@@ -17,8 +17,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.Maybe;
-import io.reactivex.internal.fuseable.ScalarCallable;
+import io.reactivex.observable.Maybe;
+import io.reactivex.observable.extensions.ScalarCallable;
 
 public class MaybeEmptyTest {
 

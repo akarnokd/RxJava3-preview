@@ -17,16 +17,16 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Action;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Action;
+import io.reactivex.observable.*;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public class CompletablePeekTest {
 
     @Test
     public void onAfterTerminateCrashes() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Completable.complete()
             .doAfterTerminate(new Action() {
@@ -38,7 +38,7 @@ public class CompletablePeekTest {
             .test()
             .assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

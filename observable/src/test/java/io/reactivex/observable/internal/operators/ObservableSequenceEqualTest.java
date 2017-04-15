@@ -19,11 +19,11 @@ import static org.mockito.Mockito.*;
 import org.junit.*;
 import org.mockito.InOrder;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.BiPredicate;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.BiPredicate;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class ObservableSequenceEqualTest {
 
@@ -335,7 +335,7 @@ public class ObservableSequenceEqualTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             to.assertEmpty();
         }
@@ -362,7 +362,7 @@ public class ObservableSequenceEqualTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             to.assertEmpty();
         }

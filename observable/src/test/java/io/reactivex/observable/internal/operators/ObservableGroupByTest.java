@@ -14,27 +14,28 @@
 package io.reactivex.observable.internal.operators;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
-
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.observables.GroupedObservable;
-import io.reactivex.observers.*;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
-
 import org.mockito.Mockito;
+
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.disposables.*;
+import io.reactivex.functions.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.*;
+import io.reactivex.observable.subjects.PublishSubject;
+import io.reactivex.observers.*;
 
 public class ObservableGroupByTest {
 

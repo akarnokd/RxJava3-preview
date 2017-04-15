@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.maybe;
+package io.reactivex.observable;
 
 import static org.junit.Assert.*;
 
@@ -22,81 +22,17 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
-import org.reactivestreams.Publisher;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueDisposable;
-import io.reactivex.internal.operators.flowable.FlowableZipTest.ArgsToString;
-import io.reactivex.internal.operators.maybe.*;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.extensions.QueueDisposable;
+import io.reactivex.observable.internal.operators.*;
+import io.reactivex.observable.observers.*;
+import io.reactivex.observable.subjects.*;
 
 public class MaybeTest {
-    @Test
-    public void fromFlowableEmpty() {
-
-        Flowable.empty()
-        .singleElement()
-        .test()
-        .assertResult();
-    }
-
-    @Test
-    public void fromFlowableJust() {
-
-        Flowable.just(1)
-        .singleElement()
-        .test()
-        .assertResult(1);
-    }
-
-    @Test
-    public void fromFlowableError() {
-
-        Flowable.error(new TestException())
-        .singleElement()
-        .test()
-        .assertFailure(TestException.class);
-    }
-
-    @Test
-    public void fromFlowableValueAndError() {
-        Flowable.just(1).concatWith(Flowable.<Integer>error(new TestException()))
-        .singleElement()
-        .test()
-        .assertFailure(TestException.class);
-    }
-
-    @Test
-    public void fromFlowableMany() {
-
-        Flowable.range(1, 2)
-        .singleElement()
-        .test()
-        .assertFailure(IllegalArgumentException.class);
-    }
-
-    @Test
-    public void fromFlowableDisposeComposesThrough() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-
-        TestObserver<Integer> ts = pp.singleElement().test();
-
-        assertTrue(pp.hasSubscribers());
-
-        ts.cancel();
-
-        assertFalse(pp.hasSubscribers());
-    }
 
     @Test
     public void fromObservableEmpty() {
@@ -127,7 +63,7 @@ public class MaybeTest {
 
     @Test
     public void fromObservableValueAndError() {
-        Flowable.just(1).concatWith(Flowable.<Integer>error(new TestException()))
+        Observable.just(1).concatWith(Observable.<Integer>error(new TestException()))
         .singleElement()
         .test()
         .assertFailure(TestException.class);
@@ -331,11 +267,6 @@ public class MaybeTest {
     }
 
     @Test
-    public void flowableMaybeFlowable() {
-        Flowable.just(1).singleElement().toFlowable().test().assertResult(1);
-    }
-
-    @Test
     public void obervableMaybeobervable() {
         Observable.just(1).singleElement().toObservable().test().assertResult(1);
     }
@@ -371,10 +302,10 @@ public class MaybeTest {
 
     @Test
     public void to() {
-        Maybe.just(1).to(new Function<Maybe<Integer>, Flowable<Integer>>() {
+        Maybe.just(1).to(new Function<Maybe<Integer>, Observable<Integer>>() {
             @Override
-            public Flowable<Integer> apply(Maybe<Integer> v) throws Exception {
-                return v.toFlowable();
+            public Observable<Integer> apply(Maybe<Integer> v) throws Exception {
+                return v.toObservable();
             }
         })
         .test()
@@ -848,12 +779,12 @@ public class MaybeTest {
 
     @Test
     public void doOnDisposeThrows() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
-            PublishProcessor<Integer> pp = PublishProcessor.create();
+            MaybeSubject<Integer> pp = MaybeSubject.create();
 
-            TestObserver<Integer> ts = pp.singleElement().doOnDispose(new Action() {
+            TestObserver<Integer> ts = pp.doOnDispose(new Action() {
                 @Override
                 public void run() throws Exception {
                     throw new TestException();
@@ -861,26 +792,26 @@ public class MaybeTest {
             })
             .test();
 
-            assertTrue(pp.hasSubscribers());
+            assertTrue(pp.hasObservers());
 
             ts.cancel();
 
-            assertFalse(pp.hasSubscribers());
+            assertFalse(pp.hasObservers());
 
             ts.assertSubscribed()
             .assertNoValues()
             .assertNoErrors()
             .assertNotComplete();
 
-            TestHelper.assertUndeliverable(list, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(list, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void observeOnDispose() throws Exception {
-        final TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
+        final TestObserver<Integer> ts = new TestObserver<Integer>();
 
         final CountDownLatch cdl = new CountDownLatch(1);
 
@@ -894,7 +825,7 @@ public class MaybeTest {
                 }
             }
         })
-        .toFlowable().subscribe(ts);
+        .subscribe(ts);
 
         Thread.sleep(250);
 
@@ -1270,57 +1201,41 @@ public class MaybeTest {
 
     @Test
     public void concat2Backpressured() {
-        TestSubscriber<Integer> ts = Maybe.concat(Maybe.just(1), Maybe.just(2))
-        .test(0L);
-
-        ts.assertEmpty();
-
-        ts.request(1);
-
-        ts.assertValue(1);
-
-        ts.request(1);
+        TestObserver<Integer> ts = Maybe.concat(Maybe.just(1), Maybe.just(2))
+        .test();
 
         ts.assertResult(1, 2);
     }
 
     @Test
     public void concat2BackpressuredNonEager() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestSubscriber<Integer> ts = Maybe.concat(pp1.singleElement(), pp2.singleElement())
-        .test(0L);
+        TestObserver<Integer> ts = Maybe.concat(pp1, pp2)
+        .test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
-        ts.assertEmpty();
 
-        ts.request(1);
+        assertTrue(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
-        assertTrue(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
-
-        pp1.onNext(1);
-        pp1.onComplete();
+        pp1.onSuccess(1);
 
         ts.assertValue(1);
 
-        assertFalse(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
-        ts.request(1);
-
-        ts.assertValue(1);
-
-        pp2.onNext(2);
+        pp2.onSuccess(2);
         pp2.onComplete();
 
         ts.assertResult(1, 2);
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
     }
 
     @Test
@@ -1353,16 +1268,8 @@ public class MaybeTest {
 
     @Test
     public void concat3Backpressured() {
-        TestSubscriber<Integer> ts = Maybe.concat(Maybe.just(1), Maybe.just(2), Maybe.just(3))
-        .test(0L);
-
-        ts.assertEmpty();
-
-        ts.request(1);
-
-        ts.assertValue(1);
-
-        ts.request(2);
+        TestObserver<Integer> ts = Maybe.concat(Maybe.just(1), Maybe.just(2), Maybe.just(3))
+        .test();
 
         ts.assertResult(1, 2, 3);
     }
@@ -1370,7 +1277,7 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void concatArrayZero() {
-        assertSame(Flowable.empty(), Maybe.concatArray());
+        assertSame(Observable.empty(), Maybe.concatArray());
     }
 
     @SuppressWarnings("unchecked")
@@ -1405,16 +1312,10 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void concatIterableBackpressured() {
-        TestSubscriber<Integer> ts = Maybe.concat(Arrays.asList(Maybe.just(1), Maybe.just(2)))
-        .test(0L);
+        TestObserver<Integer> ts = Maybe.concat(Arrays.asList(Maybe.just(1), Maybe.just(2)))
+        .test();
 
         ts.assertEmpty();
-
-        ts.request(1);
-
-        ts.assertValue(1);
-
-        ts.request(1);
 
         ts.assertResult(1, 2);
     }
@@ -1422,41 +1323,33 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void concatIterableBackpressuredNonEager() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestSubscriber<Integer> ts = Maybe.concat(Arrays.asList(pp1.singleElement(), pp2.singleElement()))
-        .test(0L);
+        TestObserver<Integer> ts = Maybe.concat(Arrays.asList(pp1, pp2))
+        .test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertEmpty();
 
-        ts.request(1);
+        assertTrue(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
-        assertTrue(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
-
-        pp1.onNext(1);
-        pp1.onComplete();
+        pp1.onSuccess(1);
 
         ts.assertValue(1);
 
-        assertFalse(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
-        ts.request(1);
-
-        ts.assertValue(1);
-
-        pp2.onNext(2);
-        pp2.onComplete();
+        pp2.onSuccess(2);
 
         ts.assertResult(1, 2);
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
     }
 
     @Test
@@ -1470,13 +1363,13 @@ public class MaybeTest {
     }
 
     @Test
-    public void concatPublisher() {
-        Maybe.concat(Flowable.just(Maybe.just(1), Maybe.just(2))).test().assertResult(1, 2);
+    public void concatObservable() {
+        Maybe.concat(Observable.just(Maybe.just(1), Maybe.just(2))).test().assertResult(1, 2);
     }
 
     @Test
-    public void concatPublisherPrefetch() {
-        Maybe.concat(Flowable.just(Maybe.just(1), Maybe.just(2)), 1).test().assertResult(1, 2);
+    public void concatObservablePrefetch() {
+        Maybe.concat(Observable.just(Maybe.just(1), Maybe.just(2)), 1).test().assertResult(1, 2);
     }
 
     @Test(expected = NullPointerException.class)
@@ -1556,8 +1449,8 @@ public class MaybeTest {
     }
 
     @Test
-    public void maybeToPublisherEnum() {
-        TestHelper.checkEnum(MaybeToPublisher.class);
+    public void maybeToObservableEnum() {
+        TestCommonHelper.checkEnum(MaybeToObservable.MaybeToObservableConverter.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -1603,22 +1496,21 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void ambArray1SignalsSuccess() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = Maybe.ambArray(pp1.singleElement(), pp2.singleElement())
+        TestObserver<Integer> ts = Maybe.ambArray(pp1, pp2)
         .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
-        pp1.onNext(1);
-        pp1.onComplete();
+        pp1.onSuccess(1);
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult(1);
     }
@@ -1626,22 +1518,21 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void ambArray2SignalsSuccess() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = Maybe.ambArray(pp1.singleElement(), pp2.singleElement())
+        TestObserver<Integer> ts = Maybe.ambArray(pp1, pp2)
         .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
-        pp2.onNext(2);
-        pp2.onComplete();
+        pp2.onSuccess(2);
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult(2);
     }
@@ -1649,21 +1540,21 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void ambArray1SignalsError() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = Maybe.ambArray(pp1.singleElement(), pp2.singleElement())
+        TestObserver<Integer> ts = Maybe.ambArray(pp1, pp2)
         .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp1.onError(new TestException());
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertFailure(TestException.class);
     }
@@ -1671,21 +1562,21 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void ambArray2SignalsError() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = Maybe.ambArray(pp1.singleElement(), pp2.singleElement())
+        TestObserver<Integer> ts = Maybe.ambArray(pp1, pp2)
         .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onError(new TestException());
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertFailure(TestException.class);
     }
@@ -1693,21 +1584,21 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void ambArray1SignalsComplete() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = Maybe.ambArray(pp1.singleElement(), pp2.singleElement())
+        TestObserver<Integer> ts = Maybe.ambArray(pp1, pp2)
         .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp1.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult();
     }
@@ -1715,21 +1606,21 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void ambArray2SignalsComplete() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = Maybe.ambArray(pp1.singleElement(), pp2.singleElement())
+        TestObserver<Integer> ts = Maybe.ambArray(pp1, pp2)
         .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult();
     }
@@ -1737,22 +1628,21 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void ambIterable1SignalsSuccess() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1.singleElement(), pp2.singleElement()))
+        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1, pp2))
         .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
-        pp1.onNext(1);
-        pp1.onComplete();
+        pp1.onSuccess(1);
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult(1);
     }
@@ -1760,22 +1650,21 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void ambIterable2SignalsSuccess() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1.singleElement(), pp2.singleElement()))
+        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1, pp2))
         .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
-        pp2.onNext(2);
-        pp2.onComplete();
+        pp2.onSuccess(2);
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult(2);
     }
@@ -1783,23 +1672,22 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void ambIterable2SignalsSuccessWithOverlap() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1.singleElement(), pp2.singleElement()))
+        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1, pp2))
                 .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
-        pp2.onNext(2);
-        pp1.onNext(1);
-        pp2.onComplete();
+        pp2.onSuccess(2);
+        pp1.onSuccess(1);
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult(2);
     }
@@ -1807,21 +1695,21 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void ambIterable1SignalsError() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1.singleElement(), pp2.singleElement()))
+        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1, pp2))
         .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp1.onError(new TestException());
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertFailure(TestException.class);
     }
@@ -1829,21 +1717,21 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void ambIterable2SignalsError() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1.singleElement(), pp2.singleElement()))
+        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1, pp2))
         .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onError(new TestException());
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertFailure(TestException.class);
     }
@@ -1851,22 +1739,22 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void ambIterable2SignalsErrorWithOverlap() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1.singleElement(), pp2.singleElement()))
+        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1, pp2))
                 .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onError(new TestException("2"));
         pp1.onError(new TestException("1"));
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertFailureAndMessage(TestException.class, "2");
     }
@@ -1874,21 +1762,21 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void ambIterable1SignalsComplete() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1.singleElement(), pp2.singleElement()))
+        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1, pp2))
         .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp1.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult();
     }
@@ -1896,21 +1784,21 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void ambIterable2SignalsComplete() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1.singleElement(), pp2.singleElement()))
+        TestObserver<Integer> ts = Maybe.amb(Arrays.asList(pp1, pp2))
         .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult();
     }
@@ -1988,36 +1876,17 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayBackpressured() {
-        TestSubscriber<Integer> ts = Maybe.mergeArray(Maybe.just(1), Maybe.just(2), Maybe.just(3))
-        .test(0L);
+        TestObserver<Integer> ts = Maybe.mergeArray(Maybe.just(1), Maybe.just(2), Maybe.just(3))
+        .test();
 
-        ts.assertEmpty();
-
-        ts.request(1);
-
-        ts.assertValue(1);
-
-        ts.request(1);
-
-        ts.assertValues(1, 2);
-
-        ts.request(1);
         ts.assertResult(1, 2, 3);
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayBackpressuredMixed1() {
-        TestSubscriber<Integer> ts = Maybe.mergeArray(Maybe.just(1), Maybe.<Integer>empty(), Maybe.just(3))
-        .test(0L);
-
-        ts.assertEmpty();
-
-        ts.request(1);
-
-        ts.assertValue(1);
-
-        ts.request(1);
+        TestObserver<Integer> ts = Maybe.mergeArray(Maybe.just(1), Maybe.<Integer>empty(), Maybe.just(3))
+        .test();
 
         ts.assertResult(1, 3);
     }
@@ -2025,16 +1894,8 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayBackpressuredMixed2() {
-        TestSubscriber<Integer> ts = Maybe.mergeArray(Maybe.just(1), Maybe.just(2), Maybe.<Integer>empty())
-        .test(0L);
-
-        ts.assertEmpty();
-
-        ts.request(1);
-
-        ts.assertValue(1);
-
-        ts.request(1);
+        TestObserver<Integer> ts = Maybe.mergeArray(Maybe.just(1), Maybe.just(2), Maybe.<Integer>empty())
+        .test();
 
         ts.assertResult(1, 2);
     }
@@ -2042,16 +1903,8 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayBackpressuredMixed3() {
-        TestSubscriber<Integer> ts = Maybe.mergeArray(Maybe.<Integer>empty(), Maybe.just(2), Maybe.just(3))
-        .test(0L);
-
-        ts.assertEmpty();
-
-        ts.request(1);
-
-        ts.assertValue(2);
-
-        ts.request(1);
+        TestObserver<Integer> ts = Maybe.mergeArray(Maybe.<Integer>empty(), Maybe.just(2), Maybe.just(3))
+        .test();
 
         ts.assertResult(2, 3);
     }
@@ -2059,13 +1912,13 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayFused() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueDisposable.ANY);
+        TestObserver<Integer> ts = ObserverFusion.newTest(QueueDisposable.ANY);
 
         Maybe.mergeArray(Maybe.just(1), Maybe.just(2), Maybe.just(3)).subscribe(ts);
 
         ts.assertSubscribed()
-        .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
+        .assertOf(ObserverFusion.<Integer>assertFuseable())
+        .assertOf(ObserverFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
         .assertResult(1, 2, 3);
     }
 
@@ -2073,28 +1926,27 @@ public class MaybeTest {
     @Test
     public void mergeArrayFusedRace() {
         for (int i = 0; i < 500; i++) {
-            final PublishProcessor<Integer> pp1 = PublishProcessor.create();
-            final PublishProcessor<Integer> pp2 = PublishProcessor.create();
+            final MaybeSubject<Integer> pp1 = MaybeSubject.create();
+            final MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-            TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueDisposable.ANY);
+            TestObserver<Integer> ts = ObserverFusion.newTest(QueueDisposable.ANY);
 
-            Maybe.mergeArray(pp1.singleElement(), pp2.singleElement()).subscribe(ts);
+            Maybe.mergeArray(pp1, pp2).subscribe(ts);
 
             ts.assertSubscribed()
-            .assertOf(SubscriberFusion.<Integer>assertFuseable())
-            .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
+            .assertOf(ObserverFusion.<Integer>assertFuseable())
+            .assertOf(ObserverFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
             ;
 
-            TestHelper.race(new Runnable() {
+            TestCommonHelper.race(new Runnable() {
                 @Override
                 public void run() {
-                    pp1.onNext(1);
-                    pp1.onComplete();
+                    pp1.onSuccess(1);
                 }
             }, new Runnable() {
                 @Override
                 public void run() {
-                    pp2.onNext(1);
+                    pp2.onSuccess(1);
                     pp2.onComplete();
                 }
             }, Schedulers.single());
@@ -2108,7 +1960,7 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void mergeArrayZero() {
-        assertSame(Flowable.empty(), Maybe.mergeArray());
+        assertSame(Observable.empty(), Maybe.mergeArray());
     }
 
     @SuppressWarnings("unchecked")
@@ -2118,29 +1970,28 @@ public class MaybeTest {
     }
 
     @Test
-    public void mergePublisher() {
-        Maybe.merge(Flowable.just(Maybe.just(1), Maybe.just(2), Maybe.just(3)))
+    public void mergeObservable() {
+        Maybe.merge(Observable.just(Maybe.just(1), Maybe.just(2), Maybe.just(3)))
         .test()
         .assertResult(1, 2, 3);
     }
 
     @Test
-    public void mergePublisherMaxConcurrent() {
-        final PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        final PublishProcessor<Integer> pp2 = PublishProcessor.create();
+    public void mergeObservableMaxConcurrent() {
+        final MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        final MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestSubscriber<Integer> ts = Maybe.merge(Flowable.just(pp1.singleElement(), pp2.singleElement()), 1).test(0L);
+        TestObserver<Integer> ts = Maybe.merge(Observable.just(pp1, pp2), 1).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
-        pp1.onNext(1);
-        pp1.onComplete();
+        pp1.onSuccess(1);
 
-        ts.request(1);
+        assertFalse(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
-        assertFalse(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        ts.assertResult(1);
     }
 
     @Test
@@ -2161,7 +2012,7 @@ public class MaybeTest {
     @Test
     public void mergeALot() {
         @SuppressWarnings("unchecked")
-        Maybe<Integer>[] sources = new Maybe[Flowable.bufferSize() * 2];
+        Maybe<Integer>[] sources = new Maybe[Observable.bufferSize() * 2];
         Arrays.fill(sources, Maybe.just(1));
 
         Maybe.mergeArray(sources)
@@ -2175,7 +2026,7 @@ public class MaybeTest {
     @Test
     public void mergeALotLastEmpty() {
         @SuppressWarnings("unchecked")
-        Maybe<Integer>[] sources = new Maybe[Flowable.bufferSize() * 2];
+        Maybe<Integer>[] sources = new Maybe[Observable.bufferSize() * 2];
         Arrays.fill(sources, Maybe.just(1));
         sources[sources.length - 1] = Maybe.empty();
 
@@ -2190,17 +2041,17 @@ public class MaybeTest {
     @Test
     public void mergeALotFused() {
         @SuppressWarnings("unchecked")
-        Maybe<Integer>[] sources = new Maybe[Flowable.bufferSize() * 2];
+        Maybe<Integer>[] sources = new Maybe[Observable.bufferSize() * 2];
         Arrays.fill(sources, Maybe.just(1));
 
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueDisposable.ANY);
+        TestObserver<Integer> ts = ObserverFusion.newTest(QueueDisposable.ANY);
 
         Maybe.mergeArray(sources).subscribe(ts);
 
         ts
         .assertSubscribed()
-        .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
+        .assertOf(ObserverFusion.<Integer>assertFuseable())
+        .assertOf(ObserverFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
         .assertValueCount(sources.length)
         .assertNoErrors()
         .assertComplete();
@@ -2228,17 +2079,17 @@ public class MaybeTest {
 
     @Test
     public void subscribeZeroError() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             assertTrue(Maybe.error(new TestException())
             .subscribe().isDisposed());
 
-            TestHelper.assertError(errors, 0, OnErrorNotImplementedException.class);
+            TestCommonHelper.assertError(errors, 0, OnErrorNotImplementedException.class);
             Throwable c = errors.get(0).getCause();
             assertTrue("" + c, c instanceof TestException);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -2413,9 +2264,9 @@ public class MaybeTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> list = TestHelper.compositeList(ts.errors().get(0));
-        TestHelper.assertError(list, 0, TestException.class, "Outer");
-        TestHelper.assertError(list, 1, TestException.class, "Inner");
+        List<Throwable> list = TestCommonHelper.compositeList(ts.errors().get(0));
+        TestCommonHelper.assertError(list, 0, TestException.class, "Outer");
+        TestCommonHelper.assertError(list, 1, TestException.class, "Inner");
         assertEquals(2, list.size());
     }
 
@@ -2444,7 +2295,7 @@ public class MaybeTest {
         .test()
         .assertFailure(TestException.class, 1);
 
-        assertSame(Flowable.empty(), Maybe.concatArrayDelayError());
+        assertSame(Observable.empty(), Maybe.concatArrayDelayError());
 
         assertFalse(Maybe.concatArrayDelayError(Maybe.never()) instanceof MaybeConcatArrayDelayError);
     }
@@ -2462,12 +2313,12 @@ public class MaybeTest {
     }
 
     @Test
-    public void concatPublisherDelayError() {
-        Maybe.concatDelayError(Flowable.just(Maybe.empty(), Maybe.just(1), Maybe.error(new TestException())))
+    public void concatObservableDelayError() {
+        Maybe.concatDelayError(Observable.just(Maybe.empty(), Maybe.just(1), Maybe.error(new TestException())))
         .test()
         .assertFailure(TestException.class, 1);
 
-        Maybe.concatDelayError(Flowable.just(Maybe.error(new TestException()), Maybe.empty(), Maybe.just(1)))
+        Maybe.concatDelayError(Observable.just(Maybe.error(new TestException()), Maybe.empty(), Maybe.just(1)))
         .test()
         .assertFailure(TestException.class, 1);
     }
@@ -2475,13 +2326,13 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void concatEagerArray() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestSubscriber<Integer> ts = Maybe.concatArrayEager(pp1.singleElement(), pp2.singleElement()).test();
+        TestObserver<Integer> ts = Maybe.concatArrayEager(pp1, pp2).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onNext(2);
         pp2.onComplete();
@@ -2498,13 +2349,13 @@ public class MaybeTest {
     @SuppressWarnings("unchecked")
     @Test
     public void concatEagerIterable() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestSubscriber<Integer> ts = Maybe.concatEager(Arrays.asList(pp1.singleElement(), pp2.singleElement())).test();
+        TestObserver<Integer> ts = Maybe.concatEager(Arrays.asList(pp1, pp2)).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onNext(2);
         pp2.onComplete();
@@ -2519,14 +2370,14 @@ public class MaybeTest {
     }
 
     @Test
-    public void concatEagerPublisher() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+    public void concatEagerObservable() {
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestSubscriber<Integer> ts = Maybe.concatEager(Flowable.just(pp1.singleElement(), pp2.singleElement())).test();
+        TestObserver<Integer> ts = Maybe.concatEager(Observable.just(pp1, pp2)).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onNext(2);
         pp2.onComplete();
@@ -2555,7 +2406,7 @@ public class MaybeTest {
 
     @Test
     public void fromFuture() {
-        Maybe.fromFuture(Flowable.just(1).delay(200, TimeUnit.MILLISECONDS).toFuture())
+        Maybe.fromFuture(Observable.just(1).delay(200, TimeUnit.MILLISECONDS).toFuture())
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(1)
@@ -2567,13 +2418,13 @@ public class MaybeTest {
         .assertResult()
         ;
 
-        Maybe.fromFuture(Flowable.error(new TestException()).delay(200, TimeUnit.MILLISECONDS, true).toFuture())
+        Maybe.fromFuture(Observable.error(new TestException()).delay(200, TimeUnit.MILLISECONDS, true).toFuture())
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(TestException.class)
         ;
 
-        Maybe.fromFuture(Flowable.empty().delay(10, TimeUnit.SECONDS).toFuture(), 100, TimeUnit.MILLISECONDS)
+        Maybe.fromFuture(Observable.empty().delay(10, TimeUnit.SECONDS).toFuture(), 100, TimeUnit.MILLISECONDS)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(TimeoutException.class)
@@ -2591,7 +2442,7 @@ public class MaybeTest {
         .test()
         .assertFailure(TestException.class, 1);
 
-        assertSame(Flowable.empty(), Maybe.mergeArrayDelayError());
+        assertSame(Observable.empty(), Maybe.mergeArrayDelayError());
     }
 
     @SuppressWarnings("unchecked")
@@ -2607,12 +2458,12 @@ public class MaybeTest {
     }
 
     @Test
-    public void mergePublisherDelayError() {
-        Maybe.mergeDelayError(Flowable.just(Maybe.empty(), Maybe.just(1), Maybe.error(new TestException())))
+    public void mergeObservableDelayError() {
+        Maybe.mergeDelayError(Observable.just(Maybe.empty(), Maybe.just(1), Maybe.error(new TestException())))
         .test()
         .assertFailure(TestException.class, 1);
 
-        Maybe.mergeDelayError(Flowable.just(Maybe.error(new TestException()), Maybe.empty(), Maybe.just(1)))
+        Maybe.mergeDelayError(Observable.just(Maybe.error(new TestException()), Maybe.empty(), Maybe.just(1)))
         .test()
         .assertFailure(TestException.class, 1);
     }
@@ -2674,12 +2525,12 @@ public class MaybeTest {
 
         Maybe.sequenceEqual(Maybe.error(new TestException()), Maybe.just(1)).test().assertFailure(TestException.class);
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Maybe.sequenceEqual(Maybe.error(new TestException("One")), Maybe.error(new TestException("Two"))).test().assertFailureAndMessage(TestException.class, "One");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Two");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Two");
         } finally {
             RxJavaPlugins.reset();
         }
@@ -2749,18 +2600,18 @@ public class MaybeTest {
         })
         .test().assertFailure(TestException.class);
 
-        Maybe.just(1).flatMapPublisher(new Function<Integer, Publisher<Integer>>() {
+        Maybe.just(1).flatMapObservable(new Function<Integer, Observable<Integer>>() {
             @Override
-            public Publisher<Integer> apply(Integer v) throws Exception {
-                return Flowable.range(1, 5);
+            public Observable<Integer> apply(Integer v) throws Exception {
+                return Observable.range(1, 5);
             }
         })
         .test().assertResult(1, 2, 3, 4, 5);
 
-        Maybe.just(1).flatMapPublisher(new Function<Integer, Publisher<Integer>>() {
+        Maybe.just(1).flatMapObservable(new Function<Integer, Observable<Integer>>() {
             @Override
-            public Publisher<Integer> apply(Integer v) throws Exception {
-                return Flowable.error(new TestException());
+            public Observable<Integer> apply(Integer v) throws Exception {
+                return Observable.error(new TestException());
             }
         })
         .test().assertFailure(TestException.class);
@@ -2969,44 +2820,44 @@ public class MaybeTest {
 
     @Test
     public void ambWith1SignalsSuccess() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = pp1.singleElement().ambWith(pp2.singleElement())
+        TestObserver<Integer> ts = pp1.ambWith(pp2)
         .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp1.onNext(1);
         pp1.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult(1);
     }
 
     @Test
     public void ambWith2SignalsSuccess() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        MaybeSubject<Integer> pp1 = MaybeSubject.create();
+        MaybeSubject<Integer> pp2 = MaybeSubject.create();
 
-        TestObserver<Integer> ts = pp1.singleElement().ambWith(pp2.singleElement())
+        TestObserver<Integer> ts = pp1.ambWith(pp2)
         .test();
 
         ts.assertEmpty();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onNext(2);
         pp2.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult(2);
     }
@@ -3043,7 +2894,7 @@ public class MaybeTest {
 
         long before = usedMemoryNow();
 
-        Maybe<Object> source = Flowable.just((Object)new Object[10000000]).singleElement();
+        Maybe<Object> source = Observable.just((Object)new Object[10000000]).singleElement();
 
         long middle = usedMemoryNow();
 
@@ -3109,9 +2960,9 @@ public class MaybeTest {
             }
         }).take(5).test().assertResult(1, 1, 1, 1, 1);
 
-        Maybe.just(1).repeatWhen(new Function<Flowable<Object>, Publisher<Object>>() {
+        Maybe.just(1).repeatWhen(new Function<Observable<Object>, Observable<Object>>() {
             @Override
-            public Publisher<Object> apply(Flowable<Object> v) throws Exception {
+            public Observable<Object> apply(Observable<Object> v) throws Exception {
                 return v;
             }
         }).take(5).test().assertResult(1, 1, 1, 1, 1);
@@ -3141,11 +2992,11 @@ public class MaybeTest {
             }
         }).test().assertResult(1);
 
-        Maybe.just(1).retryWhen(new Function<Flowable<? extends Throwable>, Publisher<Object>>() {
+        Maybe.just(1).retryWhen(new Function<Observable<? extends Throwable>, Observable<Object>>() {
             @SuppressWarnings({ "rawtypes", "unchecked" })
             @Override
-            public Publisher<Object> apply(Flowable<? extends Throwable> v) throws Exception {
-                return (Publisher)v;
+            public Observable<Object> apply(Observable<? extends Throwable> v) throws Exception {
+                return (Observable)v;
             }
         }).test().assertResult(1);
     }

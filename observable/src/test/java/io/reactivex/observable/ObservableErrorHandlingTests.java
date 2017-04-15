@@ -20,9 +20,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.observers.DefaultObserver;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.Schedulers;
+import io.reactivex.observable.observers.DefaultObserver;
 
 public class ObservableErrorHandlingTests {
 

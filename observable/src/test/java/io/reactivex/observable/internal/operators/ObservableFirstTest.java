@@ -13,15 +13,16 @@
 
 package io.reactivex.observable.internal.operators;
 
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+
+import java.util.NoSuchElementException;
 
 import org.junit.*;
 import org.mockito.InOrder;
 
-import java.util.NoSuchElementException;
-
-import io.reactivex.*;
-import io.reactivex.functions.Predicate;
+import io.reactivex.common.functions.Predicate;
+import io.reactivex.observable.*;
 
 public class ObservableFirstTest {
 

@@ -20,13 +20,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.*;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.TestHelper;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.TestScheduler;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.TestScheduler;
-import io.reactivex.subjects.PublishSubject;
 
 public class BlockingObservableLatestTest {
     @Test(timeout = 1000)
@@ -217,11 +215,11 @@ public class BlockingObservableLatestTest {
     public void onError() {
         Iterator<Object> it = Observable.never().blockingLatest().iterator();
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             ((Observer<Object>)it).onError(new TestException());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

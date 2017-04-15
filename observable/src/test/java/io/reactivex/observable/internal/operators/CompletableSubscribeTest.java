@@ -14,10 +14,11 @@
 package io.reactivex.observable.internal.operators;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subjects.PublishSubject;
 
 public class CompletableSubscribeTest {
     @Test

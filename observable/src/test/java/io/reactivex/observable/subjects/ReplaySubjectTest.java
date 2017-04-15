@@ -24,12 +24,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Test;
 import org.mockito.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.*;
-import io.reactivex.schedulers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.*;
 
 public class ReplaySubjectTest {
 
@@ -988,7 +987,7 @@ public class ReplaySubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -1016,7 +1015,7 @@ public class ReplaySubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r1, Schedulers.single());
+            TestCommonHelper.race(r1, r1, Schedulers.single());
         }
     }
 
@@ -1055,7 +1054,7 @@ public class ReplaySubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             assertFalse(rp.hasObservers());
         }

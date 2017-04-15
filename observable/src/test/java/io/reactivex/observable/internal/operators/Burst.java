@@ -12,12 +12,11 @@
  */
 package io.reactivex.observable.internal.operators;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposables;
+import io.reactivex.common.Disposables;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 
 /**
  * Creates {@link Observable} of a number of items followed by either an error or

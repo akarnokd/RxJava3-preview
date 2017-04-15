@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
-import io.reactivex.*;
+import io.reactivex.observable.Maybe;
 
 public class MaybeConcatPublisherTest {
 

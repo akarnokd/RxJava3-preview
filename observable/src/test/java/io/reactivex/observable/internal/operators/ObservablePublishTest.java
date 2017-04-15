@@ -16,24 +16,25 @@ package io.reactivex.observable.internal.operators;
 import static org.junit.Assert.*;
 
 import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
 import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.HasUpstreamObservableSource;
-import io.reactivex.observables.ConnectableObservable;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.HasUpstreamObservableSource;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.*;
-import io.reactivex.subjects.PublishSubject;
 
 public class ObservablePublishTest {
 
@@ -413,7 +414,7 @@ public class ObservablePublishTest {
                 }
             };
 
-            TestHelper.race(r1, r1);
+            TestCommonHelper.race(r1, r1);
         }
     }
 
@@ -430,7 +431,7 @@ public class ObservablePublishTest {
                 }
             };
 
-            TestHelper.race(r1, r1);
+            TestCommonHelper.race(r1, r1);
         }
     }
 
@@ -492,7 +493,7 @@ public class ObservablePublishTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -574,13 +575,13 @@ public class ObservablePublishTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Observable<Integer>() {
                 @Override
@@ -598,7 +599,7 @@ public class ObservablePublishTest {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -606,13 +607,13 @@ public class ObservablePublishTest {
 
     @Test
     public void noErrorLoss() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             ConnectableObservable<Object> co = Observable.error(new TestException()).publish();
 
             co.connect();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -643,7 +644,7 @@ public class ObservablePublishTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 

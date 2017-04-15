@@ -20,10 +20,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.functions.Action;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.Action;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 
 public class CompletableTimerTest {
 

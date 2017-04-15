@@ -19,8 +19,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.TestHelper;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public class SingleMergeTest {
@@ -56,7 +56,7 @@ public class SingleMergeTest {
 
     @Test
     public void mergeErrors() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Single<Integer> source1 = Single.error(new TestException("First"));
             Single<Integer> source2 = Single.error(new TestException("Second"));

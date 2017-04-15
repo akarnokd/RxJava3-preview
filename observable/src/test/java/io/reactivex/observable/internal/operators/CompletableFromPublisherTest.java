@@ -15,7 +15,7 @@ package io.reactivex.observable.internal.operators;
 
 import org.junit.Test;
 
-import io.reactivex.*;
+import io.reactivex.observable.*;
 
 public class CompletableFromPublisherTest {
     @Test(expected = NullPointerException.class)

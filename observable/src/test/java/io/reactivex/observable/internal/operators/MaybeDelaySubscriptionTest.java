@@ -21,14 +21,14 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
+import io.reactivex.common.TestScheduler;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.TestScheduler;
 
 public class MaybeDelaySubscriptionTest {
 
@@ -117,7 +117,7 @@ public class MaybeDelaySubscriptionTest {
 
     @Test
     public void withPublisherCallAfterTerminalEvent() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable<Integer> f = new Flowable<Integer>() {
@@ -135,7 +135,7 @@ public class MaybeDelaySubscriptionTest {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

@@ -19,10 +19,10 @@ import java.lang.ref.WeakReference;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 
 
 public class ObservableDetachTest {

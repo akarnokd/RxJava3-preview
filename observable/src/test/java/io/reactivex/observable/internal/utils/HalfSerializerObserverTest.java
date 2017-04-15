@@ -10,7 +10,7 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.common.internal.util;
+package io.reactivex.observable.internal.utils;
 
 import static org.junit.Assert.assertTrue;
 
@@ -19,11 +19,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 
 public class HalfSerializerObserverTest {
 
@@ -225,7 +225,7 @@ public class HalfSerializerObserverTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertComplete().assertNoErrors();
 
@@ -260,7 +260,7 @@ public class HalfSerializerObserverTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             if (ts.completions() != 0) {
                 ts.assertResult();

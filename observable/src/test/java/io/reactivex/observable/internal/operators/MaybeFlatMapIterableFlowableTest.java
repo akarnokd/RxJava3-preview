@@ -21,13 +21,14 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.utils.CrashingIterable;
 import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.util.CrashingIterable;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.QueueDisposable;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.subscribers.*;
 
 public class MaybeFlatMapIterableFlowableTest {
@@ -436,7 +437,7 @@ public class MaybeFlatMapIterableFlowableTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -470,7 +471,7 @@ public class MaybeFlatMapIterableFlowableTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 

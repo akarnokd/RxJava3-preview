@@ -71,7 +71,7 @@ public abstract class ConnectableObservable<T> extends Observable<T> {
      */
     @NonNull
     public Observable<T> refCount() {
-        return RxJavaPlugins.onAssembly(new ObservableRefCount<T>(this));
+        return RxJavaObservablePlugins.onAssembly(new ObservableRefCount<T>(this));
     }
 
     /**
@@ -118,8 +118,8 @@ public abstract class ConnectableObservable<T> extends Observable<T> {
     public Observable<T> autoConnect(int numberOfSubscribers, @NonNull Consumer<? super Disposable> connection) {
         if (numberOfSubscribers <= 0) {
             this.connect(connection);
-            return RxJavaPlugins.onAssembly(this);
+            return RxJavaObservablePlugins.onAssembly(this);
         }
-        return RxJavaPlugins.onAssembly(new ObservableAutoConnect<T>(this, numberOfSubscribers, connection));
+        return RxJavaObservablePlugins.onAssembly(new ObservableAutoConnect<T>(this, numberOfSubscribers, connection));
     }
 }

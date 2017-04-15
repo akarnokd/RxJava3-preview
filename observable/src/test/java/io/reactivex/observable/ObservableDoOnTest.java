@@ -19,9 +19,8 @@ import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
 
-import io.reactivex.Observable;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
 
 public class ObservableDoOnTest {
 

@@ -13,14 +13,14 @@
 
 package io.reactivex.observable.internal.operators;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 
-import io.reactivex.Single;
-import io.reactivex.functions.*;
+import io.reactivex.common.functions.*;
 
 public class SingleZipTest {
 

@@ -19,13 +19,10 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.Observable;
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.observers.TestObserver;
 
 public class SerializedSubjectTest {
 
@@ -416,13 +413,13 @@ public class SerializedSubjectTest {
 
         s.onNext(11);
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             s.onError(new TestException());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
         s.onComplete();
 
@@ -452,7 +449,7 @@ public class SerializedSubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertSubscribed().assertNoErrors().assertNotComplete()
             .assertValueSet(Arrays.asList(1, 2));
@@ -482,7 +479,7 @@ public class SerializedSubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertError(ex).assertNotComplete();
 
@@ -513,7 +510,7 @@ public class SerializedSubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertComplete().assertNoErrors();
 
@@ -546,7 +543,7 @@ public class SerializedSubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertValue(1).assertNotComplete().assertNoErrors();
         }
@@ -575,7 +572,7 @@ public class SerializedSubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertResult();
         }
@@ -602,7 +599,7 @@ public class SerializedSubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertResult();
         }
@@ -617,7 +614,7 @@ public class SerializedSubjectTest {
 
             final TestException ex = new TestException();
 
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
                 Runnable r1 = new Runnable() {
                     @Override
@@ -633,13 +630,13 @@ public class SerializedSubjectTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 ts.assertFailure(TestException.class);
 
-                TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -668,7 +665,7 @@ public class SerializedSubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertEmpty();
         }

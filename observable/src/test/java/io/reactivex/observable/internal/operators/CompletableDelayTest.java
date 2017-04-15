@@ -13,17 +13,16 @@
 
 package io.reactivex.observable.internal.operators;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import static org.junit.Assert.assertNotEquals;
+
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.functions.Consumer;
 import org.junit.Test;
 
-import io.reactivex.Completable;
-import io.reactivex.schedulers.Schedulers;
-
-import static org.junit.Assert.assertNotEquals;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.observable.Completable;
 
 public class CompletableDelayTest {
 

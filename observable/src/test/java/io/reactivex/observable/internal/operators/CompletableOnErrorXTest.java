@@ -13,11 +13,12 @@
 
 package io.reactivex.observable.internal.operators;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.functions.Function;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
 
 public class CompletableOnErrorXTest {
 

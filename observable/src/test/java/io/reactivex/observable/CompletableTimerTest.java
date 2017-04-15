@@ -11,18 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.completable;
+package io.reactivex.observable;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import io.reactivex.Completable;
-import io.reactivex.functions.Action;
-import io.reactivex.schedulers.TestScheduler;
+import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import io.reactivex.common.TestScheduler;
+import io.reactivex.common.functions.Action;
 
 public class CompletableTimerTest {
     @Test

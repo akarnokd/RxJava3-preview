@@ -13,11 +13,11 @@
 
 package io.reactivex.observable.internal.observers;
 
-import io.reactivex.annotations.Nullable;
 import org.junit.Test;
 
-import io.reactivex.disposables.Disposables;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.Disposables;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.observable.observers.TestObserver;
 
 public class BasicFuseableObserverTest {
 

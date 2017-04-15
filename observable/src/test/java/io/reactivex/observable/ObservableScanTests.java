@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 import org.junit.Test;
 
-import io.reactivex.functions.*;
+import io.reactivex.common.functions.*;
 import io.reactivex.observable.ObservableEventStream.Event;
 
 public class ObservableScanTests {

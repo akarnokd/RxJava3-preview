@@ -17,8 +17,8 @@ import java.util.concurrent.*;
 
 import org.junit.Test;
 
-import io.reactivex.Maybe;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.Maybe;
 
 public class MaybeFromFutureTest {
 

@@ -19,11 +19,9 @@ import java.util.*;
 
 import org.junit.*;
 
-import io.reactivex.Observable;
-import io.reactivex.functions.*;
+import io.reactivex.common.functions.*;
 import io.reactivex.observable.ObservableCovarianceTest.*;
 import io.reactivex.observable.ObservableEventStream.Event;
-import io.reactivex.observables.GroupedObservable;
 
 public class ObservableZipTests {
 

@@ -58,7 +58,7 @@ public final class ObservableReplay<T> extends ConnectableObservable<T> implemen
     public static <U, R> Observable<R> multicastSelector(
             final Callable<? extends ConnectableObservable<U>> connectableFactory,
             final Function<? super Observable<U>, ? extends ObservableSource<R>> selector) {
-        return RxJavaPlugins.onAssembly(new MulticastReplay<R, U>(connectableFactory, selector));
+        return RxJavaObservablePlugins.onAssembly(new MulticastReplay<R, U>(connectableFactory, selector));
     }
 
     /**
@@ -71,7 +71,7 @@ public final class ObservableReplay<T> extends ConnectableObservable<T> implemen
      */
     public static <T> ConnectableObservable<T> observeOn(final ConnectableObservable<T> co, final Scheduler scheduler) {
         final Observable<T> observable = co.observeOn(scheduler);
-        return RxJavaPlugins.onAssembly(new Replay<T>(co, observable));
+        return RxJavaObservablePlugins.onAssembly(new Replay<T>(co, observable));
     }
 
     /**
@@ -140,7 +140,7 @@ public final class ObservableReplay<T> extends ConnectableObservable<T> implemen
         // the current connection to source needs to be shared between the operator and its onSubscribe call
         final AtomicReference<ReplayObserver<T>> curr = new AtomicReference<ReplayObserver<T>>();
         ObservableSource<T> onSubscribe = new ReplaySource<T>(curr, bufferFactory);
-        return RxJavaPlugins.onAssembly(new ObservableReplay<T>(onSubscribe, source, curr, bufferFactory));
+        return RxJavaObservablePlugins.onAssembly(new ObservableReplay<T>(onSubscribe, source, curr, bufferFactory));
     }
 
     private ObservableReplay(ObservableSource<T> onSubscribe, ObservableSource<T> source,

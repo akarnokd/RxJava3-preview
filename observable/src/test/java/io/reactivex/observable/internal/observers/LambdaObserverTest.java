@@ -16,17 +16,17 @@ package io.reactivex.observable.internal.observers;
 import static org.junit.Assert.*;
 
 import java.util.*;
+import java.util.Observable;
 
 import org.junit.Test;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.Observer;
+import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.PublishSubject;
 
 public class LambdaObserverTest {
 
@@ -105,7 +105,7 @@ public class LambdaObserverTest {
 
     @Test
     public void onErrorThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             final List<Object> received = new ArrayList<Object>();
@@ -151,7 +151,7 @@ public class LambdaObserverTest {
 
     @Test
     public void onCompleteThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             final List<Object> received = new ArrayList<Object>();
@@ -186,7 +186,7 @@ public class LambdaObserverTest {
 
             assertTrue(o.isDisposed());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

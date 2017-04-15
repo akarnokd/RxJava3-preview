@@ -19,8 +19,7 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.Observable;
-import io.reactivex.functions.*;
+import io.reactivex.common.functions.*;
 
 public class ObservableWindowTests {
 

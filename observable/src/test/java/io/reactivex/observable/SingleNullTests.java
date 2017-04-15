@@ -14,20 +14,21 @@
 package io.reactivex.single;
 
 
+import static org.junit.Assert.assertTrue;
+
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.SingleOperator;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.schedulers.Schedulers;
 
 public class SingleNullTests {
 

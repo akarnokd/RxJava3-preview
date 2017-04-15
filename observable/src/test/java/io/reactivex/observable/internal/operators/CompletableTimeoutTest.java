@@ -20,13 +20,13 @@ import java.util.concurrent.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Action;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Action;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.*;
-import io.reactivex.subjects.PublishSubject;
 
 public class CompletableTimeoutTest {
 
@@ -107,7 +107,7 @@ public class CompletableTimeoutTest {
     @Test
     public void errorTimeoutRace() {
         for (int i = 0; i < 500; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
             try {
                 final TestScheduler scheduler = new TestScheduler();
@@ -133,12 +133,12 @@ public class CompletableTimeoutTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 to.assertTerminated();
 
                 if (!errors.isEmpty()) {
-                    TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                    TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
 
             } finally {

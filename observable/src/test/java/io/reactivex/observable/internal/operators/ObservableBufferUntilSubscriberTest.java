@@ -19,10 +19,10 @@ import java.util.concurrent.atomic.*;
 
 import org.junit.*;
 
-import io.reactivex.Observable;
-import io.reactivex.functions.*;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class ObservableBufferUntilSubscriberTest {
 

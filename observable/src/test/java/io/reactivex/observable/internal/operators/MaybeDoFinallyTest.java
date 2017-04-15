@@ -19,12 +19,12 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.PublishSubject;
 
 public class MaybeDoFinallyTest implements Action {
 
@@ -121,7 +121,7 @@ public class MaybeDoFinallyTest implements Action {
 
     @Test
     public void actionThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Maybe.just(1)
             .doFinally(new Action() {
@@ -134,7 +134,7 @@ public class MaybeDoFinallyTest implements Action {
             .assertResult(1)
             .cancel();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -142,7 +142,7 @@ public class MaybeDoFinallyTest implements Action {
 
     @Test
     public void actionThrowsConditional() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Maybe.just(1)
             .doFinally(new Action() {
@@ -156,7 +156,7 @@ public class MaybeDoFinallyTest implements Action {
             .assertResult(1)
             .cancel();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

@@ -20,11 +20,9 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 
 public class CompletableSubjectTest {
 
@@ -36,13 +34,13 @@ public class CompletableSubjectTest {
 
         cs.onComplete();
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             cs.onError(new IOException());
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
         cs.onComplete();
 
@@ -220,7 +218,7 @@ public class CompletableSubjectTest {
                     to.cancel();
                 }
             };
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 }

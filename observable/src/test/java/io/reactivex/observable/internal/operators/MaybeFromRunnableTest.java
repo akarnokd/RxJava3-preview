@@ -21,10 +21,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.Schedulers;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
 
 public class MaybeFromRunnableTest {
     @Test(expected = NullPointerException.class)
@@ -124,7 +124,7 @@ public class MaybeFromRunnableTest {
 
     @Test
     public void noErrorLoss() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             final CountDownLatch cdl1 = new CountDownLatch(1);
             final CountDownLatch cdl2 = new CountDownLatch(1);
@@ -153,7 +153,7 @@ public class MaybeFromRunnableTest {
                 Thread.sleep(100);
             }
 
-            TestHelper.assertUndeliverable(errors, 0, RuntimeException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, RuntimeException.class);
 
             assertTrue(errors.get(0).toString(), errors.get(0).getCause().getCause() instanceof InterruptedException);
         } finally {

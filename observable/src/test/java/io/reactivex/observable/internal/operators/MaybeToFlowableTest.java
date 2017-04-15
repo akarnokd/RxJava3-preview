@@ -18,9 +18,9 @@ import static org.junit.Assert.assertSame;
 import org.junit.Test;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.fuseable.HasUpstreamMaybeSource;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.HasUpstreamMaybeSource;
 
 public class MaybeToFlowableTest {
 

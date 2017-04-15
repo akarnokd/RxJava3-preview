@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.schedulers.TestScheduler;
+import io.reactivex.common.TestScheduler;
+import io.reactivex.observable.*;
 
 public class ObservableIntervalTest {
 

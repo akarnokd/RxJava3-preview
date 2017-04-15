@@ -14,6 +14,7 @@
 package io.reactivex.observable.subjects;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
@@ -23,12 +24,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.*;
 import org.mockito.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.observers.*;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.*;
 
 public class PublishSubjectTest {
 
@@ -570,7 +570,7 @@ public class PublishSubjectTest {
                 }
             };
 
-            TestHelper.race(task, task, Schedulers.io());
+            TestCommonHelper.race(task, task, Schedulers.io());
 
             ts
             .awaitDone(5, TimeUnit.SECONDS)
@@ -599,7 +599,7 @@ public class PublishSubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.io());
+            TestCommonHelper.race(r1, r2, Schedulers.io());
         }
     }
 
@@ -622,7 +622,7 @@ public class PublishSubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.io());
+            TestCommonHelper.race(r1, r2, Schedulers.io());
         }
     }
 
@@ -647,7 +647,7 @@ public class PublishSubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.io());
+            TestCommonHelper.race(r1, r2, Schedulers.io());
 
             ts.awaitDone(5, TimeUnit.SECONDS)
             .assertResult();

@@ -18,26 +18,25 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.annotations.Nullable;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.operators.observable.ObservableObserveOn.ObserveOnObserver;
-import io.reactivex.internal.schedulers.ImmediateThinScheduler;
-import io.reactivex.observers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.schedulers.ImmediateThinScheduler;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.*;
+import io.reactivex.observable.internal.operators.ObservableObserveOn.ObserveOnObserver;
+import io.reactivex.observable.observers.*;
+import io.reactivex.observable.subjects.*;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.*;
-import io.reactivex.subjects.*;
 
 public class ObservableObserveOnTest {
 
@@ -490,7 +489,7 @@ public class ObservableObserveOnTest {
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestScheduler scheduler = new TestScheduler();
             TestObserver<Integer> to = new Observable<Integer>() {
@@ -510,7 +509,7 @@ public class ObservableObserveOnTest {
 
             to.assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

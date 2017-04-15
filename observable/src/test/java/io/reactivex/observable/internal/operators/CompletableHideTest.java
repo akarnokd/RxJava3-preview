@@ -13,16 +13,15 @@
 
 package io.reactivex.observable.internal.operators;
 
-import io.reactivex.Completable;
-import io.reactivex.CompletableSource;
-import io.reactivex.TestHelper;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subjects.CompletableSubject;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
+import io.reactivex.observable.subjects.CompletableSubject;
+import io.reactivex.processors.PublishProcessor;
 
 public class CompletableHideTest {
 

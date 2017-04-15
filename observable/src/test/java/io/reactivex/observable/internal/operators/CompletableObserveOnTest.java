@@ -15,9 +15,9 @@ package io.reactivex.observable.internal.operators;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
 
 public class CompletableObserveOnTest {
 

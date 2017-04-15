@@ -15,7 +15,7 @@ package io.reactivex.observable.internal.operators;
 
 import org.junit.Test;
 
-import io.reactivex.Maybe;
+import io.reactivex.observable.Maybe;
 
 public class MaybeMergeWithTest {
 

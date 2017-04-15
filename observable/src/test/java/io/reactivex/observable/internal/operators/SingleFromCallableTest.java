@@ -13,8 +13,8 @@
 
 package io.reactivex.observable.internal.operators;
 
-import io.reactivex.Single;
 import java.util.concurrent.Callable;
+
 import org.junit.Test;
 
 public class SingleFromCallableTest {

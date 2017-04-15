@@ -13,11 +13,12 @@
 
 package io.reactivex.observable.internal.operators;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertSame;
+
 import org.junit.Test;
 
-import io.reactivex.Maybe;
-import io.reactivex.internal.fuseable.HasUpstreamMaybeSource;
+import io.reactivex.observable.Maybe;
+import io.reactivex.observable.extensions.HasUpstreamMaybeSource;
 
 public class MaybeIsEmptySingleTest {
 

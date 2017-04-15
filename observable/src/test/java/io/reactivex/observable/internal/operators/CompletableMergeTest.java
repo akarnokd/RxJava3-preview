@@ -20,15 +20,16 @@ import java.util.*;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
 import io.reactivex.disposables.*;
 import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
 
 public class CompletableMergeTest {
     @Test
@@ -77,7 +78,7 @@ public class CompletableMergeTest {
 
     @Test
     public void onErrorAfterComplete() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             final CompletableObserver[] co = { null };
 
@@ -94,7 +95,7 @@ public class CompletableMergeTest {
 
             co[0].onError(new TestException());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -193,7 +194,7 @@ public class CompletableMergeTest {
     @Test
     public void mainErrorInnerErrorRace() {
         for (int i = 0; i < 500; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
                 final PublishProcessor<Integer> pp1 = PublishProcessor.create();
                 final PublishProcessor<Integer> pp2 = PublishProcessor.create();
@@ -223,7 +224,7 @@ public class CompletableMergeTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 Throwable ex = to.errors().get(0);
                 if (ex instanceof CompositeException) {
@@ -236,7 +237,7 @@ public class CompletableMergeTest {
                     to.assertFailure(TestException.class);
 
                     if (!errors.isEmpty()) {
-                        TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                        TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                     }
                 }
             } finally {
@@ -277,7 +278,7 @@ public class CompletableMergeTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             to.assertFailure(CompositeException.class);
 
@@ -382,7 +383,7 @@ public class CompletableMergeTest {
 
     @Test
     public void mainDoubleOnError() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Completable.mergeDelayError(new Flowable<Completable>() {
                 @Override
@@ -396,7 +397,7 @@ public class CompletableMergeTest {
             .test()
             .assertFailureAndMessage(TestException.class, "First");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
             RxJavaPlugins.reset();
         }
@@ -404,7 +405,7 @@ public class CompletableMergeTest {
 
     @Test
     public void innerDoubleOnError() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             final CompletableObserver[] o = { null };
             Completable.mergeDelayError(Flowable.just(new Completable() {
@@ -420,7 +421,7 @@ public class CompletableMergeTest {
 
             o[0].onError(new TestException("Second"));
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
             RxJavaPlugins.reset();
         }
@@ -447,7 +448,7 @@ public class CompletableMergeTest {
     @Test
     public void mergeArrayInnerErrorRace() {
         for (int i = 0; i < 500; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
                 final PublishProcessor<Integer> pp1 = PublishProcessor.create();
                 final PublishProcessor<Integer> pp2 = PublishProcessor.create();
@@ -472,12 +473,12 @@ public class CompletableMergeTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 to.assertFailure(TestException.class);
 
                 if (!errors.isEmpty()) {
-                    TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                    TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
                 RxJavaPlugins.reset();

@@ -13,12 +13,14 @@
 
 package io.reactivex.observable.internal.operators;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.*;
+import io.reactivex.common.functions.*;
 import io.reactivex.functions.*;
+import io.reactivex.observable.Completable;
 
 public class CompletableRepeatWhenTest {
     @Test

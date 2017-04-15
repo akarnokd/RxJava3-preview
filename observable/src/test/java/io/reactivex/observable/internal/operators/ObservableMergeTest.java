@@ -14,21 +14,26 @@
 package io.reactivex.observable.internal.operators;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.Scheduler.Worker;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
 import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
 import io.reactivex.functions.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.*;
 import io.reactivex.observers.*;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.*;
@@ -1130,7 +1135,7 @@ public class ObservableMergeTest {
 
     @Test
     public void mergeErrors() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Observable<Integer> source1 = Observable.error(new TestException("First"));
             Observable<Integer> source2 = Observable.error(new TestException("Second"));

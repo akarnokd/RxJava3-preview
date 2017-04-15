@@ -32,7 +32,7 @@ public final class ObservableElementAtMaybe<T> extends Maybe<T> implements FuseT
 
     @Override
     public Observable<T> fuseToObservable() {
-        return RxJavaPlugins.onAssembly(new ObservableElementAt<T>(source, index, null, false));
+        return RxJavaObservablePlugins.onAssembly(new ObservableElementAt<T>(source, index, null, false));
     }
 
     static final class ElementAtObserver<T> implements Observer<T>, Disposable {

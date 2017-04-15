@@ -15,10 +15,9 @@ package io.reactivex.single;
 
 import org.junit.Test;
 
-import io.reactivex.Single;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.subscribers.TestSubscriber;
 
 public class SingleCacheTest {

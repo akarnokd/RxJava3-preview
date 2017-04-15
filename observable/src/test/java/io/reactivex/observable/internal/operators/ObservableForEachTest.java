@@ -19,14 +19,13 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.Observable;
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.PublishSubject;
 
 public class ObservableForEachTest {
 
@@ -102,7 +101,7 @@ public class ObservableForEachTest {
 
     @Test
     public void whilePredicateThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Observable.just(1).forEachWhile(new Predicate<Integer>() {
                 @Override
@@ -121,7 +120,7 @@ public class ObservableForEachTest {
 
     @Test
     public void whileErrorThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Observable.<Integer>error(new TestException("Outer"))
             .forEachWhile(Functions.alwaysTrue(), new Consumer<Throwable>() {
@@ -144,7 +143,7 @@ public class ObservableForEachTest {
 
     @Test
     public void whileCompleteThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Observable.just(1).forEachWhile(Functions.alwaysTrue(), Functions.emptyConsumer(),
                     new Action() {
@@ -154,7 +153,7 @@ public class ObservableForEachTest {
                         }
                     });
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

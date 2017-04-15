@@ -112,7 +112,7 @@ public final class ObservableScalarXMap {
      */
     public static <T, U> Observable<U> scalarXMap(T value,
             Function<? super T, ? extends ObservableSource<? extends U>> mapper) {
-        return RxJavaPlugins.onAssembly(new ScalarXMapObservable<T, U>(value, mapper));
+        return RxJavaObservablePlugins.onAssembly(new ScalarXMapObservable<T, U>(value, mapper));
     }
 
     /**

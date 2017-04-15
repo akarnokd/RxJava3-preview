@@ -19,12 +19,10 @@ import java.util.*;
 
 import org.junit.*;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.operators.observable.BlockingObservableIterable.BlockingObservableIterator;
+import io.reactivex.common.Disposables;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.ObservableSource;
+import io.reactivex.observable.internal.operators.BlockingObservableIterable.BlockingObservableIterator;
 
 public class BlockingObservableToIteratorTest {
 

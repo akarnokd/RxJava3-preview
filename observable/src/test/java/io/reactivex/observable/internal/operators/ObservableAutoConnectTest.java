@@ -13,10 +13,11 @@
 
 package io.reactivex.observable.internal.operators;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class ObservableAutoConnectTest {
 

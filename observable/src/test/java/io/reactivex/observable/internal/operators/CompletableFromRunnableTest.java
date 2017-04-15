@@ -13,11 +13,13 @@
 
 package io.reactivex.observable.internal.operators;
 
-import io.reactivex.Completable;
+import static org.junit.Assert.assertEquals;
+
 import java.util.concurrent.atomic.AtomicInteger;
+
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import io.reactivex.observable.Completable;
 
 public class CompletableFromRunnableTest {
     @Test(expected = NullPointerException.class)

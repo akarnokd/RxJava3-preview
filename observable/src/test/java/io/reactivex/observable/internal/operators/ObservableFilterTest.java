@@ -19,13 +19,13 @@ import static org.mockito.Mockito.*;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueDisposable;
-import io.reactivex.observers.*;
-import io.reactivex.subjects.UnicastSubject;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.QueueDisposable;
+import io.reactivex.observable.observers.*;
+import io.reactivex.observable.subjects.UnicastSubject;
 
 public class ObservableFilterTest {
 

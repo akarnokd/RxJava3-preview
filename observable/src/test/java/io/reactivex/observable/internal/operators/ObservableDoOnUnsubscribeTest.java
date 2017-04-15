@@ -21,10 +21,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.*;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.observers.TestObserver;
 
 public class ObservableDoOnUnsubscribeTest {
 

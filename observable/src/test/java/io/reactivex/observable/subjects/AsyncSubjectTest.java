@@ -23,13 +23,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.*;
 import org.mockito.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.fuseable.QueueDisposable;
-import io.reactivex.observers.*;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.QueueDisposable;
+import io.reactivex.observable.observers.*;
 
 public class AsyncSubjectTest {
 
@@ -529,7 +528,7 @@ public class AsyncSubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -557,7 +556,7 @@ public class AsyncSubjectTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             if (ts1.errorCount() != 0) {
                 ts1.assertFailure(TestException.class);

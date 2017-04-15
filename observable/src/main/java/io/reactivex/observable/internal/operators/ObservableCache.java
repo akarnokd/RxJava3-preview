@@ -54,7 +54,7 @@ public final class ObservableCache<T> extends AbstractObservableWithUpstream<T, 
     public static <T> Observable<T> from(Observable<T> source, int capacityHint) {
         ObjectHelper.verifyPositive(capacityHint, "capacityHint");
         CacheState<T> state = new CacheState<T>(source, capacityHint);
-        return RxJavaPlugins.onAssembly(new ObservableCache<T>(source, state));
+        return RxJavaObservablePlugins.onAssembly(new ObservableCache<T>(source, state));
     }
 
     /**

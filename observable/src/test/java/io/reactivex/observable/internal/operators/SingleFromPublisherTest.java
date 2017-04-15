@@ -20,10 +20,10 @@ import java.util.*;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.exceptions.TestException;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.PublishProcessor;
 
@@ -79,7 +79,7 @@ public class SingleFromPublisherTest {
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Single.fromPublisher(new Flowable<Integer>() {
@@ -101,7 +101,7 @@ public class SingleFromPublisherTest {
             .assertResult(1);
 
             TestHelper.assertError(errors, 0, IllegalStateException.class, "Subscription already set!");
-            TestHelper.assertUndeliverable(errors, 1, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 1, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

@@ -14,6 +14,7 @@
 package io.reactivex.observable.observers;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -22,11 +23,10 @@ import java.util.concurrent.atomic.*;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.*;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
 
 public class SerializedObserverTest {
 
@@ -1034,7 +1034,7 @@ public class SerializedObserverTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.single());
+            TestCommonHelper.race(r, r, Schedulers.single());
 
             ts.awaitDone(5, TimeUnit.SECONDS)
             .assertResult();
@@ -1067,7 +1067,7 @@ public class SerializedObserverTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.awaitDone(5, TimeUnit.SECONDS)
             .assertNoErrors()
@@ -1105,7 +1105,7 @@ public class SerializedObserverTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.awaitDone(5, TimeUnit.SECONDS)
             .assertError(ex)
@@ -1143,7 +1143,7 @@ public class SerializedObserverTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.awaitDone(5, TimeUnit.SECONDS)
             .assertError(ex)
@@ -1157,7 +1157,7 @@ public class SerializedObserverTest {
     @Test
     public void startOnce() {
 
-        List<Throwable> error = TestHelper.trackPluginErrors();
+        List<Throwable> error = TestCommonHelper.trackPluginErrors();
 
         try {
             TestObserver<Integer> ts = new TestObserver<Integer>();
@@ -1182,7 +1182,7 @@ public class SerializedObserverTest {
     public void onCompleteOnErrorRace() {
         for (int i = 0; i < 500; i++) {
 
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
                 TestObserver<Integer> ts = new TestObserver<Integer>();
 
@@ -1208,7 +1208,7 @@ public class SerializedObserverTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 ts.awaitDone(5, TimeUnit.SECONDS);
 

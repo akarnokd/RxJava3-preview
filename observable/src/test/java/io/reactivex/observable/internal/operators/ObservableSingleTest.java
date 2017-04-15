@@ -13,18 +13,18 @@
 
 package io.reactivex.observable.internal.operators;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-
-import org.junit.Test;
-import org.mockito.InOrder;
 
 import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.*;
-import io.reactivex.functions.*;
+import org.junit.Test;
+import org.mockito.InOrder;
+
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.*;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableSingleTest {

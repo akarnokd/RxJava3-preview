@@ -18,9 +18,9 @@ import static org.mockito.Mockito.*;
 import org.junit.*;
 import org.mockito.InOrder;
 
-import io.reactivex.*;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.common.functions.BiFunction;
+import io.reactivex.observable.*;
+import io.reactivex.observable.subjects.PublishSubject;
 
 /**
  * Systematically tests that when zipping an infinite and a finite Observable,

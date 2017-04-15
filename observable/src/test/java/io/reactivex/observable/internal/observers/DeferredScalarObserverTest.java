@@ -17,12 +17,11 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.fuseable.QueueDisposable;
-import io.reactivex.internal.observers.DeferredScalarObserver;
-import io.reactivex.observers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.QueueDisposable;
+import io.reactivex.observable.observers.*;
 
 public class DeferredScalarObserverTest {
 

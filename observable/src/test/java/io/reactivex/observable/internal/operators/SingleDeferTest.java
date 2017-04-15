@@ -17,8 +17,6 @@ import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
-import io.reactivex.Single;
-
 public class SingleDeferTest {
 
     @Test

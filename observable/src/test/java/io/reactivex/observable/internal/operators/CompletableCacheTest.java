@@ -17,13 +17,13 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class CompletableCacheTest implements Consumer<Object>, Action {
 
@@ -190,7 +190,7 @@ public class CompletableCacheTest implements Consumer<Object>, Action {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             ps.onComplete();
 
@@ -223,7 +223,7 @@ public class CompletableCacheTest implements Consumer<Object>, Action {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             ps.onComplete();
 

@@ -21,13 +21,13 @@ import java.util.concurrent.atomic.*;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
+import io.reactivex.common.*;
+import io.reactivex.common.disposables.SerialDisposable;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
 import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
 import io.reactivex.functions.*;
-import io.reactivex.internal.operators.single.SingleInternalHelper;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.observable.internal.operators.SingleInternalHelper;
 import io.reactivex.subscribers.TestSubscriber;
 
 public class SingleTest {

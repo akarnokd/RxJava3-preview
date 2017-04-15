@@ -20,14 +20,13 @@ import java.util.*;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.fuseable.QueueDisposable;
-import io.reactivex.internal.operators.maybe.MaybeMergeArray.MergeMaybeObserver;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.QueueDisposable;
+import io.reactivex.observable.internal.operators.MaybeMergeArray.MergeMaybeObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subscribers.*;
 
 public class MaybeMergeArrayTest {
@@ -134,7 +133,7 @@ public class MaybeMergeArrayTest {
     @Test
     public void errorRace() {
         for (int i = 0; i < 500; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
             try {
                 final PublishSubject<Integer> ps1 = PublishSubject.create();
@@ -159,12 +158,12 @@ public class MaybeMergeArrayTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 ts.assertFailure(Throwable.class);
 
                 if (!errors.isEmpty()) {
-                    TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                    TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
                 RxJavaPlugins.reset();

@@ -13,7 +13,6 @@
 
 package io.reactivex.observable.internal.operators;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -23,17 +22,15 @@ import java.util.concurrent.Callable;
 import org.junit.*;
 import org.mockito.InOrder;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueDisposable;
-import io.reactivex.observers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.extensions.QueueDisposable;
+import io.reactivex.observable.observers.*;
+import io.reactivex.observable.subjects.UnicastSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.UnicastSubject;
 
 public class ObservableDistinctTest {
 
@@ -229,7 +226,7 @@ public class ObservableDistinctTest {
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Observable<Integer>() {
                 @Override
@@ -247,7 +244,7 @@ public class ObservableDistinctTest {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

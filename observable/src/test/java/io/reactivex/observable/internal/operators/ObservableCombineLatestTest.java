@@ -18,23 +18,22 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 import org.mockito.*;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.observers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.*;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.*;
-import io.reactivex.subjects.PublishSubject;
 
 public class ObservableCombineLatestTest {
 
@@ -964,7 +963,7 @@ public class ObservableCombineLatestTest {
     @Test
     public void onErrorRace() {
         for (int i = 0; i < 500; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
                 final PublishSubject<Integer> ps1 = PublishSubject.create();
                 final PublishSubject<Integer> ps2 = PublishSubject.create();
@@ -992,7 +991,7 @@ public class ObservableCombineLatestTest {
                     }
                 };
 
-                TestHelper.race(r1, r2);
+                TestCommonHelper.race(r1, r2);
 
                 if (to.errorCount() != 0) {
                     if (to.errors().get(0) instanceof CompositeException) {
@@ -1020,7 +1019,7 @@ public class ObservableCombineLatestTest {
 
     @Test
     public void dontSubscribeIfDone() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             final int[] count = { 0 };
 
@@ -1052,7 +1051,7 @@ public class ObservableCombineLatestTest {
     @SuppressWarnings("unchecked")
     @Test
     public void dontSubscribeIfDone2() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             final int[] count = { 0 };
 
@@ -1086,7 +1085,7 @@ public class ObservableCombineLatestTest {
     @SuppressWarnings("unchecked")
     @Test
     public void combine2Observable2Errors() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Object> testObserver = TestObserver.create();
 

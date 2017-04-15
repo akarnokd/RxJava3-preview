@@ -17,9 +17,9 @@ import java.util.NoSuchElementException;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
 
 public class MaybeFlatMapSingleTest {
     @Test(expected = NullPointerException.class)

@@ -40,7 +40,7 @@ implements HasUpstreamMaybeSource<T>, FuseToMaybe<Boolean> {
 
     @Override
     public Maybe<Boolean> fuseToMaybe() {
-        return RxJavaPlugins.onAssembly(new MaybeIsEmpty<T>(source));
+        return RxJavaObservablePlugins.onAssembly(new MaybeIsEmpty<T>(source));
     }
 
     @Override

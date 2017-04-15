@@ -17,8 +17,8 @@ import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
-import io.reactivex.Maybe;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.Maybe;
 
 public class MaybeErrorTest {
 

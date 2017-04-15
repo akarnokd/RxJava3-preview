@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.reactivex.plugins;
+package io.reactivex.observable;
 
 import static org.junit.Assert.*;
 
@@ -28,26 +28,21 @@ import java.util.concurrent.atomic.*;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.Scheduler.Worker;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.common.internal.schedulers.ImmediateThinScheduler;
 import io.reactivex.disposables.*;
 import io.reactivex.exceptions.*;
 import io.reactivex.flowables.ConnectableFlowable;
 import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.operators.completable.CompletableError;
 import io.reactivex.internal.operators.flowable.FlowableRange;
-import io.reactivex.internal.operators.maybe.MaybeError;
-import io.reactivex.internal.operators.observable.ObservableRange;
 import io.reactivex.internal.operators.parallel.ParallelFromPublisher;
-import io.reactivex.internal.operators.single.SingleJust;
-import io.reactivex.internal.schedulers.ImmediateThinScheduler;
 import io.reactivex.internal.subscriptions.ScalarSubscription;
-import io.reactivex.observables.ConnectableObservable;
+import io.reactivex.observable.internal.operators.*;
 import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.schedulers.Schedulers;
 
 public class RxJavaPluginsTest {
 
@@ -71,7 +66,7 @@ public class RxJavaPluginsTest {
 
     @Test
     public void constructorShouldBePrivate() {
-        TestHelper.checkUtilityClass(RxJavaPlugins.class);
+        TestCommonHelper.checkUtilityClass(RxJavaObservablePlugins.class);
     }
 
     @Test

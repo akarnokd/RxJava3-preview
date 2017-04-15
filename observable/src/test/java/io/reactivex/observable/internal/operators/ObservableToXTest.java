@@ -13,10 +13,10 @@
 
 package io.reactivex.observable.internal.operators;
 
-import io.reactivex.exceptions.MissingBackpressureException;
 import org.junit.Test;
 
-import io.reactivex.*;
+import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.observable.Observable;
 import io.reactivex.subscribers.TestSubscriber;
 
 public class ObservableToXTest {

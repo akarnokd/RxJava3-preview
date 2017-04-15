@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import io.reactivex.*;
+import io.reactivex.observable.*;
 
 public class SingleConcatTest {
     @Test

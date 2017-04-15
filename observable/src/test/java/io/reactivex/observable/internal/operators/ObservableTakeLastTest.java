@@ -22,11 +22,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.*;
 import org.mockito.InOrder;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
 import io.reactivex.functions.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.*;
 import io.reactivex.observers.*;
-import io.reactivex.schedulers.Schedulers;
 
 public class ObservableTakeLastTest {
 

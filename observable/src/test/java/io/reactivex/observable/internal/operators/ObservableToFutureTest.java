@@ -13,6 +13,7 @@
 
 package io.reactivex.observable.internal.operators;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.concurrent.*;
@@ -20,9 +21,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.*;
+import io.reactivex.common.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 
 public class ObservableToFutureTest {
 

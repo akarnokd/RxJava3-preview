@@ -23,15 +23,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueDisposable;
-import io.reactivex.observers.*;
+import io.reactivex.common.Disposables;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.QueueDisposable;
+import io.reactivex.observable.observers.*;
+import io.reactivex.observable.subjects.UnicastSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subjects.UnicastSubject;
 
 public class ObservableDoOnEachTest {
 
@@ -225,7 +225,7 @@ public class ObservableDoOnEachTest {
 
     @Test
     public void ignoreCancel() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Observable.wrap(new ObservableSource<Object>() {
@@ -247,7 +247,7 @@ public class ObservableDoOnEachTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -255,7 +255,7 @@ public class ObservableDoOnEachTest {
 
     @Test
     public void onErrorAfterCrash() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Observable.wrap(new ObservableSource<Object>() {
@@ -274,7 +274,7 @@ public class ObservableDoOnEachTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -282,7 +282,7 @@ public class ObservableDoOnEachTest {
 
     @Test
     public void onCompleteAfterCrash() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Observable.wrap(new ObservableSource<Object>() {
@@ -301,7 +301,7 @@ public class ObservableDoOnEachTest {
             .test()
             .assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -328,7 +328,7 @@ public class ObservableDoOnEachTest {
 
     @Test
     public void ignoreCancelConditional() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Observable.wrap(new ObservableSource<Object>() {
@@ -351,7 +351,7 @@ public class ObservableDoOnEachTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -359,7 +359,7 @@ public class ObservableDoOnEachTest {
 
     @Test
     public void onErrorAfterCrashConditional() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Observable.wrap(new ObservableSource<Object>() {
@@ -379,7 +379,7 @@ public class ObservableDoOnEachTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }
@@ -403,7 +403,7 @@ public class ObservableDoOnEachTest {
 
     @Test
     public void onCompleteAfterCrashConditional() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Observable.wrap(new ObservableSource<Object>() {
@@ -423,7 +423,7 @@ public class ObservableDoOnEachTest {
             .test()
             .assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
             RxJavaPlugins.reset();
         }

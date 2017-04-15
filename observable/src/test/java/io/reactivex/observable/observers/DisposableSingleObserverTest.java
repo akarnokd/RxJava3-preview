@@ -19,9 +19,8 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.common.*;
+import io.reactivex.observable.*;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public class DisposableSingleObserverTest {
@@ -73,7 +72,7 @@ public class DisposableSingleObserverTest {
     @Test
     public void startOnce() {
 
-        List<Throwable> error = TestHelper.trackPluginErrors();
+        List<Throwable> error = TestCommonHelper.trackPluginErrors();
 
         try {
             TestSingle<Integer> tc = new TestSingle<Integer>();

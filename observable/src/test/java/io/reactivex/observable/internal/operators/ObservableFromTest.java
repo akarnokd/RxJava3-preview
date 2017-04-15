@@ -19,11 +19,13 @@ import java.util.concurrent.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.functions.Function;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.functions.Function;
 import io.reactivex.internal.fuseable.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.extensions.*;
+import io.reactivex.observable.observers.*;
 import io.reactivex.observers.*;
-import io.reactivex.schedulers.Schedulers;
 
 public class ObservableFromTest {
 

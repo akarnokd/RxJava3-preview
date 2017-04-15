@@ -20,13 +20,12 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Cancellable;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Cancellable;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
 
 public class ObservableCreateTest {
 
@@ -392,7 +391,7 @@ public class ObservableCreateTest {
 
     @Test
     public void serialized() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Observable.create(new ObservableOnSubscribe<Object>() {
                 @Override
@@ -444,7 +443,7 @@ public class ObservableCreateTest {
                     }
                 };
 
-                TestHelper.race(r1, r1, Schedulers.single());
+                TestCommonHelper.race(r1, r1, Schedulers.single());
             }
         })
         .take(1000)
@@ -478,7 +477,7 @@ public class ObservableCreateTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
             }
         })
         .test()
@@ -512,7 +511,7 @@ public class ObservableCreateTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
             }
         })
         .test()
@@ -546,11 +545,11 @@ public class ObservableCreateTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
             }
         });
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             for (int i = 0; i < 500; i++) {
@@ -585,7 +584,7 @@ public class ObservableCreateTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
             }
         });
 

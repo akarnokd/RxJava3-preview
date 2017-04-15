@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
+import io.reactivex.observable.TestHelper;
 
 public class SingleInternalHelperTest {
 

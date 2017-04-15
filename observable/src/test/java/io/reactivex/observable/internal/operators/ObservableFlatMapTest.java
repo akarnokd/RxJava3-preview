@@ -18,22 +18,21 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
 
 public class ObservableFlatMapTest {
     @Test
@@ -713,7 +712,7 @@ public class ObservableFlatMapTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -790,7 +789,7 @@ public class ObservableFlatMapTest {
     @Test
     public void cancelScalarDrainRace() {
         for (int i = 0; i < 1000; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
 
                 final PublishSubject<Observable<Integer>> pp = PublishSubject.create();
@@ -810,7 +809,7 @@ public class ObservableFlatMapTest {
                     }
                 };
 
-                TestHelper.race(r1, r2);
+                TestCommonHelper.race(r1, r2);
 
                 assertTrue(errors.toString(), errors.isEmpty());
             } finally {
@@ -823,7 +822,7 @@ public class ObservableFlatMapTest {
     public void cancelDrainRace() {
         for (int i = 0; i < 1000; i++) {
             for (int j = 1; j < 50; j += 5) {
-                List<Throwable> errors = TestHelper.trackPluginErrors();
+                List<Throwable> errors = TestCommonHelper.trackPluginErrors();
                 try {
 
                     final PublishSubject<Observable<Integer>> pp = PublishSubject.create();
@@ -849,7 +848,7 @@ public class ObservableFlatMapTest {
                         }
                     };
 
-                    TestHelper.race(r1, r2);
+                    TestCommonHelper.race(r1, r2);
 
                     assertTrue(errors.toString(), errors.isEmpty());
                 } finally {

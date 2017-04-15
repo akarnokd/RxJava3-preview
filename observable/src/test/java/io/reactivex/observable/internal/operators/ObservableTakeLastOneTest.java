@@ -19,9 +19,9 @@ import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.functions.*;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 
 public class ObservableTakeLastOneTest {
 

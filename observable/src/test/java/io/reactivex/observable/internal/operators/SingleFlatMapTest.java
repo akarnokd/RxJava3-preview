@@ -18,9 +18,10 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
 import io.reactivex.functions.*;
+import io.reactivex.observable.*;
 
 public class SingleFlatMapTest {
 

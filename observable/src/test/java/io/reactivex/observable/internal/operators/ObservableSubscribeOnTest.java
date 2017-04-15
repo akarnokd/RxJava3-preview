@@ -18,13 +18,13 @@ import static org.junit.Assert.assertEquals;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.reactivex.annotations.NonNull;
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.schedulers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 
 public class ObservableSubscribeOnTest {
 

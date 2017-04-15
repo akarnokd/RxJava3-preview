@@ -19,13 +19,13 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
 
 public class MaybeTakeUntilPublisherTest {
 
@@ -127,7 +127,7 @@ public class MaybeTakeUntilPublisherTest {
             final TestException ex1 = new TestException();
             final TestException ex2 = new TestException();
 
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
 
                 Runnable r1 = new Runnable() {
@@ -143,12 +143,12 @@ public class MaybeTakeUntilPublisherTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 to.assertFailure(TestException.class);
 
                 if (!errors.isEmpty()) {
-                    TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                    TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
 
             } finally {
@@ -179,7 +179,7 @@ public class MaybeTakeUntilPublisherTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             to.assertResult();
         }
@@ -187,7 +187,7 @@ public class MaybeTakeUntilPublisherTest {
 
     @Test
     public void otherSignalsAndCompletes() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Maybe.just(1).takeUntil(Flowable.just(1).take(1))
             .test()

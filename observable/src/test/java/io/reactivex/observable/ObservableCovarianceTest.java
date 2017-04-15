@@ -22,11 +22,8 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableTransformer;
-import io.reactivex.functions.*;
-import io.reactivex.observables.GroupedObservable;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.observers.TestObserver;
 
 /**
  * Test super/extends of generics.

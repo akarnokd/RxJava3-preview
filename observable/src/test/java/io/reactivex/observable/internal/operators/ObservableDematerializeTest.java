@@ -20,11 +20,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableDematerializeTest {
@@ -153,7 +153,7 @@ public class ObservableDematerializeTest {
 
     @Test
     public void eventsAfterDematerializedTerminal() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Observable<Object>() {
                 @Override
@@ -169,8 +169,8 @@ public class ObservableDematerializeTest {
             .test()
             .assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "First");
-            TestHelper.assertUndeliverable(errors, 1, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "First");
+            TestCommonHelper.assertUndeliverable(errors, 1, TestException.class, "Second");
         } finally {
             RxJavaPlugins.reset();
         }

@@ -18,22 +18,22 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.*;
 import org.mockito.InOrder;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Consumer;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.*;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.*;
-import io.reactivex.subjects.PublishSubject;
 
 public class ObservableAmbTest {
 
@@ -291,7 +291,7 @@ public class ObservableAmbTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             to.assertSubscribed().assertNoErrors()
             .assertNotComplete().assertValueCount(1);
@@ -320,7 +320,7 @@ public class ObservableAmbTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             to.assertResult();
         }
@@ -350,16 +350,16 @@ public class ObservableAmbTest {
                 }
             };
 
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
             } finally {
                 RxJavaPlugins.reset();
             }
 
             to.assertFailure(TestException.class);
             if (!errors.isEmpty()) {
-                TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
             }
         }
     }

@@ -13,17 +13,17 @@
 
 package io.reactivex.observable.internal.operators;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.*;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
 
 public class MaybeConcatArrayTest {
@@ -101,7 +101,7 @@ public class MaybeConcatArrayTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -126,14 +126,14 @@ public class MaybeConcatArrayTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void errorAfterTermination() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             final MaybeObserver<?>[] o = { null };
             Maybe.concatArrayDelayError(Maybe.just(1),
@@ -152,7 +152,7 @@ public class MaybeConcatArrayTest {
             o[0].onError(new TestException());
 
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaPlugins.reset();
         }

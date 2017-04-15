@@ -13,17 +13,18 @@
 
 package io.reactivex.observable.internal.operators;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.Assert.*;
-import org.junit.*;
+import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public class CompletableDoOnTest {
@@ -79,7 +80,7 @@ public class CompletableDoOnTest {
 
     @Test
     public void onSubscribeCrash() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             final Disposable bs = Disposables.empty();
 
@@ -102,7 +103,7 @@ public class CompletableDoOnTest {
 
             assertTrue(bs.isDisposed());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
             RxJavaPlugins.reset();
         }

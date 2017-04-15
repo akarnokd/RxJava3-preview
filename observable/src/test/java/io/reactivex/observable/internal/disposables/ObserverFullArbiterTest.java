@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.disposables;
+package io.reactivex.observable.internal.disposables;
 
 import static org.junit.Assert.*;
 
@@ -19,13 +19,10 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.disposables.ObserverFullArbiter;
-import io.reactivex.internal.util.NotificationLite;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.internal.utils.NotificationLite;
+import io.reactivex.observable.observers.TestObserver;
 
 public class ObserverFullArbiterTest {
 
@@ -69,13 +66,13 @@ public class ObserverFullArbiterTest {
 
         fa.dispose();
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             fa.onError(new TestException(), bs);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -83,16 +80,16 @@ public class ObserverFullArbiterTest {
     public void cancelAfterError() {
         ObserverFullArbiter<Integer> fa = new ObserverFullArbiter<Integer>(new TestObserver<Integer>(), null, 128);
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             fa.queue.offer(fa.s, NotificationLite.error(new TestException()));
 
             fa.dispose();
 
             fa.drain();
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

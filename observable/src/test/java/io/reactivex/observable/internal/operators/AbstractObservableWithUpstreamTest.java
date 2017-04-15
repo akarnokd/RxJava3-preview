@@ -13,12 +13,13 @@
 
 package io.reactivex.observable.internal.operators;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertSame;
+
 import org.junit.Test;
 
-import io.reactivex.Observable;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.HasUpstreamObservableSource;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.extensions.HasUpstreamObservableSource;
 
 public class AbstractObservableWithUpstreamTest {
 

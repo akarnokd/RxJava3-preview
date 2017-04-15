@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.reactivex.completable;
+package io.reactivex.observable;
 
 import java.util.concurrent.CountDownLatch;
 

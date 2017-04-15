@@ -13,16 +13,15 @@
 
 package io.reactivex.maybe;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import io.reactivex.Maybe;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.TestScheduler;
+import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import io.reactivex.common.TestScheduler;
+import io.reactivex.common.functions.Consumer;
 
 public class MaybeTimerTest {
     @Test

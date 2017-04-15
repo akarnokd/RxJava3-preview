@@ -14,10 +14,11 @@
 package io.reactivex.observable.internal.operators;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposables;
+import io.reactivex.common.Disposables;
+import io.reactivex.observable.*;
 
 public class CompletableUnsafeTest {
 
