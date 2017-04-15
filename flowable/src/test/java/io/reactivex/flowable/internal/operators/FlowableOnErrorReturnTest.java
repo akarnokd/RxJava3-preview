@@ -14,6 +14,7 @@
 package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -22,13 +23,13 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableOnErrorReturnTest {
 
@@ -255,12 +256,12 @@ public class FlowableOnErrorReturnTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.just(1).onErrorReturnItem(1));
+        TestHelper.checkDisposed(Flowable.just(1).onErrorReturnItem(1));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> f) throws Exception {
                 return f.onErrorReturnItem(1);

@@ -23,17 +23,15 @@ import java.util.*;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.*;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.*;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableMapTest {
 
@@ -222,7 +220,7 @@ public class FlowableMapTest {
                 return i;
             }
 
-        }).blockingGet());
+        }).blockingLast(null));
     }
 
     /**
@@ -253,7 +251,7 @@ public class FlowableMapTest {
                 return i / 0;
             }
 
-        }).blockingGet();
+        }).blockingLast();
     }
 
     // FIXME RS subscribers can't throw
@@ -676,12 +674,12 @@ public class FlowableMapTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.range(1, 5).map(Functions.identity()));
+        TestHelper.checkDisposed(Flowable.range(1, 5).map(Functions.identity()));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.map(Functions.identity());
@@ -691,19 +689,19 @@ public class FlowableMapTest {
 
     @Test
     public void fusedSync() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueDisposable.ANY);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 5)
         .map(Functions.<Integer>identity())
         .subscribe(to);
 
-        SubscriberFusion.assertFusion(to, QueueDisposable.SYNC)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.SYNC)
         .assertResult(1, 2, 3, 4, 5);
     }
 
     @Test
     public void fusedAsync() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueDisposable.ANY);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         UnicastProcessor<Integer> us = UnicastProcessor.create();
 
@@ -711,27 +709,27 @@ public class FlowableMapTest {
         .map(Functions.<Integer>identity())
         .subscribe(to);
 
-        TestCommonHelper.emit(us, 1, 2, 3, 4, 5);
+        TestHelper.emit(us, 1, 2, 3, 4, 5);
 
-        SubscriberFusion.assertFusion(to, QueueDisposable.ASYNC)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.ASYNC)
         .assertResult(1, 2, 3, 4, 5);
     }
 
     @Test
     public void fusedReject() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueDisposable.ANY | QueueDisposable.BOUNDARY);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ANY | FusedQueueSubscription.BOUNDARY);
 
         Flowable.range(1, 5)
         .map(Functions.<Integer>identity())
         .subscribe(to);
 
-        SubscriberFusion.assertFusion(to, QueueDisposable.NONE)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.NONE)
         .assertResult(1, 2, 3, 4, 5);
     }
 
     @Test
     public void badSource() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> o) throws Exception {
                 return o.map(Functions.identity());

@@ -20,14 +20,14 @@ import java.util.*;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.FusedQueueSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.UnicastProcessor;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.UnicastProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableDoFinallyTest implements Action {
 
@@ -81,13 +81,13 @@ public class FlowableDoFinallyTest implements Action {
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
             @Override
             public Publisher<Object> apply(Flowable<Object> f) throws Exception {
                 return f.doFinally(FlowableDoFinallyTest.this);
             }
         });
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
             @Override
             public Publisher<Object> apply(Flowable<Object> f) throws Exception {
                 return f.doFinally(FlowableDoFinallyTest.this).filter(Functions.alwaysTrue());
@@ -128,7 +128,7 @@ public class FlowableDoFinallyTest implements Action {
         TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ASYNC);
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
-        TestCommonHelper.emit(up, 1, 2, 3, 4, 5);
+        TestHelper.emit(up, 1, 2, 3, 4, 5);
 
         up
         .doFinally(this)
@@ -145,7 +145,7 @@ public class FlowableDoFinallyTest implements Action {
         TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ASYNC | FusedQueueSubscription.BOUNDARY);
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
-        TestCommonHelper.emit(up, 1, 2, 3, 4, 5);
+        TestHelper.emit(up, 1, 2, 3, 4, 5);
 
         up
         .doFinally(this)
@@ -267,7 +267,7 @@ public class FlowableDoFinallyTest implements Action {
         TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ASYNC);
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
-        TestCommonHelper.emit(up, 1, 2, 3, 4, 5);
+        TestHelper.emit(up, 1, 2, 3, 4, 5);
 
         up
         .doFinally(this)
@@ -285,7 +285,7 @@ public class FlowableDoFinallyTest implements Action {
         TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ASYNC | FusedQueueSubscription.BOUNDARY);
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
-        TestCommonHelper.emit(up, 1, 2, 3, 4, 5);
+        TestHelper.emit(up, 1, 2, 3, 4, 5);
 
         up
         .doFinally(this)

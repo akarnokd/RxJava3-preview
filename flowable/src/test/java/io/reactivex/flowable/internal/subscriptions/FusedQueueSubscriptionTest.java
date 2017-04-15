@@ -11,13 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscriptions;
+package io.reactivex.flowable.internal.subscriptions;
 
-import io.reactivex.annotations.Nullable;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-import io.reactivex.TestHelper;
+import io.reactivex.common.TestCommonHelper;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.flowable.TestHelper;
 
 public class FusedQueueSubscriptionTest {
     static final class EmptyQS extends BasicFusedQueueSubscription<Integer> {
@@ -96,12 +98,12 @@ public class FusedQueueSubscriptionTest {
 
     @Test
     public void noOfferBasic() {
-        TestCommonHelper.assertNoOffer(new EmptyQS());
+        TestHelper.assertNoOffer(new EmptyQS());
     }
 
     @Test
     public void noOfferBasicInt() {
-        TestCommonHelper.assertNoOffer(new EmptyIntQS());
+        TestHelper.assertNoOffer(new EmptyIntQS());
     }
 
     @Test
@@ -110,6 +112,6 @@ public class FusedQueueSubscriptionTest {
 
         assertEquals("EmptySubscription", EmptySubscription.INSTANCE.toString());
 
-        TestCommonHelper.assertNoOffer(EmptySubscription.INSTANCE);
+        TestHelper.assertNoOffer(EmptySubscription.INSTANCE);
     }
 }

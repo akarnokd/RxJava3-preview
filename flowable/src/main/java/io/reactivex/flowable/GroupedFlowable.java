@@ -26,7 +26,7 @@ import io.reactivex.common.annotations.Nullable;
  *            the type of the key
  * @param <T>
  *            the type of the items emitted by the {@code GroupedFlowable}
- * @see Flowable#groupBy(io.reactivex.functions.Function)
+ * @see Flowable#groupBy(io.reactivex.common.functions.Function)
  * @see <a href="http://reactivex.io/documentation/operators/groupby.html">ReactiveX documentation: GroupBy</a>
  */
 public abstract class GroupedFlowable<K, T> extends Flowable<T> {

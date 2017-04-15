@@ -20,12 +20,12 @@ import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableGenerateTest {
 
@@ -117,7 +117,7 @@ public class FlowableGenerateTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.generate(new Callable<Object>() {
+        TestHelper.checkDisposed(Flowable.generate(new Callable<Object>() {
                 @Override
                 public Object call() throws Exception {
                     return 1;
@@ -152,7 +152,7 @@ public class FlowableGenerateTest {
 
     @Test
     public void badRequest() {
-        TestCommonHelper.assertBadRequestReported(Flowable.generate(new Callable<Object>() {
+        TestHelper.assertBadRequestReported(Flowable.generate(new Callable<Object>() {
                 @Override
                 public Object call() throws Exception {
                     return 1;

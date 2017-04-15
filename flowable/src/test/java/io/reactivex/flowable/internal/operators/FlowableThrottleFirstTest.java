@@ -23,12 +23,11 @@ import org.junit.*;
 import org.mockito.InOrder;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.TestScheduler;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
 
 public class FlowableThrottleFirstTest {
 
@@ -164,7 +163,7 @@ public class FlowableThrottleFirstTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.just(1).throttleFirst(1, TimeUnit.DAYS));
+        TestHelper.checkDisposed(Flowable.just(1).throttleFirst(1, TimeUnit.DAYS));
     }
 
     @Test

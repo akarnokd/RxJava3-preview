@@ -21,14 +21,14 @@ import java.util.concurrent.*;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.processors.*;
-import io.reactivex.schedulers.TestScheduler;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.*;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableWindowWithStartEndFlowableTest {
 
@@ -261,7 +261,7 @@ public class FlowableWindowWithStartEndFlowableTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.just(1).window(Flowable.just(2), Functions.justFunction(Flowable.never())));
+        TestHelper.checkDisposed(Flowable.just(1).window(Flowable.just(2), Functions.justFunction(Flowable.never())));
     }
 
     @Test
@@ -297,7 +297,7 @@ public class FlowableWindowWithStartEndFlowableTest {
 
     @Test
     public void badSourceCallable() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> o) throws Exception {
                 return o.window(Flowable.just(1), Functions.justFunction(Flowable.never()));
@@ -336,7 +336,7 @@ public class FlowableWindowWithStartEndFlowableTest {
 
         start.onNext(2);
 
-        TestCommonHelper.emit(source, 7, 8);
+        TestHelper.emit(source, 7, 8);
 
         to.assertResult(1, 2, 3, 4, 5, 5, 6, 6, 7, 8);
     }

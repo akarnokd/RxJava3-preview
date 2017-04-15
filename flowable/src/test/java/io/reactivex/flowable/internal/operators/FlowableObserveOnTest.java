@@ -21,23 +21,22 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.annotations.Nullable;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.*;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.common.internal.schedulers.ImmediateThinScheduler;
+import io.reactivex.flowable.*;
 import io.reactivex.flowable.internal.operators.FlowableObserveOn.BaseObserveOnSubscriber;
-import io.reactivex.internal.schedulers.ImmediateThinScheduler;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.*;
-import io.reactivex.schedulers.*;
-import io.reactivex.subscribers.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.*;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableObserveOnTest {
 
@@ -1144,12 +1143,12 @@ public class FlowableObserveOnTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(PublishProcessor.create().observeOn(new TestScheduler()));
+        TestHelper.checkDisposed(PublishProcessor.create().observeOn(new TestScheduler()));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.observeOn(new TestScheduler());
@@ -1200,7 +1199,7 @@ public class FlowableObserveOnTest {
 
         TestSubscriber<Integer> to = us.observeOn(Schedulers.single()).test();
 
-        TestCommonHelper.emit(us, 1, 2, 3, 4, 5);
+        TestHelper.emit(us, 1, 2, 3, 4, 5);
 
         to
         .awaitDone(5, TimeUnit.SECONDS)
@@ -1350,17 +1349,12 @@ public class FlowableObserveOnTest {
                 @SuppressWarnings("unchecked")
                 BaseObserveOnSubscriber<Integer> oo = (BaseObserveOnSubscriber<Integer>)observer;
 
-                oo.sourceMode = QueueFuseable.SYNC;
+                oo.sourceMode = FusedQueueSubscription.SYNC;
                 oo.requested.lazySet(1);
                 oo.queue = new FusedQueue<Integer>() {
 
                     @Override
                     public boolean offer(Integer value) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean offer(Integer v1, Integer v2) {
                         return false;
                     }
 
@@ -1401,17 +1395,12 @@ public class FlowableObserveOnTest {
                 @SuppressWarnings("unchecked")
                 BaseObserveOnSubscriber<Integer> oo = (BaseObserveOnSubscriber<Integer>)observer;
 
-                oo.sourceMode = QueueFuseable.SYNC;
+                oo.sourceMode = FusedQueueSubscription.SYNC;
                 oo.requested.lazySet(1);
                 oo.queue = new FusedQueue<Integer>() {
 
                     @Override
                     public boolean offer(Integer value) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean offer(Integer v1, Integer v2) {
                         return false;
                     }
 
@@ -1453,17 +1442,12 @@ public class FlowableObserveOnTest {
                 @SuppressWarnings("unchecked")
                 BaseObserveOnSubscriber<Integer> oo = (BaseObserveOnSubscriber<Integer>)observer;
 
-                oo.sourceMode = QueueFuseable.ASYNC;
+                oo.sourceMode = FusedQueueSubscription.ASYNC;
                 oo.requested.lazySet(1);
                 oo.queue = new FusedQueue<Integer>() {
 
                     @Override
                     public boolean offer(Integer value) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean offer(Integer v1, Integer v2) {
                         return false;
                     }
 
@@ -1504,17 +1488,12 @@ public class FlowableObserveOnTest {
                 @SuppressWarnings("unchecked")
                 BaseObserveOnSubscriber<Integer> oo = (BaseObserveOnSubscriber<Integer>)observer;
 
-                oo.sourceMode = QueueFuseable.ASYNC;
+                oo.sourceMode = FusedQueueSubscription.ASYNC;
                 oo.requested.lazySet(1);
                 oo.queue = new FusedQueue<Integer>() {
 
                     @Override
                     public boolean offer(Integer value) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean offer(Integer v1, Integer v2) {
                         return false;
                     }
 

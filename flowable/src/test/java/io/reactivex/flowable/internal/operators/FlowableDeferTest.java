@@ -13,6 +13,7 @@
 
 package io.reactivex.flowable.internal.operators;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.concurrent.Callable;
@@ -20,9 +21,9 @@ import java.util.concurrent.Callable;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.subscribers.DefaultSubscriber;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.DefaultSubscriber;
 
 @SuppressWarnings("unchecked")
 public class FlowableDeferTest {

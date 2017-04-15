@@ -43,7 +43,7 @@ import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
  *
  * <p>Implementation of {@link #onStart()}, {@link #onNext(Object)}, {@link #onError(Throwable)}
  * and {@link #onComplete()} are not allowed to throw any unchecked exceptions.
- * If for some reason this can't be avoided, use {@link io.reactivex.Flowable#safeSubscribe(org.reactivestreams.Subscriber)}
+ * If for some reason this can't be avoided, use {@link io.reactivex.flowable.Flowable#safeSubscribe(org.reactivestreams.Subscriber)}
  * instead of the standard {@code subscribe()} method.
  *
  * <p>Example<code><pre>

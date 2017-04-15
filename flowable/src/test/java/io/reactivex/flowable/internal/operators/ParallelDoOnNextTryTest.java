@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,12 +19,12 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class ParallelDoOnNextTryTest implements Consumer<Object> {
 
@@ -210,12 +210,12 @@ public class ParallelDoOnNextTryTest implements Consumer<Object> {
         .test()
         .assertFailure(CompositeException.class);
 
-        TestCommonHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
+        TestHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
     }
 
     @Test
     public void doOnNextWrongParallelism() {
-        TestCommonHelper.checkInvalidParallelSubscribers(
+        TestHelper.checkInvalidParallelSubscribers(
             Flowable.just(1).parallel(1)
             .doOnNext(Functions.emptyConsumer(), ParallelFailureHandling.ERROR)
         );
@@ -358,12 +358,12 @@ public class ParallelDoOnNextTryTest implements Consumer<Object> {
         .test()
         .assertFailure(CompositeException.class);
 
-        TestCommonHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
+        TestHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
     }
 
     @Test
     public void doOnNextWrongParallelismConditional() {
-        TestCommonHelper.checkInvalidParallelSubscribers(
+        TestHelper.checkInvalidParallelSubscribers(
             Flowable.just(1).parallel(1)
             .doOnNext(Functions.emptyConsumer(), ParallelFailureHandling.ERROR)
             .filter(Functions.alwaysTrue())

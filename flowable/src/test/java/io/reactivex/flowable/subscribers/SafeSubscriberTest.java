@@ -829,7 +829,7 @@ public class SafeSubscriberTest {
             TestCommonHelper.assertError(list, 0, CompositeException.class);
             List<Throwable> ce = TestCommonHelper.compositeList(list.get(0));
             TestCommonHelper.assertError(ce, 0, TestException.class, "onNext(1)");
-            TestCommonHelper.assertError(ce, 1, TestException.class, "onError(io.reactivex.exceptions.TestException: onNext(1))");
+            TestCommonHelper.assertError(ce, 1, TestException.class, "onError(io.reactivex.common.exceptions.TestException: onNext(1))");
         } finally {
             RxJavaCommonPlugins.reset();
         }

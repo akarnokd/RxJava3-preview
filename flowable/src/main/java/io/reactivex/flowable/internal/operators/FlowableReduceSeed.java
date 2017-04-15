@@ -17,6 +17,7 @@ import org.reactivestreams.Subscriber;
 
 import io.reactivex.common.functions.BiFunction;
 import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.operators.FlowableReduceWith.ReduceWithSubscriber;
 
 public final class FlowableReduceSeed<T, R> extends AbstractFlowableWithUpstream<T, R> {
 
@@ -32,8 +33,7 @@ public final class FlowableReduceSeed<T, R> extends AbstractFlowableWithUpstream
 
     @Override
     protected void subscribeActual(Subscriber<? super R> s) {
-        // TODO Auto-generated method stub
-        
+        source.subscribe(new ReduceWithSubscriber<T, R>(s, initialValue, reducer));
     }
 
 }

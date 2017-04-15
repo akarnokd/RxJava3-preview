@@ -24,12 +24,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.processors.*;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.TestCommonHelper;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.*;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableWindowWithFlowableTest {
 
@@ -458,12 +459,12 @@ public class FlowableWindowWithFlowableTest {
 
     @Test
     public void boundaryDispose() {
-        TestCommonHelper.checkDisposed(Flowable.never().window(Flowable.never()));
+        TestHelper.checkDisposed(Flowable.never().window(Flowable.never()));
     }
 
     @Test
     public void boundaryDispose2() {
-        TestCommonHelper.checkDisposed(Flowable.never().window(Functions.justCallable(Flowable.never())));
+        TestHelper.checkDisposed(Flowable.never().window(Functions.justCallable(Flowable.never())));
     }
 
     @Test
@@ -489,7 +490,7 @@ public class FlowableWindowWithFlowableTest {
 
     @Test
     public void innerBadSource() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> o) throws Exception {
                 return Flowable.just(1).window(o).flatMap(new Function<Flowable<Integer>, Flowable<Integer>>() {
@@ -501,7 +502,7 @@ public class FlowableWindowWithFlowableTest {
             }
         }, false, 1, 1, (Object[])null);
 
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> o) throws Exception {
                 return Flowable.just(1).window(Functions.justCallable(o)).flatMap(new Function<Flowable<Integer>, Flowable<Integer>>() {
@@ -588,7 +589,7 @@ public class FlowableWindowWithFlowableTest {
 
     @Test
     public void badSource() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> o) throws Exception {
                 return o.window(Flowable.never()).flatMap(new Function<Flowable<Object>, Flowable<Object>>() {
@@ -603,7 +604,7 @@ public class FlowableWindowWithFlowableTest {
 
     @Test
     public void badSourceCallable() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> o) throws Exception {
                 return o.window(Functions.justCallable(Flowable.never())).flatMap(new Function<Flowable<Object>, Flowable<Object>>() {

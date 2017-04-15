@@ -24,15 +24,15 @@ import org.junit.*;
 import org.mockito.InOrder;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.UnicastProcessor;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.UnicastProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableDistinctTest {
 
@@ -143,19 +143,19 @@ public class FlowableDistinctTest {
 
     @Test
     public void fusedSync() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueDisposable.ANY);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.just(1, 1, 2, 1, 3, 2, 4, 5, 4)
         .distinct()
         .subscribe(to);
 
-        SubscriberFusion.assertFusion(to, QueueDisposable.SYNC)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.SYNC)
         .assertResult(1, 2, 3, 4, 5);
     }
 
     @Test
     public void fusedAsync() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueDisposable.ANY);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         UnicastProcessor<Integer> us = UnicastProcessor.create();
 
@@ -163,9 +163,9 @@ public class FlowableDistinctTest {
         .distinct()
         .subscribe(to);
 
-        TestCommonHelper.emit(us, 1, 1, 2, 1, 3, 2, 4, 5, 4);
+        TestHelper.emit(us, 1, 1, 2, 1, 3, 2, 4, 5, 4);
 
-        SubscriberFusion.assertFusion(to, QueueDisposable.ASYNC)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.ASYNC)
         .assertResult(1, 2, 3, 4, 5);
     }
 

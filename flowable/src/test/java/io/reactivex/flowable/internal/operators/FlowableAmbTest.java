@@ -26,15 +26,14 @@ import org.junit.*;
 import org.mockito.InOrder;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.util.CrashingMappedIterable;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.*;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.utils.CrashingMappedIterable;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableAmbTest {
 
@@ -537,7 +536,7 @@ public class FlowableAmbTest {
     @SuppressWarnings("unchecked")
     @Test
     public void disposed() {
-        TestCommonHelper.checkDisposed(Flowable.ambArray(Flowable.never(), Flowable.never()));
+        TestHelper.checkDisposed(Flowable.ambArray(Flowable.never(), Flowable.never()));
     }
 
     @Test

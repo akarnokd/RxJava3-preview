@@ -20,10 +20,9 @@ import java.util.concurrent.*;
 
 import org.junit.*;
 
-import io.reactivex.common.Schedulers;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class FutureSubscriberTest {
 

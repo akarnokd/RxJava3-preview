@@ -17,24 +17,21 @@ import static org.junit.Assert.*;
 
 import java.util.*;
 
-import org.junit.*;
+import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
 
 public class FlowableElementAtTest {
 
     @Test
     public void testElementAtFlowable() {
-        assertEquals(2, Flowable.fromArray(1, 2).elementAt(1).toFlowable().blockingSingle()
+        assertEquals(2, Flowable.fromArray(1, 2).elementAt(1).blockingSingle()
                 .intValue());
     }
 
@@ -45,17 +42,17 @@ public class FlowableElementAtTest {
 
     @Test
     public void testElementAtWithIndexOutOfBoundsFlowable() {
-        assertEquals(-100, Flowable.fromArray(1, 2).elementAt(2).toFlowable().blockingFirst(-100).intValue());
+        assertEquals(-100, Flowable.fromArray(1, 2).elementAt(2).blockingFirst(-100).intValue());
     }
 
     @Test
     public void testElementAtOrDefaultFlowable() {
-        assertEquals(2, Flowable.fromArray(1, 2).elementAt(1, 0).toFlowable().blockingSingle().intValue());
+        assertEquals(2, Flowable.fromArray(1, 2).elementAt(1, 0).blockingSingle().intValue());
     }
 
     @Test
     public void testElementAtOrDefaultWithIndexOutOfBoundsFlowable() {
-        assertEquals(0, Flowable.fromArray(1, 2).elementAt(2, 0).toFlowable().blockingSingle().intValue());
+        assertEquals(0, Flowable.fromArray(1, 2).elementAt(2, 0).blockingSingle().intValue());
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
@@ -65,7 +62,7 @@ public class FlowableElementAtTest {
 
     @Test
     public void testElementAt() {
-        assertEquals(2, Flowable.fromArray(1, 2).elementAt(1).blockingGet()
+        assertEquals(2, Flowable.fromArray(1, 2).elementAt(1).blockingLast()
                 .intValue());
     }
 
@@ -76,17 +73,17 @@ public class FlowableElementAtTest {
 
     @Test
     public void testElementAtWithIndexOutOfBounds() {
-        assertNull(Flowable.fromArray(1, 2).elementAt(2).blockingGet());
+        assertNull(Flowable.fromArray(1, 2).elementAt(2).blockingLast(null));
     }
 
     @Test
     public void testElementAtOrDefault() {
-        assertEquals(2, Flowable.fromArray(1, 2).elementAt(1, 0).blockingGet().intValue());
+        assertEquals(2, Flowable.fromArray(1, 2).elementAt(1, 0).blockingLast().intValue());
     }
 
     @Test
     public void testElementAtOrDefaultWithIndexOutOfBounds() {
-        assertEquals(0, Flowable.fromArray(1, 2).elementAt(2, 0).blockingGet().intValue());
+        assertEquals(0, Flowable.fromArray(1, 2).elementAt(2, 0).blockingLast().intValue());
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
@@ -189,24 +186,10 @@ public class FlowableElementAtTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
             @Override
             public Publisher<Object> apply(Flowable<Object> o) throws Exception {
-                return o.elementAt(0).toFlowable();
-            }
-        });
-
-        TestCommonHelper.checkDoubleOnSubscribeFlowableToMaybe(new Function<Flowable<Object>, Maybe<Object>>() {
-            @Override
-            public Maybe<Object> apply(Flowable<Object> o) throws Exception {
                 return o.elementAt(0);
-            }
-        });
-
-        TestCommonHelper.checkDoubleOnSubscribeFlowableToSingle(new Function<Flowable<Object>, Single<Object>>() {
-            @Override
-            public Single<Object> apply(Flowable<Object> o) throws Exception {
-                return o.elementAt(0, 1);
             }
         });
     }
@@ -215,7 +198,7 @@ public class FlowableElementAtTest {
     public void elementAtIndex1WithDefaultOnEmptySourceObservable() {
         Flowable.empty()
             .elementAt(1, 10)
-            .toFlowable()
+            
             .test()
             .assertResult(10);
     }
@@ -224,7 +207,7 @@ public class FlowableElementAtTest {
     public void errorFlowable() {
         Flowable.error(new TestException())
             .elementAt(1, 10)
-            .toFlowable()
+            
             .test()
             .assertFailure(TestException.class);
     }
@@ -259,7 +242,7 @@ public class FlowableElementAtTest {
                 }
             }
             .elementAt(0)
-            .toFlowable()
+            
             .test()
             .assertResult(1);
 
@@ -268,61 +251,61 @@ public class FlowableElementAtTest {
             RxJavaCommonPlugins.reset();
         }
 
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.elementAt(0);
             }
         }, false, null, 1);
 
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.elementAt(0, 1);
             }
         }, false, null, 1, 1);
 
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
-                return f.elementAt(0).toFlowable();
+                return f.elementAt(0);
             }
         }, false, null, 1);
 
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
-                return f.elementAt(0, 1).toFlowable();
+                return f.elementAt(0, 1);
             }
         }, false, null, 1, 1);
     }
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(PublishProcessor.create().elementAt(0).toFlowable());
-        TestCommonHelper.checkDisposed(PublishProcessor.create().elementAt(0, 1).toFlowable());
+        TestHelper.checkDisposed(PublishProcessor.create().elementAt(0));
+        TestHelper.checkDisposed(PublishProcessor.create().elementAt(0, 1));
 
-        TestCommonHelper.checkDisposed(PublishProcessor.create().elementAt(0));
-        TestCommonHelper.checkDisposed(PublishProcessor.create().elementAt(0, 1));
+        TestHelper.checkDisposed(PublishProcessor.create().elementAt(0));
+        TestHelper.checkDisposed(PublishProcessor.create().elementAt(0, 1));
     }
 
     @Test
     public void badSourceObservable() {
         List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
-            new Observable<Integer>() {
+            new Flowable<Integer>() {
                 @Override
-                protected void subscribeActual(Observer<? super Integer> observer) {
-                    observer.onSubscribe(Disposables.empty());
+                protected void subscribeActual(Subscriber<? super Integer> s) {
+                    s.onSubscribe(new BooleanSubscription());
 
-                    observer.onNext(1);
-                    observer.onNext(2);
-                    observer.onError(new TestException());
-                    observer.onComplete();
+                    s.onNext(1);
+                    s.onNext(2);
+                    s.onError(new TestException());
+                    s.onComplete();
                 }
             }
             .elementAt(0)
-            .toFlowable()
+            
             .test()
             .assertResult(1);
 

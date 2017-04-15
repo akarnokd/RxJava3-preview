@@ -18,8 +18,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.*;
 
 public class FlowableLiftTest {
 

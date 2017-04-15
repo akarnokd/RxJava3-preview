@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.processors;
+package io.reactivex.flowable.processors;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,10 +22,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.subscribers.*;
 
 public class ReplayProcessorConcurrencyTest {
 
@@ -179,7 +179,7 @@ public class ReplayProcessorConcurrencyTest {
 
                 @Override
                 public void run() {
-                    List<Long> values = replay.toList().blockingGet();
+                    List<Long> values = replay.toList().blockingLast();
                     listOfListsOfValues.add(values);
                     System.out.println("Finished thread: " + count);
                 }

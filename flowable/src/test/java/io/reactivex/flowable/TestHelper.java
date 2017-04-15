@@ -60,6 +60,19 @@ public enum TestHelper {
         return w;
     }
 
+    /**
+     * Assert that the offer methods throw UnsupportedOperationExcetpion.
+     * @param q the queue implementation
+     */
+    public static void assertNoOffer(FusedQueue<?> q) {
+        try {
+            q.offer(null);
+            fail("Should have thrown!");
+        } catch (UnsupportedOperationException ex) {
+            // expected
+        }
+    }
+
     public static void assertError(TestSubscriber<?> ts, int index, Class<? extends Throwable> clazz) {
         Throwable ex = ts.errors().get(0);
         if (ex instanceof CompositeException) {

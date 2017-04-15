@@ -24,14 +24,14 @@ import org.junit.*;
 import org.mockito.MockitoAnnotations;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableGroupJoinTest {
 
@@ -365,7 +365,7 @@ public class FlowableGroupJoinTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.just(1).groupJoin(
+        TestHelper.checkDisposed(Flowable.just(1).groupJoin(
             Flowable.just(2),
             new Function<Integer, Flowable<Object>>() {
                 @Override

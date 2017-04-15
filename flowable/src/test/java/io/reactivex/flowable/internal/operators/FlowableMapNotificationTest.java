@@ -18,13 +18,13 @@ import java.util.concurrent.Callable;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
 import io.reactivex.flowable.internal.operators.FlowableMapNotification.MapNotificationSubscriber;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableMapNotificationTest {
     @Test
@@ -149,7 +149,7 @@ public class FlowableMapNotificationTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(new Flowable<Integer>() {
+        TestHelper.checkDisposed(new Flowable<Integer>() {
             @SuppressWarnings({ "rawtypes", "unchecked" })
             @Override
             protected void subscribeActual(Subscriber<? super Integer> observer) {
@@ -166,7 +166,7 @@ public class FlowableMapNotificationTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Integer>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Integer>>() {
             @Override
             public Flowable<Integer> apply(Flowable<Object> o) throws Exception {
                 return o.flatMap(

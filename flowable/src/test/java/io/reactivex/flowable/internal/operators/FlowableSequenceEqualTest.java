@@ -23,15 +23,13 @@ import org.junit.*;
 import org.mockito.InOrder;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableSequenceEqualTest {
 
@@ -39,7 +37,7 @@ public class FlowableSequenceEqualTest {
     public void test1Flowable() {
         Flowable<Boolean> observable = Flowable.sequenceEqual(
                 Flowable.just("one", "two", "three"),
-                Flowable.just("one", "two", "three")).toFlowable();
+                Flowable.just("one", "two", "three"));
         verifyResult(observable, true);
     }
 
@@ -47,7 +45,7 @@ public class FlowableSequenceEqualTest {
     public void test2Flowable() {
         Flowable<Boolean> observable = Flowable.sequenceEqual(
                 Flowable.just("one", "two", "three"),
-                Flowable.just("one", "two", "three", "four")).toFlowable();
+                Flowable.just("one", "two", "three", "four"));
         verifyResult(observable, false);
     }
 
@@ -55,7 +53,7 @@ public class FlowableSequenceEqualTest {
     public void test3Flowable() {
         Flowable<Boolean> observable = Flowable.sequenceEqual(
                 Flowable.just("one", "two", "three", "four"),
-                Flowable.just("one", "two", "three")).toFlowable();
+                Flowable.just("one", "two", "three"));
         verifyResult(observable, false);
     }
 
@@ -64,7 +62,7 @@ public class FlowableSequenceEqualTest {
         Flowable<Boolean> observable = Flowable.sequenceEqual(
                 Flowable.concat(Flowable.just("one"),
                         Flowable.<String> error(new TestException())),
-                Flowable.just("one", "two", "three")).toFlowable();
+                Flowable.just("one", "two", "three"));
         verifyError(observable);
     }
 
@@ -73,7 +71,7 @@ public class FlowableSequenceEqualTest {
         Flowable<Boolean> observable = Flowable.sequenceEqual(
                 Flowable.just("one", "two", "three"),
                 Flowable.concat(Flowable.just("one"),
-                        Flowable.<String> error(new TestException()))).toFlowable();
+                        Flowable.<String> error(new TestException())));
         verifyError(observable);
     }
 
@@ -83,7 +81,7 @@ public class FlowableSequenceEqualTest {
                 Flowable.concat(Flowable.just("one"),
                         Flowable.<String> error(new TestException())),
                 Flowable.concat(Flowable.just("one"),
-                        Flowable.<String> error(new TestException()))).toFlowable();
+                        Flowable.<String> error(new TestException())));
         verifyError(observable);
     }
 
@@ -91,7 +89,7 @@ public class FlowableSequenceEqualTest {
     public void testWithEmpty1Flowable() {
         Flowable<Boolean> observable = Flowable.sequenceEqual(
                 Flowable.<String> empty(),
-                Flowable.just("one", "two", "three")).toFlowable();
+                Flowable.just("one", "two", "three"));
         verifyResult(observable, false);
     }
 
@@ -99,14 +97,14 @@ public class FlowableSequenceEqualTest {
     public void testWithEmpty2Flowable() {
         Flowable<Boolean> observable = Flowable.sequenceEqual(
                 Flowable.just("one", "two", "three"),
-                Flowable.<String> empty()).toFlowable();
+                Flowable.<String> empty());
         verifyResult(observable, false);
     }
 
     @Test
     public void testWithEmpty3Flowable() {
         Flowable<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.<String> empty(), Flowable.<String> empty()).toFlowable();
+                Flowable.<String> empty(), Flowable.<String> empty());
         verifyResult(observable, true);
     }
 
@@ -114,7 +112,7 @@ public class FlowableSequenceEqualTest {
     @Ignore("Null values not allowed")
     public void testWithNull1Flowable() {
         Flowable<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.just((String) null), Flowable.just("one")).toFlowable();
+                Flowable.just((String) null), Flowable.just("one"));
         verifyResult(observable, false);
     }
 
@@ -122,117 +120,13 @@ public class FlowableSequenceEqualTest {
     @Ignore("Null values not allowed")
     public void testWithNull2Flowable() {
         Flowable<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.just((String) null), Flowable.just((String) null)).toFlowable();
+                Flowable.just((String) null), Flowable.just((String) null));
         verifyResult(observable, true);
     }
 
     @Test
     public void testWithEqualityErrorFlowable() {
         Flowable<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.just("one"), Flowable.just("one"),
-                new BiPredicate<String, String>() {
-                    @Override
-                    public boolean test(String t1, String t2) {
-                        throw new TestException();
-                    }
-                }).toFlowable();
-        verifyError(observable);
-    }
-
-    @Test
-    public void test1() {
-        Single<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.just("one", "two", "three"),
-                Flowable.just("one", "two", "three"));
-        verifyResult(observable, true);
-    }
-
-    @Test
-    public void test2() {
-        Single<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.just("one", "two", "three"),
-                Flowable.just("one", "two", "three", "four"));
-        verifyResult(observable, false);
-    }
-
-    @Test
-    public void test3() {
-        Single<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.just("one", "two", "three", "four"),
-                Flowable.just("one", "two", "three"));
-        verifyResult(observable, false);
-    }
-
-    @Test
-    public void testWithError1() {
-        Single<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.concat(Flowable.just("one"),
-                        Flowable.<String> error(new TestException())),
-                Flowable.just("one", "two", "three"));
-        verifyError(observable);
-    }
-
-    @Test
-    public void testWithError2() {
-        Single<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.just("one", "two", "three"),
-                Flowable.concat(Flowable.just("one"),
-                        Flowable.<String> error(new TestException())));
-        verifyError(observable);
-    }
-
-    @Test
-    public void testWithError3() {
-        Single<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.concat(Flowable.just("one"),
-                        Flowable.<String> error(new TestException())),
-                Flowable.concat(Flowable.just("one"),
-                        Flowable.<String> error(new TestException())));
-        verifyError(observable);
-    }
-
-    @Test
-    public void testWithEmpty1() {
-        Single<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.<String> empty(),
-                Flowable.just("one", "two", "three"));
-        verifyResult(observable, false);
-    }
-
-    @Test
-    public void testWithEmpty2() {
-        Single<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.just("one", "two", "three"),
-                Flowable.<String> empty());
-        verifyResult(observable, false);
-    }
-
-    @Test
-    public void testWithEmpty3() {
-        Single<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.<String> empty(), Flowable.<String> empty());
-        verifyResult(observable, true);
-    }
-
-    @Test
-    @Ignore("Null values not allowed")
-    public void testWithNull1() {
-        Single<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.just((String) null), Flowable.just("one"));
-        verifyResult(observable, false);
-    }
-
-    @Test
-    @Ignore("Null values not allowed")
-    public void testWithNull2() {
-        Single<Boolean> observable = Flowable.sequenceEqual(
-                Flowable.just((String) null), Flowable.just((String) null));
-        verifyResult(observable, true);
-    }
-
-    @Test
-    public void testWithEqualityError() {
-        Single<Boolean> observable = Flowable.sequenceEqual(
                 Flowable.just("one"), Flowable.just("one"),
                 new BiPredicate<String, String>() {
                     @Override
@@ -254,27 +148,8 @@ public class FlowableSequenceEqualTest {
         inOrder.verifyNoMoreInteractions();
     }
 
-    private void verifyResult(Single<Boolean> observable, boolean result) {
-        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
-
-        observable.subscribe(observer);
-
-        InOrder inOrder = inOrder(observer);
-        inOrder.verify(observer, times(1)).onSuccess(result);
-        inOrder.verifyNoMoreInteractions();
-    }
-
     private void verifyError(Flowable<Boolean> observable) {
         Subscriber<Boolean> observer = TestHelper.mockSubscriber();
-        observable.subscribe(observer);
-
-        InOrder inOrder = inOrder(observer);
-        inOrder.verify(observer, times(1)).onError(isA(TestException.class));
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    private void verifyError(Single<Boolean> observable) {
-        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
         observable.subscribe(observer);
 
         InOrder inOrder = inOrder(observer);
@@ -292,7 +167,7 @@ public class FlowableSequenceEqualTest {
 
     @Test
     public void disposed() {
-        TestCommonHelper.checkDisposed(Flowable.sequenceEqual(Flowable.just(1), Flowable.just(2)));
+        TestHelper.checkDisposed(Flowable.sequenceEqual(Flowable.just(1), Flowable.just(2)));
     }
 
     @Test
@@ -305,36 +180,9 @@ public class FlowableSequenceEqualTest {
     @Test
     public void simpleInequalObservable() {
         Flowable.sequenceEqual(Flowable.just(1), Flowable.just(2))
-        .toFlowable()
+        
         .test()
         .assertResult(false);
-    }
-
-    @Test
-    public void onNextCancelRace() {
-        for (int i = 0; i < 500; i++) {
-            final PublishProcessor<Integer> ps = PublishProcessor.create();
-
-            final TestObserver<Boolean> to = Flowable.sequenceEqual(Flowable.never(), ps).test();
-
-            Runnable r1 = new Runnable() {
-                @Override
-                public void run() {
-                    to.cancel();
-                }
-            };
-
-            Runnable r2 = new Runnable() {
-                @Override
-                public void run() {
-                    ps.onNext(1);
-                }
-            };
-
-            TestCommonHelper.race(r1, r2);
-
-            to.assertEmpty();
-        }
     }
 
     @Test
@@ -342,7 +190,7 @@ public class FlowableSequenceEqualTest {
         for (int i = 0; i < 500; i++) {
             final PublishProcessor<Integer> ps = PublishProcessor.create();
 
-            final TestSubscriber<Boolean> to = Flowable.sequenceEqual(Flowable.never(), ps).toFlowable().test();
+            final TestSubscriber<Boolean> to = Flowable.sequenceEqual(Flowable.never(), ps).test();
 
             Runnable r1 = new Runnable() {
                 @Override
@@ -366,13 +214,13 @@ public class FlowableSequenceEqualTest {
 
     @Test
     public void disposedFlowable() {
-        TestCommonHelper.checkDisposed(Flowable.sequenceEqual(Flowable.just(1), Flowable.just(2)).toFlowable());
+        TestHelper.checkDisposed(Flowable.sequenceEqual(Flowable.just(1), Flowable.just(2)));
     }
 
     @Test
     public void prefetchFlowable() {
         Flowable.sequenceEqual(Flowable.range(1, 20), Flowable.range(1, 20), 2)
-        .toFlowable()
+        
         .test()
         .assertResult(true);
     }
@@ -382,7 +230,7 @@ public class FlowableSequenceEqualTest {
         Flowable<Integer> source = Flowable.range(1, Flowable.bufferSize() * 4).subscribeOn(Schedulers.computation());
 
         Flowable.sequenceEqual(source, source)
-        .toFlowable()
+        
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(true);
@@ -396,12 +244,12 @@ public class FlowableSequenceEqualTest {
         });
 
         Flowable.sequenceEqual(source, Flowable.range(1, 10).hide())
-        .toFlowable()
+        
         .test()
         .assertFailure(TestException.class);
 
         Flowable.sequenceEqual(Flowable.range(1, 10).hide(), source)
-        .toFlowable()
+        
         .test()
         .assertFailure(TestException.class);
     }
@@ -422,7 +270,7 @@ public class FlowableSequenceEqualTest {
             boolean swap = (i & 1) == 0;
 
             Flowable.sequenceEqual(swap ? pp : neverNever, swap ? neverNever : pp)
-            .toFlowable()
+            
             .subscribe(ts);
 
             Runnable r1 = new Runnable() {
@@ -456,7 +304,7 @@ public class FlowableSequenceEqualTest {
                 }
             }
         }, 8)
-        .toFlowable()
+        
         .test()
         .assertFailure(MissingBackpressureException.class);
     }
@@ -473,7 +321,7 @@ public class FlowableSequenceEqualTest {
                     s.onError(new TestException("Second"));
                 }
             }, 8)
-            .toFlowable()
+            
             .test()
             .assertFailureAndMessage(TestException.class, "First");
 
@@ -508,44 +356,6 @@ public class FlowableSequenceEqualTest {
         Flowable.sequenceEqual(Flowable.range(1, 10).hide(), source)
         .test()
         .assertFailure(TestException.class);
-    }
-
-    @Test
-    public void cancelAndDrainRace() {
-        Flowable<Object> neverNever = new Flowable<Object>() {
-            @Override
-            protected void subscribeActual(Subscriber<? super Object> s) {
-            }
-        };
-
-        for (int i = 0; i < 500; i++) {
-            final TestObserver<Boolean> ts = new TestObserver<Boolean>();
-
-            final PublishProcessor<Integer> pp = PublishProcessor.create();
-
-            boolean swap = (i & 1) == 0;
-
-            Flowable.sequenceEqual(swap ? pp : neverNever, swap ? neverNever : pp)
-            .subscribe(ts);
-
-            Runnable r1 = new Runnable() {
-                @Override
-                public void run() {
-                    pp.onNext(1);
-                }
-            };
-
-            Runnable r2 = new Runnable() {
-                @Override
-                public void run() {
-                    ts.cancel();
-                }
-            };
-
-            TestCommonHelper.race(r1, r2);
-
-            ts.assertEmpty();
-        }
     }
 
     @Test

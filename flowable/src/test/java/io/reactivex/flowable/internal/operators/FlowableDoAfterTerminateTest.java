@@ -22,10 +22,10 @@ import org.junit.*;
 import org.mockito.Mockito;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.functions.Action;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.functions.Action;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableDoAfterTerminateTest {
 

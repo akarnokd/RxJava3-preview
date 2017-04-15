@@ -19,17 +19,16 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.annotations.NonNull;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Action;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Action;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableUnsubscribeOnTest {
 
@@ -205,7 +204,7 @@ public class FlowableUnsubscribeOnTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.just(1).unsubscribeOn(Schedulers.single()));
+        TestHelper.checkDisposed(Flowable.just(1).unsubscribeOn(Schedulers.single()));
     }
 
     @Test

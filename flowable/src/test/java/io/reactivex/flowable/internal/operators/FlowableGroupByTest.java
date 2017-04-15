@@ -25,16 +25,15 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.flowables.GroupedFlowable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.FusedQueueSubscription;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableGroupByTest {
 
@@ -1665,14 +1664,14 @@ public class FlowableGroupByTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.just(1).groupBy(Functions.justFunction(1)));
+        TestHelper.checkDisposed(Flowable.just(1).groupBy(Functions.justFunction(1)));
 
         Flowable.just(1)
         .groupBy(Functions.justFunction(1))
         .doOnNext(new Consumer<GroupedFlowable<Integer, Integer>>() {
             @Override
             public void accept(GroupedFlowable<Integer, Integer> g) throws Exception {
-                TestCommonHelper.checkDisposed(g);
+                TestHelper.checkDisposed(g);
             }
         })
         .test();
@@ -1748,7 +1747,7 @@ public class FlowableGroupByTest {
 
     @Test
     public void badSource() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> f) throws Exception {
                 return f.groupBy(Functions.justFunction(1));
@@ -1758,13 +1757,13 @@ public class FlowableGroupByTest {
 
     @Test
     public void badRequest() {
-        TestCommonHelper.assertBadRequestReported(Flowable.just(1)
+        TestHelper.assertBadRequestReported(Flowable.just(1)
                 .groupBy(Functions.justFunction(1)));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<GroupedFlowable<Integer, Object>>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<GroupedFlowable<Integer, Object>>>() {
             @Override
             public Publisher<GroupedFlowable<Integer, Object>> apply(Flowable<Object> f) throws Exception {
                 return f.groupBy(Functions.justFunction(1));

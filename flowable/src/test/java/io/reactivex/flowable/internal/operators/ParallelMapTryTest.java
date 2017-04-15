@@ -11,18 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class ParallelMapTryTest implements Consumer<Object> {
 
@@ -185,12 +185,12 @@ public class ParallelMapTryTest implements Consumer<Object> {
         .test()
         .assertFailure(CompositeException.class);
 
-        TestCommonHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
+        TestHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
     }
 
     @Test
     public void mapWrongParallelism() {
-        TestCommonHelper.checkInvalidParallelSubscribers(
+        TestHelper.checkInvalidParallelSubscribers(
             Flowable.just(1).parallel(1)
             .map(Functions.identity(), ParallelFailureHandling.ERROR)
         );
@@ -321,12 +321,12 @@ public class ParallelMapTryTest implements Consumer<Object> {
         .test()
         .assertFailure(CompositeException.class);
 
-        TestCommonHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
+        TestHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
     }
 
     @Test
     public void mapWrongParallelismConditional() {
-        TestCommonHelper.checkInvalidParallelSubscribers(
+        TestHelper.checkInvalidParallelSubscribers(
             Flowable.just(1).parallel(1)
             .map(Functions.identity(), ParallelFailureHandling.ERROR)
             .filter(Functions.alwaysTrue())

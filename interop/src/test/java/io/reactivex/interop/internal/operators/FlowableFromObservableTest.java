@@ -13,15 +13,17 @@
 
 package io.reactivex.flowable.internal.operators;
 
+import java.util.Observable;
+
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.*;
 
 public class FlowableFromObservableTest {
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Observable.just(1).toFlowable(BackpressureStrategy.MISSING));
+        TestHelper.checkDisposed(Observable.just(1).toFlowable(BackpressureStrategy.MISSING));
     }
 
     @Test

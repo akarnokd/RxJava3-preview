@@ -21,11 +21,11 @@ import java.util.concurrent.ExecutionException;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableMaterializeTest {
 
@@ -285,12 +285,12 @@ public class FlowableMaterializeTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.just(1).materialize());
+        TestHelper.checkDisposed(Flowable.just(1).materialize());
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Notification<Object>>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Notification<Object>>>() {
             @Override
             public Flowable<Notification<Object>> apply(Flowable<Object> o) throws Exception {
                 return o.materialize();
@@ -300,7 +300,7 @@ public class FlowableMaterializeTest {
 
     @Test
     public void badSource() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> f) throws Exception {
                 return f.materialize();
@@ -310,6 +310,6 @@ public class FlowableMaterializeTest {
 
     @Test
     public void badRequest() {
-        TestCommonHelper.assertBadRequestReported(Flowable.just(1).materialize());
+        TestHelper.assertBadRequestReported(Flowable.just(1).materialize());
     }
 }

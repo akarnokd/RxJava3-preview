@@ -22,15 +22,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.FusedQueueSubscription;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableFlattenIterableTest {
 
@@ -46,7 +46,7 @@ public class FlowableFlattenIterableTest {
                 return Math.max(a, b);
             }
         })
-        .toFlowable()
+        
         .flatMapIterable(new Function<Integer, Iterable<Integer>>() {
             @Override
             public Iterable<Integer> apply(Integer v) {
@@ -569,7 +569,7 @@ public class FlowableFlattenIterableTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(PublishProcessor.create().flatMapIterable(new Function<Object, Iterable<Integer>>() {
+        TestHelper.checkDisposed(PublishProcessor.create().flatMapIterable(new Function<Object, Iterable<Integer>>() {
             @Override
             public Iterable<Integer> apply(Object v) throws Exception {
                 return Arrays.asList(10, 20);
@@ -579,7 +579,7 @@ public class FlowableFlattenIterableTest {
 
     @Test
     public void badSource() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> o) throws Exception {
                 return o.flatMapIterable(new Function<Object, Iterable<Integer>>() {

@@ -20,10 +20,10 @@ import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableTakeLastOneTest {
 
@@ -97,7 +97,7 @@ public class FlowableTakeLastOneTest {
             public void accept(Integer t) {
                 upstreamCount.incrementAndGet();
             }})
-            .takeLast(0).count().blockingGet();
+            .takeLast(0).count().blockingLast();
         assertEquals(num, upstreamCount.get());
         assertEquals(0L, count);
     }
@@ -140,12 +140,12 @@ public class FlowableTakeLastOneTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.just(1).takeLast(1));
+        TestHelper.checkDisposed(Flowable.just(1).takeLast(1));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> f) throws Exception {
                 return f.takeLast(1);

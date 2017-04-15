@@ -23,15 +23,14 @@ import java.util.concurrent.atomic.*;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.*;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.*;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableConcatMapEagerTest {
 
@@ -834,7 +833,7 @@ public class FlowableConcatMapEagerTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.just(1).hide().concatMapEager(new Function<Integer, Flowable<Integer>>() {
+        TestHelper.checkDisposed(Flowable.just(1).hide().concatMapEager(new Function<Integer, Flowable<Integer>>() {
             @Override
             public Flowable<Integer> apply(Integer v) throws Exception {
                 return Flowable.range(1, 2);
@@ -894,7 +893,7 @@ public class FlowableConcatMapEagerTest {
                 Throwable ex = to.errors().get(0);
 
                 if (ex instanceof CompositeException) {
-                    List<Throwable> es = TestCommonHelper.errorList(to);
+                    List<Throwable> es = TestHelper.errorList(to);
                     TestCommonHelper.assertError(es, 0, TestException.class);
                     TestCommonHelper.assertError(es, 1, TestException.class);
                 } else {
@@ -1049,7 +1048,7 @@ public class FlowableConcatMapEagerTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.concatMapEager(new Function<Object, Flowable<Object>>() {

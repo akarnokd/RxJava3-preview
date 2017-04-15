@@ -17,11 +17,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.internal.util.NotificationLite;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.internal.utils.NotificationLite;
 
 
 public class NotificationLiteTest {
@@ -51,11 +50,10 @@ public class NotificationLiteTest {
     public void errorNotification() {
         Object o = NotificationLite.error(new TestException());
 
-        assertEquals("NotificationLite.Error[io.reactivex.exceptions.TestException]", o.toString());
+        assertEquals("NotificationLite.Error[io.reactivex.common.exceptions.TestException]", o.toString());
 
         assertTrue(NotificationLite.isError(o));
         assertFalse(NotificationLite.isComplete(o));
-        assertFalse(NotificationLite.isDisposable(o));
         assertFalse(NotificationLite.isSubscription(o));
 
         assertTrue(NotificationLite.getError(o) instanceof TestException);
@@ -70,26 +68,11 @@ public class NotificationLiteTest {
 
         assertFalse(NotificationLite.isError(o));
         assertTrue(NotificationLite.isComplete(o));
-        assertFalse(NotificationLite.isDisposable(o));
         assertFalse(NotificationLite.isSubscription(o));
 
         assertEquals("NotificationLite.Complete", o.toString());
 
         assertTrue(NotificationLite.isComplete(o));
-    }
-
-    @Test
-    public void disposableNotification() {
-        Object o = NotificationLite.disposable(Disposables.empty());
-
-        assertEquals("NotificationLite.Disposable[RunnableDisposable(disposed=false, EmptyRunnable)]", o.toString());
-
-        assertFalse(NotificationLite.isError(o));
-        assertFalse(NotificationLite.isComplete(o));
-        assertTrue(NotificationLite.isDisposable(o));
-        assertFalse(NotificationLite.isSubscription(o));
-
-        assertNotNull(NotificationLite.getDisposable(o));
     }
 
     @Test
@@ -100,7 +83,6 @@ public class NotificationLiteTest {
 
         assertFalse(NotificationLite.isError(o));
         assertFalse(NotificationLite.isComplete(o));
-        assertFalse(NotificationLite.isDisposable(o));
         assertTrue(NotificationLite.isSubscription(o));
 
         assertNotNull(NotificationLite.getSubscription(o));

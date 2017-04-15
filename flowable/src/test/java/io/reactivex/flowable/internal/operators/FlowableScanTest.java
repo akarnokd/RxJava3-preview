@@ -14,6 +14,7 @@
 package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
@@ -23,15 +24,13 @@ import java.util.concurrent.atomic.*;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.*;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
 import io.reactivex.flowable.*;
 import io.reactivex.flowable.FlowableEventStream.Event;
-import io.reactivex.functions.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.*;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableScanTest {
 
@@ -256,32 +255,6 @@ public class FlowableScanTest {
      * This uses the public API collect which uses scan under the covers.
      */
     @Test
-    public void testSeedFactory() {
-        Single<List<Integer>> o = Flowable.range(1, 10)
-                .collect(new Callable<List<Integer>>() {
-
-                    @Override
-                    public List<Integer> call() {
-                        return new ArrayList<Integer>();
-                    }
-
-                }, new BiConsumer<List<Integer>, Integer>() {
-
-                    @Override
-                    public void accept(List<Integer> list, Integer t2) {
-                        list.add(t2);
-                    }
-
-                });
-
-        assertEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), o.blockingGet());
-        assertEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), o.blockingGet());
-    }
-
-    /**
-     * This uses the public API collect which uses scan under the covers.
-     */
-    @Test
     public void testSeedFactoryFlowable() {
         Flowable<List<Integer>> o = Flowable.range(1, 10)
                 .collect(new Callable<List<Integer>>() {
@@ -298,7 +271,7 @@ public class FlowableScanTest {
                         list.add(t2);
                     }
 
-                }).toFlowable().takeLast(1);
+                }).takeLast(1);
 
         assertEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), o.blockingSingle());
         assertEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), o.blockingSingle());
@@ -507,7 +480,7 @@ public class FlowableScanTest {
                  list.add(t);
             }};
         try {
-            RxJavaPlugins.setErrorHandler(errorConsumer);
+            RxJavaCommonPlugins.setErrorHandler(errorConsumer);
             final RuntimeException e = new RuntimeException();
             final RuntimeException e2 = new RuntimeException();
             Burst.items(1).error(e2)
@@ -587,7 +560,7 @@ public class FlowableScanTest {
                  list.add(t);
             }};
         try {
-            RxJavaPlugins.setErrorHandler(errorConsumer);
+            RxJavaCommonPlugins.setErrorHandler(errorConsumer);
             final RuntimeException e = new RuntimeException();
             final RuntimeException e2 = new RuntimeException();
             Burst.items(1, 2).error(e2)
@@ -706,7 +679,7 @@ public class FlowableScanTest {
             })
             .rebatchRequests(b)
             .toList()
-            .blockingGet();
+            .blockingLast();
 
             for (int i = 0; i <= n; i++) {
                 assertEquals(i, list.get(i).intValue());

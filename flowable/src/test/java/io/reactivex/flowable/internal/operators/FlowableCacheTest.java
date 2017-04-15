@@ -23,13 +23,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableCacheTest {
     @Test
@@ -301,7 +301,7 @@ public class FlowableCacheTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.range(1, 5).cache());
+        TestHelper.checkDisposed(Flowable.range(1, 5).cache());
     }
 
     @Test
@@ -379,7 +379,7 @@ public class FlowableCacheTest {
 
     @Test
     public void badSource() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> f) throws Exception {
                 return f.cache();
@@ -389,7 +389,7 @@ public class FlowableCacheTest {
 
     @Test
     public void badRequest() {
-        TestCommonHelper.assertBadRequestReported(Flowable.never().cache());
+        TestHelper.assertBadRequestReported(Flowable.never().cache());
     }
 
     @Test

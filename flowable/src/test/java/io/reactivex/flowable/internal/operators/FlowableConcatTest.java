@@ -26,16 +26,14 @@ import org.junit.*;
 import org.mockito.InOrder;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.*;
-import io.reactivex.schedulers.*;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.*;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableConcatTest {
 
@@ -622,9 +620,9 @@ public class FlowableConcatTest {
             }
         });
 
-        Single<List<Integer>> result = Flowable.concat(source).toList();
+        Flowable<List<Integer>> result = Flowable.concat(source).toList();
 
-        SingleObserver<List<Integer>> o = TestCommonHelper.mockSingleObserver();
+        Subscriber<List<Integer>> o = TestHelper.mockSubscriber();
         InOrder inOrder = inOrder(o);
 
         result.subscribe(o);
@@ -633,7 +631,7 @@ public class FlowableConcatTest {
         for (int i = 0; i < n; i++) {
             list.add(i);
         }
-        inOrder.verify(o).onSuccess(list);
+        inOrder.verify(o).onNext(list);
         verify(o, never()).onError(any(Throwable.class));
     }
     @Test
@@ -646,9 +644,9 @@ public class FlowableConcatTest {
             }
         });
 
-        Single<List<Integer>> result = Flowable.concat(source).take(n / 2).toList();
+        Flowable<List<Integer>> result = Flowable.concat(source).take(n / 2).toList();
 
-        SingleObserver<List<Integer>> o = TestCommonHelper.mockSingleObserver();
+        Subscriber<List<Integer>> o = TestHelper.mockSubscriber();
         InOrder inOrder = inOrder(o);
 
         result.subscribe(o);
@@ -657,7 +655,7 @@ public class FlowableConcatTest {
         for (int i = 0; i < n / 2; i++) {
             list.add(i);
         }
-        inOrder.verify(o).onSuccess(list);
+        inOrder.verify(o).onNext(list);
         verify(o, never()).onError(any(Throwable.class));
     }
 
@@ -1305,13 +1303,13 @@ public class FlowableConcatTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Integer>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Integer>>() {
             @Override
             public Publisher<Integer> apply(Flowable<Object> f) throws Exception {
                 return f.concatMap(Functions.justFunction(Flowable.just(2)));
             }
         });
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Integer>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Integer>>() {
             @Override
             public Publisher<Integer> apply(Flowable<Object> f) throws Exception {
                 return f.concatMapDelayError(Functions.justFunction(Flowable.just(2)));
@@ -1385,7 +1383,7 @@ public class FlowableConcatTest {
 
     @Test
     public void badSource() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.concatMap(Functions.justFunction(Flowable.just(1).hide()));
@@ -1447,7 +1445,7 @@ public class FlowableConcatTest {
 
     @Test
     public void badSourceDelayError() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.concatMap(Functions.justFunction(Flowable.just(1).hide()));
@@ -1507,10 +1505,10 @@ public class FlowableConcatTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.range(1, 2)
+        TestHelper.checkDisposed(Flowable.range(1, 2)
         .concatMap(Functions.justFunction(Flowable.just(1))));
 
-        TestCommonHelper.checkDisposed(Flowable.range(1, 2)
+        TestHelper.checkDisposed(Flowable.range(1, 2)
         .concatMapDelayError(Functions.justFunction(Flowable.just(1))));
     }
 

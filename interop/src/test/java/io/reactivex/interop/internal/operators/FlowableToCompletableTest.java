@@ -21,9 +21,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.functions.Action;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.functions.Action;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableToCompletableTest {
 

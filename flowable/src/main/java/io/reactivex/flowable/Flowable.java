@@ -5577,7 +5577,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Subscribes to the source and calls the given callbacks <strong>on the current thread</strong>.
      * <p>
      * If the Flowable emits an error, it is wrapped into an
-     * {@link io.reactivex.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
+     * {@link io.reactivex.common.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
      * and routed to the RxJavaFlowablePlugins.onError handler.
      * <p>
      * <dl>
@@ -8893,7 +8893,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * onNext Predicate returns false.
      * <p>
      * If the Flowable emits an error, it is wrapped into an
-     * {@link io.reactivex.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
+     * {@link io.reactivex.common.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
      * and routed to the RxJavaFlowablePlugins.onError handler.
      * <dl>
      *  <dt><b>Backpressure:</b><dt>
@@ -12026,7 +12026,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Flowable<T> singleElement() {
-        return RxJavaFlowablePlugins.onAssembly(new FlowableSingle<T>(this, null));
+        return RxJavaFlowablePlugins.onAssembly(new FlowableSingle<T>(this, null, false));
     }
 
     /**
@@ -12054,7 +12054,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Flowable<T> single(T defaultItem) {
         ObjectHelper.requireNonNull(defaultItem, "defaultItem is null");
-        return RxJavaFlowablePlugins.onAssembly(new FlowableSingle<T>(this, defaultItem));
+        return RxJavaFlowablePlugins.onAssembly(new FlowableSingle<T>(this, defaultItem, false));
     }
 
     /**
@@ -12079,7 +12079,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
     @SchedulerSupport(SchedulerSupport.NONE)
     public final Flowable<T> singleOrError() {
-        return RxJavaFlowablePlugins.onAssembly(new FlowableSingle<T>(this, null));
+        return RxJavaFlowablePlugins.onAssembly(new FlowableSingle<T>(this, null, true));
     }
 
     /**
@@ -12646,7 +12646,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Subscribes to a Publisher and ignores {@code onNext} and {@code onComplete} emissions.
      * <p>
      * If the Flowable emits an error, it is wrapped into an
-     * {@link io.reactivex.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
+     * {@link io.reactivex.common.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
      * and routed to the RxJavaFlowablePlugins.onError handler.
      * <dl>
      *  <dt><b>Backpressure:</b><dt>
@@ -12671,7 +12671,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Subscribes to a Publisher and provides a callback to handle the items it emits.
      * <p>
      * If the Flowable emits an error, it is wrapped into an
-     * {@link io.reactivex.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
+     * {@link io.reactivex.common.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
      * and routed to the RxJavaFlowablePlugins.onError handler.
      * <dl>
      *  <dt><b>Backpressure:</b><dt>

@@ -22,14 +22,13 @@ import java.util.concurrent.atomic.*;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.SerialDisposable;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.*;
+import io.reactivex.common.disposables.SerialDisposable;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.Flowable;
 import io.reactivex.flowable.internal.operators.BlockingFlowableNext.NextSubscriber;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.*;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.*;
 
 public class BlockingFlowableNextTest {
 

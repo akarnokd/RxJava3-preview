@@ -25,13 +25,11 @@ import org.junit.*;
 import org.mockito.*;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.flowables.ConnectableFlowable;
-import io.reactivex.functions.Function;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.*;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableTimerTest {
     @Mock
@@ -291,7 +289,7 @@ public class FlowableTimerTest {
 
     @Test
     public void disposed() {
-        TestCommonHelper.checkDisposed(Flowable.timer(1, TimeUnit.DAYS));
+        TestHelper.checkDisposed(Flowable.timer(1, TimeUnit.DAYS));
     }
 
     @Test

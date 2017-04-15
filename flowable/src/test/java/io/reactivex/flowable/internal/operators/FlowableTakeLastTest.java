@@ -14,6 +14,7 @@
 package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
@@ -23,12 +24,11 @@ import org.junit.*;
 import org.mockito.InOrder;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableTakeLastTest {
 
@@ -148,7 +148,7 @@ public class FlowableTakeLastTest {
         assertEquals(0, Flowable
                 .empty()
                 .count()
-                .toFlowable()
+                
                 .filter(new Predicate<Long>() {
                     @Override
                     public boolean test(Long v) {
@@ -156,7 +156,7 @@ public class FlowableTakeLastTest {
                     }
                 })
                 .toList()
-                .blockingGet().size());
+                .blockingLast().size());
     }
 
     @Test
@@ -321,12 +321,12 @@ public class FlowableTakeLastTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.range(1, 10).takeLast(5));
+        TestHelper.checkDisposed(Flowable.range(1, 10).takeLast(5));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.takeLast(5);

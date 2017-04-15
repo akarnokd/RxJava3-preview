@@ -23,11 +23,11 @@ import java.util.concurrent.atomic.*;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueDisposable;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableRangeTest {
 
@@ -283,12 +283,12 @@ public class FlowableRangeTest {
 
     @Test
     public void requestWrongFusion() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueDisposable.ASYNC);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ASYNC);
 
         Flowable.range(1, 5)
         .subscribe(to);
 
-        SubscriberFusion.assertFusion(to, QueueDisposable.NONE)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.NONE)
         .assertResult(1, 2, 3, 4, 5);
     }
 
@@ -301,32 +301,32 @@ public class FlowableRangeTest {
 
     @Test
     public void fused() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueDisposable.ANY);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 2).subscribe(to);
 
-        SubscriberFusion.assertFusion(to, QueueDisposable.SYNC)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.SYNC)
         .assertResult(1, 2);
     }
 
     @Test
     public void fusedReject() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueDisposable.ASYNC);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ASYNC);
 
         Flowable.range(1, 2).subscribe(to);
 
-        SubscriberFusion.assertFusion(to, QueueDisposable.NONE)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.NONE)
         .assertResult(1, 2);
     }
 
     @Test
     public void disposed() {
-        TestCommonHelper.checkDisposed(Flowable.range(1, 2));
+        TestHelper.checkDisposed(Flowable.range(1, 2));
     }
 
     @Test
     public void fusedClearIsEmpty() {
-        TestCommonHelper.checkFusedIsEmptyClear(Flowable.range(1, 2));
+        TestHelper.checkFusedIsEmptyClear(Flowable.range(1, 2));
     }
 
     @Test
@@ -346,9 +346,9 @@ public class FlowableRangeTest {
 
     @Test
     public void badRequest() {
-        TestCommonHelper.assertBadRequestReported(Flowable.range(1, 5));
+        TestHelper.assertBadRequestReported(Flowable.range(1, 5));
 
-        TestCommonHelper.assertBadRequestReported(Flowable.range(1, 5).filter(Functions.alwaysTrue()));
+        TestHelper.assertBadRequestReported(Flowable.range(1, 5).filter(Functions.alwaysTrue()));
     }
 
     @Test

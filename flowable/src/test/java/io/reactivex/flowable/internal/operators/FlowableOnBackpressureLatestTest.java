@@ -19,12 +19,12 @@ import java.util.concurrent.TimeUnit;
 import org.junit.*;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableOnBackpressureLatestTest {
     @Test
@@ -133,7 +133,7 @@ public class FlowableOnBackpressureLatestTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
             @Override
             public Publisher<Object> apply(Flowable<Object> f) throws Exception {
                 return f.onBackpressureLatest();
@@ -152,11 +152,11 @@ public class FlowableOnBackpressureLatestTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.never().onBackpressureLatest());
+        TestHelper.checkDisposed(Flowable.never().onBackpressureLatest());
     }
 
     @Test
     public void badRequest() {
-        TestCommonHelper.assertBadRequestReported(Flowable.never().onBackpressureLatest());
+        TestHelper.assertBadRequestReported(Flowable.never().onBackpressureLatest());
     }
 }

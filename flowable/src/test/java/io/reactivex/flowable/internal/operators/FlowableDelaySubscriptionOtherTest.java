@@ -18,12 +18,12 @@ import java.util.concurrent.atomic.*;
 import org.junit.*;
 import org.reactivestreams.Subscription;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableDelaySubscriptionOtherTest {
     @Test
@@ -314,7 +314,7 @@ public class FlowableDelaySubscriptionOtherTest {
 
     @Test
     public void badSourceOther() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> o) throws Exception {
                 return Flowable.just(1).delaySubscription(o);

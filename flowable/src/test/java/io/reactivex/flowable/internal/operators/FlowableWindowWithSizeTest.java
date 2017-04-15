@@ -24,13 +24,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableWindowWithSizeTest {
 
@@ -40,7 +40,7 @@ public class FlowableWindowWithSizeTest {
         Flowable.concat(observables.map(new Function<Flowable<T>, Flowable<List<T>>>() {
             @Override
             public Flowable<List<T>> apply(Flowable<T> xs) {
-                return xs.toList().toFlowable();
+                return xs.toList();
             }
         }))
                 .blockingForEach(new Consumer<List<T>>() {
@@ -299,7 +299,7 @@ public class FlowableWindowWithSizeTest {
         .map(new Function<Flowable<Integer>, Flowable<List<Integer>>>() {
             @Override
             public Flowable<List<Integer>> apply(Flowable<Integer> t) {
-                return t.toList().toFlowable();
+                return t.toList();
             }
         })
         .concatMap(new Function<Flowable<List<Integer>>, Publisher<List<Integer>>>() {
@@ -332,30 +332,30 @@ public class FlowableWindowWithSizeTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(PublishProcessor.create().window(1));
+        TestHelper.checkDisposed(PublishProcessor.create().window(1));
 
-        TestCommonHelper.checkDisposed(PublishProcessor.create().window(2, 1));
+        TestHelper.checkDisposed(PublishProcessor.create().window(2, 1));
 
-        TestCommonHelper.checkDisposed(PublishProcessor.create().window(1, 2));
+        TestHelper.checkDisposed(PublishProcessor.create().window(1, 2));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Flowable<Object>>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Flowable<Object>>>() {
             @Override
             public Flowable<Flowable<Object>> apply(Flowable<Object> o) throws Exception {
                 return o.window(1);
             }
         });
 
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Flowable<Object>>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Flowable<Object>>>() {
             @Override
             public Flowable<Flowable<Object>> apply(Flowable<Object> o) throws Exception {
                 return o.window(2, 1);
             }
         });
 
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Flowable<Object>>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Flowable<Object>>>() {
             @Override
             public Flowable<Flowable<Object>> apply(Flowable<Object> o) throws Exception {
                 return o.window(1, 2);

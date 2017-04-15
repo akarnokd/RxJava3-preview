@@ -24,15 +24,15 @@ import org.junit.*;
 import org.mockito.InOrder;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.*;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.*;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableDistinctUntilChangedTest {
 
@@ -272,7 +272,7 @@ public class FlowableDistinctUntilChangedTest {
 
     @Test
     public void fused() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueDisposable.ANY);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.just(1, 2, 2, 3, 3, 4, 5)
         .distinctUntilChanged(new BiPredicate<Integer, Integer>() {
@@ -284,14 +284,14 @@ public class FlowableDistinctUntilChangedTest {
         .subscribe(to);
 
         to.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.SYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.SYNC))
         .assertResult(1, 2, 3, 4, 5)
         ;
     }
 
     @Test
     public void fusedAsync() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueDisposable.ANY);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
 
@@ -304,10 +304,10 @@ public class FlowableDistinctUntilChangedTest {
         })
         .subscribe(to);
 
-        TestCommonHelper.emit(up, 1, 2, 2, 3, 3, 4, 5);
+        TestHelper.emit(up, 1, 2, 2, 3, 3, 4, 5);
 
         to.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .assertResult(1, 2, 3, 4, 5)
         ;
     }
@@ -411,7 +411,7 @@ public class FlowableDistinctUntilChangedTest {
         })
         .test();
 
-        TestCommonHelper.emit(up, 1, 2, 1, 3, 3, 4, 3, 5, 5);
+        TestHelper.emit(up, 1, 2, 1, 3, 3, 4, 3, 5, 5);
 
         ts
         .assertResult(2, 4);
@@ -470,7 +470,7 @@ public class FlowableDistinctUntilChangedTest {
         .subscribe(ts);
 
 
-        TestCommonHelper.emit(up, 1, 2, 1, 3, 3, 4, 3, 5, 5);
+        TestHelper.emit(up, 1, 2, 1, 3, 3, 4, 3, 5, 5);
 
         SubscriberFusion.assertFusion(ts, FusedQueueSubscription.ASYNC)
         .assertResult(2, 4);
@@ -478,7 +478,7 @@ public class FlowableDistinctUntilChangedTest {
 
     @Test
     public void badSource() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.distinctUntilChanged().filter(Functions.alwaysTrue());

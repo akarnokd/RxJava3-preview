@@ -24,14 +24,14 @@ import org.junit.*;
 import org.mockito.MockitoAnnotations;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableJoinTest {
     Subscriber<Object> observer = TestHelper.mockSubscriber();
@@ -310,7 +310,7 @@ public class FlowableJoinTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(PublishProcessor.<Integer>create().join(Flowable.just(1),
+        TestHelper.checkDisposed(PublishProcessor.<Integer>create().join(Flowable.just(1),
                 Functions.justFunction(Flowable.never()),
                 Functions.justFunction(Flowable.never()), new BiFunction<Integer, Integer, Integer>() {
                     @Override

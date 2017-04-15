@@ -11,12 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.processors;
-
-import io.reactivex.subscribers.TestSubscriber;
-import org.junit.Test;
+package io.reactivex.flowable.processors;
 
 import static org.junit.Assert.assertFalse;
+
+import org.junit.Test;
+
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public abstract class DelayedFlowableProcessorTest<T> extends FlowableProcessorTest<T> {
 

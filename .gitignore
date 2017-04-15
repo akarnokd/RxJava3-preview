@@ -76,3 +76,5 @@ bin/
 
 #Android Studio
 local.properties
+
+**/test-output

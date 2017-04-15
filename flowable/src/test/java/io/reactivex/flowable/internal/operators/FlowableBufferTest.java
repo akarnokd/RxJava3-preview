@@ -25,15 +25,14 @@ import org.junit.*;
 import org.mockito.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.*;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableBufferTest {
 
@@ -1175,7 +1174,7 @@ public class FlowableBufferTest {
     @Test
     public void timeAndSkipOverlapScheduler() {
 
-        RxJavaPlugins.setComputationSchedulerHandler(new Function<Scheduler, Scheduler>() {
+        RxJavaCommonPlugins.setComputationSchedulerHandler(new Function<Scheduler, Scheduler>() {
             @Override
             public Scheduler apply(Scheduler t) {
                 return scheduler;
@@ -1225,7 +1224,7 @@ public class FlowableBufferTest {
     @SuppressWarnings("unchecked")
     @Test
     public void timeAndSkipSkipDefaultScheduler() {
-        RxJavaPlugins.setComputationSchedulerHandler(new Function<Scheduler, Scheduler>() {
+        RxJavaCommonPlugins.setComputationSchedulerHandler(new Function<Scheduler, Scheduler>() {
             @Override
             public Scheduler apply(Scheduler t) {
                 return scheduler;
@@ -1523,20 +1522,20 @@ public class FlowableBufferTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.range(1, 5).buffer(1, TimeUnit.DAYS, Schedulers.single()));
+        TestHelper.checkDisposed(Flowable.range(1, 5).buffer(1, TimeUnit.DAYS, Schedulers.single()));
 
-        TestCommonHelper.checkDisposed(Flowable.range(1, 5).buffer(2, 1, TimeUnit.DAYS, Schedulers.single()));
+        TestHelper.checkDisposed(Flowable.range(1, 5).buffer(2, 1, TimeUnit.DAYS, Schedulers.single()));
 
-        TestCommonHelper.checkDisposed(Flowable.range(1, 5).buffer(1, 2, TimeUnit.DAYS, Schedulers.single()));
+        TestHelper.checkDisposed(Flowable.range(1, 5).buffer(1, 2, TimeUnit.DAYS, Schedulers.single()));
 
-        TestCommonHelper.checkDisposed(Flowable.range(1, 5)
+        TestHelper.checkDisposed(Flowable.range(1, 5)
                 .buffer(1, TimeUnit.DAYS, Schedulers.single(), 2, Functions.<Integer>createArrayList(16), true));
 
-        TestCommonHelper.checkDisposed(Flowable.range(1, 5).buffer(1));
+        TestHelper.checkDisposed(Flowable.range(1, 5).buffer(1));
 
-        TestCommonHelper.checkDisposed(Flowable.range(1, 5).buffer(2, 1));
+        TestHelper.checkDisposed(Flowable.range(1, 5).buffer(2, 1));
 
-        TestCommonHelper.checkDisposed(Flowable.range(1, 5).buffer(1, 2));
+        TestHelper.checkDisposed(Flowable.range(1, 5).buffer(1, 2));
     }
 
     @Test
@@ -1891,21 +1890,21 @@ public class FlowableBufferTest {
 
     @Test
     public void badSource() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.buffer(1);
             }
         }, false, 1, 1, Arrays.asList(1));
 
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.buffer(1, 2);
             }
         }, false, 1, 1, Arrays.asList(1));
 
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.buffer(2, 1);
@@ -1915,21 +1914,21 @@ public class FlowableBufferTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<List<Object>>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<List<Object>>>() {
             @Override
             public Publisher<List<Object>> apply(Flowable<Object> f) throws Exception {
                 return f.buffer(1);
             }
         });
 
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<List<Object>>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<List<Object>>>() {
             @Override
             public Publisher<List<Object>> apply(Flowable<Object> f) throws Exception {
                 return f.buffer(1, 2);
             }
         });
 
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<List<Object>>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<List<Object>>>() {
             @Override
             public Publisher<List<Object>> apply(Flowable<Object> f) throws Exception {
                 return f.buffer(2, 1);
@@ -1939,11 +1938,11 @@ public class FlowableBufferTest {
 
     @Test
     public void badRequest() {
-        TestCommonHelper.assertBadRequestReported(PublishProcessor.create().buffer(1));
+        TestHelper.assertBadRequestReported(PublishProcessor.create().buffer(1));
 
-        TestCommonHelper.assertBadRequestReported(PublishProcessor.create().buffer(1, 2));
+        TestHelper.assertBadRequestReported(PublishProcessor.create().buffer(1, 2));
 
-        TestCommonHelper.assertBadRequestReported(PublishProcessor.create().buffer(2, 1));
+        TestHelper.assertBadRequestReported(PublishProcessor.create().buffer(2, 1));
     }
 
     @SuppressWarnings("unchecked")

@@ -21,10 +21,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 
 public class FlowableDetachTest {
@@ -39,7 +39,7 @@ public class FlowableDetachTest {
 
         TestSubscriber<Object> ts = new TestSubscriber<Object>();
 
-        Flowable.just(o).count().toFlowable().onTerminateDetach().subscribe(ts);
+        Flowable.just(o).count().onTerminateDetach().subscribe(ts);
 
         ts.assertValue(1L);
         ts.assertComplete();
@@ -96,7 +96,7 @@ public class FlowableDetachTest {
 
         TestSubscriber<Object> ts = new TestSubscriber<Object>(0L);
 
-        Flowable.just(o).count().toFlowable().onTerminateDetach().subscribe(ts);
+        Flowable.just(o).count().onTerminateDetach().subscribe(ts);
 
         ts.assertNoValues();
 
@@ -122,7 +122,7 @@ public class FlowableDetachTest {
 
         TestSubscriber<Object> ts = new TestSubscriber<Object>(0);
 
-        Flowable.just(o).count().toFlowable().onTerminateDetach().subscribe(ts);
+        Flowable.just(o).count().onTerminateDetach().subscribe(ts);
 
         ts.cancel();
         o = null;
@@ -162,12 +162,12 @@ public class FlowableDetachTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.never().onTerminateDetach());
+        TestHelper.checkDisposed(Flowable.never().onTerminateDetach());
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.onTerminateDetach();

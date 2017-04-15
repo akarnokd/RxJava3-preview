@@ -11,12 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.subscriptions.EmptySubscription;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.ParallelFlowable;
+import io.reactivex.flowable.internal.subscriptions.EmptySubscription;
 
 /**
  * Signals two onErrors to each subscriber for testing purposes.

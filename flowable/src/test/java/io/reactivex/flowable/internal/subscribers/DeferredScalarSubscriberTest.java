@@ -25,13 +25,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 import org.reactivestreams.*;
 
+import io.reactivex.common.*;
 import io.reactivex.common.Scheduler.Worker;
-import io.reactivex.common.Schedulers;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.flowable.Flowable;
 import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
 import io.reactivex.flowable.processors.PublishProcessor;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class DeferredScalarSubscriberTest {
 
@@ -132,7 +132,7 @@ public class DeferredScalarSubscriberTest {
     public void emptySource() {
         TestSubscriber<Integer> ts = TestSubscriber.create(0L);
         TestingDeferredScalarSubscriber ds = new TestingDeferredScalarSubscriber(ts);
-        Flowable.just(1).ignoreElements().<Integer>toFlowable().subscribe(ds); // we need a producer from upstream
+        Flowable.just(1).ignoreElements().subscribe(ds); // we need a producer from upstream
 
         ts.assertNoValues();
 

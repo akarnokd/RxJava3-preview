@@ -24,13 +24,12 @@ import org.junit.*;
 import org.mockito.InOrder;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableUsingTest {
 
@@ -506,7 +505,7 @@ public class FlowableUsingTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.using(
+        TestHelper.checkDisposed(Flowable.using(
                 new Callable<Object>() {
                     @Override
                     public Object call() throws Exception {

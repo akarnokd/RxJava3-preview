@@ -19,9 +19,9 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.Flowable;
 
 public class FlowableForEachTest {
 

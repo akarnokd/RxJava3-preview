@@ -11,18 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.List;
 
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.TestCommonHelper;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class ParallelJoinTest {
 
@@ -170,7 +171,7 @@ public class ParallelJoinTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> error = TestCommonHelper.errorList(flow);
+        List<Throwable> error = TestHelper.errorList(flow);
         TestCommonHelper.assertError(error, 0, TestException.class);
         TestCommonHelper.assertError(error, 1, TestException.class);
     }

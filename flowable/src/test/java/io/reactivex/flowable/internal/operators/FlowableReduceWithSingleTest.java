@@ -15,9 +15,9 @@ package io.reactivex.flowable.internal.operators;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.functions.BiFunction;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
 
 public class FlowableReduceWithSingleTest {
 
@@ -36,7 +36,7 @@ public class FlowableReduceWithSingleTest {
 
     @Test
     public void disposed() {
-        TestCommonHelper.checkDisposed(Flowable.range(1, 5)
+        TestHelper.checkDisposed(Flowable.range(1, 5)
         .reduceWith(Functions.justCallable(1), new BiFunction<Integer, Integer, Integer>() {
             @Override
             public Integer apply(Integer a, Integer b) throws Exception {

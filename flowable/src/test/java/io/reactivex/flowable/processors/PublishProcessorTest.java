@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.processors;
+package io.reactivex.flowable.processors;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,11 +25,12 @@ import org.junit.Test;
 import org.mockito.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.*;
 
 public class PublishProcessorTest extends FlowableProcessorTest<Object> {
 
@@ -306,7 +307,7 @@ public class PublishProcessorTest extends FlowableProcessorTest<Object> {
             InOrder inOrder = inOrder(o);
             String v = "" + i;
             System.out.printf("Turn: %d%n", i);
-            src.firstElement().toFlowable()
+            src.firstElement()
                 .flatMap(new Function<String, Flowable<String>>() {
 
                     @Override
@@ -451,7 +452,7 @@ public class PublishProcessorTest extends FlowableProcessorTest<Object> {
 
     @Test
     public void requestValidation() {
-        TestCommonHelper.assertBadRequestReported(PublishProcessor.create());
+        TestHelper.assertBadRequestReported(PublishProcessor.create());
     }
 
     @Test

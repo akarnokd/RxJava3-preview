@@ -23,11 +23,11 @@ import java.util.concurrent.atomic.*;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueDisposable;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableRangeLongTest {
 
@@ -290,32 +290,32 @@ public class FlowableRangeLongTest {
 
     @Test
     public void fused() {
-        TestSubscriber<Long> to = SubscriberFusion.newTest(QueueDisposable.ANY);
+        TestSubscriber<Long> to = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.rangeLong(1, 2).subscribe(to);
 
-        SubscriberFusion.assertFusion(to, QueueDisposable.SYNC)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.SYNC)
         .assertResult(1L, 2L);
     }
 
     @Test
     public void fusedReject() {
-        TestSubscriber<Long> to = SubscriberFusion.newTest(QueueDisposable.ASYNC);
+        TestSubscriber<Long> to = SubscriberFusion.newTest(FusedQueueSubscription.ASYNC);
 
         Flowable.rangeLong(1, 2).subscribe(to);
 
-        SubscriberFusion.assertFusion(to, QueueDisposable.NONE)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.NONE)
         .assertResult(1L, 2L);
     }
 
     @Test
     public void disposed() {
-        TestCommonHelper.checkDisposed(Flowable.rangeLong(1, 2));
+        TestHelper.checkDisposed(Flowable.rangeLong(1, 2));
     }
 
     @Test
     public void fusedClearIsEmpty() {
-        TestCommonHelper.checkFusedIsEmptyClear(Flowable.rangeLong(1, 2));
+        TestHelper.checkFusedIsEmptyClear(Flowable.rangeLong(1, 2));
     }
 
     @Test
@@ -335,9 +335,9 @@ public class FlowableRangeLongTest {
 
     @Test
     public void badRequest() {
-        TestCommonHelper.assertBadRequestReported(Flowable.rangeLong(1L, 5L));
+        TestHelper.assertBadRequestReported(Flowable.rangeLong(1L, 5L));
 
-        TestCommonHelper.assertBadRequestReported(Flowable.rangeLong(1L, 5L).filter(Functions.alwaysTrue()));
+        TestHelper.assertBadRequestReported(Flowable.rangeLong(1L, 5L).filter(Functions.alwaysTrue()));
     }
 
     @Test

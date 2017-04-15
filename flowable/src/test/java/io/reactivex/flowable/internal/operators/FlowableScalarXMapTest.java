@@ -20,12 +20,12 @@ import java.util.concurrent.Callable;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableScalarXMapTest {
 
@@ -197,13 +197,6 @@ public class FlowableScalarXMapTest {
 
         try {
             sd.offer(1);
-            fail("Should have thrown");
-        } catch (UnsupportedOperationException ex) {
-            // expected
-        }
-
-        try {
-            sd.offer(1, 2);
             fail("Should have thrown");
         } catch (UnsupportedOperationException ex) {
             // expected

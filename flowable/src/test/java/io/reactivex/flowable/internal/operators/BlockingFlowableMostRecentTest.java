@@ -20,10 +20,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.processors.*;
-import io.reactivex.schedulers.TestScheduler;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.processors.*;
 
 public class BlockingFlowableMostRecentTest {
     @Test

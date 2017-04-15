@@ -18,7 +18,9 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import io.reactivex.common.annotations.Nullable;
+import io.reactivex.flowable.TestHelper;
 import io.reactivex.flowable.internal.subscriptions.ScalarSubscription;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class BasicFuseableSubscriberTest {
 
@@ -44,7 +46,7 @@ public class BasicFuseableSubscriberTest {
 
         fcs.onSubscribe(new ScalarSubscription<Integer>(fcs, 1));
 
-        TestCommonHelper.assertNoOffer(fcs);
+        TestHelper.assertNoOffer(fcs);
 
         assertFalse(fcs.isEmpty());
         fcs.clear();

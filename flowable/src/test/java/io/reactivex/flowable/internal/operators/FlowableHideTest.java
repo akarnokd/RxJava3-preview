@@ -14,17 +14,18 @@
 package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.assertFalse;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.DefaultSubscriber;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.DefaultSubscriber;
 
-public class FlowableAsObservableTest {
+public class FlowableHideTest {
     @Test
     public void testHiding() {
         PublishProcessor<Integer> src = PublishProcessor.create();

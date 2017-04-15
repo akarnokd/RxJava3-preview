@@ -20,12 +20,12 @@ import java.util.List;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
 
 public class FlowableDoOnLifecycleTest {
 
@@ -46,7 +46,7 @@ public class FlowableDoOnLifecycleTest {
     public void doubleOnSubscribe() {
         final int[] calls = { 0, 0 };
 
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
             @Override
             public Publisher<Object> apply(Flowable<Object> o) throws Exception {
                 return o
@@ -72,7 +72,7 @@ public class FlowableDoOnLifecycleTest {
     public void dispose() {
         final int[] calls = { 0, 0 };
 
-        TestCommonHelper.checkDisposed(Flowable.just(1)
+        TestHelper.checkDisposed(Flowable.just(1)
                 .doOnLifecycle(new Consumer<Subscription>() {
                     @Override
                     public void accept(Subscription s) throws Exception {

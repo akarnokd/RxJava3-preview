@@ -18,11 +18,11 @@ package io.reactivex.flowable.internal.operators;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.functions.Predicate;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.ScalarCallable;
-import io.reactivex.subscribers.TestSubscriber;
+import hu.akarnokd.reactivestreams.extensions.ConstantValuePublisher;
+import io.reactivex.common.functions.Predicate;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableFromArrayTest {
 
@@ -100,7 +100,7 @@ public class FlowableFromArrayTest {
     @Test
     public void just() {
         Flowable<Integer> source = Flowable.fromArray(new Integer[] { 1 });
-        Assert.assertTrue(source.getClass().toString(), source instanceof ScalarCallable);
+        Assert.assertTrue(source.getClass().toString(), source instanceof ConstantValuePublisher);
     }
 
     @Test
@@ -112,7 +112,7 @@ public class FlowableFromArrayTest {
 
     @Test
     public void badRequest() {
-        TestCommonHelper.assertBadRequestReported(Flowable.just(1, 2, 3));
+        TestHelper.assertBadRequestReported(Flowable.just(1, 2, 3));
     }
 
     @Test

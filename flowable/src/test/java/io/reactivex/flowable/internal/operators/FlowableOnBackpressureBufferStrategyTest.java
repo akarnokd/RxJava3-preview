@@ -13,8 +13,8 @@
 
 package io.reactivex.flowable.internal.operators;
 
-import static io.reactivex.BackpressureOverflowStrategy.*;
-import static io.reactivex.internal.functions.Functions.EMPTY_ACTION;
+import static io.reactivex.flowable.BackpressureOverflowStrategy.*;
+import static io.reactivex.common.internal.functions.Functions.EMPTY_ACTION;
 import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,12 +22,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableOnBackpressureBufferStrategyTest {
 
@@ -129,7 +129,7 @@ public class FlowableOnBackpressureBufferStrategyTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.just(1)
+        TestHelper.checkDisposed(Flowable.just(1)
                 .onBackpressureBuffer(16, Functions.EMPTY_ACTION, BackpressureOverflowStrategy.ERROR));
     }
 
@@ -152,7 +152,7 @@ public class FlowableOnBackpressureBufferStrategyTest {
 
     @Test
     public void badSource() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> f) throws Exception {
                 return f.onBackpressureBuffer(8, Functions.EMPTY_ACTION, BackpressureOverflowStrategy.ERROR);
@@ -162,7 +162,7 @@ public class FlowableOnBackpressureBufferStrategyTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> f) throws Exception {
                 return f.onBackpressureBuffer(8, Functions.EMPTY_ACTION, BackpressureOverflowStrategy.ERROR);
@@ -185,7 +185,7 @@ public class FlowableOnBackpressureBufferStrategyTest {
 
     @Test
     public void badRequest() {
-        TestCommonHelper.assertBadRequestReported(Flowable.just(1)
+        TestHelper.assertBadRequestReported(Flowable.just(1)
                 .onBackpressureBuffer(16, Functions.EMPTY_ACTION, BackpressureOverflowStrategy.ERROR));
     }
 

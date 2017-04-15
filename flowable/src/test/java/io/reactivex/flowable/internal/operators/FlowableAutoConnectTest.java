@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.flowable.processors.PublishProcessor;
 
 public class FlowableAutoConnectTest {
 

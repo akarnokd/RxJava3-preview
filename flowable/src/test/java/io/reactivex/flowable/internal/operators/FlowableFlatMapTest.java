@@ -24,14 +24,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableFlatMapTest {
     @Test
@@ -885,7 +884,7 @@ public class FlowableFlatMapTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestCommonHelper.errorList(to);
+        List<Throwable> errors = TestHelper.errorList(to);
 
         TestCommonHelper.assertError(errors, 0, TestException.class);
 

@@ -26,16 +26,15 @@ import org.junit.*;
 import org.mockito.InOrder;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.FusedQueueSubscription;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableZipTest {
     BiFunction<String, String, String> concat2Strings;
@@ -1222,7 +1221,7 @@ public class FlowableZipTest {
         for (int i = 0; i < 1026; i++) {
             expected.add(i * 3);
         }
-        assertEquals(expected, zip2.toList().blockingGet());
+        assertEquals(expected, zip2.toList().blockingLast());
     }
     @Test
     public void testUnboundedDownstreamOverrequesting() {
@@ -1296,7 +1295,7 @@ public class FlowableZipTest {
         for (int i = 2; i < 10; i++) {
             Class<?>[] types = new Class[i + 1];
             Arrays.fill(types, Publisher.class);
-            types[i] = i == 2 ? BiFunction.class : Class.forName("io.reactivex.functions.Function" + i);
+            types[i] = i == 2 ? BiFunction.class : Class.forName("io.reactivex.common.functions.Function" + i);
 
             Method m = Flowable.class.getMethod("zip", types);
 
@@ -1609,7 +1608,7 @@ public class FlowableZipTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.zip(Flowable.just(1), Flowable.just(1), new BiFunction<Integer, Integer, Object>() {
+        TestHelper.checkDisposed(Flowable.zip(Flowable.just(1), Flowable.just(1), new BiFunction<Integer, Integer, Object>() {
             @Override
             public Object apply(Integer a, Integer b) throws Exception {
                 return a + b;
@@ -1619,7 +1618,7 @@ public class FlowableZipTest {
 
     @Test
     public void badRequest() {
-        TestCommonHelper.assertBadRequestReported(Flowable.zip(Flowable.just(1), Flowable.just(1), new BiFunction<Integer, Integer, Object>() {
+        TestHelper.assertBadRequestReported(Flowable.zip(Flowable.just(1), Flowable.just(1), new BiFunction<Integer, Integer, Object>() {
             @Override
             public Object apply(Integer a, Integer b) throws Exception {
                 return a + b;
@@ -1812,11 +1811,6 @@ public class FlowableZipTest {
 
         @Override
         public boolean offer(Integer value) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean offer(Integer v1, Integer v2) {
             throw new UnsupportedOperationException();
         }
 

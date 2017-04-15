@@ -19,16 +19,19 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
-import org.reactivestreams.*;
+import org.reactivestreams.Subscription;
 
-import io.reactivex.*;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
 import io.reactivex.disposables.*;
 import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.*;
 import io.reactivex.internal.fuseable.*;
 import io.reactivex.observers.*;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.*;
 
 public class FlowableFlatMapCompletableTest {
@@ -41,7 +44,7 @@ public class FlowableFlatMapCompletableTest {
             public CompletableSource apply(Integer v) throws Exception {
                 return Completable.complete();
             }
-        }).toFlowable()
+        })
         .test()
         .assertResult();
     }
@@ -98,7 +101,7 @@ public class FlowableFlatMapCompletableTest {
             public CompletableSource apply(Integer v) throws Exception {
                 return Completable.complete();
             }
-        }, true, Integer.MAX_VALUE).toFlowable()
+        }, true, Integer.MAX_VALUE)
         .test()
         .assertResult();
     }
@@ -111,7 +114,7 @@ public class FlowableFlatMapCompletableTest {
             public CompletableSource apply(Integer v) throws Exception {
                 return Flowable.range(1, 100).subscribeOn(Schedulers.computation()).ignoreElements();
             }
-        }).toFlowable()
+        })
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
@@ -125,7 +128,7 @@ public class FlowableFlatMapCompletableTest {
             public CompletableSource apply(Integer v) throws Exception {
                 return Flowable.range(1, 100).subscribeOn(Schedulers.computation()).ignoreElements();
             }
-        }, false, 3).toFlowable()
+        }, false, 3)
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult();
@@ -177,7 +180,7 @@ public class FlowableFlatMapCompletableTest {
             public CompletableSource apply(Integer v) throws Exception {
                 return Completable.complete();
             }
-        }, false, Integer.MAX_VALUE).toFlowable()
+        }, false, Integer.MAX_VALUE)
         .test()
         .assertFailure(TestException.class);
     }
@@ -185,7 +188,7 @@ public class FlowableFlatMapCompletableTest {
 
     @Test
     public void fusedFlowable() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueDisposable.ANY);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 10)
         .flatMapCompletable(new Function<Integer, CompletableSource>() {
@@ -198,7 +201,7 @@ public class FlowableFlatMapCompletableTest {
 
         to
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .assertResult();
     }
 
@@ -340,7 +343,7 @@ public class FlowableFlatMapCompletableTest {
 
     @Test
     public void fused() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueDisposable.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 10)
         .flatMapCompletable(new Function<Integer, CompletableSource>() {
@@ -354,13 +357,13 @@ public class FlowableFlatMapCompletableTest {
 
         ts
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .assertResult();
     }
 
     @Test
     public void disposed() {
-        TestCommonHelper.checkDisposed(Flowable.range(1, 10)
+        TestHelper.checkDisposed(Flowable.range(1, 10)
         .flatMapCompletable(new Function<Integer, CompletableSource>() {
             @Override
             public CompletableSource apply(Integer v) throws Exception {
@@ -385,18 +388,18 @@ public class FlowableFlatMapCompletableTest {
 
     @Test
     public void disposedFlowable() {
-        TestCommonHelper.checkDisposed(Flowable.range(1, 10)
+        TestHelper.checkDisposed(Flowable.range(1, 10)
         .flatMapCompletable(new Function<Integer, CompletableSource>() {
             @Override
             public CompletableSource apply(Integer v) throws Exception {
                 return Completable.complete();
             }
-        }).toFlowable());
+        }));
     }
 
     @Test
     public void badSource() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> o) throws Exception {
                 return o.flatMapCompletable(new Function<Integer, CompletableSource>() {
@@ -418,7 +421,7 @@ public class FlowableFlatMapCompletableTest {
                 return Completable.complete();
             }
         })
-        .toFlowable()
+        
         .subscribe(new RelaxedSubscriber<Object>() {
             @Override
             public void onSubscribe(Subscription d) {
@@ -466,13 +469,13 @@ public class FlowableFlatMapCompletableTest {
                 };
             }
         })
-        .toFlowable()
+        
         .test();
     }
 
     @Test
     public void badSourceFlowable() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> o) throws Exception {
                 return o.flatMapCompletable(new Function<Integer, CompletableSource>() {
@@ -480,7 +483,7 @@ public class FlowableFlatMapCompletableTest {
                     public CompletableSource apply(Integer v) throws Exception {
                         return Completable.complete();
                     }
-                }).toFlowable();
+                });
             }
         }, false, 1, null);
     }

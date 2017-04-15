@@ -22,19 +22,16 @@ import java.util.concurrent.atomic.*;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.flowables.ConnectableFlowable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.HasUpstreamPublisher;
-import io.reactivex.internal.schedulers.ImmediateThinScheduler;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.*;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.common.internal.schedulers.ImmediateThinScheduler;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.extensions.HasUpstreamPublisher;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowablePublishTest {
 
@@ -571,9 +568,9 @@ public class FlowablePublishTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.never().publish());
+        TestHelper.checkDisposed(Flowable.never().publish());
 
-        TestCommonHelper.checkDisposed(Flowable.never().publish(Functions.<Flowable<Object>>identity()));
+        TestHelper.checkDisposed(Flowable.never().publish(Functions.<Flowable<Object>>identity()));
     }
 
     @Test

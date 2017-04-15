@@ -14,6 +14,7 @@
 package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
@@ -23,9 +24,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.junit.Test;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.functions.LongConsumer;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.functions.LongConsumer;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableSkipTest {
 
@@ -172,7 +173,7 @@ public class FlowableSkipTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.just(1).skip(2));
+        TestHelper.checkDisposed(Flowable.just(1).skip(2));
     }
 
 }

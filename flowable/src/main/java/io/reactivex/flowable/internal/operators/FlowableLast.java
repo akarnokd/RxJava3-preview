@@ -13,14 +13,18 @@
 
 package io.reactivex.flowable.internal.operators;
 
-import org.reactivestreams.Subscriber;
+import java.util.NoSuchElementException;
 
+import org.reactivestreams.*;
+
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
 import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 public final class FlowableLast<T> extends AbstractFlowableWithUpstream<T, T> {
 
     final T defaultItem;
-    
+
     final boolean errorOnEmpty;
     
     public FlowableLast(Flowable<T> source, T defaultItem, boolean errorOnEmpty) {
@@ -31,9 +35,67 @@ public final class FlowableLast<T> extends AbstractFlowableWithUpstream<T, T> {
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        // TODO Auto-generated method stub
-        
+        source.subscribe(new LastSubscriber<T>(s, defaultItem, errorOnEmpty));
     }
 
-    
+    static final class LastSubscriber<T> extends DeferredScalarSubscription<T>
+    implements RelaxedSubscriber<T> {
+
+        private static final long serialVersionUID = 5455573518954847071L;
+
+        final T defaultItem;
+
+        final boolean errorOnEmpty;
+
+        Subscription upstream;
+
+        public LastSubscriber(Subscriber<? super T> actual, T defaultItem, boolean errorOnEmpty) {
+            super(actual);
+            this.defaultItem = defaultItem;
+            this.errorOnEmpty = errorOnEmpty;
+        }
+
+        @Override
+        public void onNext(T t) {
+            this.value = t;
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            value = null;
+            actual.onError(t);
+        }
+
+        @Override
+        public void onComplete() {
+            T v = value;
+            value = null;
+            if (v == null) {
+                if (errorOnEmpty) {
+                    actual.onError(new NoSuchElementException());
+                } else {
+                    actual.onComplete();
+                }
+            } else {
+                complete(v);
+            }
+        }
+
+        @Override
+        public void onSubscribe(Subscription s) {
+            if (SubscriptionHelper.validate(upstream, s)) {
+                upstream = s;
+
+                actual.onSubscribe(this);
+
+                s.request(Long.MAX_VALUE);
+            }
+        }
+        
+        @Override
+        public void cancel() {
+            super.cancel();
+            upstream.cancel();
+        }
+    }
 }

@@ -25,13 +25,12 @@ import org.junit.*;
 import org.mockito.InOrder;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.TestScheduler;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableTimeoutTests {
     private PublishProcessor<String> underlyingSubject;
@@ -388,9 +387,9 @@ public class FlowableTimeoutTests {
 
     @Test
     public void disposed() {
-        TestCommonHelper.checkDisposed(PublishProcessor.create().timeout(1, TimeUnit.DAYS));
+        TestHelper.checkDisposed(PublishProcessor.create().timeout(1, TimeUnit.DAYS));
 
-        TestCommonHelper.checkDisposed(PublishProcessor.create().timeout(1, TimeUnit.DAYS, Flowable.just(1)));
+        TestHelper.checkDisposed(PublishProcessor.create().timeout(1, TimeUnit.DAYS, Flowable.just(1)));
     }
 
     @Test

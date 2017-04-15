@@ -11,24 +11,21 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.processors;
-
-import io.reactivex.Observable;
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.fuseable.FusedQueueSubscription;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.SubscriberFusion;
-import io.reactivex.subscribers.TestSubscriber;
-import org.junit.Test;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+package io.reactivex.flowable.processors;
 
 import static org.junit.Assert.*;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.junit.Test;
+
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.subscribers.*;
 
 public class UnicastProcessorTest extends DelayedFlowableProcessorTest<Object> {
 
@@ -128,7 +125,7 @@ public class UnicastProcessorTest extends DelayedFlowableProcessorTest<Object> {
     public void onTerminateCalledWhenOnError() {
         final AtomicBoolean didRunOnTerminate = new AtomicBoolean();
 
-        UnicastProcessor<Integer> us = UnicastProcessor.create(Observable.bufferSize(), new Runnable() {
+        UnicastProcessor<Integer> us = UnicastProcessor.create(Flowable.bufferSize(), new Runnable() {
             @Override public void run() {
                 didRunOnTerminate.set(true);
             }
@@ -143,7 +140,7 @@ public class UnicastProcessorTest extends DelayedFlowableProcessorTest<Object> {
     public void onTerminateCalledWhenOnComplete() {
         final AtomicBoolean didRunOnTerminate = new AtomicBoolean();
 
-        UnicastProcessor<Integer> us = UnicastProcessor.create(Observable.bufferSize(), new Runnable() {
+        UnicastProcessor<Integer> us = UnicastProcessor.create(Flowable.bufferSize(), new Runnable() {
             @Override public void run() {
                 didRunOnTerminate.set(true);
             }
@@ -158,7 +155,7 @@ public class UnicastProcessorTest extends DelayedFlowableProcessorTest<Object> {
     public void onTerminateCalledWhenCanceled() {
         final AtomicBoolean didRunOnTerminate = new AtomicBoolean();
 
-        UnicastProcessor<Integer> us = UnicastProcessor.create(Observable.bufferSize(), new Runnable() {
+        UnicastProcessor<Integer> us = UnicastProcessor.create(Flowable.bufferSize(), new Runnable() {
             @Override public void run() {
                 didRunOnTerminate.set(true);
             }

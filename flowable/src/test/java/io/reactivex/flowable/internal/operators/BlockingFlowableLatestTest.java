@@ -21,11 +21,10 @@ import java.util.concurrent.TimeUnit;
 import org.junit.*;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.TestScheduler;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.processors.PublishProcessor;
 
 public class BlockingFlowableLatestTest {
     @Test(timeout = 1000)

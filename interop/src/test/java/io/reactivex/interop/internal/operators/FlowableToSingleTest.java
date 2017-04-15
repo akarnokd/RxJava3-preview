@@ -17,9 +17,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.functions.Action;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.functions.Action;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableToSingleTest {
 
@@ -27,7 +27,7 @@ public class FlowableToSingleTest {
     public void testJustSingleItemObservable() {
         TestSubscriber<String> subscriber = TestSubscriber.create();
         Single<String> single = Flowable.just("Hello World!").single("");
-        single.toFlowable().subscribe(subscriber);
+        single.subscribe(subscriber);
 
         subscriber.assertResult("Hello World!");
     }
@@ -37,7 +37,7 @@ public class FlowableToSingleTest {
         TestSubscriber<String> subscriber = TestSubscriber.create();
         IllegalArgumentException error = new IllegalArgumentException("Error");
         Single<String> single = Flowable.<String>error(error).single("");
-        single.toFlowable().subscribe(subscriber);
+        single.subscribe(subscriber);
 
         subscriber.assertError(error);
     }
@@ -46,7 +46,7 @@ public class FlowableToSingleTest {
     public void testJustTwoEmissionsObservableThrowsError() {
         TestSubscriber<String> subscriber = TestSubscriber.create();
         Single<String> single = Flowable.just("First", "Second").single("");
-        single.toFlowable().subscribe(subscriber);
+        single.subscribe(subscriber);
 
         subscriber.assertError(IllegalArgumentException.class);
     }
@@ -55,7 +55,7 @@ public class FlowableToSingleTest {
     public void testEmptyObservable() {
         TestSubscriber<String> subscriber = TestSubscriber.create();
         Single<String> single = Flowable.<String>empty().single("");
-        single.toFlowable().subscribe(subscriber);
+        single.subscribe(subscriber);
 
         subscriber.assertResult("");
     }
@@ -64,7 +64,7 @@ public class FlowableToSingleTest {
     public void testRepeatObservableThrowsError() {
         TestSubscriber<String> subscriber = TestSubscriber.create();
         Single<String> single = Flowable.just("First", "Second").repeat().single("");
-        single.toFlowable().subscribe(subscriber);
+        single.subscribe(subscriber);
 
         subscriber.assertError(IllegalArgumentException.class);
     }
@@ -79,7 +79,7 @@ public class FlowableToSingleTest {
             public void run() {
                 unsubscribed.set(true);
             }}).single("");
-        single.toFlowable().subscribe(subscriber);
+        single.subscribe(subscriber);
         subscriber.assertComplete();
         Assert.assertFalse(unsubscribed.get());
     }

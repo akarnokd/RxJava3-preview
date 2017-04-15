@@ -24,15 +24,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.UnicastProcessor;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.UnicastProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableDoOnEachTest {
 
@@ -132,7 +132,7 @@ public class FlowableDoOnEachTest {
                         }
                     })
                     .toList()
-                    .doOnSuccess(new Consumer<List<Boolean>>() {
+                    .doOnNext(new Consumer<List<Boolean>>() {
                         @Override
                         public void accept(List<Boolean> booleans) {
                             count.incrementAndGet();
@@ -158,7 +158,7 @@ public class FlowableDoOnEachTest {
                         }
                     })
                     .toList()
-                    .doOnSuccess(new Consumer<List<Boolean>>() {
+                    .doOnNext(new Consumer<List<Boolean>>() {
                         @Override
                         public void accept(List<Boolean> booleans) {
                             count.incrementAndGet();
@@ -640,7 +640,7 @@ public class FlowableDoOnEachTest {
         })
         .subscribe(ts);
 
-        TestCommonHelper.emit(up, 1, 2, 3, 4, 5);
+        TestHelper.emit(up, 1, 2, 3, 4, 5);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
         .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
@@ -674,7 +674,7 @@ public class FlowableDoOnEachTest {
         .filter(Functions.alwaysTrue())
         .subscribe(ts);
 
-        TestCommonHelper.emit(up, 1, 2, 3, 4, 5);
+        TestHelper.emit(up, 1, 2, 3, 4, 5);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
         .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
@@ -708,7 +708,7 @@ public class FlowableDoOnEachTest {
         .filter(Functions.alwaysTrue())
         .subscribe(ts);
 
-        TestCommonHelper.emit(up, 1, 2, 3, 4, 5);
+        TestHelper.emit(up, 1, 2, 3, 4, 5);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
         .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.NONE))
@@ -720,12 +720,12 @@ public class FlowableDoOnEachTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.just(1).doOnEach(new TestSubscriber<Integer>()));
+        TestHelper.checkDisposed(Flowable.just(1).doOnEach(new TestSubscriber<Integer>()));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.doOnEach(new TestSubscriber<Object>());

@@ -16,24 +16,14 @@ package io.reactivex.flowable.internal.operators;
 import org.junit.Test;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.*;
-import io.reactivex.functions.Function;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.*;
 
 public class FlowableOnBackpressureErrorTest {
 
     @Test
-    public void dispose() {
-        TestCommonHelper.checkDisposed(Observable.just(1).toFlowable(BackpressureStrategy.ERROR));
-    }
-
-    @Test
-    public void badRequest() {
-        TestCommonHelper.assertBadRequestReported(Observable.just(1).toFlowable(BackpressureStrategy.ERROR));
-    }
-
-    @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
             @Override
             public Publisher<Object> apply(Flowable<Object> f) throws Exception {
                 return new FlowableOnBackpressureError<Object>(f);
@@ -43,7 +33,7 @@ public class FlowableOnBackpressureErrorTest {
 
     @Test
     public void badSource() {
-        TestCommonHelper.<Integer>checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.<Integer>checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return new FlowableOnBackpressureError<Integer>(f);

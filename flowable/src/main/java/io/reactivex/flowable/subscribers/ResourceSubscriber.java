@@ -32,10 +32,10 @@ import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
  * <p>To release the associated resources, one has to call {@link #dispose()}
  * in {@code onError()} and {@code onComplete()} explicitly.
  *
- * <p>Use {@link #add(Disposable)} to associate resources (as {@link io.reactivex.disposables.Disposable Disposable}s)
+ * <p>Use {@link #add(Disposable)} to associate resources (as {@link io.reactivex.common.Disposable Disposable}s)
  * with this {@code ResourceSubscriber} that will be cleaned up when {@link #dispose()} is called.
  * Removing previously associated resources is not possible but one can create a
- * {@link io.reactivex.disposables.CompositeDisposable CompositeDisposable}, associate it with this
+ * {@link io.reactivex.common.disposables.CompositeDisposable CompositeDisposable}, associate it with this
  * {@code ResourceSubscriber} and then add/remove resources to/from the {@code CompositeDisposable}
  * freely.
  *
@@ -56,7 +56,7 @@ import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
  *
  * <p>Implementation of {@link #onStart()}, {@link #onNext(Object)}, {@link #onError(Throwable)}
  * and {@link #onComplete()} are not allowed to throw any unchecked exceptions.
- * If for some reason this can't be avoided, use {@link io.reactivex.Flowable#safeSubscribe(org.reactivestreams.Subscriber)}
+ * If for some reason this can't be avoided, use {@link io.reactivex.flowable.Flowable#safeSubscribe(org.reactivestreams.Subscriber)}
  * instead of the standard {@code subscribe()} method.
  *
  * <p>Example<code><pre>

@@ -20,10 +20,10 @@ import java.util.*;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.flowable.Flowable;
 import io.reactivex.flowable.internal.operators.BlockingFlowableIterable.BlockingFlowableIterator;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
 
 public class BlockingFlowableToIteratorTest {
 

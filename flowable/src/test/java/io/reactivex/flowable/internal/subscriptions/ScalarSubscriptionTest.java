@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscriptions;
+package io.reactivex.flowable.internal.subscriptions;
 
 import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.flowable.TestHelper;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class ScalarSubscriptionTest {
 
@@ -45,6 +45,6 @@ public class ScalarSubscriptionTest {
 
         ScalarSubscription<Integer> sc = new ScalarSubscription<Integer>(ts, 1);
 
-        TestCommonHelper.assertNoOffer(sc);
+        TestHelper.assertNoOffer(sc);
     }
 }

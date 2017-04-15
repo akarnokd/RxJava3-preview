@@ -20,12 +20,12 @@ import java.util.*;
 import org.junit.Test;
 import org.reactivestreams.*;
 
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.flowable.Flowable;
 import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
 import io.reactivex.flowable.processors.PublishProcessor;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class LambdaSubscriberTest {
 

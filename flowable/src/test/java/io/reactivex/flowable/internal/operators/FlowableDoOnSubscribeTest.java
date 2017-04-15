@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.*;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
 
 public class FlowableDoOnSubscribeTest {
 

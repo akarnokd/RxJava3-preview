@@ -20,6 +20,7 @@ import org.reactivestreams.Subscription;
 
 import hu.akarnokd.reactivestreams.extensions.ConditionalSubscriber;
 import io.reactivex.common.annotations.Nullable;
+import io.reactivex.flowable.TestHelper;
 import io.reactivex.flowable.internal.subscriptions.ScalarSubscription;
 
 public class BasicFuseableConditionalSubscriberTest {
@@ -75,7 +76,7 @@ public class BasicFuseableConditionalSubscriberTest {
 
         fcs.onSubscribe(new ScalarSubscription<Integer>(fcs, 1));
 
-        TestCommonHelper.assertNoOffer(fcs);
+        TestHelper.assertNoOffer(fcs);
 
         assertFalse(fcs.isEmpty());
         fcs.clear();

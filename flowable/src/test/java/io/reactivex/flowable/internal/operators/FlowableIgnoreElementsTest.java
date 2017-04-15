@@ -18,26 +18,25 @@ import static org.junit.Assert.*;
 import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
-import org.reactivestreams.*;
+import org.reactivestreams.Subscription;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.fuseable.FusedQueueSubscription;
-import io.reactivex.observers.*;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableIgnoreElementsTest {
 
     @Test
     public void testWithEmptyFlowable() {
-        assertTrue(Flowable.empty().ignoreElements().toFlowable().isEmpty().blockingGet());
+        assertTrue(Flowable.empty().ignoreElements().isEmpty().blockingLast());
     }
 
     @Test
     public void testWithNonEmptyFlowable() {
-        assertTrue(Flowable.just(1, 2, 3).ignoreElements().toFlowable().isEmpty().blockingGet());
+        assertTrue(Flowable.just(1, 2, 3).ignoreElements().isEmpty().blockingLast());
     }
 
     @Test
@@ -52,8 +51,8 @@ public class FlowableIgnoreElementsTest {
                     }
                 })
                 .ignoreElements()
-                .toFlowable()
-                .count().blockingGet();
+                
+                .count().blockingLast();
         assertEquals(num, upstreamCount.get());
         assertEquals(0, count);
     }
@@ -61,7 +60,7 @@ public class FlowableIgnoreElementsTest {
     @Test
     public void testCompletedOkFlowable() {
         TestSubscriber<Object> ts = new TestSubscriber<Object>();
-        Flowable.range(1, 10).ignoreElements().toFlowable().subscribe(ts);
+        Flowable.range(1, 10).ignoreElements().subscribe(ts);
         ts.assertNoErrors();
         ts.assertNoValues();
         ts.assertTerminated();
@@ -73,7 +72,7 @@ public class FlowableIgnoreElementsTest {
     public void testErrorReceivedFlowable() {
         TestSubscriber<Object> ts = new TestSubscriber<Object>();
         TestException ex = new TestException("boo");
-        Flowable.error(ex).ignoreElements().toFlowable().subscribe(ts);
+        Flowable.error(ex).ignoreElements().subscribe(ts);
         ts.assertNoValues();
         ts.assertTerminated();
         // FIXME no longer testable
@@ -92,7 +91,7 @@ public class FlowableIgnoreElementsTest {
                 unsub.set(true);
             }})
             .ignoreElements()
-            .toFlowable()
+            
             .subscribe().dispose();
 
         assertTrue(unsub.get());
@@ -113,7 +112,6 @@ public class FlowableIgnoreElementsTest {
                 })
                 //
                 .ignoreElements()
-                .<Integer>toFlowable()
                 //
                 .doOnNext(new Consumer<Integer>() {
 
@@ -151,12 +149,12 @@ public class FlowableIgnoreElementsTest {
 
     @Test
     public void testWithEmpty() {
-        assertNull(Flowable.empty().ignoreElements().blockingGet());
+        assertNull(Flowable.empty().ignoreElements().blockingLast(null));
     }
 
     @Test
     public void testWithNonEmpty() {
-        assertNull(Flowable.just(1, 2, 3).ignoreElements().blockingGet());
+        assertNull(Flowable.just(1, 2, 3).ignoreElements().blockingLast(null));
     }
 
     @Test
@@ -171,14 +169,14 @@ public class FlowableIgnoreElementsTest {
                     }
                 })
                 .ignoreElements()
-                .blockingGet();
+                .blockingLast(null);
         assertEquals(num, upstreamCount.get());
         assertNull(count);
     }
 
     @Test
     public void testCompletedOk() {
-        TestObserver<Object> ts = new TestObserver<Object>();
+        TestSubscriber<Object> ts = new TestSubscriber<Object>();
         Flowable.range(1, 10).ignoreElements().subscribe(ts);
         ts.assertNoErrors();
         ts.assertNoValues();
@@ -189,7 +187,7 @@ public class FlowableIgnoreElementsTest {
 
     @Test
     public void testErrorReceived() {
-        TestObserver<Object> ts = new TestObserver<Object>();
+        TestSubscriber<Object> ts = new TestSubscriber<Object>();
         TestException ex = new TestException("boo");
         Flowable.error(ex).ignoreElements().subscribe(ts);
         ts.assertNoValues();
@@ -231,13 +229,18 @@ public class FlowableIgnoreElementsTest {
                 //
                 .ignoreElements()
                 //
-                .subscribe(new DisposableCompletableObserver() {
+                .subscribe(new DisposableSubscriber<Integer>() {
+
                     @Override
-                    public void onComplete() {
+                    public void onNext(Integer t) {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onError(Throwable t) {
+                    }
+
+                    @Override
+                    public void onComplete() {
                     }
                 });
         assertEquals(num, upstreamCount.get());
@@ -249,7 +252,7 @@ public class FlowableIgnoreElementsTest {
 
         PublishProcessor<Integer> pp = PublishProcessor.create();
 
-        TestSubscriber<Integer> ts = pp.ignoreElements().<Integer>toFlowable().test();
+        TestSubscriber<Integer> ts = pp.ignoreElements().test();
 
         assertTrue(pp.hasSubscribers());
 
@@ -262,7 +265,7 @@ public class FlowableIgnoreElementsTest {
     public void fused() {
         TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
-        Flowable.just(1).hide().ignoreElements().<Integer>toFlowable()
+        Flowable.just(1).hide().ignoreElements()
         .subscribe(ts);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
@@ -272,7 +275,7 @@ public class FlowableIgnoreElementsTest {
 
     @Test
     public void fusedAPICalls() {
-        Flowable.just(1).hide().ignoreElements().<Integer>toFlowable()
+        Flowable.just(1).hide().ignoreElements()
         .subscribe(new RelaxedSubscriber<Integer>() {
 
             @Override
@@ -282,7 +285,7 @@ public class FlowableIgnoreElementsTest {
 
                 try {
                     assertNull(qs.poll());
-                } catch (Exception ex) {
+                } catch (Throwable ex) {
                     throw new AssertionError(ex);
                 }
 
@@ -294,19 +297,12 @@ public class FlowableIgnoreElementsTest {
 
                 try {
                     assertNull(qs.poll());
-                } catch (Exception ex) {
+                } catch (Throwable ex) {
                     throw new AssertionError(ex);
                 }
 
                 try {
                     qs.offer(1);
-                    fail("Should have thrown!");
-                } catch (UnsupportedOperationException ex) {
-                    // expected
-                }
-
-                try {
-                    qs.offer(1, 2);
                     fail("Should have thrown!");
                 } catch (UnsupportedOperationException ex) {
                     // expected
@@ -329,8 +325,8 @@ public class FlowableIgnoreElementsTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.just(1).ignoreElements());
+        TestHelper.checkDisposed(Flowable.just(1).ignoreElements());
 
-        TestCommonHelper.checkDisposed(Flowable.just(1).ignoreElements().toFlowable());
+        TestHelper.checkDisposed(Flowable.just(1).ignoreElements());
     }
 }

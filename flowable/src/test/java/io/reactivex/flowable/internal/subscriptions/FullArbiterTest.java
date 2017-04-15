@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscriptions;
+package io.reactivex.flowable.internal.subscriptions;
 
 import static org.junit.Assert.*;
 
@@ -19,11 +19,10 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.util.NotificationLite;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.internal.utils.NotificationLite;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FullArbiterTest {
 

@@ -14,7 +14,7 @@ package io.reactivex.flowable.internal.operators;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
+import io.reactivex.common.TestCommonHelper;
 
 public class FlowableInternalHelperTest {
 

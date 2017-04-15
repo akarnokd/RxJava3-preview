@@ -21,13 +21,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Test;
 import org.reactivestreams.Subscription;
 
+import io.reactivex.flowable.TestHelper;
 import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
 
 public class BlockingSubscriberTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.doubleOnSubscribe(new BlockingSubscriber<Integer>(new ArrayDeque<Object>()));
+        TestHelper.doubleOnSubscribe(new BlockingSubscriber<Integer>(new ArrayDeque<Object>()));
     }
 
     @Test
@@ -47,7 +48,7 @@ public class BlockingSubscriberTest {
 
     @Test
     public void blockingFirstDoubleOnSubscribe() {
-        TestCommonHelper.doubleOnSubscribe(new BlockingFirstSubscriber<Integer>());
+        TestHelper.doubleOnSubscribe(new BlockingFirstSubscriber<Integer>());
     }
 
     @Test(timeout = 5000)

@@ -11,14 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscriptions;
+package io.reactivex.flowable.internal.subscriptions;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
 
 public class ArrayCompositeSubscriptionTest {
 

@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscriptions;
+package io.reactivex.flowable.internal.subscriptions;
 
 import static org.junit.Assert.*;
 
@@ -19,8 +19,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
 
 public class SubscriptionArbiterTest {
 

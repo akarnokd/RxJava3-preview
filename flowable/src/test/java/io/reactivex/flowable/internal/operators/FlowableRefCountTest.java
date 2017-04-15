@@ -26,15 +26,14 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.flowables.ConnectableFlowable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.processors.ReplayProcessor;
-import io.reactivex.schedulers.*;
-import io.reactivex.subscribers.TestSubscriber;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.ReplayProcessor;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableRefCountTest {
 
@@ -598,7 +597,7 @@ public class FlowableRefCountTest {
 
     @Test
     public void disposed() {
-        TestCommonHelper.checkDisposed(Flowable.just(1).publish().refCount());
+        TestHelper.checkDisposed(Flowable.just(1).publish().refCount());
     }
 
     @Test

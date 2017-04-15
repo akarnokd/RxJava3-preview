@@ -52,7 +52,7 @@ public abstract class ConnectableFlowable<T> extends Flowable<T> {
      * Instructs the {@code ConnectableObservable} to begin emitting the items from its underlying
      * {@link Flowable} to its {@link Subscriber}s.
      * <p>
-     * To disconnect from a synchronous source, use the {@link #connect(io.reactivex.functions.Consumer)} method.
+     * To disconnect from a synchronous source, use the {@link #connect(io.reactivex.common.functions.Consumer)} method.
      *
      * @return the subscription representing the connection
      * @see <a href="http://reactivex.io/documentation/operators/connect.html">ReactiveX documentation: Connect</a>

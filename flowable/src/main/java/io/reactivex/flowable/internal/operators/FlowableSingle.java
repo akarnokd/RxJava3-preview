@@ -13,6 +13,8 @@
 
 package io.reactivex.flowable.internal.operators;
 
+import java.util.NoSuchElementException;
+
 import org.reactivestreams.*;
 
 import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
@@ -24,14 +26,17 @@ public final class FlowableSingle<T> extends AbstractFlowableWithUpstream<T, T> 
 
     final T defaultValue;
 
-    public FlowableSingle(Flowable<T> source, T defaultValue) {
+    final boolean errorOnEmpty;
+
+    public FlowableSingle(Flowable<T> source, T defaultValue, boolean errorOnEmpty) {
         super(source);
         this.defaultValue = defaultValue;
+        this.errorOnEmpty = errorOnEmpty;
     }
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        source.subscribe(new SingleElementSubscriber<T>(s, defaultValue));
+        source.subscribe(new SingleElementSubscriber<T>(s, defaultValue, errorOnEmpty));
     }
 
     static final class SingleElementSubscriber<T> extends DeferredScalarSubscription<T>
@@ -41,13 +46,16 @@ public final class FlowableSingle<T> extends AbstractFlowableWithUpstream<T, T> 
 
         final T defaultValue;
 
+        final boolean errorOnEmpty;
+
         Subscription s;
 
         boolean done;
 
-        SingleElementSubscriber(Subscriber<? super T> actual, T defaultValue) {
+        SingleElementSubscriber(Subscriber<? super T> actual, T defaultValue, boolean errorOnEmpty) {
             super(actual);
             this.defaultValue = defaultValue;
+            this.errorOnEmpty = errorOnEmpty;
         }
 
         @Override
@@ -95,7 +103,11 @@ public final class FlowableSingle<T> extends AbstractFlowableWithUpstream<T, T> 
                 v = defaultValue;
             }
             if (v == null) {
-                actual.onComplete();
+                if (errorOnEmpty) {
+                    actual.onError(new NoSuchElementException());
+                } else {
+                    actual.onComplete();
+                }
             } else {
                 complete(v);
             }

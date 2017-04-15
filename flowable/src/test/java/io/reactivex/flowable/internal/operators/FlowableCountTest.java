@@ -15,50 +15,43 @@ package io.reactivex.flowable.internal.operators;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.functions.Function;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.*;
 
 public class FlowableCountTest {
     @Test
     public void simpleFlowable() {
-        Assert.assertEquals(0, Flowable.empty().count().toFlowable().blockingLast().intValue());
+        Assert.assertEquals(0, Flowable.empty().count().blockingLast().intValue());
 
-        Assert.assertEquals(1, Flowable.just(1).count().toFlowable().blockingLast().intValue());
+        Assert.assertEquals(1, Flowable.just(1).count().blockingLast().intValue());
 
-        Assert.assertEquals(10, Flowable.range(1, 10).count().toFlowable().blockingLast().intValue());
+        Assert.assertEquals(10, Flowable.range(1, 10).count().blockingLast().intValue());
 
     }
 
     @Test
     public void simple() {
-        Assert.assertEquals(0, Flowable.empty().count().blockingGet().intValue());
+        Assert.assertEquals(0, Flowable.empty().count().blockingLast().intValue());
 
-        Assert.assertEquals(1, Flowable.just(1).count().blockingGet().intValue());
+        Assert.assertEquals(1, Flowable.just(1).count().blockingLast().intValue());
 
-        Assert.assertEquals(10, Flowable.range(1, 10).count().blockingGet().intValue());
+        Assert.assertEquals(10, Flowable.range(1, 10).count().blockingLast().intValue());
 
     }
 
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.just(1).count());
+        TestHelper.checkDisposed(Flowable.just(1).count());
 
-        TestCommonHelper.checkDisposed(Flowable.just(1).count().toFlowable());
+        TestHelper.checkDisposed(Flowable.just(1).count());
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Long>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Long>>() {
             @Override
             public Flowable<Long> apply(Flowable<Object> o) throws Exception {
-                return o.count().toFlowable();
-            }
-        });
-
-        TestCommonHelper.checkDoubleOnSubscribeFlowableToSingle(new Function<Flowable<Object>, SingleSource<Long>>() {
-            @Override
-            public SingleSource<Long> apply(Flowable<Object> o) throws Exception {
                 return o.count();
             }
         });

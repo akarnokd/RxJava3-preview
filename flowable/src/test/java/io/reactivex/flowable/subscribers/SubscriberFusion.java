@@ -52,7 +52,7 @@ public enum SubscriberFusion {
      * Use this as follows:
      * <pre>
      * source
-     * .to(ObserverFusion.test(0, QueueDisposable.ANY, false))
+     * .to(ObserverFusion.test(0, FusedQueueSubscription.ANY, false))
      * .assertOf(ObserverFusion.assertFuseable());
      * </pre>
      * @param <T> the value type
@@ -114,7 +114,7 @@ public enum SubscriberFusion {
      * Use this as follows:
      * <pre>
      * source
-     * .to(ObserverFusion.test(0, QueueDisposable.ANY, false))
+     * .to(ObserverFusion.test(0, FusedQueueSubscription.ANY, false))
      * .assertOf(ObserverFusion.assertNotFuseable());
      * </pre>
      * @param <T> the value type

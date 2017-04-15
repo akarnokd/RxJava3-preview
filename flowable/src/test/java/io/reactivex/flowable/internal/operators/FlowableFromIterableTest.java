@@ -25,15 +25,14 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.util.CrashingIterable;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.common.internal.utils.CrashingIterable;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableFromIterableTest {
 
@@ -580,7 +579,7 @@ public class FlowableFromIterableTest {
 
                 try {
                     assertEquals(1, qs.poll().intValue());
-                } catch (Exception ex) {
+                } catch (Throwable ex) {
                     throw new AssertionError(ex);
                 }
 
@@ -868,12 +867,12 @@ public class FlowableFromIterableTest {
 
     @Test
     public void fusionRejected() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueDisposable.ASYNC);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ASYNC);
 
         Flowable.fromIterable(Arrays.asList(1, 2, 3))
         .subscribe(to);
 
-        SubscriberFusion.assertFusion(to, QueueDisposable.NONE)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.NONE)
         .assertResult(1, 2, 3);
     }
 

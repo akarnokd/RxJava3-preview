@@ -14,13 +14,14 @@
 package io.reactivex.flowable.internal.operators;
 
 import org.junit.*;
-import org.reactivestreams.*;
+import org.reactivestreams.Subscription;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Cancellable;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Cancellable;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableFromSourceTest {
 

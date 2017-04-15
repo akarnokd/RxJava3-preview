@@ -26,15 +26,14 @@ import org.junit.*;
 import org.mockito.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
 import io.reactivex.flowable.internal.operators.FlowableZipTest.ArgsToString;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.*;
-import io.reactivex.subscribers.*;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableCombineLatestTest {
 
@@ -1060,7 +1059,7 @@ public class FlowableCombineLatestTest {
         for (int i = 2; i < 10; i++) {
             Class<?>[] types = new Class[i + 1];
             Arrays.fill(types, Publisher.class);
-            types[i] = i == 2 ? BiFunction.class : Class.forName("io.reactivex.functions.Function" + i);
+            types[i] = i == 2 ? BiFunction.class : Class.forName("io.reactivex.common.functions.Function" + i);
 
             Method m = Flowable.class.getMethod("combineLatest", types);
 
@@ -1231,7 +1230,7 @@ public class FlowableCombineLatestTest {
 
     @Test
     public void disposed() {
-        TestCommonHelper.checkDisposed(Flowable.combineLatest(Flowable.never(), Flowable.never(), new BiFunction<Object, Object, Object>() {
+        TestHelper.checkDisposed(Flowable.combineLatest(Flowable.never(), Flowable.never(), new BiFunction<Object, Object, Object>() {
             @Override
             public Object apply(Object a, Object b) throws Exception {
                 return a;
@@ -1300,7 +1299,7 @@ public class FlowableCombineLatestTest {
                         .assertNotComplete()
                         .assertNoValues();
 
-                        for (Throwable e : TestCommonHelper.errorList(to)) {
+                        for (Throwable e : TestHelper.errorList(to)) {
                             assertTrue(e.toString(), e instanceof TestException);
                         }
 

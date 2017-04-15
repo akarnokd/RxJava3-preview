@@ -23,24 +23,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.fuseable.HasUpstreamPublisher;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.extensions.HasUpstreamPublisher;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableReduceTest {
     Subscriber<Object> observer;
 
-    SingleObserver<Object> singleObserver;
-
     @Before
     public void before() {
         observer = TestHelper.mockSubscriber();
-        singleObserver = TestCommonHelper.mockSingleObserver();
     }
 
     BiFunction<Integer, Integer, Integer> sum = new BiFunction<Integer, Integer, Integer>() {
@@ -53,7 +49,7 @@ public class FlowableReduceTest {
     @Test
     public void testAggregateAsIntSumFlowable() {
 
-        Flowable<Integer> result = Flowable.just(1, 2, 3, 4, 5).reduce(0, sum).toFlowable()
+        Flowable<Integer> result = Flowable.just(1, 2, 3, 4, 5).reduce(0, sum)
                 .map(new Function<Integer, Integer>() {
                     @Override
                     public Integer apply(Integer v) {
@@ -72,7 +68,7 @@ public class FlowableReduceTest {
     public void testAggregateAsIntSumSourceThrowsFlowable() {
         Flowable<Integer> result = Flowable.concat(Flowable.just(1, 2, 3, 4, 5),
                 Flowable.<Integer> error(new TestException()))
-                .reduce(0, sum).toFlowable().map(new Function<Integer, Integer>() {
+                .reduce(0, sum).map(new Function<Integer, Integer>() {
                     @Override
                     public Integer apply(Integer v) {
                         return v;
@@ -96,7 +92,7 @@ public class FlowableReduceTest {
         };
 
         Flowable<Integer> result = Flowable.just(1, 2, 3, 4, 5)
-                .reduce(0, sumErr).toFlowable().map(new Function<Integer, Integer>() {
+                .reduce(0, sumErr).map(new Function<Integer, Integer>() {
                     @Override
                     public Integer apply(Integer v) {
                         return v;
@@ -122,7 +118,7 @@ public class FlowableReduceTest {
         };
 
         Flowable<Integer> result = Flowable.just(1, 2, 3, 4, 5)
-                .reduce(0, sum).toFlowable().map(error);
+                .reduce(0, sum).map(error);
 
         result.subscribe(observer);
 
@@ -134,105 +130,9 @@ public class FlowableReduceTest {
     @Test
     public void testBackpressureWithInitialValueFlowable() throws InterruptedException {
         Flowable<Integer> source = Flowable.just(1, 2, 3, 4, 5, 6);
-        Flowable<Integer> reduced = source.reduce(0, sum).toFlowable();
+        Flowable<Integer> reduced = source.reduce(0, sum);
 
         Integer r = reduced.blockingFirst();
-        assertEquals(21, r.intValue());
-    }
-
-
-    @Test
-    public void testAggregateAsIntSum() {
-
-        Single<Integer> result = Flowable.just(1, 2, 3, 4, 5).reduce(0, sum)
-                .map(new Function<Integer, Integer>() {
-                    @Override
-                    public Integer apply(Integer v) {
-                        return v;
-                    }
-                });
-
-        result.subscribe(singleObserver);
-
-        verify(singleObserver).onSuccess(1 + 2 + 3 + 4 + 5);
-        verify(singleObserver, never()).onError(any(Throwable.class));
-    }
-
-    @Test
-    public void testAggregateAsIntSumSourceThrows() {
-        Single<Integer> result = Flowable.concat(Flowable.just(1, 2, 3, 4, 5),
-                Flowable.<Integer> error(new TestException()))
-                .reduce(0, sum).map(new Function<Integer, Integer>() {
-                    @Override
-                    public Integer apply(Integer v) {
-                        return v;
-                    }
-                });
-
-        result.subscribe(singleObserver);
-
-        verify(singleObserver, never()).onSuccess(any());
-        verify(singleObserver, times(1)).onError(any(TestException.class));
-    }
-
-    @Test
-    public void testAggregateAsIntSumAccumulatorThrows() {
-        BiFunction<Integer, Integer, Integer> sumErr = new BiFunction<Integer, Integer, Integer>() {
-            @Override
-            public Integer apply(Integer t1, Integer t2) {
-                throw new TestException();
-            }
-        };
-
-        Single<Integer> result = Flowable.just(1, 2, 3, 4, 5)
-                .reduce(0, sumErr).map(new Function<Integer, Integer>() {
-                    @Override
-                    public Integer apply(Integer v) {
-                        return v;
-                    }
-                });
-
-        result.subscribe(singleObserver);
-
-        verify(singleObserver, never()).onSuccess(any());
-        verify(singleObserver, times(1)).onError(any(TestException.class));
-    }
-
-    @Test
-    public void testAggregateAsIntSumResultSelectorThrows() {
-
-        Function<Integer, Integer> error = new Function<Integer, Integer>() {
-
-            @Override
-            public Integer apply(Integer t1) {
-                throw new TestException();
-            }
-        };
-
-        Single<Integer> result = Flowable.just(1, 2, 3, 4, 5)
-                .reduce(0, sum).map(error);
-
-        result.subscribe(singleObserver);
-
-        verify(singleObserver, never()).onSuccess(any());
-        verify(singleObserver, times(1)).onError(any(TestException.class));
-    }
-
-    @Test
-    public void testBackpressureWithNoInitialValue() throws InterruptedException {
-        Flowable<Integer> source = Flowable.just(1, 2, 3, 4, 5, 6);
-        Maybe<Integer> reduced = source.reduce(sum);
-
-        Integer r = reduced.blockingGet();
-        assertEquals(21, r.intValue());
-    }
-
-    @Test
-    public void testBackpressureWithInitialValue() throws InterruptedException {
-        Flowable<Integer> source = Flowable.just(1, 2, 3, 4, 5, 6);
-        Single<Integer> reduced = source.reduce(0, sum);
-
-        Integer r = reduced.blockingGet();
         assertEquals(21, r.intValue());
     }
 
@@ -257,7 +157,7 @@ public class FlowableReduceTest {
                     throw new TestException("Reducer");
                 }
             })
-            .toFlowable()
+            
             .test()
             .assertFailureAndMessage(TestException.class, "Reducer");
 
@@ -278,7 +178,7 @@ public class FlowableReduceTest {
             public Integer apply(Integer a, Integer b) throws Exception {
                 return a + b;
             }
-        }).toFlowable()
+        })
         .test();
 
         ts.assertEmpty();
@@ -292,7 +192,7 @@ public class FlowableReduceTest {
     @Test
     public void testBackpressureWithNoInitialValueObservable() throws InterruptedException {
         Flowable<Integer> source = Flowable.just(1, 2, 3, 4, 5, 6);
-        Flowable<Integer> reduced = source.reduce(sum).toFlowable();
+        Flowable<Integer> reduced = source.reduce(sum);
 
         Integer r = reduced.blockingFirst();
         assertEquals(21, r.intValue());
@@ -307,17 +207,7 @@ public class FlowableReduceTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(Flowable.range(1, 2).reduce(sum));
-    }
-
-    @Test
-    public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowableToMaybe(new Function<Flowable<Integer>, MaybeSource<Integer>>() {
-            @Override
-            public MaybeSource<Integer> apply(Flowable<Integer> f) throws Exception {
-                return f.reduce(sum);
-            }
-        });
+        TestHelper.checkDisposed(Flowable.range(1, 2).reduce(sum));
     }
 
     @Test
@@ -332,7 +222,7 @@ public class FlowableReduceTest {
     public void errorFlowable() {
         Flowable.<Integer>error(new TestException())
         .reduce(sum)
-        .toFlowable()
+        
         .test()
         .assertFailure(TestException.class);
     }
@@ -349,14 +239,14 @@ public class FlowableReduceTest {
     public void emptyFlowable() {
         Flowable.<Integer>empty()
         .reduce(sum)
-        .toFlowable()
+        
         .test()
         .assertResult();
     }
 
     @Test
     public void badSource() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.reduce(sum);
@@ -366,10 +256,10 @@ public class FlowableReduceTest {
 
     @Test
     public void badSourceFlowable() {
-        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
-                return f.reduce(sum).toFlowable();
+                return f.reduce(sum);
             }
         }, false, 1, 1, 1);
     }
@@ -410,13 +300,13 @@ public class FlowableReduceTest {
                         return l + "_" + r;
                     }
                 })
-                .doOnSuccess(new Consumer<String>() {
+                .doOnNext(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
                         count.incrementAndGet();
                         System.out.println("Completed with " + s);}
                 })
-                .toFlowable();
+                ;
             }
         }
         ).blockingLast();
@@ -447,7 +337,7 @@ public class FlowableReduceTest {
                         return l + "_" + r;
                     }
                 })
-                .toFlowable()
+                
                 .doOnNext(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {

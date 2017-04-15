@@ -19,13 +19,13 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.FusedQueueSubscription;
-import io.reactivex.processors.UnicastProcessor;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.UnicastProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableDoAfterNextTest {
 
@@ -120,7 +120,7 @@ public class FlowableDoAfterNextTest {
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
 
-        TestCommonHelper.emit(up, 1, 2, 3, 4, 5);
+        TestHelper.emit(up, 1, 2, 3, 4, 5);
 
         up
         .doAfterNext(afterNext)
@@ -217,7 +217,7 @@ public class FlowableDoAfterNextTest {
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
 
-        TestCommonHelper.emit(up, 1, 2, 3, 4, 5);
+        TestHelper.emit(up, 1, 2, 3, 4, 5);
 
         up
         .doAfterNext(afterNext)

@@ -19,9 +19,9 @@ import static org.mockito.Mockito.*;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableTakeUntilTest {
 
@@ -280,6 +280,6 @@ public class FlowableTakeUntilTest {
 
     @Test
     public void dispose() {
-        TestCommonHelper.checkDisposed(PublishProcessor.create().takeUntil(Flowable.never()));
+        TestHelper.checkDisposed(PublishProcessor.create().takeUntil(Flowable.never()));
     }
 }

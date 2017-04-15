@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
 
@@ -22,15 +22,14 @@ import java.util.concurrent.*;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.UnicastProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.common.internal.utils.*;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.UnicastProcessor;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class ParallelFlowableTest {
 
@@ -979,7 +978,7 @@ public class ParallelFlowableTest {
         .assertError(CompositeException.class)
         .assertNotComplete();
 
-        List<Throwable> errors = TestCommonHelper.errorList(ts);
+        List<Throwable> errors = TestHelper.errorList(ts);
         TestCommonHelper.assertError(errors, 0, TestException.class);
         TestCommonHelper.assertError(errors, 1, IOException.class);
     }

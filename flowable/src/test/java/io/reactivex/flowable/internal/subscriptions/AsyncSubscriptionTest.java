@@ -11,15 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscriptions;
+package io.reactivex.flowable.internal.subscriptions;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 import org.junit.Test;
 import org.reactivestreams.Subscription;
 
-import io.reactivex.disposables.Disposable;
+import io.reactivex.common.Disposable;
 
 public class AsyncSubscriptionTest {
     @Test

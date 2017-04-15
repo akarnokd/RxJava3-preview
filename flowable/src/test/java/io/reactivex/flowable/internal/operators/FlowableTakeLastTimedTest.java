@@ -13,6 +13,7 @@
 
 package io.reactivex.flowable.internal.operators;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.concurrent.TimeUnit;
@@ -21,12 +22,12 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.*;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableTakeLastTimedTest {
 
@@ -272,12 +273,12 @@ public class FlowableTakeLastTimedTest {
 
     @Test
     public void disposed() {
-        TestCommonHelper.checkDisposed(PublishProcessor.create().takeLast(1, TimeUnit.MINUTES));
+        TestHelper.checkDisposed(PublishProcessor.create().takeLast(1, TimeUnit.MINUTES));
     }
 
     @Test
     public void observeOn() {
-        Observable.range(1, 1000)
+        Flowable.range(1, 1000)
         .takeLast(1, TimeUnit.DAYS)
         .take(500)
         .observeOn(Schedulers.single(), true, 1)
@@ -324,7 +325,7 @@ public class FlowableTakeLastTimedTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
+        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
             @Override
             public Publisher<Object> apply(Flowable<Object> f) throws Exception {
                 return f.takeLast(1, TimeUnit.SECONDS);
@@ -334,6 +335,6 @@ public class FlowableTakeLastTimedTest {
 
     @Test
     public void badRequest() {
-        TestCommonHelper.assertBadRequestReported(PublishProcessor.create().takeLast(1, TimeUnit.SECONDS));
+        TestHelper.assertBadRequestReported(PublishProcessor.create().takeLast(1, TimeUnit.SECONDS));
     }
 }

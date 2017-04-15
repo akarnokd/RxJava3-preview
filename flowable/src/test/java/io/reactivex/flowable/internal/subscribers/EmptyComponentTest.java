@@ -23,7 +23,6 @@ import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
 import io.reactivex.flowable.internal.utils.EmptyComponent;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class EmptyComponentTest {
 
@@ -42,12 +41,6 @@ public class EmptyComponentTest {
 
             c.request(-10);
 
-            Disposable d = Disposables.empty();
-
-            c.onSubscribe(d);
-
-            assertTrue(d.isDisposed());
-
             BooleanSubscription s = new BooleanSubscription();
 
             c.onSubscribe(s);
@@ -61,8 +54,6 @@ public class EmptyComponentTest {
             c.onComplete();
 
             c.onError(new TestException());
-
-            c.onSuccess(2);
 
             c.cancel();
 

@@ -811,7 +811,7 @@ public class RelaxedSubscriberTest {
                 assertEquals("Plugin returned null Subscriber", ex.getMessage());
             }
         } finally {
-            RxJavaCommonPlugins.reset();
+            RxJavaFlowablePlugins.reset();
         }
     }
 

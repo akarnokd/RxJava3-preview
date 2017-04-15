@@ -20,10 +20,10 @@ import java.util.concurrent.atomic.*;
 import org.junit.*;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.*;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.processors.PublishProcessor;
 
 public class BufferUntilSubscriberTest {
 
@@ -62,7 +62,7 @@ public class BufferUntilSubscriberTest {
                         }
                     })
                     .toList()
-                    .doOnSuccess(new Consumer<List<Object>>() {
+                    .doOnNext(new Consumer<List<Object>>() {
                         @Override
                         public void accept(List<Object> integers) {
                                 counter.incrementAndGet();
