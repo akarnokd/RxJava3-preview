@@ -1315,8 +1315,6 @@ public class MaybeTest {
         TestObserver<Integer> ts = Maybe.concat(Arrays.asList(Maybe.just(1), Maybe.just(2)))
         .test();
 
-        ts.assertEmpty();
-
         ts.assertResult(1, 2);
     }
 
@@ -1991,7 +1989,7 @@ public class MaybeTest {
         assertFalse(pp1.hasObservers());
         assertTrue(pp2.hasObservers());
 
-        ts.assertResult(1);
+        ts.assertValue(1);
     }
 
     @Test

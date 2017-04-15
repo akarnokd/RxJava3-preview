@@ -20,6 +20,7 @@ import io.reactivex.common.disposables.CompositeDisposable;
 import io.reactivex.common.internal.disposables.DisposableHelper;
 import io.reactivex.common.internal.utils.AtomicThrowable;
 import io.reactivex.observable.*;
+import io.reactivex.observable.internal.queues.SpscLinkedArrayQueue;
 
 public final class CompletableMerge extends Completable {
     final ObservableSource<? extends CompletableSource> source;
@@ -52,6 +53,8 @@ public final class CompletableMerge extends Completable {
 
         final CompositeDisposable set;
 
+        final CompletableBuffer buffer;
+        
         Disposable s;
 
         CompletableMergeObserver(CompletableObserver actual, int maxConcurrency, boolean delayErrors) {
@@ -60,6 +63,7 @@ public final class CompletableMerge extends Completable {
             this.delayErrors = delayErrors;
             this.set = new CompositeDisposable();
             this.error = new AtomicThrowable();
+            this.buffer = maxConcurrency != Integer.MAX_VALUE ? new CompletableBuffer(maxConcurrency) : null;
             lazySet(1);
         }
 
@@ -67,6 +71,10 @@ public final class CompletableMerge extends Completable {
         public void dispose() {
             s.dispose();
             set.dispose();
+            CompletableBuffer b = buffer;
+            if (b != null) {
+                b.cancel();
+            }
         }
 
         @Override
@@ -85,16 +93,27 @@ public final class CompletableMerge extends Completable {
         @Override
         public void onNext(CompletableSource t) {
             getAndIncrement();
+            if (maxConcurrency == Integer.MAX_VALUE) {
+                onNextActual(t);
+            } else {
+                buffer.offer(t);
+            }
+        }
 
+        void onNextActual(CompletableSource t) {
             MergeInnerObserver inner = new MergeInnerObserver();
             set.add(inner);
             t.subscribe(inner);
         }
-
+        
         @Override
         public void onError(Throwable t) {
             if (!delayErrors) {
                 set.dispose();
+                CompletableBuffer b = buffer;
+                if (b != null) {
+                    b.cancel();
+                }
 
                 if (error.addThrowable(t)) {
                     if (getAndSet(0) > 0) {
@@ -131,6 +150,10 @@ public final class CompletableMerge extends Completable {
             if (!delayErrors) {
                 s.dispose();
                 set.dispose();
+                CompletableBuffer b = buffer;
+                if (b != null) {
+                    b.cancel();
+                }
 
                 if (error.addThrowable(t)) {
                     if (getAndSet(0) > 0) {
@@ -145,7 +168,7 @@ public final class CompletableMerge extends Completable {
                         actual.onError(error.terminate());
                     } else {
                         if (maxConcurrency != Integer.MAX_VALUE) {
-                            // FIXME proper maxConcurrency
+                            buffer.request();
                         }
                     }
                 } else {
@@ -165,7 +188,7 @@ public final class CompletableMerge extends Completable {
                 }
             } else {
                 if (maxConcurrency != Integer.MAX_VALUE) {
-                    // FIXME proper maxConcurrency
+                    buffer.request();
                 }
             }
         }
@@ -198,6 +221,80 @@ public final class CompletableMerge extends Completable {
             @Override
             public void dispose() {
                 DisposableHelper.dispose(this);
+            }
+        }
+        
+        final class CompletableBuffer extends AtomicInteger {
+
+            private static final long serialVersionUID = -6105068104477470875L;
+
+            final AtomicLong requested = new AtomicLong();
+            
+            volatile boolean cancelled;
+            
+            final SpscLinkedArrayQueue<CompletableSource> queue = 
+                    new SpscLinkedArrayQueue<CompletableSource>(Observable.bufferSize());
+
+            CompletableBuffer(int initialRequest) {
+                requested.lazySet(initialRequest);
+            }
+
+            void offer(CompletableSource t) {
+                queue.offer(t);
+                drain();
+            }
+
+            void request() {
+                requested.getAndIncrement();
+                drain();
+            }
+
+            void drain() {
+                if (getAndIncrement() == 0) {
+                    int missed = 1;
+                    for (;;) {
+                        long e = 0L;
+                        long r = requested.get();
+                        
+                        while (e != r) {
+                            if (cancelled) {
+                                queue.clear();
+                                return;
+                            }
+                            
+                            CompletableSource t = queue.poll();
+                            if (t != null) {
+                                onNextActual(t);
+                                e++;
+                            } else {
+                                break;
+                            }
+                        }
+                        
+                        if (e == r) {
+                            if (cancelled) {
+                                queue.clear();
+                                return;
+                            }
+                        }
+                        
+                        if (e != 0) {
+                            requested.addAndGet(-e);
+                        }
+
+                        missed = addAndGet(-missed);
+                        if (missed == 0) {
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            void cancel() {
+                cancelled = true;
+                if (getAndIncrement() == 0) {
+                    queue.clear();
+                }
             }
         }
     }
