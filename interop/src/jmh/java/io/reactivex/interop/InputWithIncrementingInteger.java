@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import java.util.Iterator;
 
@@ -19,8 +19,10 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.reactivestreams.*;
 
-import io.reactivex.internal.subscriptions.EmptySubscription;
-import io.reactivex.subscribers.DefaultSubscriber;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.EmptySubscription;
+import io.reactivex.flowable.subscribers.DefaultSubscriber;
 
 /**
  * Exposes an Observable and Observer that increments n Integers and consumes them in a Blackhole.
@@ -115,7 +117,7 @@ public abstract class InputWithIncrementingInteger {
         return new PerfSubscriber(bh);
     }
 
-    public FlowableSubscriber<Integer> newSubscriber() {
+    public RelaxedSubscriber<Integer> newSubscriber() {
         return new DefaultSubscriberImpl();
     }
 

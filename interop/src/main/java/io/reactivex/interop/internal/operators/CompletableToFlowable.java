@@ -11,12 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
+import io.reactivex.flowable.Flowable;
+import io.reactivex.interop.internal.consumers.SubscriberCompletableObserver;
 import io.reactivex.observable.CompletableSource;
-import io.reactivex.observable.internal.observers.SubscriberCompletableObserver;
 
 public final class CompletableToFlowable<T> extends Flowable<T> {
 

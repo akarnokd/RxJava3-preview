@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicLong;
@@ -24,8 +24,9 @@ import io.reactivex.common.exceptions.Exceptions;
 import io.reactivex.common.functions.Function;
 import io.reactivex.common.internal.disposables.DisposableHelper;
 import io.reactivex.common.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.BackpressureHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 import io.reactivex.observable.*;
 
 /**
@@ -52,7 +53,7 @@ public final class MaybeFlatMapIterableFlowable<T, R> extends Flowable<R> {
     }
 
     static final class FlatMapIterableObserver<T, R>
-    extends BasicIntQueueDisposable<R>
+    extends BasicIntFusedQueueSubscription<R>
     implements MaybeObserver<T> {
 
         private static final long serialVersionUID = -8938804753851907758L;

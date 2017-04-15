@@ -11,15 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import org.openjdk.jmh.infra.Blackhole;
 import org.reactivestreams.*;
 
-import io.reactivex.disposables.Disposable;
+import io.reactivex.common.Disposable;
+import io.reactivex.observable.*;
 
 /**
- * A multi-type synchronous consumer that doesn't implement FlowableSubscriber and
+ * A multi-type synchronous consumer that doesn't implement RelaxedSubscriber and
  * thus should be treated by Flowable as a candidate for strict interop.
  */
 public final class PerfInteropConsumer implements Subscriber<Object>, Observer<Object>,

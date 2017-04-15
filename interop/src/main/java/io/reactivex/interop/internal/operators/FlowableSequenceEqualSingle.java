@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.flowable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,9 +24,10 @@ import io.reactivex.common.functions.BiPredicate;
 import io.reactivex.common.internal.utils.AtomicThrowable;
 import io.reactivex.flowable.*;
 import io.reactivex.flowable.extensions.FuseToFlowable;
+import io.reactivex.flowable.internal.operators.FlowableSequenceEqual;
 import io.reactivex.flowable.internal.operators.FlowableSequenceEqual.*;
 import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.fuseable.*;
+import io.reactivex.observable.*;
 
 public final class FlowableSequenceEqualSingle<T> extends Single<Boolean> implements FuseToFlowable<Boolean> {
     final Publisher<? extends T> first;

@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -20,13 +20,15 @@ import java.util.concurrent.*;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.parallel.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 
 /**
  * Check that static and instance methods validate their parameters against
@@ -675,7 +677,7 @@ public class ParamValidationCheckerTest {
     }
 
     void checkClass(Class<?> clazz) {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             StringBuilder b = new StringBuilder();
             int fail = 0;
@@ -836,7 +838,7 @@ public class ParamValidationCheckerTest {
                 throw new AssertionError("Parameter validation problems: " + fail + b.toString());
             }
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -847,7 +849,7 @@ public class ParamValidationCheckerTest {
     Function3, Function4, Function5, Function6, Function7, Function8, Function9,
     FlowableOnSubscribe, ObservableOnSubscribe, SingleOnSubscribe, MaybeOnSubscribe, CompletableOnSubscribe,
     FlowableTransformer, ObservableTransformer, SingleTransformer, MaybeTransformer, CompletableTransformer,
-    Subscriber, FlowableSubscriber, Observer, SingleObserver, MaybeObserver, CompletableObserver,
+    Subscriber, RelaxedSubscriber, Observer, SingleObserver, MaybeObserver, CompletableObserver,
     FlowableOperator, ObservableOperator, SingleOperator, MaybeOperator, CompletableOperator,
     Comparator, ParallelTransformer
     {

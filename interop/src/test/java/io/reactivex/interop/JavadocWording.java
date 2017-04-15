@@ -11,14 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
+
+import static org.junit.Assert.*;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
 
-import io.reactivex.BaseTypeParser.RxMethod;
+import io.reactivex.interop.BaseTypeParser.RxMethod;
 
 /**
  * Check if the method wording is consistent with the target base type.

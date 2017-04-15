@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
@@ -20,8 +20,9 @@ import org.reactivestreams.*;
 import io.reactivex.common.*;
 import io.reactivex.common.internal.disposables.SequentialDisposable;
 import io.reactivex.common.internal.utils.AtomicThrowable;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 import io.reactivex.observable.*;
 import io.reactivex.observable.internal.utils.NotificationLite;
 

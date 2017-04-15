@@ -10,13 +10,14 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.single;
+package io.reactivex.interop.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.common.Disposable;
 import io.reactivex.common.internal.disposables.DisposableHelper;
-import io.reactivex.internal.subscriptions.DeferredScalarSubscription;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.DeferredScalarSubscription;
 import io.reactivex.observable.*;
 
 /**

@@ -11,14 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import java.util.concurrent.CountDownLatch;
 
 import org.openjdk.jmh.infra.Blackhole;
 import org.reactivestreams.Subscription;
 
-public class PerfSubscriber implements FlowableSubscriber<Object> {
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+
+public class PerfSubscriber implements RelaxedSubscriber<Object> {
 
     public CountDownLatch latch = new CountDownLatch(1);
     private final Blackhole bh;

@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +19,9 @@ import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.reactivestreams.*;
+
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.flowable.Flowable;
 
 @BenchmarkMode(Mode.Throughput)
 @Warmup(iterations = 5)
@@ -53,7 +56,7 @@ public class StrictPerf {
         source.subscribe(new ExternalConsumer(bh, cpu));
     }
 
-    static final class InternalConsumer implements FlowableSubscriber<Object> {
+    static final class InternalConsumer implements RelaxedSubscriber<Object> {
         final Blackhole bh;
 
         final int cycles;

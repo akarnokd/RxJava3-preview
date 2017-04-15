@@ -11,18 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.flowable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import java.util.NoSuchElementException;
 
 import org.reactivestreams.Subscription;
 
 import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
-import io.reactivex.common.Disposable;
-import io.reactivex.flowable.Flowable;
+import io.reactivex.common.*;
+import io.reactivex.flowable.*;
 import io.reactivex.flowable.extensions.FuseToFlowable;
+import io.reactivex.flowable.internal.operators.FlowableSingle;
 import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.observable.*;
 
 public final class FlowableSingleSingle<T> extends Single<T> implements FuseToFlowable<T> {
 
@@ -42,7 +43,7 @@ public final class FlowableSingleSingle<T> extends Single<T> implements FuseToFl
 
     @Override
     public Flowable<T> fuseToFlowable() {
-        return RxJavaPlugins.onAssembly(new FlowableSingle<T>(source, defaultValue));
+        return RxJavaFlowablePlugins.onAssembly(new FlowableSingle<T>(source, defaultValue, false));
     }
 
     static final class SingleElementSubscriber<T>

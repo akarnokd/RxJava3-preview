@@ -11,13 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import java.util.concurrent.CountDownLatch;
 
 import org.openjdk.jmh.infra.Blackhole;
 
-import io.reactivex.disposables.Disposable;
+import io.reactivex.common.Disposable;
+import io.reactivex.observable.SingleObserver;
 
 public final class LatchedSingleObserver<T> implements SingleObserver<T> {
     final CountDownLatch cdl;

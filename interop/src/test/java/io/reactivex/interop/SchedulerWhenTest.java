@@ -11,23 +11,22 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.schedulers;
+package io.reactivex.interop;
 
-import static io.reactivex.Flowable.just;
-import static io.reactivex.Flowable.merge;
+import static io.reactivex.flowable.Flowable.just;
+import static io.reactivex.flowable.Flowable.merge;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
-import io.reactivex.Completable;
-import io.reactivex.Flowable;
-import io.reactivex.Scheduler;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.schedulers.TestScheduler;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.subscribers.TestSubscriber;
+import io.reactivex.interop.internal.operators.SchedulerWhen;
+import io.reactivex.observable.Completable;
 
 public class SchedulerWhenTest {
     @Test
@@ -177,10 +176,10 @@ public class SchedulerWhenTest {
                 Flowable<Completable> workers = workerActions.map(new Function<Flowable<Completable>, Completable>() {
                     @Override
                     public Completable apply(Flowable<Completable> actions) {
-                        return Completable.concat(actions);
+                        return RxJava3Interop.concatCompletable(actions);
                     }
                 });
-                return Completable.merge(workers, 2);
+                return RxJava3Interop.mergeCompletable(workers, 2);
             }
         }, tSched);
         return sched;
@@ -193,10 +192,10 @@ public class SchedulerWhenTest {
                 Flowable<Completable> workers = workerActions.map(new Function<Flowable<Completable>, Completable>() {
                     @Override
                     public Completable apply(Flowable<Completable> actions) {
-                        return Completable.concat(actions);
+                        return RxJava3Interop.concatCompletable(actions);
                     }
                 });
-                return Completable.concat(workers.map(new Function<Completable, Completable>() {
+                return RxJava3Interop.concatCompletable(workers.map(new Function<Completable, Completable>() {
                     @Override
                     public Completable apply(Completable worker) {
                         return worker.delay(1, SECONDS, tSched);
@@ -210,10 +209,10 @@ public class SchedulerWhenTest {
     @Test(timeout = 1000)
     public void testRaceConditions() {
         Scheduler comp = Schedulers.computation();
-        Scheduler limited = comp.when(new Function<Flowable<Flowable<Completable>>, Completable>() {
+        Scheduler limited = RxJava3Interop.when(comp, new Function<Flowable<Flowable<Completable>>, Completable>() {
             @Override
             public Completable apply(Flowable<Flowable<Completable>> t) {
-                return Completable.merge(Flowable.merge(t, 10));
+                return RxJava3Interop.mergeCompletable(Flowable.merge(t, 10));
             }
         });
 

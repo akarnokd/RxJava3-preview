@@ -11,15 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
 import io.reactivex.common.*;
 import io.reactivex.common.internal.disposables.DisposableHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.observable.*;
 import io.reactivex.observable.internal.observers.ResumeSingleObserver;
 
@@ -41,7 +42,7 @@ public final class SingleDelayWithPublisher<T, U> extends Single<T> {
 
     static final class OtherSubscriber<T, U>
     extends AtomicReference<Disposable>
-    implements FlowableSubscriber<U>, Disposable {
+    implements RelaxedSubscriber<U>, Disposable {
 
 
         private static final long serialVersionUID = -8565274649390031272L;

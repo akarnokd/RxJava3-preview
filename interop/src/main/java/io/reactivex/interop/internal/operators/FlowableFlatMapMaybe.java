@@ -11,25 +11,26 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.flowable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
 import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
-import io.reactivex.common.Disposable;
+import io.reactivex.common.*;
 import io.reactivex.common.disposables.CompositeDisposable;
 import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
 import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.functions.ObjectHelper;
 import io.reactivex.common.internal.utils.AtomicThrowable;
-import io.reactivex.disposables.*;
 import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.operators.AbstractFlowableWithUpstream;
 import io.reactivex.flowable.internal.queues.SpscLinkedArrayQueue;
 import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.flowable.internal.utils.BackpressureHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.observable.*;
 
 /**
  * Maps upstream values into MaybeSources and merges their signals into one sequence.

@@ -11,13 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.*;
 
 import org.junit.Test;
+
+import io.reactivex.flowable.Flowable;
+import io.reactivex.observable.*;
 
 /**
  * Verifies that instance methods of the base reactive classes are all declared final.

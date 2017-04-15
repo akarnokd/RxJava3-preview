@@ -11,27 +11,23 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
+package io.reactivex.interop.schedulers;
 
-import io.reactivex.Flowable;
-import io.reactivex.Scheduler;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.subscribers.TestSubscriber;
-import java.util.ArrayList;
-import java.util.Arrays;
+import static org.junit.Assert.*;
+
+import java.util.*;
 import java.util.concurrent.TimeUnit;
-import org.junit.Test;
-import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import org.reactivestreams.*;
+
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class TrampolineSchedulerTest extends AbstractSchedulerTests {
 

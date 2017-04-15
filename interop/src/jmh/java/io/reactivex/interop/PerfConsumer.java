@@ -11,17 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import org.openjdk.jmh.infra.Blackhole;
 import org.reactivestreams.Subscription;
 
-import io.reactivex.disposables.Disposable;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.Disposable;
+import io.reactivex.observable.*;
 
 /**
  * A multi-type synchronous consumer.
  */
-public final class PerfConsumer implements FlowableSubscriber<Object>, Observer<Object>,
+public final class PerfConsumer implements RelaxedSubscriber<Object>, Observer<Object>,
 SingleObserver<Object>, CompletableObserver, MaybeObserver<Object> {
 
     final Blackhole bh;

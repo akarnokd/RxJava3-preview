@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.common.schedulers;
+package io.reactivex.interop.schedulers;
 
 import static org.junit.Assert.*;
 
@@ -21,10 +21,11 @@ import java.util.concurrent.atomic.*;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.functions.*;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.Scheduler;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.subscribers.*;
 
 /**
  * Base tests for schedulers that involve threads (concurrency).

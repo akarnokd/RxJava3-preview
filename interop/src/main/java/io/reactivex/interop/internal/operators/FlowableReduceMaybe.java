@@ -11,18 +11,20 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.flowable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import org.reactivestreams.*;
 
 import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
-import io.reactivex.common.Disposable;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.Exceptions;
-import io.reactivex.flowable.Flowable;
+import io.reactivex.common.functions.BiFunction;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.*;
 import io.reactivex.flowable.extensions.*;
+import io.reactivex.flowable.internal.operators.FlowableReduce;
 import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.observable.*;
 
 /**
  * Reduce a Flowable into a single value exposed as Single or signal NoSuchElementException.
@@ -49,7 +51,7 @@ implements HasUpstreamPublisher<T>, FuseToFlowable<T> {
 
     @Override
     public Flowable<T> fuseToFlowable() {
-        return RxJavaPlugins.onAssembly(new FlowableReduce<T>(source, reducer));
+        return RxJavaFlowablePlugins.onAssembly(new FlowableReduce<T>(source, reducer));
     }
 
     @Override

@@ -11,21 +11,20 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.internal.disposables.DisposableHelper;
-import io.reactivex.exceptions.*;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.observable.*;
-import io.reactivex.observable.extensions.SimpleQueue;
+import io.reactivex.observable.extensions.*;
 import io.reactivex.observable.internal.queues.*;
 
 public final class CompletableConcat extends Completable {
@@ -44,7 +43,7 @@ public final class CompletableConcat extends Completable {
 
     static final class CompletableConcatSubscriber
     extends AtomicInteger
-    implements FlowableSubscriber<CompletableSource>, Disposable {
+    implements RelaxedSubscriber<CompletableSource>, Disposable {
         private static final long serialVersionUID = 9032184911934499404L;
 
         final CompletableObserver actual;

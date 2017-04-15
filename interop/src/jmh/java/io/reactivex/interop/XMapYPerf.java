@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +20,10 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.functions.Function;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
 
 @BenchmarkMode(Mode.Throughput)
 @Warmup(iterations = 5)
@@ -116,28 +119,28 @@ public class XMapYPerf {
             }
         });
 
-        flowFlatMapSingle1 = fsource.flatMapSingle(new Function<Integer, SingleSource<Integer>>() {
+        flowFlatMapSingle1 = RxJava3Interop.flatMapSingle(fsource, new Function<Integer, SingleSource<Integer>>() {
             @Override
             public SingleSource<Integer> apply(Integer v) throws Exception {
                 return Single.just(v);
             }
         });
 
-        flowFlatMapMaybe1 = fsource.flatMapMaybe(new Function<Integer, MaybeSource<Integer>>() {
+        flowFlatMapMaybe1 = RxJava3Interop.flatMapMaybe(fsource, new Function<Integer, MaybeSource<Integer>>() {
             @Override
             public MaybeSource<Integer> apply(Integer v) throws Exception {
                 return Maybe.just(v);
             }
         });
 
-        flowFlatMapMaybe0 = fsource.flatMapMaybe(new Function<Integer, MaybeSource<Integer>>() {
+        flowFlatMapMaybe0 = RxJava3Interop.flatMapMaybe(fsource, new Function<Integer, MaybeSource<Integer>>() {
             @Override
             public MaybeSource<Integer> apply(Integer v) throws Exception {
                 return Maybe.empty();
             }
         });
 
-        flowFlatMapCompletable0 = fsource.flatMapCompletable(new Function<Integer, CompletableSource>() {
+        flowFlatMapCompletable0 = RxJava3Interop.flatMapCompletable(fsource, new Function<Integer, CompletableSource>() {
             @Override
             public CompletableSource apply(Integer v) throws Exception {
                 return Completable.complete();
@@ -159,28 +162,28 @@ public class XMapYPerf {
         });
 
 
-        flowFlatMapSingle1 = fsource.flatMapSingle(new Function<Integer, SingleSource<Integer>>() {
+        flowFlatMapSingle1 = RxJava3Interop.flatMapSingle(fsource, new Function<Integer, SingleSource<Integer>>() {
             @Override
             public SingleSource<Integer> apply(Integer v) throws Exception {
                 return Single.just(v);
             }
         });
 
-        flowFlatMapMaybe1 = fsource.flatMapMaybe(new Function<Integer, MaybeSource<Integer>>() {
+        flowFlatMapMaybe1 = RxJava3Interop.flatMapMaybe(fsource, new Function<Integer, MaybeSource<Integer>>() {
             @Override
             public MaybeSource<Integer> apply(Integer v) throws Exception {
                 return Maybe.just(v);
             }
         });
 
-        flowFlatMapMaybe0 = fsource.flatMapMaybe(new Function<Integer, MaybeSource<Integer>>() {
+        flowFlatMapMaybe0 = RxJava3Interop.flatMapMaybe(fsource, new Function<Integer, MaybeSource<Integer>>() {
             @Override
             public MaybeSource<Integer> apply(Integer v) throws Exception {
                 return Maybe.empty();
             }
         });
 
-        flowFlatMapCompletable0 = fsource.flatMapCompletable(new Function<Integer, CompletableSource>() {
+        flowFlatMapCompletable0 = RxJava3Interop.flatMapCompletable(fsource, new Function<Integer, CompletableSource>() {
             @Override
             public CompletableSource apply(Integer v) throws Exception {
                 return Completable.complete();
@@ -192,28 +195,28 @@ public class XMapYPerf {
         flowFlatMapSingleAsFlow1 = fsource.flatMap(new Function<Integer, Publisher<Integer>>() {
             @Override
             public Publisher<Integer> apply(Integer v) throws Exception {
-                return Single.just(v).toFlowable();
+                return RxJava3Interop.toFlowable(Single.just(v));
             }
         });
 
         flowFlatMapMaybeAsFlow1 = fsource.flatMap(new Function<Integer, Publisher<Integer>>() {
             @Override
             public Publisher<Integer> apply(Integer v) throws Exception {
-                return Maybe.just(v).toFlowable();
+                return RxJava3Interop.toFlowable(Maybe.just(v));
             }
         });
 
         flowFlatMapMaybeAsFlow0 = fsource.flatMap(new Function<Integer, Publisher<Integer>>() {
             @Override
             public Publisher<Integer> apply(Integer v) throws Exception {
-                return Maybe.<Integer>empty().toFlowable();
+                return RxJava3Interop.toFlowable(Maybe.<Integer>empty());
             }
         });
 
         flowFlatMapCompletableAsFlow0 = fsource.flatMap(new Function<Integer, Publisher<Integer>>() {
             @Override
             public Publisher<Integer> apply(Integer v) throws Exception {
-                return Completable.complete().<Integer>toFlowable();
+                return RxJava3Interop.toFlowable(Completable.complete());
             }
         });
 

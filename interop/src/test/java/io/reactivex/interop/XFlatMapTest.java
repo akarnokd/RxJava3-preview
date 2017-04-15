@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import static org.junit.Assert.assertTrue;
 
@@ -21,12 +21,13 @@ import java.util.concurrent.CyclicBarrier;
 import org.junit.*;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.exceptions.TestException;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.subscribers.TestSubscriber;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 
 public class XFlatMapTest {
 
@@ -48,7 +49,7 @@ public class XFlatMapTest {
 
     @Test
     public void flowableFlowable() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestSubscriber<Integer> ts = Flowable.just(1)
             .subscribeOn(Schedulers.io())
@@ -73,17 +74,17 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void flowableSingle() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
-            TestSubscriber<Integer> ts = Flowable.just(1)
+            TestSubscriber<Integer> ts = RxJava3Interop.flatMapSingle(Flowable.just(1)
             .subscribeOn(Schedulers.io())
-            .flatMapSingle(new Function<Integer, Single<Integer>>() {
+            , new Function<Integer, Single<Integer>>() {
                 @Override
                 public Single<Integer> apply(Integer v) throws Exception {
                     sleep();
@@ -104,17 +105,17 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void flowableMaybe() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
-            TestSubscriber<Integer> ts = Flowable.just(1)
+            TestSubscriber<Integer> ts = RxJava3Interop.flatMapMaybe(Flowable.just(1)
             .subscribeOn(Schedulers.io())
-            .flatMapMaybe(new Function<Integer, Maybe<Integer>>() {
+            , new Function<Integer, Maybe<Integer>>() {
                 @Override
                 public Maybe<Integer> apply(Integer v) throws Exception {
                     sleep();
@@ -135,17 +136,17 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void flowableCompletable() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
-            TestObserver<Void> ts = Flowable.just(1)
+            TestObserver<Void> ts = RxJava3Interop.flatMapCompletable(Flowable.just(1)
             .subscribeOn(Schedulers.io())
-            .flatMapCompletable(new Function<Integer, Completable>() {
+            , new Function<Integer, Completable>() {
                 @Override
                 public Completable apply(Integer v) throws Exception {
                     sleep();
@@ -166,24 +167,26 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void flowableCompletable2() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
-            TestSubscriber<Void> ts = Flowable.just(1)
+            TestSubscriber<Void> ts =
+            RxJava3Interop.<Void>toFlowable(
+            RxJava3Interop.flatMapCompletable(Flowable.just(1)
             .subscribeOn(Schedulers.io())
-            .flatMapCompletable(new Function<Integer, Completable>() {
+            , new Function<Integer, Completable>() {
                 @Override
                 public Completable apply(Integer v) throws Exception {
                     sleep();
                     return Completable.error(new TestException());
                 }
             })
-            .<Void>toFlowable()
+            )
             .test();
 
             cb.await();
@@ -198,13 +201,13 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void observableFlowable() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Integer> ts = Observable.just(1)
             .subscribeOn(Schedulers.io())
@@ -229,13 +232,13 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void observerSingle() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Integer> ts = Observable.just(1)
             .subscribeOn(Schedulers.io())
@@ -260,13 +263,13 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void observerMaybe() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Integer> ts = Observable.just(1)
             .subscribeOn(Schedulers.io())
@@ -291,13 +294,13 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void observerCompletable() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Void> ts = Observable.just(1)
             .subscribeOn(Schedulers.io())
@@ -322,13 +325,13 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void observerCompletable2() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Void> ts = Observable.just(1)
             .subscribeOn(Schedulers.io())
@@ -354,13 +357,13 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void singleSingle() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Integer> ts = Single.just(1)
             .subscribeOn(Schedulers.io())
@@ -385,13 +388,13 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void singleMaybe() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Integer> ts = Single.just(1)
             .subscribeOn(Schedulers.io())
@@ -416,13 +419,13 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void singleCompletable() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Void> ts = Single.just(1)
             .subscribeOn(Schedulers.io())
@@ -447,13 +450,13 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void singleCompletable2() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Integer> ts = Single.just(1)
             .subscribeOn(Schedulers.io())
@@ -479,13 +482,13 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void maybeSingle() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Integer> ts = Maybe.just(1)
             .subscribeOn(Schedulers.io())
@@ -510,13 +513,13 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void maybeMaybe() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Integer> ts = Maybe.just(1)
             .subscribeOn(Schedulers.io())
@@ -541,13 +544,13 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void maybeCompletable() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Void> ts = Maybe.just(1)
             .subscribeOn(Schedulers.io())
@@ -572,13 +575,13 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void maybeCompletable2() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestObserver<Void> ts = Maybe.just(1)
             .subscribeOn(Schedulers.io())
@@ -604,7 +607,7 @@ public class XFlatMapTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

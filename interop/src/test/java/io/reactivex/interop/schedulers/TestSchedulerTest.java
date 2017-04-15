@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.common.schedulers;
+package io.reactivex.interop.schedulers;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -22,11 +22,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 import org.mockito.*;
+import org.reactivestreams.*;
 
 import io.reactivex.common.*;
 import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.TestScheduler.*;
 import io.reactivex.common.functions.Function;
 import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
 
 public class TestSchedulerTest {
 

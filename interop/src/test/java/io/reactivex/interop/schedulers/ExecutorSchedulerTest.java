@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
+package io.reactivex.interop.schedulers;
 
 import static org.junit.Assert.*;
 
@@ -22,13 +22,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.EmptyDisposable;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.schedulers.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.common.internal.schedulers.*;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
 
 public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
 
@@ -336,7 +334,7 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
 
         Scheduler s = Schedulers.from(exec);
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             assertSame(EmptyDisposable.INSTANCE, s.scheduleDirect(Functions.EMPTY_RUNNABLE));
@@ -345,11 +343,11 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
 
             assertSame(EmptyDisposable.INSTANCE, s.schedulePeriodicallyDirect(Functions.EMPTY_RUNNABLE, 10, 10, TimeUnit.MILLISECONDS));
 
-            TestHelper.assertUndeliverable(errors, 0, RejectedExecutionException.class);
-            TestHelper.assertUndeliverable(errors, 1, RejectedExecutionException.class);
-            TestHelper.assertUndeliverable(errors, 2, RejectedExecutionException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, RejectedExecutionException.class);
+            TestCommonHelper.assertUndeliverable(errors, 1, RejectedExecutionException.class);
+            TestCommonHelper.assertUndeliverable(errors, 2, RejectedExecutionException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -358,7 +356,7 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
         ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
         exec.shutdown();
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Worker s = Schedulers.from(exec).createWorker();
@@ -370,11 +368,11 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
             s = Schedulers.from(exec).createWorker();
             assertSame(EmptyDisposable.INSTANCE, s.schedulePeriodically(Functions.EMPTY_RUNNABLE, 10, 10, TimeUnit.MILLISECONDS));
 
-            TestHelper.assertUndeliverable(errors, 0, RejectedExecutionException.class);
-            TestHelper.assertUndeliverable(errors, 1, RejectedExecutionException.class);
-            TestHelper.assertUndeliverable(errors, 2, RejectedExecutionException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, RejectedExecutionException.class);
+            TestCommonHelper.assertUndeliverable(errors, 1, RejectedExecutionException.class);
+            TestCommonHelper.assertUndeliverable(errors, 2, RejectedExecutionException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

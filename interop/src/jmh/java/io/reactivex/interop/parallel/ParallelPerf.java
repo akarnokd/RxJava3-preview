@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.parallel;
+package io.reactivex.interop.parallel;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -20,10 +20,10 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.*;
-import io.reactivex.flowables.GroupedFlowable;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.*;
+import io.reactivex.interop.PerfAsyncConsumer;
 
 @BenchmarkMode(Mode.Throughput)
 @Warmup(iterations = 5)

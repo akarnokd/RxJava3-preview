@@ -11,16 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.flowable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import org.reactivestreams.Subscription;
 
 import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
-import io.reactivex.common.Disposable;
-import io.reactivex.flowable.Flowable;
+import io.reactivex.common.*;
+import io.reactivex.flowable.*;
 import io.reactivex.flowable.extensions.FuseToFlowable;
+import io.reactivex.flowable.internal.operators.FlowableElementAt;
 import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.observable.*;
 
 public final class FlowableElementAtMaybe<T> extends Maybe<T> implements FuseToFlowable<T> {
     final Flowable<T> source;
@@ -39,7 +40,7 @@ public final class FlowableElementAtMaybe<T> extends Maybe<T> implements FuseToF
 
     @Override
     public Flowable<T> fuseToFlowable() {
-        return RxJavaPlugins.onAssembly(new FlowableElementAt<T>(source, index, null, false));
+        return RxJavaFlowablePlugins.onAssembly(new FlowableElementAt<T>(source, index, null, false));
     }
 
     static final class ElementAtSubscriber<T> implements RelaxedSubscriber<T>, Disposable {

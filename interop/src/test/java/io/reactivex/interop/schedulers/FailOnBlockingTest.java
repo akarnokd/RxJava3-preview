@@ -11,16 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.common.schedulers;
+package io.reactivex.interop.schedulers;
 
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.observable.*;
 
 public class FailOnBlockingTest {
 
@@ -28,7 +29,7 @@ public class FailOnBlockingTest {
     public void failComputationFlowableBlockingFirst() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Flowable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -45,7 +46,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -54,7 +55,7 @@ public class FailOnBlockingTest {
     public void failComputationFlowableBlockingLast() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Flowable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -71,7 +72,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -80,7 +81,7 @@ public class FailOnBlockingTest {
     public void failComputationFlowableBlockingIterable() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Flowable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -97,7 +98,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -106,7 +107,7 @@ public class FailOnBlockingTest {
     public void failComputationFlowableBlockingSubscribe() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Flowable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -123,7 +124,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -132,7 +133,7 @@ public class FailOnBlockingTest {
     public void failComputationFlowableBlockingSingle() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Flowable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -149,7 +150,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -158,7 +159,7 @@ public class FailOnBlockingTest {
     public void failComputationFlowableBlockingForEach() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Flowable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -175,7 +176,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -184,7 +185,7 @@ public class FailOnBlockingTest {
     public void failComputationFlowableBlockingLatest() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Flowable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -201,7 +202,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -210,7 +211,7 @@ public class FailOnBlockingTest {
     public void failComputationFlowableBlockingNext() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Flowable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -227,7 +228,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -236,7 +237,7 @@ public class FailOnBlockingTest {
     public void failComputationFlowableToFuture() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Flowable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -253,7 +254,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -262,7 +263,7 @@ public class FailOnBlockingTest {
     public void failComputationObservableBlockingFirst() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Observable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -279,7 +280,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -288,7 +289,7 @@ public class FailOnBlockingTest {
     public void failComputationObservableBlockingLast() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Observable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -305,7 +306,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -314,7 +315,7 @@ public class FailOnBlockingTest {
     public void failComputationObservableBlockingIterable() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Observable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -331,7 +332,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -340,7 +341,7 @@ public class FailOnBlockingTest {
     public void failComputationObservableBlockingSubscribe() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Observable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -357,7 +358,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -366,7 +367,7 @@ public class FailOnBlockingTest {
     public void failComputationObservableBlockingSingle() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Observable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -383,7 +384,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -392,7 +393,7 @@ public class FailOnBlockingTest {
     public void failComputationObservableBlockingForEach() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Observable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -409,7 +410,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -418,7 +419,7 @@ public class FailOnBlockingTest {
     public void failComputationObservableBlockingLatest() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Observable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -435,7 +436,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -444,7 +445,7 @@ public class FailOnBlockingTest {
     public void failComputationObservableBlockingNext() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Observable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -461,7 +462,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -470,7 +471,7 @@ public class FailOnBlockingTest {
     public void failComputationObservableToFuture() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Observable.just(1)
             .subscribeOn(Schedulers.computation())
@@ -487,7 +488,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -496,7 +497,7 @@ public class FailOnBlockingTest {
     public void failSingleObservableBlockingFirst() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Observable.just(1)
             .subscribeOn(Schedulers.single())
@@ -513,7 +514,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -522,7 +523,7 @@ public class FailOnBlockingTest {
     public void failSingleSingleBlockingGet() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Single.just(1)
             .subscribeOn(Schedulers.single())
@@ -539,7 +540,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -548,7 +549,7 @@ public class FailOnBlockingTest {
     public void failSingleMaybeBlockingGet() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Maybe.just(1)
             .subscribeOn(Schedulers.single())
@@ -565,7 +566,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -574,7 +575,7 @@ public class FailOnBlockingTest {
     public void failSingleCompletableBlockingGet() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Completable.complete()
             .subscribeOn(Schedulers.single())
@@ -588,7 +589,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -597,7 +598,7 @@ public class FailOnBlockingTest {
     public void failSingleCompletableBlockingAwait() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Completable.complete()
             .subscribeOn(Schedulers.single())
@@ -611,7 +612,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertFailure(IllegalStateException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -620,7 +621,7 @@ public class FailOnBlockingTest {
     public void dontfailIOObservableBlockingFirst() {
 
         try {
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Observable.just(1)
             .subscribeOn(Schedulers.io())
@@ -634,7 +635,7 @@ public class FailOnBlockingTest {
             .awaitDone(5, TimeUnit.SECONDS)
             .assertResult(2);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -642,13 +643,13 @@ public class FailOnBlockingTest {
     @Test
     public void failWithCustomHandler() {
         try {
-            RxJavaPlugins.setOnBeforeBlocking(new BooleanSupplier() {
+            RxJavaCommonPlugins.setOnBeforeBlocking(new BooleanSupplier() {
                 @Override
                 public boolean getAsBoolean() throws Exception {
                     return true;
                 }
             });
-            RxJavaPlugins.setFailOnNonBlockingScheduler(true);
+            RxJavaCommonPlugins.setFailOnNonBlockingScheduler(true);
 
             Flowable.just(1)
             .map(new Function<Integer, Integer>() {
@@ -665,7 +666,7 @@ public class FailOnBlockingTest {
             .assertFailure(IllegalStateException.class);
 
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
         Flowable.just(1)

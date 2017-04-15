@@ -22,11 +22,11 @@ import io.reactivex.observable.extensions.HasUpstreamMaybeSource;
  * @param <T> the source value type
  * @param <R> the output value type
  */
-abstract class AbstractMaybeWithUpstream<T, R> extends Maybe<R> implements HasUpstreamMaybeSource<T> {
+public abstract class AbstractMaybeWithUpstream<T, R> extends Maybe<R> implements HasUpstreamMaybeSource<T> {
 
     protected final MaybeSource<T> source;
 
-    AbstractMaybeWithUpstream(MaybeSource<T> source) {
+    public AbstractMaybeWithUpstream(MaybeSource<T> source) {
         this.source = source;
     }
 

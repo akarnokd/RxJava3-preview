@@ -11,13 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
 import io.reactivex.common.Disposable;
 import io.reactivex.common.internal.disposables.DisposableHelper;
-import io.reactivex.internal.subscriptions.DeferredScalarSubscription;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.DeferredScalarSubscription;
 import io.reactivex.observable.*;
 import io.reactivex.observable.extensions.HasUpstreamMaybeSource;
 
@@ -42,17 +43,17 @@ public final class MaybeToFlowable<T> extends Flowable<T> implements HasUpstream
 
     @Override
     protected void subscribeActual(Subscriber<? super T> s) {
-        source.subscribe(new MaybeToFlowableSubscriber<T>(s));
+        source.subscribe(new MaybeToRelaxedSubscriber<T>(s));
     }
 
-    static final class MaybeToFlowableSubscriber<T> extends DeferredScalarSubscription<T>
+    static final class MaybeToRelaxedSubscriber<T> extends DeferredScalarSubscription<T>
     implements MaybeObserver<T> {
 
         private static final long serialVersionUID = 7603343402964826922L;
 
         Disposable d;
 
-        MaybeToFlowableSubscriber(Subscriber<? super T> actual) {
+        MaybeToRelaxedSubscriber(Subscriber<? super T> actual) {
             super(actual);
         }
 

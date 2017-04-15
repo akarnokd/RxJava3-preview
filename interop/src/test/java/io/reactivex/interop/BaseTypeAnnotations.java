@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import static org.junit.Assert.fail;
 
@@ -20,7 +20,10 @@ import java.lang.reflect.*;
 import org.junit.Test;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.annotations.*;
+import io.reactivex.common.Scheduler;
+import io.reactivex.common.annotations.*;
+import io.reactivex.flowable.*;
+import io.reactivex.observable.*;
 
 /**
  * Verifies several properties.

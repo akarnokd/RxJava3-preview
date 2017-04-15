@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.schedulers;
+package io.reactivex.interop.schedulers;
 
 import static org.junit.Assert.*;
 
@@ -19,10 +19,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.*;
 
-import io.reactivex.Scheduler;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.schedulers.NewThreadWorker;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.internal.schedulers.NewThreadWorker;
 
 public class NewThreadSchedulerTest extends AbstractSchedulerConcurrencyTests {
 

@@ -10,12 +10,13 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.observable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import org.reactivestreams.*;
 
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
 import io.reactivex.common.Disposable;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.observable.*;
 
 public final class ObservableFromPublisher<T> extends Observable<T> {
@@ -32,7 +33,7 @@ public final class ObservableFromPublisher<T> extends Observable<T> {
     }
 
     static final class PublisherSubscriber<T>
-    implements FlowableSubscriber<T>, Disposable {
+    implements RelaxedSubscriber<T>, Disposable {
 
         final Observer<? super T> actual;
         Subscription s;

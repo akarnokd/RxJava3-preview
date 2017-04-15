@@ -11,17 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
 import io.reactivex.common.Disposable;
 import io.reactivex.common.exceptions.CompositeException;
 import io.reactivex.common.internal.disposables.DisposableHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.observable.*;
+import io.reactivex.observable.internal.operators.AbstractMaybeWithUpstream;
 
 /**
  * Delay the emission of the main signal until the other signals an item or completes.
@@ -104,7 +106,7 @@ public final class MaybeDelayOtherPublisher<T, U> extends AbstractMaybeWithUpstr
 
     static final class OtherSubscriber<T> extends
     AtomicReference<Subscription>
-    implements FlowableSubscriber<Object> {
+    implements RelaxedSubscriber<Object> {
 
         private static final long serialVersionUID = -1215060610805418006L;
 

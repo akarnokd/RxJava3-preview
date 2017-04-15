@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.flowable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import java.util.NoSuchElementException;
 
@@ -20,6 +20,7 @@ import org.reactivestreams.*;
 import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
 import io.reactivex.common.Disposable;
 import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.observable.*;
 
 /**
  * Consumes the source Publisher and emits its last item or the defaultItem

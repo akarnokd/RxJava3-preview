@@ -50,14 +50,14 @@ public final class FlowableSequenceEqual<T> extends Flowable<Boolean> {
     /**
      * Provides callbacks for the EqualSubscribers.
      */
-    interface EqualCoordinatorHelper {
+    public interface EqualCoordinatorHelper {
 
         void drain();
 
         void innerError(Throwable ex);
     }
 
-    static final class EqualCoordinator<T> extends DeferredScalarSubscription<Boolean>
+    public static final class EqualCoordinator<T> extends DeferredScalarSubscription<Boolean>
     implements EqualCoordinatorHelper {
 
         private static final long serialVersionUID = -6178010334400373240L;
@@ -76,7 +76,7 @@ public final class FlowableSequenceEqual<T> extends Flowable<Boolean> {
 
         T v2;
 
-        EqualCoordinator(Subscriber<? super Boolean> actual, int prefetch, BiPredicate<? super T, ? super T> comparer) {
+        public EqualCoordinator(Subscriber<? super Boolean> actual, int prefetch, BiPredicate<? super T, ? super T> comparer) {
             super(actual);
             this.comparer = comparer;
             this.wip = new AtomicInteger();
@@ -242,7 +242,7 @@ public final class FlowableSequenceEqual<T> extends Flowable<Boolean> {
         }
     }
 
-    static final class EqualSubscriber<T>
+    public static final class EqualSubscriber<T>
     extends AtomicReference<Subscription>
     implements RelaxedSubscriber<T> {
 
@@ -256,13 +256,13 @@ public final class FlowableSequenceEqual<T> extends Flowable<Boolean> {
 
         long produced;
 
-        volatile FusedQueue<T> queue;
+        public volatile FusedQueue<T> queue;
 
-        volatile boolean done;
+        public volatile boolean done;
 
         int sourceMode;
 
-        EqualSubscriber(EqualCoordinatorHelper parent, int prefetch) {
+        public EqualSubscriber(EqualCoordinatorHelper parent, int prefetch) {
             this.parent = parent;
             this.limit = prefetch - (prefetch >> 2);
             this.prefetch = prefetch;
@@ -335,7 +335,7 @@ public final class FlowableSequenceEqual<T> extends Flowable<Boolean> {
             SubscriptionHelper.cancel(this);
         }
 
-        void clear() {
+        public void clear() {
             FusedQueue<T> sq = queue;
             if (sq != null) {
                 sq.clear();

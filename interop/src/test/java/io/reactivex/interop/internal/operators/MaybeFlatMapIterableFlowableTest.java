@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import static org.junit.Assert.*;
 
@@ -299,7 +299,7 @@ public class MaybeFlatMapIterableFlowableTest {
                     public Iterable<Integer> apply(Object v) throws Exception {
                         return Arrays.asList(1, 2, 3);
                     }
-        }).subscribe(new FlowableSubscriber<Integer>() {
+        }).subscribe(new RelaxedSubscriber<Integer>() {
             QueueDisposable<Integer> qd;
             @SuppressWarnings("unchecked")
             @Override

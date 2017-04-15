@@ -22,7 +22,7 @@ import io.reactivex.observable.extensions.HasUpstreamObservableSource;
  * @param <T> the input source type
  * @param <U> the output type
  */
-abstract class AbstractObservableWithUpstream<T, U> extends Observable<U> implements HasUpstreamObservableSource<T> {
+public abstract class AbstractObservableWithUpstream<T, U> extends Observable<U> implements HasUpstreamObservableSource<T> {
 
     /** The source consumable Observable. */
     protected final ObservableSource<T> source;
@@ -31,7 +31,7 @@ abstract class AbstractObservableWithUpstream<T, U> extends Observable<U> implem
      * Constructs the ObservableSource with the given consumable.
      * @param source the consumable Observable
      */
-    AbstractObservableWithUpstream(ObservableSource<T> source) {
+    public AbstractObservableWithUpstream(ObservableSource<T> source) {
         this.source = source;
     }
 

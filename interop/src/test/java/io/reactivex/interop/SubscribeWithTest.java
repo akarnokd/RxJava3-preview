@@ -11,15 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal;
+package io.reactivex.interop;
+
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.TestObserver;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.Disposable;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.subscribers.TestSubscriber;
+import io.reactivex.observable.*;
+import io.reactivex.observable.observers.TestObserver;
 
 public class SubscribeWithTest {
 

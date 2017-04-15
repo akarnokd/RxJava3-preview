@@ -11,14 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.flowable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import org.reactivestreams.*;
 
 import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
 import io.reactivex.common.Disposable;
 import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.BiFunction;
+import io.reactivex.common.internal.functions.ObjectHelper;
 import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.observable.*;
 
 /**
  * Reduce a sequence of values, starting from a seed value and by using

@@ -11,16 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
 import io.reactivex.common.*;
 import io.reactivex.common.internal.disposables.DisposableHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.observable.*;
+import io.reactivex.observable.internal.operators.AbstractMaybeWithUpstream;
 
 /**
  * Relays the main source's event unless the other Publisher signals an item first or just completes
@@ -119,7 +121,7 @@ public final class MaybeTakeUntilPublisher<T, U> extends AbstractMaybeWithUpstre
         }
 
         static final class TakeUntilOtherMaybeObserver<U>
-        extends AtomicReference<Subscription> implements FlowableSubscriber<U> {
+        extends AtomicReference<Subscription> implements RelaxedSubscriber<U> {
 
             private static final long serialVersionUID = -1266041316834525931L;
 

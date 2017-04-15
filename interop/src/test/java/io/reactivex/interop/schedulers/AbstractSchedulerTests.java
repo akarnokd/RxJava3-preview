@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.common.schedulers;
+package io.reactivex.interop.schedulers;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -29,9 +29,10 @@ import org.reactivestreams.*;
 import io.reactivex.common.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.schedulers.TrampolineScheduler;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.subscribers.DefaultSubscriber;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.subscribers.DefaultSubscriber;
+import io.reactivex.interop.RxJava3Interop;
 
 /**
  * Base tests for all schedulers including Immediate/Current.
@@ -124,7 +125,7 @@ public abstract class AbstractSchedulerTests {
 
         });
 
-        List<String> strings = m.toList().blockingGet();
+        List<String> strings = RxJava3Interop.toList(m).blockingGet();
 
         assertEquals(4, strings.size());
         // because flatMap does a merge there is no guarantee of order

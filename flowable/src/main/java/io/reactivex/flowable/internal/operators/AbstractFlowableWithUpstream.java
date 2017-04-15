@@ -26,7 +26,7 @@ import io.reactivex.flowable.extensions.HasUpstreamPublisher;
  * @param <T> the upstream value type
  * @param <R> the output value type
  */
-abstract class AbstractFlowableWithUpstream<T, R> extends Flowable<R> implements HasUpstreamPublisher<T> {
+public abstract class AbstractFlowableWithUpstream<T, R> extends Flowable<R> implements HasUpstreamPublisher<T> {
 
     /**
      * The upstream source Publisher.
@@ -38,7 +38,7 @@ abstract class AbstractFlowableWithUpstream<T, R> extends Flowable<R> implements
      * source Publisher.
      * @param source the source (upstream) Publisher instance, not null (verified)
      */
-    AbstractFlowableWithUpstream(Flowable<T> source) {
+    public AbstractFlowableWithUpstream(Flowable<T> source) {
         this.source = ObjectHelper.requireNonNull(source, "source is null");
     }
 

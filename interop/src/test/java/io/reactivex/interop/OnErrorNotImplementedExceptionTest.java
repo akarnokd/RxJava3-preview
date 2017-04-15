@@ -11,16 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.common.exceptions;
+package io.reactivex.interop;
 
 import static org.junit.Assert.*;
 
-import java.util.*;
+import java.util.List;
 
 import org.junit.*;
 
 import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
 import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.observable.*;
 
 public class OnErrorNotImplementedExceptionTest {
 
@@ -28,15 +31,15 @@ public class OnErrorNotImplementedExceptionTest {
 
     @Before
     public void before() {
-       errors = TestHelper.trackPluginErrors();
+       errors = TestCommonHelper.trackPluginErrors();
     }
 
     @After
     public void after() {
-        RxJavaPlugins.reset();
+        RxJavaCommonPlugins.reset();
 
         assertFalse("" + errors, errors.isEmpty());
-        TestHelper.assertError(errors, 0, OnErrorNotImplementedException.class);
+        TestCommonHelper.assertError(errors, 0, OnErrorNotImplementedException.class);
         Throwable c = errors.get(0).getCause();
         assertTrue("" + c, c instanceof TestException);
     }

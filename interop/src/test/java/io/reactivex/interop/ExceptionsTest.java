@@ -13,47 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.reactivex.common.exceptions;
+package io.reactivex.interop;
 
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.*;
-import org.reactivestreams.*;
+import org.reactivestreams.Subscription;
 
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
 import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.utils.ExceptionHelper;
-import io.reactivex.functions.*;
-import io.reactivex.observables.GroupedObservable;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.observable.*;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class ExceptionsTest {
 
     @Ignore("Exceptions is not an enum")
     @Test
     public void constructorShouldBePrivate() {
-        TestHelper.checkUtilityClass(ExceptionHelper.class);
+        TestCommonHelper.checkUtilityClass(ExceptionHelper.class);
     }
 
     @Test
     public void testOnErrorNotImplementedIsThrown() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
+        try {
+            Observable.just(1, 2, 3).subscribe(new Consumer<Integer>() {
 
-        Observable.just(1, 2, 3).subscribe(new Consumer<Integer>() {
+                @Override
+                public void accept(Integer t1) {
+                    throw new RuntimeException("hello");
+                }
 
-            @Override
-            public void accept(Integer t1) {
-                throw new RuntimeException("hello");
-            }
+            });
 
-        });
-
-        TestHelper.assertError(errors, 0, RuntimeException.class, "hello");
-        RxJavaPlugins.reset();
+            TestCommonHelper.assertError(errors, 0, RuntimeException.class, "hello");
+        } finally {
+            RxJavaCommonPlugins.reset();
+        }
     }
 
     /**
@@ -382,12 +385,12 @@ public class ExceptionsTest {
         Single.unsafeCreate(new SingleSource<Integer>() {
                           @Override
                           public void subscribe(final SingleObserver<? super Integer> s1) {
-                              Single.unsafeCreate(new SingleSource<Integer>() {
+                              RxJava3Interop.toFlowable(Single.unsafeCreate(new SingleSource<Integer>() {
                                   @Override
                                   public void subscribe(SingleObserver<? super Integer> s2) {
                                       throw new IllegalArgumentException("original exception");
                                   }
-                              }).toFlowable().subscribe(new FlowableSubscriber<Integer>() {
+                              })).subscribe(new RelaxedSubscriber<Integer>() {
 
                                   @Override
                                   public void onSubscribe(Subscription s) {
@@ -437,7 +440,7 @@ public class ExceptionsTest {
 
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(Exceptions.class);
+        TestCommonHelper.checkUtilityClass(Exceptions.class);
     }
 
     @Test

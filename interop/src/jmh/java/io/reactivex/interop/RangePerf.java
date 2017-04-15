@@ -11,16 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import java.util.concurrent.TimeUnit;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
-import io.reactivex.Flowable;
-import io.reactivex.internal.schedulers.SingleScheduler;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.internal.schedulers.SingleScheduler;
+import io.reactivex.flowable.Flowable;
 
 @BenchmarkMode(Mode.Throughput)
 @Warmup(iterations = 5)

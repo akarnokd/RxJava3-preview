@@ -4016,7 +4016,7 @@ public class CompletableTest {
     public void safeOnCompleteThrowsRegularSubscriber() {
         /*
         try {
-            normal.completable.subscribe(new FlowableSubscriber<Object>() {
+            normal.completable.subscribe(new RelaxedSubscriber<Object>() {
 
                 @Override
                 public void onComplete() {
@@ -4048,7 +4048,7 @@ public class CompletableTest {
     public void safeOnErrorThrowsRegularSubscriber() {
         /*
         try {
-            error.completable.subscribe(new FlowableSubscriber<Object>() {
+            error.completable.subscribe(new RelaxedSubscriber<Object>() {
 
                 @Override
                 public void onComplete() {

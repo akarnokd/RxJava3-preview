@@ -11,19 +11,21 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
 
 import org.openjdk.jmh.infra.Blackhole;
-import org.reactivestreams.*;
+import org.reactivestreams.Subscription;
 
-import io.reactivex.disposables.Disposable;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.Disposable;
+import io.reactivex.observable.*;
 
 /**
  * A multi-type asynchronous consumer.
  */
-public final class PerfAsyncConsumer extends CountDownLatch implements FlowableSubscriber<Object>, Observer<Object>,
+public final class PerfAsyncConsumer extends CountDownLatch implements RelaxedSubscriber<Object>, Observer<Object>,
 SingleObserver<Object>, CompletableObserver, MaybeObserver<Object> {
 
     final Blackhole bh;

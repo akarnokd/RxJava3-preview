@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +19,9 @@ import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
-import io.reactivex.functions.BiFunction;
+import io.reactivex.common.functions.BiFunction;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.observable.*;
 
 @BenchmarkMode(Mode.Throughput)
 @Warmup(iterations = 5)
@@ -53,9 +55,9 @@ public class ReducePerf implements BiFunction<Integer, Integer, Integer> {
 
         obsMaybe = Observable.fromArray(array).reduce(this);
 
-        flowSingle = Flowable.fromArray(array).reduce(0, this);
+        flowSingle = RxJava3Interop.reduce(Flowable.fromArray(array), 0, this);
 
-        flowMaybe = Flowable.fromArray(array).reduce(this);
+        flowMaybe = RxJava3Interop.reduce(Flowable.fromArray(array), this);
     }
 
     @Benchmark

@@ -11,15 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.single;
+package io.reactivex.interop.internal.operators;
 
 import java.util.NoSuchElementException;
 
 import org.reactivestreams.*;
 
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
 import io.reactivex.common.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.observable.SingleObserver;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.observable.*;
 
 public final class SingleFromPublisher<T> extends Single<T> {
 
@@ -34,7 +35,7 @@ public final class SingleFromPublisher<T> extends Single<T> {
         publisher.subscribe(new ToSingleObserver<T>(s));
     }
 
-    static final class ToSingleObserver<T> implements FlowableSubscriber<T>, Disposable {
+    static final class ToSingleObserver<T> implements RelaxedSubscriber<T>, Disposable {
         final SingleObserver<? super T> actual;
 
         Subscription s;

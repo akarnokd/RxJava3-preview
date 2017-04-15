@@ -13,25 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.reactivex.common.internal.schedulers;
+package io.reactivex.interop.internal.operators;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.*;
 
-import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.annotations.Experimental;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.processors.FlowableProcessor;
-import io.reactivex.processors.UnicastProcessor;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.processors.*;
+import io.reactivex.observable.*;
 
 /**
  * Allows the use of operators for controlling the timing around when actions
@@ -52,7 +45,7 @@ import io.reactivex.processors.UnicastProcessor;
  * Finally the actions scheduled on the parent {@link Scheduler} when the inner
  * most {@link Completable}s are subscribed to.
  * <p>
- * When the {@link io.reactivex.Scheduler.Worker Worker} is unsubscribed the {@link Completable} emits an
+ * When the {@link io.reactivex.common.Scheduler.Worker Worker} is unsubscribed the {@link Completable} emits an
  * onComplete and triggers any behavior in the flattening operator. The
  * {@link Observable} and all {@link Completable}s give to the flattening
  * function never onError.
@@ -70,11 +63,11 @@ import io.reactivex.processors.UnicastProcessor;
  * <p>
  * This is a slightly different way to limit the concurrency but it has some
  * interesting benefits and drawbacks to the method above. It works by limited
- * the number of concurrent {@link io.reactivex.Scheduler.Worker Worker}s rather than individual actions.
- * Generally each {@link Observable} uses its own {@link io.reactivex.Scheduler.Worker Worker}. This means
+ * the number of concurrent {@link io.reactivex.common.Scheduler.Worker Worker}s rather than individual actions.
+ * Generally each {@link Observable} uses its own {@link io.reactivex.common.Scheduler.Worker Worker}. This means
  * that this will essentially limit the number of concurrent subscribes. The
  * danger comes from using operators like
- * {@link Flowable#zip(org.reactivestreams.Publisher, org.reactivestreams.Publisher, io.reactivex.functions.BiFunction)} where
+ * {@link Flowable#zip(org.reactivestreams.Publisher, org.reactivestreams.Publisher, io.reactivex.common.functions.BiFunction)} where
  * subscribing to the first {@link Observable} could deadlock the subscription
  * to the second.
  * 

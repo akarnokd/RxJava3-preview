@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -19,7 +19,9 @@ import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.*;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.functions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.observable.*;
 
 @BenchmarkMode(Mode.Throughput)
 @Warmup(iterations = 5)
@@ -53,12 +55,12 @@ public class ToFlowablePerf {
             }
         };
 
-        flowable = source.reduce(second);
+        flowable = RxJava3Interop.reduce(source, second);
 
         flowableInner = source.concatMap(new Function<Integer, Publisher<Integer>>() {
             @Override
             public Publisher<Integer> apply(Integer v) throws Exception {
-                return Flowable.range(1, 50).reduce(second).toFlowable();
+                return Flowable.range(1, 50).reduce(second);
             }
         });
 

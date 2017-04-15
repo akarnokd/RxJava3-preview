@@ -11,13 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.observable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import org.reactivestreams.*;
 
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
 import io.reactivex.common.Disposable;
-import io.reactivex.disposables.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.observable.*;
 
 public final class CompletableFromPublisher<T> extends Completable {
@@ -33,7 +33,7 @@ public final class CompletableFromPublisher<T> extends Completable {
         flowable.subscribe(new FromPublisherSubscriber<T>(cs));
     }
 
-    static final class FromPublisherSubscriber<T> implements FlowableSubscriber<T>, Disposable {
+    static final class FromPublisherSubscriber<T> implements RelaxedSubscriber<T>, Disposable {
 
         final CompletableObserver cs;
 

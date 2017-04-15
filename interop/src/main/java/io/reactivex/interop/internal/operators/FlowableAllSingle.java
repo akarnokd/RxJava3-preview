@@ -10,7 +10,7 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.flowable.internal.operators;
+package io.reactivex.interop.internal.operators;
 
 import org.reactivestreams.Subscription;
 
@@ -18,10 +18,11 @@ import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.Exceptions;
 import io.reactivex.common.functions.Predicate;
-import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.*;
 import io.reactivex.flowable.extensions.FuseToFlowable;
+import io.reactivex.flowable.internal.operators.FlowableAll;
 import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.observable.*;
 
 public final class FlowableAllSingle<T> extends Single<Boolean> implements FuseToFlowable<Boolean> {
 
@@ -41,7 +42,7 @@ public final class FlowableAllSingle<T> extends Single<Boolean> implements FuseT
 
     @Override
     public Flowable<Boolean> fuseToFlowable() {
-        return RxJavaPlugins.onAssembly(new FlowableAll<T>(source, predicate));
+        return RxJavaFlowablePlugins.onAssembly(new FlowableAll<T>(source, predicate));
     }
 
     static final class AllSubscriber<T> implements RelaxedSubscriber<T>, Disposable {

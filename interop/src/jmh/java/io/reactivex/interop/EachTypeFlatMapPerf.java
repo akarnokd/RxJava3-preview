@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.interop;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +19,9 @@ import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.functions.Function;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.observable.*;
 
 @BenchmarkMode(Mode.Throughput)
 @Warmup(iterations = 5)
