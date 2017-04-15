@@ -11,17 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.Callable;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscribers.SinglePostCompleteSubscriber;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscribers.SinglePostCompleteSubscriber;
 
 public final class FlowableMapNotification<T, R> extends AbstractFlowableWithUpstream<T, R> {
 

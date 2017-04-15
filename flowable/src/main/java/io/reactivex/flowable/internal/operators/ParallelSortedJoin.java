@@ -11,19 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 /**
  * Given sorted rail sequences (according to the provided comparator) as List
@@ -131,7 +131,7 @@ public final class ParallelSortedJoin<T> extends Flowable<T> {
                 drain();
             } else {
                 if (e != error.get()) {
-                    RxJavaPlugins.onError(e);
+                    RxJavaCommonPlugins.onError(e);
                 }
             }
         }
@@ -189,7 +189,7 @@ public final class ParallelSortedJoin<T> extends Flowable<T> {
                                     cancelAll();
                                     Arrays.fill(lists, null);
                                     if (!error.compareAndSet(null, exc)) {
-                                        RxJavaPlugins.onError(exc);
+                                        RxJavaCommonPlugins.onError(exc);
                                     }
                                     a.onError(error.get());
                                     return;
@@ -264,7 +264,7 @@ public final class ParallelSortedJoin<T> extends Flowable<T> {
 
     static final class SortedJoinInnerSubscriber<T>
     extends AtomicReference<Subscription>
-    implements FlowableSubscriber<List<T>> {
+    implements RelaxedSubscriber<List<T>> {
 
 
         private static final long serialVersionUID = 6751017204873808094L;

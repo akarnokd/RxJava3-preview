@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.mockito.Mockito.*;
 

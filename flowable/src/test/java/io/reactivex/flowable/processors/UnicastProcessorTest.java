@@ -17,7 +17,7 @@ import io.reactivex.Observable;
 import io.reactivex.TestHelper;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.internal.fuseable.FusedQueueSubscription;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
@@ -41,13 +41,13 @@ public class UnicastProcessorTest extends DelayedFlowableProcessorTest<Object> {
     public void fusionLive() {
         UnicastProcessor<Integer> ap = UnicastProcessor.create();
 
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         ap.subscribe(ts);
 
         ts
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC));
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC));
 
         ts.assertNoValues().assertNoErrors().assertNotComplete();
 
@@ -66,13 +66,13 @@ public class UnicastProcessorTest extends DelayedFlowableProcessorTest<Object> {
         ap.onNext(1);
         ap.onComplete();
 
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         ap.subscribe(ts);
 
         ts
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .assertResult(1);
     }
 
@@ -97,7 +97,7 @@ public class UnicastProcessorTest extends DelayedFlowableProcessorTest<Object> {
         ap.onNext(1);
         ap.onError(new RuntimeException());
 
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         ap.subscribe(ts);
         ts
@@ -265,11 +265,11 @@ public class UnicastProcessorTest extends DelayedFlowableProcessorTest<Object> {
     public void rejectSyncFusion() {
         UnicastProcessor<Object> p = UnicastProcessor.create();
 
-        TestSubscriber<Object> ts = SubscriberFusion.newTest(QueueSubscription.SYNC);
+        TestSubscriber<Object> ts = SubscriberFusion.newTest(FusedQueueSubscription.SYNC);
 
         p.subscribe(ts);
 
-        SubscriberFusion.assertFusion(ts, QueueSubscription.NONE);
+        SubscriberFusion.assertFusion(ts, FusedQueueSubscription.NONE);
     }
 
     @Test
@@ -299,7 +299,7 @@ public class UnicastProcessorTest extends DelayedFlowableProcessorTest<Object> {
         for (int i = 0; i < 500; i++) {
             final UnicastProcessor<Object> p = UnicastProcessor.create();
 
-            final TestSubscriber<Object> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+            final TestSubscriber<Object> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
             p.subscribe(ts);
 

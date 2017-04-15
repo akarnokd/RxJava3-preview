@@ -11,15 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.operators.flowable.FlowableConcatMap;
-import io.reactivex.internal.util.ErrorMode;
-import io.reactivex.parallel.ParallelFlowable;
+import io.reactivex.common.ErrorMode;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.ParallelFlowable;
 
 /**
  * Concatenates the generated Publishers on each rail.

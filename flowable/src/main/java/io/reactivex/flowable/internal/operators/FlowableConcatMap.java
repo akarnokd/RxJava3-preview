@@ -10,22 +10,22 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.SpscArrayQueue;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.SpscArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 public final class FlowableConcatMap<T, R> extends AbstractFlowableWithUpstream<T, R> {
 
@@ -68,7 +68,7 @@ public final class FlowableConcatMap<T, R> extends AbstractFlowableWithUpstream<
 
     abstract static class BaseConcatMapSubscriber<T, R>
     extends AtomicInteger
-    implements FlowableSubscriber<T>, ConcatMapSupport<R>, Subscription {
+    implements RelaxedSubscriber<T>, ConcatMapSupport<R>, Subscription {
 
         private static final long serialVersionUID = -3511336836796789179L;
 
@@ -84,7 +84,7 @@ public final class FlowableConcatMap<T, R> extends AbstractFlowableWithUpstream<
 
         int consumed;
 
-        SimpleQueue<T> queue;
+        FusedQueue<T> queue;
 
         volatile boolean done;
 
@@ -111,10 +111,10 @@ public final class FlowableConcatMap<T, R> extends AbstractFlowableWithUpstream<
             if (SubscriptionHelper.validate(this.s, s))  {
                 this.s = s;
 
-                if (s instanceof QueueSubscription) {
-                    @SuppressWarnings("unchecked") QueueSubscription<T> f = (QueueSubscription<T>)s;
-                    int m = f.requestFusion(QueueSubscription.ANY);
-                    if (m == QueueSubscription.SYNC) {
+                if (s instanceof FusedQueueSubscription) {
+                    @SuppressWarnings("unchecked") FusedQueueSubscription<T> f = (FusedQueueSubscription<T>)s;
+                    int m = f.requestFusion(FusedQueueSubscription.ANY);
+                    if (m == FusedQueueSubscription.SYNC) {
                         sourceMode = m;
                         queue = f;
                         done = true;
@@ -124,7 +124,7 @@ public final class FlowableConcatMap<T, R> extends AbstractFlowableWithUpstream<
                         drain();
                         return;
                     }
-                    if (m == QueueSubscription.ASYNC) {
+                    if (m == FusedQueueSubscription.ASYNC) {
                         sourceMode = m;
                         queue = f;
 
@@ -149,7 +149,7 @@ public final class FlowableConcatMap<T, R> extends AbstractFlowableWithUpstream<
 
         @Override
         public final void onNext(T t) {
-            if (sourceMode != QueueSubscription.ASYNC) {
+            if (sourceMode != FusedQueueSubscription.ASYNC) {
                 if (!queue.offer(t)) {
                     s.cancel();
                     onError(new IllegalStateException("Queue full?!"));
@@ -206,7 +206,7 @@ public final class FlowableConcatMap<T, R> extends AbstractFlowableWithUpstream<
                     actual.onError(errors.terminate());
                 }
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 
@@ -230,7 +230,7 @@ public final class FlowableConcatMap<T, R> extends AbstractFlowableWithUpstream<
                     actual.onError(errors.terminate());
                 }
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -293,7 +293,7 @@ public final class FlowableConcatMap<T, R> extends AbstractFlowableWithUpstream<
                                 return;
                             }
 
-                            if (sourceMode != QueueSubscription.SYNC) {
+                            if (sourceMode != FusedQueueSubscription.SYNC) {
                                 int c = consumed + 1;
                                 if (c == limit) {
                                     consumed = 0;
@@ -408,7 +408,7 @@ public final class FlowableConcatMap<T, R> extends AbstractFlowableWithUpstream<
                 done = true;
                 drain();
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 
@@ -428,7 +428,7 @@ public final class FlowableConcatMap<T, R> extends AbstractFlowableWithUpstream<
                 active = false;
                 drain();
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -506,7 +506,7 @@ public final class FlowableConcatMap<T, R> extends AbstractFlowableWithUpstream<
                                 return;
                             }
 
-                            if (sourceMode != QueueSubscription.SYNC) {
+                            if (sourceMode != FusedQueueSubscription.SYNC) {
                                 int c = consumed + 1;
                                 if (c == limit) {
                                     consumed = 0;
@@ -568,7 +568,7 @@ public final class FlowableConcatMap<T, R> extends AbstractFlowableWithUpstream<
 
     static final class ConcatMapInner<R>
     extends SubscriptionArbiter
-    implements FlowableSubscriber<R> {
+    implements RelaxedSubscriber<R> {
 
 
         private static final long serialVersionUID = 897683679971470653L;

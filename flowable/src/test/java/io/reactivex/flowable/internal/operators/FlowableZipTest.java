@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -30,7 +30,7 @@ import io.reactivex.*;
 import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.internal.fuseable.FusedQueueSubscription;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.PublishProcessor;
@@ -1803,7 +1803,7 @@ public class FlowableZipTest {
         }
     }
 
-    static final class ThrowingQueueSubscription implements QueueSubscription<Integer>, Publisher<Integer> {
+    static final class ThrowingFusedQueueSubscription implements FusedQueueSubscription<Integer>, Publisher<Integer> {
 
         @Override
         public int requestFusion(int mode) {
@@ -1850,7 +1850,7 @@ public class FlowableZipTest {
 
     @Test
     public void fusedInputThrows2() {
-        Flowable.zip(new ThrowingQueueSubscription(), Flowable.just(1), new BiFunction<Integer, Integer, Integer>() {
+        Flowable.zip(new ThrowingFusedQueueSubscription(), Flowable.just(1), new BiFunction<Integer, Integer, Integer>() {
             @Override
             public Integer apply(Integer a, Integer b) throws Exception {
                 return a + b;
@@ -1862,7 +1862,7 @@ public class FlowableZipTest {
 
     @Test
     public void fusedInputThrows2Backpressured() {
-        Flowable.zip(new ThrowingQueueSubscription(), Flowable.just(1), new BiFunction<Integer, Integer, Integer>() {
+        Flowable.zip(new ThrowingFusedQueueSubscription(), Flowable.just(1), new BiFunction<Integer, Integer, Integer>() {
             @Override
             public Integer apply(Integer a, Integer b) throws Exception {
                 return a + b;

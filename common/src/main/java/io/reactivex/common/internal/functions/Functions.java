@@ -18,8 +18,6 @@ import java.util.concurrent.*;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.OnErrorNotImplementedException;
 import io.reactivex.common.functions.*;
-import io.reactivex.common.RxJavaPlugins;
-import io.reactivex.common.Timed;
 
 /**
  * Utility methods to convert the BiFunction, Function3..Function9 instances to Function of Object array.
@@ -690,14 +688,14 @@ public final class Functions {
     static final class ErrorConsumer implements Consumer<Throwable> {
         @Override
         public void accept(Throwable error) {
-            RxJavaPlugins.onError(error);
+            RxJavaCommonPlugins.onError(error);
         }
     }
 
     static final class OnErrorMissingConsumer implements Consumer<Throwable> {
         @Override
         public void accept(Throwable error) {
-            RxJavaPlugins.onError(new OnErrorNotImplementedException(error));
+            RxJavaCommonPlugins.onError(new OnErrorNotImplementedException(error));
         }
     }
 

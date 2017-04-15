@@ -11,22 +11,22 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
+import io.reactivex.flowable.subscribers.*;
 
 public final class FlowableDebounce<T, U> extends AbstractFlowableWithUpstream<T, T> {
     final Function<? super T, ? extends Publisher<U>> debounceSelector;
@@ -42,7 +42,7 @@ public final class FlowableDebounce<T, U> extends AbstractFlowableWithUpstream<T
     }
 
     static final class DebounceSubscriber<T, U> extends AtomicLong
-    implements FlowableSubscriber<T>, Subscription {
+    implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = 6725975399620862591L;
         final Subscriber<? super T> actual;
@@ -185,7 +185,7 @@ public final class FlowableDebounce<T, U> extends AbstractFlowableWithUpstream<T
             @Override
             public void onError(Throwable t) {
                 if (done) {
-                    RxJavaPlugins.onError(t);
+                    RxJavaCommonPlugins.onError(t);
                     return;
                 }
                 done = true;

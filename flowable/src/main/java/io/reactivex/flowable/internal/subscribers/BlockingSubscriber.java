@@ -11,18 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.Subscription;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.NotificationLite;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.NotificationLite;
 
-public final class BlockingSubscriber<T> extends AtomicReference<Subscription> implements FlowableSubscriber<T>, Subscription {
+public final class BlockingSubscriber<T> extends AtomicReference<Subscription> implements RelaxedSubscriber<T>, Subscription {
 
     private static final long serialVersionUID = -4875965440900746268L;
 

@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.reactivestreams.*;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 /**
  * Relays signals from upstream according to downstream requests and allows
@@ -28,7 +28,7 @@ import io.reactivex.internal.util.BackpressureHelper;
  * @param <T> the input value type
  * @param <R> the output value type
  */
-public abstract class SinglePostCompleteSubscriber<T, R> extends AtomicLong implements FlowableSubscriber<T>, Subscription {
+public abstract class SinglePostCompleteSubscriber<T, R> extends AtomicLong implements RelaxedSubscriber<T>, Subscription {
     private static final long serialVersionUID = 7917814472626990048L;
 
     /** The downstream consumer. */

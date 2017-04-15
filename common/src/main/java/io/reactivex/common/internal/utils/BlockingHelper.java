@@ -15,9 +15,8 @@ package io.reactivex.common.internal.utils;
 
 import java.util.concurrent.CountDownLatch;
 
-import io.reactivex.common.Disposable;
+import io.reactivex.common.*;
 import io.reactivex.common.internal.schedulers.NonBlockingThread;
-import io.reactivex.common.RxJavaPlugins;
 
 /**
  * Utility methods for helping common blocking operations.
@@ -54,9 +53,9 @@ public final class BlockingHelper {
      * @throws IllegalStateException if the {@code failOnNonBlockingScheduler} and the current thread is sensitive to blocking
      */
     public static void verifyNonBlocking() {
-        if (RxJavaPlugins.isFailOnNonBlockingScheduler()
+        if (RxJavaCommonPlugins.isFailOnNonBlockingScheduler()
                 && (Thread.currentThread() instanceof NonBlockingThread
-                        || RxJavaPlugins.onBeforeBlocking())) {
+                        || RxJavaCommonPlugins.onBeforeBlocking())) {
             throw new IllegalStateException("Attempt to block on a Scheduler " + Thread.currentThread().getName() + " that doesn't support blocking operators as they may lead to deadlock");
         }
     }

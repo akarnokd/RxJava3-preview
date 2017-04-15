@@ -11,16 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.HalfSerializer;
 
 public final class FlowableSkipUntil<T, U> extends AbstractFlowableWithUpstream<T, T> {
     final Publisher<U> other;
@@ -108,7 +109,7 @@ public final class FlowableSkipUntil<T, U> extends AbstractFlowableWithUpstream<
         }
 
         final class OtherSubscriber extends AtomicReference<Subscription>
-        implements FlowableSubscriber<Object> {
+        implements RelaxedSubscriber<Object> {
 
             private static final long serialVersionUID = -5592042965931999169L;
 

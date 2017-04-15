@@ -11,25 +11,25 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.fuseable.SimplePlainQueue;
-import io.reactivex.internal.queue.MpscLinkedQueue;
-import io.reactivex.internal.subscribers.QueueDrainSubscriber;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.NotificationLite;
-import io.reactivex.processors.UnicastProcessor;
-import io.reactivex.subscribers.SerializedSubscriber;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.common.internal.disposables.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.*;
+import io.reactivex.flowable.internal.subscribers.QueueDrainSubscriber;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.NotificationLite;
+import io.reactivex.flowable.processors.UnicastProcessor;
+import io.reactivex.flowable.subscribers.SerializedSubscriber;
 
 public final class FlowableWindowTimed<T> extends AbstractFlowableWithUpstream<T, Flowable<T>> {
     final long timespan;
@@ -76,7 +76,7 @@ public final class FlowableWindowTimed<T> extends AbstractFlowableWithUpstream<T
 
     static final class WindowExactUnboundedSubscriber<T>
             extends QueueDrainSubscriber<T, Object, Flowable<T>>
-            implements FlowableSubscriber<T>, Subscription, Runnable {
+            implements RelaxedSubscriber<T>, Subscription, Runnable {
         final long timespan;
         final TimeUnit unit;
         final Scheduler scheduler;

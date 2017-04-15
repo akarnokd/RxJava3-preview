@@ -11,19 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import org.reactivestreams.Subscription;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.internal.subscriptions.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 /**
  * Subscriber that communicates with a FullArbiter.
  *
  * @param <T> the value type
  */
-public final class FullArbiterSubscriber<T> implements FlowableSubscriber<T> {
+public final class FullArbiterSubscriber<T> implements RelaxedSubscriber<T> {
     final FullArbiter<T> arbiter;
 
     Subscription s;

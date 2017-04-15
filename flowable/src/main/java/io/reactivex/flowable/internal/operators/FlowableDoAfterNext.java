@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.annotations.*;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
-import io.reactivex.internal.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.ConditionalSubscriber;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscribers.*;
 
 /**
  * Calls a consumer after pushing the current item to the downstream.
@@ -77,7 +77,7 @@ public final class FlowableDoAfterNext<T> extends AbstractFlowableWithUpstream<T
 
         @Nullable
         @Override
-        public T poll() throws Exception {
+        public T poll() throws Throwable {
             T v = qs.poll();
             if (v != null) {
                 onAfterNext.accept(v);
@@ -126,7 +126,7 @@ public final class FlowableDoAfterNext<T> extends AbstractFlowableWithUpstream<T
 
         @Nullable
         @Override
-        public T poll() throws Exception {
+        public T poll() throws Throwable {
             T v = qs.poll();
             if (v != null) {
                 onAfterNext.accept(v);

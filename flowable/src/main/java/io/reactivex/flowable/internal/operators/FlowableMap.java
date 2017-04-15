@@ -12,16 +12,16 @@
  */
 
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
-import io.reactivex.internal.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.ConditionalSubscriber;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscribers.*;
 
 public final class FlowableMap<T, U> extends AbstractFlowableWithUpstream<T, U> {
     final Function<? super T, ? extends U> mapper;
@@ -76,7 +76,7 @@ public final class FlowableMap<T, U> extends AbstractFlowableWithUpstream<T, U> 
 
         @Nullable
         @Override
-        public U poll() throws Exception {
+        public U poll() throws Throwable {
             T t = qs.poll();
             return t != null ? ObjectHelper.<U>requireNonNull(mapper.apply(t), "The mapper function returned a null value.") : null;
         }
@@ -136,7 +136,7 @@ public final class FlowableMap<T, U> extends AbstractFlowableWithUpstream<T, U> 
 
         @Nullable
         @Override
-        public U poll() throws Exception {
+        public U poll() throws Throwable {
             T t = qs.poll();
             return t != null ? ObjectHelper.<U>requireNonNull(mapper.apply(t), "The mapper function returned a null value.") : null;
         }

@@ -11,16 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Predicate;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.ConditionalSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Predicate;
+import io.reactivex.flowable.ParallelFlowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Filters each 'rail' of the source ParallelFlowable with a predicate function.
@@ -137,7 +137,7 @@ public final class ParallelFilter<T> extends ParallelFlowable<T> {
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -195,7 +195,7 @@ public final class ParallelFilter<T> extends ParallelFlowable<T> {
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;

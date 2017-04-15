@@ -11,16 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.Callable;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.DeferredScalarSubscription;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.DeferredScalarSubscription;
 
 public final class FlowableFromCallable<T> extends Flowable<T> implements Callable<T> {
     final Callable<? extends T> callable;

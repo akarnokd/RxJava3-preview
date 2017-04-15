@@ -11,10 +11,11 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex;
+package io.reactivex.flowable;
 
-import io.reactivex.annotations.*;
 import org.reactivestreams.Publisher;
+
+import io.reactivex.common.annotations.NonNull;
 
 /**
  * Interface to compose Flowables.

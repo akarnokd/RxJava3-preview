@@ -335,7 +335,7 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
             TestHelper.assertUndeliverable(errors, 1, RejectedExecutionException.class);
             TestHelper.assertUndeliverable(errors, 2, RejectedExecutionException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -360,7 +360,7 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
             TestHelper.assertUndeliverable(errors, 1, RejectedExecutionException.class);
             TestHelper.assertUndeliverable(errors, 2, RejectedExecutionException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

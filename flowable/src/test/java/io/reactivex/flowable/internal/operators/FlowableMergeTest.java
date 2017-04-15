@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
@@ -518,7 +518,7 @@ public class FlowableMergeTest {
             public void subscribe(final Subscriber<? super Long> child) {
                 Flowable.interval(1, TimeUnit.SECONDS, scheduler)
                 .take(5)
-                .subscribe(new FlowableSubscriber<Long>() {
+                .subscribe(new RelaxedSubscriber<Long>() {
                     @Override
                     public void onSubscribe(final Subscription s) {
                         child.onSubscribe(new Subscription() {

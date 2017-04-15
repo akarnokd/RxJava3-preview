@@ -11,19 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.exceptions.*;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.SpscArrayQueue;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.parallel.ParallelFlowable;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.flowable.ParallelFlowable;
+import io.reactivex.flowable.internal.queues.SpscArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 /**
  * Dispatches the values from upstream in a round robin fashion to subscribers which are
@@ -60,7 +59,7 @@ public final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
 
     static final class ParallelDispatcher<T>
     extends AtomicInteger
-    implements FlowableSubscriber<T> {
+    implements RelaxedSubscriber<T> {
 
 
         private static final long serialVersionUID = -4470634016609963609L;
@@ -77,7 +76,7 @@ public final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
 
         Subscription s;
 
-        SimpleQueue<T> queue;
+        FusedQueue<T> queue;
 
         Throwable error;
 
@@ -112,13 +111,13 @@ public final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
 
-                if (s instanceof QueueSubscription) {
+                if (s instanceof FusedQueueSubscription) {
                     @SuppressWarnings("unchecked")
-                    QueueSubscription<T> qs = (QueueSubscription<T>) s;
+                    FusedQueueSubscription<T> qs = (FusedQueueSubscription<T>) s;
 
-                    int m = qs.requestFusion(QueueSubscription.ANY);
+                    int m = qs.requestFusion(FusedQueueSubscription.ANY);
 
-                    if (m == QueueSubscription.SYNC) {
+                    if (m == FusedQueueSubscription.SYNC) {
                         sourceMode = m;
                         queue = qs;
                         done = true;
@@ -126,7 +125,7 @@ public final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                         drain();
                         return;
                     } else
-                    if (m == QueueSubscription.ASYNC) {
+                    if (m == FusedQueueSubscription.ASYNC) {
                         sourceMode = m;
                         queue = qs;
 
@@ -202,7 +201,7 @@ public final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
 
         @Override
         public void onNext(T t) {
-            if (sourceMode == QueueSubscription.NONE) {
+            if (sourceMode == FusedQueueSubscription.NONE) {
                 if (!queue.offer(t)) {
                     s.cancel();
                     onError(new MissingBackpressureException("Queue is full?"));
@@ -239,7 +238,7 @@ public final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
         void drainAsync() {
             int missed = 1;
 
-            SimpleQueue<T> q = queue;
+            FusedQueue<T> q = queue;
             Subscriber<? super T>[] a = this.subscribers;
             AtomicLongArray r = this.requests;
             long[] e = this.emissions;
@@ -344,7 +343,7 @@ public final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
         void drainSync() {
             int missed = 1;
 
-            SimpleQueue<T> q = queue;
+            FusedQueue<T> q = queue;
             Subscriber<? super T>[] a = this.subscribers;
             AtomicLongArray r = this.requests;
             long[] e = this.emissions;
@@ -431,7 +430,7 @@ public final class ParallelFromPublisher<T> extends ParallelFlowable<T> {
                 return;
             }
 
-            if (sourceMode == QueueSubscription.SYNC) {
+            if (sourceMode == FusedQueueSubscription.SYNC) {
                 drainSync();
             } else {
                 drainAsync();

@@ -11,18 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.ParallelFlowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Maps each 'rail' of the source ParallelFlowable with a mapper function.
@@ -68,7 +67,7 @@ public final class ParallelMap<T, R> extends ParallelFlowable<R> {
         return source.parallelism();
     }
 
-    static final class ParallelMapSubscriber<T, R> implements FlowableSubscriber<T>, Subscription {
+    static final class ParallelMapSubscriber<T, R> implements RelaxedSubscriber<T>, Subscription {
 
         final Subscriber<? super R> actual;
 
@@ -124,7 +123,7 @@ public final class ParallelMap<T, R> extends ParallelFlowable<R> {
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -216,7 +215,7 @@ public final class ParallelMap<T, R> extends ParallelFlowable<R> {
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;

@@ -11,21 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.processors;
+package io.reactivex.flowable.processors;
 
-import io.reactivex.annotations.CheckReturnValue;
 import java.util.concurrent.atomic.*;
 
-import io.reactivex.annotations.Experimental;
-import io.reactivex.annotations.Nullable;
 import org.reactivestreams.*;
 
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.QueueSubscription;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.internal.queues.SpscLinkedArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 /**
  * Processor that allows only a single Subscriber to subscribe to it during its lifetime.
@@ -62,7 +60,7 @@ public final class UnicastProcessor<T> extends FlowableProcessor<T> {
 
     final AtomicBoolean once;
 
-    final BasicIntQueueSubscription<T> wip;
+    final BasicIntFusedQueueSubscription<T> wip;
 
     final AtomicLong requested;
 
@@ -175,7 +173,7 @@ public final class UnicastProcessor<T> extends FlowableProcessor<T> {
         this.delayError = delayError;
         this.actual = new AtomicReference<Subscriber<? super T>>();
         this.once = new AtomicBoolean();
-        this.wip = new UnicastQueueSubscription();
+        this.wip = new UnicastFusedQueueSubscription();
         this.requested = new AtomicLong();
     }
 
@@ -355,7 +353,7 @@ public final class UnicastProcessor<T> extends FlowableProcessor<T> {
     @Override
     public void onError(Throwable t) {
         if (done || cancelled) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
 
@@ -400,7 +398,7 @@ public final class UnicastProcessor<T> extends FlowableProcessor<T> {
         }
     }
 
-    final class UnicastQueueSubscription extends BasicIntQueueSubscription<T> {
+    final class UnicastFusedQueueSubscription extends BasicIntFusedQueueSubscription<T> {
 
 
         private static final long serialVersionUID = -4896760517184205454L;
@@ -423,11 +421,11 @@ public final class UnicastProcessor<T> extends FlowableProcessor<T> {
 
         @Override
         public int requestFusion(int requestedMode) {
-            if ((requestedMode & QueueSubscription.ASYNC) != 0) {
+            if ((requestedMode & FusedQueueSubscription.ASYNC) != 0) {
                 enableOperatorFusion = true;
-                return QueueSubscription.ASYNC;
+                return FusedQueueSubscription.ASYNC;
             }
-            return QueueSubscription.NONE;
+            return FusedQueueSubscription.NONE;
         }
 
         @Override

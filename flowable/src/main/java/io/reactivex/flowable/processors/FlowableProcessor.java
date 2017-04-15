@@ -11,11 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.processors;
+package io.reactivex.flowable.processors;
 
-import io.reactivex.*;
-import io.reactivex.annotations.NonNull;
 import org.reactivestreams.Processor;
+
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.flowable.Flowable;
 
 /**
  * Represents a Subscriber and a Flowable (Publisher) at the same time, allowing
@@ -25,7 +27,7 @@ import org.reactivestreams.Processor;
  *
  * @param <T> the item value type
  */
-public abstract class FlowableProcessor<T> extends Flowable<T> implements Processor<T, T>, FlowableSubscriber<T> {
+public abstract class FlowableProcessor<T> extends Flowable<T> implements Processor<T, T>, RelaxedSubscriber<T> {
 
     /**
      * Returns true if the subject has subscribers.

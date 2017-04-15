@@ -18,4 +18,4 @@
  * Default wrappers and implementations for Subscriber-based consumer classes and interfaces;
  * utility classes for creating them from callbacks.
  */
-package io.reactivex.subscribers;
+package io.reactivex.flowable.subscribers;

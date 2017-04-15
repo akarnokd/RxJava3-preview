@@ -11,22 +11,21 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import org.reactivestreams.*;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.fuseable.QueueSubscription;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Base class for a fuseable intermediate subscriber.
  * @param <T> the upstream value type
  * @param <R> the downstream value type
  */
-public abstract class BasicFuseableSubscriber<T, R> implements FlowableSubscriber<T>, QueueSubscription<R> {
+public abstract class BasicFuseableSubscriber<T, R> implements RelaxedSubscriber<T>, FusedQueueSubscription<R> {
 
     /** The downstream subscriber. */
     protected final Subscriber<? super R> actual;
@@ -34,8 +33,8 @@ public abstract class BasicFuseableSubscriber<T, R> implements FlowableSubscribe
     /** The upstream subscription. */
     protected Subscription s;
 
-    /** The upstream's QueueSubscription if not null. */
-    protected QueueSubscription<T> qs;
+    /** The upstream's FusedQueueSubscription if not null. */
+    protected FusedQueueSubscription<T> qs;
 
     /** Flag indicating no further onXXX event should be accepted. */
     protected boolean done;
@@ -58,8 +57,8 @@ public abstract class BasicFuseableSubscriber<T, R> implements FlowableSubscribe
         if (SubscriptionHelper.validate(this.s, s)) {
 
             this.s = s;
-            if (s instanceof QueueSubscription) {
-                this.qs = (QueueSubscription<T>)s;
+            if (s instanceof FusedQueueSubscription) {
+                this.qs = (FusedQueueSubscription<T>)s;
             }
 
             if (beforeDownstream()) {
@@ -94,7 +93,7 @@ public abstract class BasicFuseableSubscriber<T, R> implements FlowableSubscribe
     @Override
     public void onError(Throwable t) {
         if (done) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         done = true;
@@ -121,17 +120,17 @@ public abstract class BasicFuseableSubscriber<T, R> implements FlowableSubscribe
     }
 
     /**
-     * Calls the upstream's QueueSubscription.requestFusion with the mode and
+     * Calls the upstream's FusedQueueSubscription.requestFusion with the mode and
      * saves the established mode in {@link #sourceMode} if that mode doesn't
-     * have the {@link QueueSubscription#BOUNDARY} flag set.
+     * have the {@link FusedQueueSubscription#BOUNDARY} flag set.
      * <p>
      * If the upstream doesn't support fusion ({@link #qs} is null), the method
-     * returns {@link QueueSubscription#NONE}.
+     * returns {@link FusedQueueSubscription#NONE}.
      * @param mode the fusion mode requested
      * @return the established fusion mode
      */
     protected final int transitiveBoundaryFusion(int mode) {
-        QueueSubscription<T> qs = this.qs;
+        FusedQueueSubscription<T> qs = this.qs;
         if (qs != null) {
             if ((mode & BOUNDARY) == 0) {
                 int m = qs.requestFusion(mode);
@@ -177,8 +176,4 @@ public abstract class BasicFuseableSubscriber<T, R> implements FlowableSubscribe
         throw new UnsupportedOperationException("Should not be called!");
     }
 
-    @Override
-    public final boolean offer(R v1, R v2) {
-        throw new UnsupportedOperationException("Should not be called!");
-    }
 }

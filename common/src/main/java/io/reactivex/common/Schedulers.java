@@ -13,12 +13,11 @@
 
 package io.reactivex.common;
 
-import io.reactivex.common.Scheduler;
+import java.util.concurrent.*;
+
+import io.reactivex.common.RxJavaCommonPlugins;
 import io.reactivex.common.annotations.NonNull;
 import io.reactivex.common.internal.schedulers.*;
-import io.reactivex.common.RxJavaPlugins;
-
-import java.util.concurrent.*;
 
 /**
  * Static factory methods for returning standard Scheduler instances.
@@ -71,15 +70,15 @@ public final class Schedulers {
     }
 
     static {
-        SINGLE = RxJavaPlugins.initSingleScheduler(new SingleTask());
+        SINGLE = RxJavaCommonPlugins.initSingleScheduler(new SingleTask());
 
-        COMPUTATION = RxJavaPlugins.initComputationScheduler(new ComputationTask());
+        COMPUTATION = RxJavaCommonPlugins.initComputationScheduler(new ComputationTask());
 
-        IO = RxJavaPlugins.initIoScheduler(new IOTask());
+        IO = RxJavaCommonPlugins.initIoScheduler(new IOTask());
 
         TRAMPOLINE = TrampolineScheduler.instance();
 
-        NEW_THREAD = RxJavaPlugins.initNewThreadScheduler(new NewThreadTask());
+        NEW_THREAD = RxJavaCommonPlugins.initNewThreadScheduler(new NewThreadTask());
     }
 
     /** Utility class. */
@@ -132,7 +131,7 @@ public final class Schedulers {
      */
     @NonNull
     public static Scheduler computation() {
-        return RxJavaPlugins.onComputationScheduler(COMPUTATION);
+        return RxJavaCommonPlugins.onComputationScheduler(COMPUTATION);
     }
 
     /**
@@ -176,7 +175,7 @@ public final class Schedulers {
      */
     @NonNull
     public static Scheduler io() {
-        return RxJavaPlugins.onIoScheduler(IO);
+        return RxJavaCommonPlugins.onIoScheduler(IO);
     }
 
     /**
@@ -234,7 +233,7 @@ public final class Schedulers {
      */
     @NonNull
     public static Scheduler newThread() {
-        return RxJavaPlugins.onNewThreadScheduler(NEW_THREAD);
+        return RxJavaCommonPlugins.onNewThreadScheduler(NEW_THREAD);
     }
 
     /**
@@ -284,7 +283,7 @@ public final class Schedulers {
      */
     @NonNull
     public static Scheduler single() {
-        return RxJavaPlugins.onSingleScheduler(SINGLE);
+        return RxJavaCommonPlugins.onSingleScheduler(SINGLE);
     }
 
     /**

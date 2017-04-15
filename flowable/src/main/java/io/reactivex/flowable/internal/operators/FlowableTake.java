@@ -11,14 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 public final class FlowableTake<T> extends AbstractFlowableWithUpstream<T, T> {
     final long limit;
@@ -32,7 +33,7 @@ public final class FlowableTake<T> extends AbstractFlowableWithUpstream<T, T> {
         source.subscribe(new TakeSubscriber<T>(s, limit));
     }
 
-    static final class TakeSubscriber<T> extends AtomicBoolean implements FlowableSubscriber<T>, Subscription {
+    static final class TakeSubscriber<T> extends AtomicBoolean implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = -5636543848937116287L;
         boolean done;

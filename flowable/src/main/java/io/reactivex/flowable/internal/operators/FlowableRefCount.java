@@ -11,18 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.reactivestreams.*;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.disposables.*;
-import io.reactivex.flowables.ConnectableFlowable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.flowable.ConnectableFlowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Returns an observable sequence that stays connected to the source as long as
@@ -43,7 +44,7 @@ public final class FlowableRefCount<T> extends AbstractFlowableWithUpstream<T, T
 
     final class ConnectionSubscriber
     extends AtomicReference<Subscription>
-    implements FlowableSubscriber<T>, Subscription {
+    implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = 152064694420235350L;
         final Subscriber<? super T> subscriber;

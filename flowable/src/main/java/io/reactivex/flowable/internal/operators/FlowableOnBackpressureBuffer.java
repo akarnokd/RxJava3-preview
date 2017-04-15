@@ -11,20 +11,20 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Action;
-import io.reactivex.internal.fuseable.SimplePlainQueue;
-import io.reactivex.internal.queue.*;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.BackpressureHelper;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Action;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.*;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 public final class FlowableOnBackpressureBuffer<T> extends AbstractFlowableWithUpstream<T, T> {
     final int bufferSize;
@@ -46,7 +46,7 @@ public final class FlowableOnBackpressureBuffer<T> extends AbstractFlowableWithU
         source.subscribe(new BackpressureBufferSubscriber<T>(s, bufferSize, unbounded, delayError, onOverflow));
     }
 
-    static final class BackpressureBufferSubscriber<T> extends BasicIntQueueSubscription<T> implements FlowableSubscriber<T> {
+    static final class BackpressureBufferSubscriber<T> extends BasicIntFusedQueueSubscription<T> implements RelaxedSubscriber<T> {
 
         private static final long serialVersionUID = -2514538129242366402L;
 
@@ -255,7 +255,7 @@ public final class FlowableOnBackpressureBuffer<T> extends AbstractFlowableWithU
 
         @Nullable
         @Override
-        public T poll() throws Exception {
+        public T poll() throws Throwable {
             return queue.poll();
         }
 

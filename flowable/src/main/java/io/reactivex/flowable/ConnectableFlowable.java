@@ -11,18 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.flowables;
+package io.reactivex.flowable;
 
-import io.reactivex.annotations.NonNull;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.operators.flowable.*;
-import io.reactivex.internal.util.ConnectConsumer;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.annotations.NonNull;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.common.internal.utils.ConnectConsumer;
+import io.reactivex.flowable.internal.operators.*;
 
 /**
  * A {@code ConnectableObservable} resembles an ordinary {@link Flowable}, except that it does not begin
@@ -74,7 +72,7 @@ public abstract class ConnectableFlowable<T> extends Flowable<T> {
      */
     @NonNull
     public Flowable<T> refCount() {
-        return RxJavaPlugins.onAssembly(new FlowableRefCount<T>(this));
+        return RxJavaFlowablePlugins.onAssembly(new FlowableRefCount<T>(this));
     }
 
     /**
@@ -121,8 +119,8 @@ public abstract class ConnectableFlowable<T> extends Flowable<T> {
     public Flowable<T> autoConnect(int numberOfSubscribers, @NonNull Consumer<? super Disposable> connection) {
         if (numberOfSubscribers <= 0) {
             this.connect(connection);
-            return RxJavaPlugins.onAssembly(this);
+            return RxJavaFlowablePlugins.onAssembly(this);
         }
-        return RxJavaPlugins.onAssembly(new FlowableAutoConnect<T>(this, numberOfSubscribers, connection));
+        return RxJavaFlowablePlugins.onAssembly(new FlowableAutoConnect<T>(this, numberOfSubscribers, connection));
     }
 }

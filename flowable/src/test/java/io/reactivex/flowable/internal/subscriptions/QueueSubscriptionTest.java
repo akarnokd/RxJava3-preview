@@ -19,8 +19,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import io.reactivex.TestHelper;
 
-public class QueueSubscriptionTest {
-    static final class EmptyQS extends BasicQueueSubscription<Integer> {
+public class FusedQueueSubscriptionTest {
+    static final class EmptyQS extends BasicFusedQueueSubscription<Integer> {
 
         private static final long serialVersionUID = -5312809687598840520L;
 
@@ -57,7 +57,7 @@ public class QueueSubscriptionTest {
 
     }
 
-    static final class EmptyIntQS extends BasicIntQueueSubscription<Integer> {
+    static final class EmptyIntQS extends BasicIntFusedQueueSubscription<Integer> {
 
         private static final long serialVersionUID = -1374033403007296252L;
 

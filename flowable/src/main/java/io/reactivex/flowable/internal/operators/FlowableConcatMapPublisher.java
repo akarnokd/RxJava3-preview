@@ -10,13 +10,13 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.util.ErrorMode;
+import io.reactivex.common.ErrorMode;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.Flowable;
 
 public final class FlowableConcatMapPublisher<T, R> extends Flowable<R> {
 

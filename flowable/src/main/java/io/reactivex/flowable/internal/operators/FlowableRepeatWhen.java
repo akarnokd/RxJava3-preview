@@ -11,19 +11,20 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.processors.*;
-import io.reactivex.subscribers.SerializedSubscriber;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.processors.*;
+import io.reactivex.flowable.subscribers.SerializedSubscriber;
 
 public final class FlowableRepeatWhen<T> extends AbstractFlowableWithUpstream<T, T> {
     final Function<? super Flowable<Object>, ? extends Publisher<?>> handler;
@@ -66,7 +67,7 @@ public final class FlowableRepeatWhen<T> extends AbstractFlowableWithUpstream<T,
 
     static final class WhenReceiver<T, U>
     extends AtomicInteger
-    implements FlowableSubscriber<Object>, Subscription {
+    implements RelaxedSubscriber<Object>, Subscription {
 
 
         private static final long serialVersionUID = 2827772011130406689L;
@@ -130,7 +131,7 @@ public final class FlowableRepeatWhen<T> extends AbstractFlowableWithUpstream<T,
         }
     }
 
-    abstract static class WhenSourceSubscriber<T, U> extends SubscriptionArbiter implements FlowableSubscriber<T> {
+    abstract static class WhenSourceSubscriber<T, U> extends SubscriptionArbiter implements RelaxedSubscriber<T> {
 
         private static final long serialVersionUID = -5604623027276966720L;
 

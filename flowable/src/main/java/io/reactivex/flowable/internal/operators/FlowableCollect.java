@@ -10,18 +10,19 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.Callable;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BiConsumer;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.BiConsumer;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 public final class FlowableCollect<T, U> extends AbstractFlowableWithUpstream<T, U> {
 
@@ -47,7 +48,7 @@ public final class FlowableCollect<T, U> extends AbstractFlowableWithUpstream<T,
         source.subscribe(new CollectSubscriber<T, U>(s, u, collector));
     }
 
-    static final class CollectSubscriber<T, U> extends DeferredScalarSubscription<U> implements FlowableSubscriber<T> {
+    static final class CollectSubscriber<T, U> extends DeferredScalarSubscription<U> implements RelaxedSubscriber<T> {
 
         private static final long serialVersionUID = -3589550218733891694L;
 
@@ -91,7 +92,7 @@ public final class FlowableCollect<T, U> extends AbstractFlowableWithUpstream<T,
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;

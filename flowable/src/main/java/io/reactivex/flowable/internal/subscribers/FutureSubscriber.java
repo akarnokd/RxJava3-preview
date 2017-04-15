@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import java.util.NoSuchElementException;
 import java.util.concurrent.*;
@@ -19,10 +19,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.Subscription;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BlockingHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.internal.utils.BlockingHelper;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 /**
  * A Subscriber + Future that expects exactly one upstream value and provides it
@@ -31,7 +31,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  * @param <T> the value type
  */
 public final class FutureSubscriber<T> extends CountDownLatch
-implements FlowableSubscriber<T>, Future<T>, Subscription {
+implements RelaxedSubscriber<T>, Future<T>, Subscription {
 
     T value;
     Throwable error;
@@ -130,7 +130,7 @@ implements FlowableSubscriber<T>, Future<T>, Subscription {
         for (;;) {
             Subscription a = s.get();
             if (a == this || a == SubscriptionHelper.CANCELLED) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             error = t;

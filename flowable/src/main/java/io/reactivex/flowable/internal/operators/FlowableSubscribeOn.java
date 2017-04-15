@@ -11,15 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.Scheduler;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 /**
  * Subscribes to the source Flowable on the specified Scheduler and makes
@@ -49,7 +51,7 @@ public final class FlowableSubscribeOn<T> extends AbstractFlowableWithUpstream<T
     }
 
     static final class SubscribeOnSubscriber<T> extends AtomicReference<Thread>
-    implements FlowableSubscriber<T>, Subscription, Runnable {
+    implements RelaxedSubscriber<T>, Subscription, Runnable {
 
         private static final long serialVersionUID = 8094547886072529208L;
 

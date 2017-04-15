@@ -11,12 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subscribers;
+package io.reactivex.flowable.subscribers;
 
 import org.reactivestreams.Subscription;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Abstract base implementation of a {@link org.reactivestreams.Subscriber Subscriber} with
@@ -74,7 +74,7 @@ import io.reactivex.internal.subscriptions.SubscriptionHelper;
  * d.dispose();
  * </pre></code>
  */
-public abstract class DefaultSubscriber<T> implements FlowableSubscriber<T> {
+public abstract class DefaultSubscriber<T> implements RelaxedSubscriber<T> {
     private Subscription s;
     @Override
     public final void onSubscribe(Subscription s) {

@@ -11,17 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.parallel.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.ConditionalSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Calls a Consumer for each upstream value passing by
@@ -165,7 +165,7 @@ public final class ParallelDoOnNextTry<T> extends ParallelFlowable<T> {
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -274,7 +274,7 @@ public final class ParallelDoOnNextTry<T> extends ParallelFlowable<T> {
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;

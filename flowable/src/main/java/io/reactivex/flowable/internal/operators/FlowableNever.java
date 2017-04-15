@@ -10,12 +10,12 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.internal.subscriptions.EmptySubscription;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.EmptySubscription;
 
 public final class FlowableNever extends Flowable<Object> {
     public static final Flowable<Object> INSTANCE = new FlowableNever();

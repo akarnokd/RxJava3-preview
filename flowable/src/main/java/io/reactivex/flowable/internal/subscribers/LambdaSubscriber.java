@@ -11,20 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.Subscription;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
-public final class LambdaSubscriber<T> extends AtomicReference<Subscription> implements FlowableSubscriber<T>, Subscription, Disposable {
+public final class LambdaSubscriber<T> extends AtomicReference<Subscription> implements RelaxedSubscriber<T>, Subscription, Disposable {
 
     private static final long serialVersionUID = -7251123623727029452L;
     final Consumer<? super T> onNext;
@@ -76,10 +75,10 @@ public final class LambdaSubscriber<T> extends AtomicReference<Subscription> imp
                 onError.accept(t);
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
-                RxJavaPlugins.onError(new CompositeException(t, e));
+                RxJavaCommonPlugins.onError(new CompositeException(t, e));
             }
         } else {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
         }
     }
 
@@ -91,7 +90,7 @@ public final class LambdaSubscriber<T> extends AtomicReference<Subscription> imp
                 onComplete.run();
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
     }

@@ -10,20 +10,18 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.subscribers;
+package io.reactivex.flowable.subscribers;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.annotations.Experimental;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.fuseable.QueueSubscription;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.observers.BaseTestConsumer;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.Experimental;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 /**
  * A subscriber that records events and allows making assertions about them.
@@ -39,8 +37,8 @@ import io.reactivex.observers.BaseTestConsumer;
  * @param <T> the value type
  */
 public class TestSubscriber<T>
-extends BaseTestConsumer<T, TestSubscriber<T>>
-implements FlowableSubscriber<T>, Subscription, Disposable {
+extends TestConsumer<T, TestSubscriber<T>>
+implements RelaxedSubscriber<T>, Subscription, Disposable {
     /** The actual subscriber to forward events to. */
     private final Subscriber<? super T> actual;
 
@@ -53,7 +51,7 @@ implements FlowableSubscriber<T>, Subscription, Disposable {
     /** Holds the requested amount until a subscription arrives. */
     private final AtomicLong missedRequested;
 
-    private QueueSubscription<T> qs;
+    private FusedQueueSubscription<T> qs;
 
     /**
      * Creates a TestSubscriber with Long.MAX_VALUE initial request.
@@ -144,13 +142,13 @@ implements FlowableSubscriber<T>, Subscription, Disposable {
         }
 
         if (initialFusionMode != 0) {
-            if (s instanceof QueueSubscription) {
-                qs = (QueueSubscription<T>)s;
+            if (s instanceof FusedQueueSubscription) {
+                qs = (FusedQueueSubscription<T>)s;
 
                 int m = qs.requestFusion(initialFusionMode);
                 establishedFusionMode = m;
 
-                if (m == QueueSubscription.SYNC) {
+                if (m == FusedQueueSubscription.SYNC) {
                     checkSubscriptionOnce = true;
                     lastThread = Thread.currentThread();
                     try {
@@ -196,7 +194,7 @@ implements FlowableSubscriber<T>, Subscription, Disposable {
         }
         lastThread = Thread.currentThread();
 
-        if (establishedFusionMode == QueueSubscription.ASYNC) {
+        if (establishedFusionMode == FusedQueueSubscription.ASYNC) {
             try {
                 while ((t = qs.poll()) != null) {
                     values.add(t);
@@ -331,7 +329,7 @@ implements FlowableSubscriber<T>, Subscription, Disposable {
      * Sets the initial fusion mode if the upstream supports fusion.
      * <p>Package-private: avoid leaking the now internal fusion properties into the public API.
      * Use SubscriberFusion to work with such tests.
-     * @param mode the mode to establish, see the {@link QueueSubscription} constants
+     * @param mode the mode to establish, see the {@link FusedQueueSubscription} constants
      * @return this
      */
     final TestSubscriber<T> setInitialFusionMode(int mode) {
@@ -361,9 +359,9 @@ implements FlowableSubscriber<T>, Subscription, Disposable {
 
     static String fusionModeToString(int mode) {
         switch (mode) {
-        case QueueSubscription.NONE : return "NONE";
-        case QueueSubscription.SYNC : return "SYNC";
-        case QueueSubscription.ASYNC : return "ASYNC";
+        case FusedQueueSubscription.NONE : return "NONE";
+        case FusedQueueSubscription.SYNC : return "SYNC";
+        case FusedQueueSubscription.ASYNC : return "ASYNC";
         default: return "Unknown(" + mode + ")";
         }
     }
@@ -423,7 +421,7 @@ implements FlowableSubscriber<T>, Subscription, Disposable {
     /**
      * A subscriber that ignores all events and does not report errors.
      */
-    enum EmptySubscriber implements FlowableSubscriber<Object> {
+    enum EmptySubscriber implements RelaxedSubscriber<Object> {
         INSTANCE;
 
         @Override

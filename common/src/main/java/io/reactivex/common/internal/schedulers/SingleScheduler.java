@@ -104,7 +104,7 @@ public final class SingleScheduler extends Scheduler {
     @NonNull
     @Override
     public Disposable scheduleDirect(@NonNull Runnable run, long delay, TimeUnit unit) {
-        ScheduledDirectTask task = new ScheduledDirectTask(RxJavaPlugins.onSchedule(run));
+        ScheduledDirectTask task = new ScheduledDirectTask(RxJavaCommonPlugins.onSchedule(run));
         try {
             Future<?> f;
             if (delay <= 0L) {
@@ -115,7 +115,7 @@ public final class SingleScheduler extends Scheduler {
             task.setFuture(f);
             return task;
         } catch (RejectedExecutionException ex) {
-            RxJavaPlugins.onError(ex);
+            RxJavaCommonPlugins.onError(ex);
             return REJECTED;
         }
     }
@@ -123,13 +123,13 @@ public final class SingleScheduler extends Scheduler {
     @NonNull
     @Override
     public Disposable schedulePeriodicallyDirect(@NonNull Runnable run, long initialDelay, long period, TimeUnit unit) {
-        ScheduledDirectPeriodicTask task = new ScheduledDirectPeriodicTask(RxJavaPlugins.onSchedule(run));
+        ScheduledDirectPeriodicTask task = new ScheduledDirectPeriodicTask(RxJavaCommonPlugins.onSchedule(run));
         try {
             Future<?> f = executor.get().scheduleAtFixedRate(task, initialDelay, period, unit);
             task.setFuture(f);
             return task;
         } catch (RejectedExecutionException ex) {
-            RxJavaPlugins.onError(ex);
+            RxJavaCommonPlugins.onError(ex);
             return REJECTED;
         }
     }
@@ -154,7 +154,7 @@ public final class SingleScheduler extends Scheduler {
                 return REJECTED;
             }
 
-            Runnable decoratedRun = RxJavaPlugins.onSchedule(run);
+            Runnable decoratedRun = RxJavaCommonPlugins.onSchedule(run);
 
             ScheduledRunnable sr = new ScheduledRunnable(decoratedRun, tasks);
             tasks.add(sr);
@@ -170,7 +170,7 @@ public final class SingleScheduler extends Scheduler {
                 sr.setFuture(f);
             } catch (RejectedExecutionException ex) {
                 dispose();
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
                 return REJECTED;
             }
 

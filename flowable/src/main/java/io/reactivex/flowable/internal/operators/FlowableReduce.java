@@ -11,16 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.BiFunction;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 /**
  * Reduces a sequence via a function into a single value or signals NoSuchElementException for
@@ -42,7 +43,7 @@ public final class FlowableReduce<T> extends AbstractFlowableWithUpstream<T, T> 
         source.subscribe(new ReduceSubscriber<T>(s, reducer));
     }
 
-    static final class ReduceSubscriber<T> extends DeferredScalarSubscription<T> implements FlowableSubscriber<T> {
+    static final class ReduceSubscriber<T> extends DeferredScalarSubscription<T> implements RelaxedSubscriber<T> {
 
         private static final long serialVersionUID = -4663883003264602070L;
 
@@ -89,7 +90,7 @@ public final class FlowableReduce<T> extends AbstractFlowableWithUpstream<T, T> 
         @Override
         public void onError(Throwable t) {
             if (s == SubscriptionHelper.CANCELLED) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             s = SubscriptionHelper.CANCELLED;

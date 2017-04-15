@@ -10,15 +10,16 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Predicate;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Predicate;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 public final class FlowableAny<T> extends AbstractFlowableWithUpstream<T, Boolean> {
     final Predicate<? super T> predicate;
@@ -32,7 +33,7 @@ public final class FlowableAny<T> extends AbstractFlowableWithUpstream<T, Boolea
         source.subscribe(new AnySubscriber<T>(s, predicate));
     }
 
-    static final class AnySubscriber<T> extends DeferredScalarSubscription<Boolean> implements FlowableSubscriber<T> {
+    static final class AnySubscriber<T> extends DeferredScalarSubscription<Boolean> implements RelaxedSubscriber<T> {
 
         private static final long serialVersionUID = -2311252482644620661L;
 
@@ -79,7 +80,7 @@ public final class FlowableAny<T> extends AbstractFlowableWithUpstream<T, Boolea
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
 

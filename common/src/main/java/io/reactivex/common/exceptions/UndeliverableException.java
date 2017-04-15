@@ -16,7 +16,7 @@ package io.reactivex.common.exceptions;
 import io.reactivex.common.annotations.Experimental;
 
 /**
- * Wrapper for Throwable errors that are sent to `RxJavaPlugins.onError`.
+ * Wrapper for Throwable errors that are sent to `RxJavaCommonPlugins.onError`.
  * @since 2.0.6 - experimental
  */
 @Experimental

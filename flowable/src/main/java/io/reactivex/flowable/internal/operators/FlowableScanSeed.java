@@ -10,22 +10,22 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.SimplePlainQueue;
-import io.reactivex.internal.queue.SpscArrayQueue;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.BiFunction;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.*;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 public final class FlowableScanSeed<T, R> extends AbstractFlowableWithUpstream<T, R> {
     final BiFunction<R, ? super T, R> accumulator;
@@ -54,7 +54,7 @@ public final class FlowableScanSeed<T, R> extends AbstractFlowableWithUpstream<T
 
     static final class ScanSeedSubscriber<T, R>
     extends AtomicInteger
-    implements FlowableSubscriber<T>, Subscription {
+    implements RelaxedSubscriber<T>, Subscription {
         private static final long serialVersionUID = -1776795561228106469L;
 
         final Subscriber<? super R> actual;
@@ -126,7 +126,7 @@ public final class FlowableScanSeed<T, R> extends AbstractFlowableWithUpstream<T
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             error = t;

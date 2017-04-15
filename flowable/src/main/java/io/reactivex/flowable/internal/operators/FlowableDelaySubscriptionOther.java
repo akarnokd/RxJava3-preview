@@ -10,13 +10,14 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.SubscriptionArbiter;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionArbiter;
 
 /**
  * Delays the subscription to the main source until the other
@@ -38,12 +39,12 @@ public final class FlowableDelaySubscriptionOther<T, U> extends Flowable<T> {
         final SubscriptionArbiter serial = new SubscriptionArbiter();
         child.onSubscribe(serial);
 
-        FlowableSubscriber<U> otherSubscriber = new DelaySubscriber(serial, child);
+        RelaxedSubscriber<U> otherSubscriber = new DelaySubscriber(serial, child);
 
         other.subscribe(otherSubscriber);
     }
 
-    final class DelaySubscriber implements FlowableSubscriber<U> {
+    final class DelaySubscriber implements RelaxedSubscriber<U> {
         final SubscriptionArbiter serial;
         final Subscriber<? super T> child;
         boolean done;
@@ -67,7 +68,7 @@ public final class FlowableDelaySubscriptionOther<T, U> extends Flowable<T> {
         @Override
         public void onError(Throwable e) {
             if (done) {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
                 return;
             }
             done = true;
@@ -102,7 +103,7 @@ public final class FlowableDelaySubscriptionOther<T, U> extends Flowable<T> {
             }
         }
 
-        final class OnCompleteSubscriber implements FlowableSubscriber<T> {
+        final class OnCompleteSubscriber implements RelaxedSubscriber<T> {
             @Override
             public void onSubscribe(Subscription s) {
                 serial.setSubscription(s);

@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subscribers;
+package io.reactivex.flowable.subscribers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.Subscription;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.Disposable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 /**
  * An abstract Subscriber that allows asynchronous, external cancellation by implementing Disposable.
@@ -72,7 +72,7 @@ import io.reactivex.internal.subscriptions.SubscriptionHelper;
  * </pre></code>
  * @param <T> the received value type.
  */
-public abstract class DisposableSubscriber<T> implements FlowableSubscriber<T>, Disposable {
+public abstract class DisposableSubscriber<T> implements RelaxedSubscriber<T>, Disposable {
     final AtomicReference<Subscription> s = new AtomicReference<Subscription>();
 
     @Override

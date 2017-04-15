@@ -18,17 +18,17 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import io.reactivex.TestHelper;
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.internal.fuseable.FusedQueueSubscription;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.TestSubscriber;
 
 public class DeferredScalarSubscriptionTest {
 
     @Test
-    public void queueSubscriptionSyncRejected() {
+    public void FusedQueueSubscriptionSyncRejected() {
         DeferredScalarSubscription<Integer> ds = new DeferredScalarSubscription<Integer>(new TestSubscriber<Integer>());
 
-        assertEquals(QueueSubscription.NONE, ds.requestFusion(QueueSubscription.SYNC));
+        assertEquals(FusedQueueSubscription.NONE, ds.requestFusion(FusedQueueSubscription.SYNC));
     }
 
     @Test

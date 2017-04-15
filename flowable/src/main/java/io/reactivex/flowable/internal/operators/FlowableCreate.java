@@ -11,22 +11,21 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Cancellable;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.fuseable.SimplePlainQueue;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Cancellable;
+import io.reactivex.common.internal.disposables.*;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.queues.*;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 
 public final class FlowableCreate<T> extends Flowable<T> {
@@ -130,7 +129,7 @@ public final class FlowableCreate<T> extends Flowable<T> {
         @Override
         public void onError(Throwable t) {
             if (emitter.isCancelled() || done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             if (t == null) {
@@ -140,7 +139,7 @@ public final class FlowableCreate<T> extends Flowable<T> {
                 done = true;
                 drain();
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 
@@ -261,7 +260,7 @@ public final class FlowableCreate<T> extends Flowable<T> {
                 e = new NullPointerException("onError called with null. Null values are generally not allowed in 2.x operators and sources.");
             }
             if (isCancelled()) {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
                 return;
             }
             try {
@@ -448,7 +447,7 @@ public final class FlowableCreate<T> extends Flowable<T> {
         @Override
         public void onError(Throwable e) {
             if (done || isCancelled()) {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
                 return;
             }
 
@@ -591,7 +590,7 @@ public final class FlowableCreate<T> extends Flowable<T> {
         @Override
         public void onError(Throwable e) {
             if (done || isCancelled()) {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
                 return;
             }
             if (e == null) {

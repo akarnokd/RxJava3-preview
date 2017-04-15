@@ -11,15 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.HalfSerializer;
 
 public final class FlowableTakeUntil<T, U> extends AbstractFlowableWithUpstream<T, T> {
     final Publisher<? extends U> other;
@@ -38,7 +40,7 @@ public final class FlowableTakeUntil<T, U> extends AbstractFlowableWithUpstream<
         source.subscribe(parent);
     }
 
-    static final class TakeUntilMainSubscriber<T> extends AtomicInteger implements FlowableSubscriber<T>, Subscription {
+    static final class TakeUntilMainSubscriber<T> extends AtomicInteger implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = -4945480365982832967L;
 
@@ -93,7 +95,7 @@ public final class FlowableTakeUntil<T, U> extends AbstractFlowableWithUpstream<
             SubscriptionHelper.cancel(other);
         }
 
-        final class OtherSubscriber extends AtomicReference<Subscription> implements FlowableSubscriber<Object> {
+        final class OtherSubscriber extends AtomicReference<Subscription> implements RelaxedSubscriber<Object> {
 
             private static final long serialVersionUID = -3592821756711087922L;
 

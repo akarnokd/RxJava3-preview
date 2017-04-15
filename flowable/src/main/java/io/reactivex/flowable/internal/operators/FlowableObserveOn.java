@@ -11,21 +11,21 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.exceptions.*;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.SpscArrayQueue;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.SpscArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 public final class FlowableObserveOn<T> extends AbstractFlowableWithUpstream<T, T> {
 final Scheduler scheduler;
@@ -58,8 +58,8 @@ final Scheduler scheduler;
     }
 
     abstract static class BaseObserveOnSubscriber<T>
-    extends BasicIntQueueSubscription<T>
-    implements FlowableSubscriber<T>, Runnable {
+    extends BasicIntFusedQueueSubscription<T>
+    implements RelaxedSubscriber<T>, Runnable {
         private static final long serialVersionUID = -8241002408341274697L;
 
         final Worker worker;
@@ -74,7 +74,7 @@ final Scheduler scheduler;
 
         Subscription s;
 
-        SimpleQueue<T> queue;
+        FusedQueue<T> queue;
 
         volatile boolean cancelled;
 
@@ -120,7 +120,7 @@ final Scheduler scheduler;
         @Override
         public final void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             error = t;
@@ -240,7 +240,7 @@ final Scheduler scheduler;
     }
 
     static final class ObserveOnSubscriber<T> extends BaseObserveOnSubscriber<T>
-    implements FlowableSubscriber<T> {
+    implements RelaxedSubscriber<T> {
 
         private static final long serialVersionUID = -4547113800637756442L;
 
@@ -260,9 +260,9 @@ final Scheduler scheduler;
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
 
-                if (s instanceof QueueSubscription) {
+                if (s instanceof FusedQueueSubscription) {
                     @SuppressWarnings("unchecked")
-                    QueueSubscription<T> f = (QueueSubscription<T>) s;
+                    FusedQueueSubscription<T> f = (FusedQueueSubscription<T>) s;
 
                     int m = f.requestFusion(ANY | BOUNDARY);
 
@@ -299,7 +299,7 @@ final Scheduler scheduler;
             int missed = 1;
 
             final Subscriber<? super T> a = actual;
-            final SimpleQueue<T> q = queue;
+            final FusedQueue<T> q = queue;
 
             long e = produced;
 
@@ -362,7 +362,7 @@ final Scheduler scheduler;
             int missed = 1;
 
             final Subscriber<? super T> a = actual;
-            final SimpleQueue<T> q = queue;
+            final FusedQueue<T> q = queue;
 
             long e = produced;
 
@@ -460,7 +460,7 @@ final Scheduler scheduler;
 
         @Nullable
         @Override
-        public T poll() throws Exception {
+        public T poll() throws Throwable {
             T v = queue.poll();
             if (v != null && sourceMode != SYNC) {
                 long p = produced + 1;
@@ -499,9 +499,9 @@ final Scheduler scheduler;
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
 
-                if (s instanceof QueueSubscription) {
+                if (s instanceof FusedQueueSubscription) {
                     @SuppressWarnings("unchecked")
-                    QueueSubscription<T> f = (QueueSubscription<T>) s;
+                    FusedQueueSubscription<T> f = (FusedQueueSubscription<T>) s;
 
                     int m = f.requestFusion(ANY | BOUNDARY);
 
@@ -538,7 +538,7 @@ final Scheduler scheduler;
             int missed = 1;
 
             final ConditionalSubscriber<? super T> a = actual;
-            final SimpleQueue<T> q = queue;
+            final FusedQueue<T> q = queue;
 
             long e = produced;
 
@@ -600,7 +600,7 @@ final Scheduler scheduler;
             int missed = 1;
 
             final ConditionalSubscriber<? super T> a = actual;
-            final SimpleQueue<T> q = queue;
+            final FusedQueue<T> q = queue;
 
             long emitted = produced;
             long polled = consumed;
@@ -699,7 +699,7 @@ final Scheduler scheduler;
 
         @Nullable
         @Override
-        public T poll() throws Exception {
+        public T poll() throws Throwable {
             T v = queue.poll();
             if (v != null && sourceMode != SYNC) {
                 long p = consumed + 1;

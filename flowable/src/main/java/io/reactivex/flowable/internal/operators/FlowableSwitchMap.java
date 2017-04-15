@@ -11,21 +11,22 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.SpscArrayQueue;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.SpscArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 public final class FlowableSwitchMap<T, R> extends AbstractFlowableWithUpstream<T, R> {
     final Function<? super T, ? extends Publisher<? extends R>> mapper;
@@ -49,7 +50,7 @@ public final class FlowableSwitchMap<T, R> extends AbstractFlowableWithUpstream<
         source.subscribe(new SwitchMapSubscriber<T, R>(s, mapper, bufferSize, delayErrors));
     }
 
-    static final class SwitchMapSubscriber<T, R> extends AtomicInteger implements FlowableSubscriber<T>, Subscription {
+    static final class SwitchMapSubscriber<T, R> extends AtomicInteger implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = -3491074160481096299L;
         final Subscriber<? super R> actual;
@@ -142,7 +143,7 @@ public final class FlowableSwitchMap<T, R> extends AbstractFlowableWithUpstream<
                 done = true;
                 drain();
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 
@@ -230,7 +231,7 @@ public final class FlowableSwitchMap<T, R> extends AbstractFlowableWithUpstream<
                 }
 
                 SwitchMapInnerSubscriber<T, R> inner = active.get();
-                SimpleQueue<R> q = inner != null ? inner.queue : null;
+                FusedQueue<R> q = inner != null ? inner.queue : null;
                 if (q != null) {
                     if (inner.done) {
                         if (!delayErrors) {
@@ -333,14 +334,14 @@ public final class FlowableSwitchMap<T, R> extends AbstractFlowableWithUpstream<
     }
 
     static final class SwitchMapInnerSubscriber<T, R>
-    extends AtomicReference<Subscription> implements FlowableSubscriber<R> {
+    extends AtomicReference<Subscription> implements RelaxedSubscriber<R> {
 
         private static final long serialVersionUID = 3837284832786408377L;
         final SwitchMapSubscriber<T, R> parent;
         final long index;
         final int bufferSize;
 
-        volatile SimpleQueue<R> queue;
+        volatile FusedQueue<R> queue;
 
         volatile boolean done;
 
@@ -355,19 +356,19 @@ public final class FlowableSwitchMap<T, R> extends AbstractFlowableWithUpstream<
         @Override
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.setOnce(this, s)) {
-                if (s instanceof QueueSubscription) {
+                if (s instanceof FusedQueueSubscription) {
                     @SuppressWarnings("unchecked")
-                    QueueSubscription<R> qs = (QueueSubscription<R>) s;
+                    FusedQueueSubscription<R> qs = (FusedQueueSubscription<R>) s;
 
-                    int m = qs.requestFusion(QueueSubscription.ANY);
-                    if (m == QueueSubscription.SYNC) {
+                    int m = qs.requestFusion(FusedQueueSubscription.ANY);
+                    if (m == FusedQueueSubscription.SYNC) {
                         fusionMode = m;
                         queue = qs;
                         done = true;
                         parent.drain();
                         return;
                     }
-                    if (m == QueueSubscription.ASYNC) {
+                    if (m == FusedQueueSubscription.ASYNC) {
                         fusionMode = m;
                         queue = qs;
                         s.request(bufferSize);
@@ -385,7 +386,7 @@ public final class FlowableSwitchMap<T, R> extends AbstractFlowableWithUpstream<
         public void onNext(R t) {
             SwitchMapSubscriber<T, R> p = parent;
             if (index == p.unique) {
-                if (fusionMode == QueueSubscription.NONE && !queue.offer(t)) {
+                if (fusionMode == FusedQueueSubscription.NONE && !queue.offer(t)) {
                     onError(new MissingBackpressureException("Queue full?!"));
                     return;
                 }
@@ -403,7 +404,7 @@ public final class FlowableSwitchMap<T, R> extends AbstractFlowableWithUpstream<
                 done = true;
                 p.drain();
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 

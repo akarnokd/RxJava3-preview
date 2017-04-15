@@ -43,7 +43,7 @@ public class HalfSerializerSubscriberTest {
 
         final TestSubscriber ts = new TestSubscriber();
 
-        FlowableSubscriber s = new FlowableSubscriber() {
+        RelaxedSubscriber s = new RelaxedSubscriber() {
             @Override
             public void onSubscribe(Subscription s) {
                 ts.onSubscribe(s);
@@ -87,7 +87,7 @@ public class HalfSerializerSubscriberTest {
 
         final TestSubscriber ts = new TestSubscriber();
 
-        FlowableSubscriber s = new FlowableSubscriber() {
+        RelaxedSubscriber s = new RelaxedSubscriber() {
             @Override
             public void onSubscribe(Subscription s) {
                 ts.onSubscribe(s);
@@ -131,7 +131,7 @@ public class HalfSerializerSubscriberTest {
 
         final TestSubscriber ts = new TestSubscriber();
 
-        FlowableSubscriber s = new FlowableSubscriber() {
+        RelaxedSubscriber s = new RelaxedSubscriber() {
             @Override
             public void onSubscribe(Subscription s) {
                 ts.onSubscribe(s);
@@ -175,7 +175,7 @@ public class HalfSerializerSubscriberTest {
 
         final TestSubscriber ts = new TestSubscriber();
 
-        FlowableSubscriber s = new FlowableSubscriber() {
+        RelaxedSubscriber s = new RelaxedSubscriber() {
             @Override
             public void onSubscribe(Subscription s) {
                 ts.onSubscribe(s);

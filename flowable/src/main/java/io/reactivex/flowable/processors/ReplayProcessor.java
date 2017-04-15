@@ -11,9 +11,8 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.processors;
+package io.reactivex.flowable.processors;
 
-import io.reactivex.annotations.CheckReturnValue;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -21,11 +20,11 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Scheduler;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.CheckReturnValue;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.*;
 
 /**
  * Replays events to Subscribers.
@@ -291,7 +290,7 @@ public final class ReplayProcessor<T> extends FlowableProcessor<T> {
             t = new NullPointerException("onError called with null. Null values are generally not allowed in 2.x operators and sources.");
         }
         if (done) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         done = true;

@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -173,10 +173,10 @@ public class FlowableDistinctTest {
     public void fusedClear() {
         Flowable.just(1, 1, 2, 1, 3, 2, 4, 5, 4)
         .distinct()
-        .subscribe(new FlowableSubscriber<Integer>() {
+        .subscribe(new RelaxedSubscriber<Integer>() {
             @Override
             public void onSubscribe(Subscription d) {
-                QueueSubscription<?> qd = (QueueSubscription<?>)d;
+                FusedQueueSubscription<?> qd = (FusedQueueSubscription<?>)d;
 
                 assertFalse(qd.isEmpty());
 

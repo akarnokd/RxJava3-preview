@@ -11,16 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 public final class FlowableAmb<T> extends Flowable<T> {
     final Publisher<? extends T>[] sources;
@@ -147,7 +148,7 @@ public final class FlowableAmb<T> extends Flowable<T> {
         }
     }
 
-    static final class AmbInnerSubscriber<T> extends AtomicReference<Subscription> implements FlowableSubscriber<T>, Subscription {
+    static final class AmbInnerSubscriber<T> extends AtomicReference<Subscription> implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = -1185974347409665484L;
         final AmbCoordinator<T> parent;
@@ -198,7 +199,7 @@ public final class FlowableAmb<T> extends Flowable<T> {
                     actual.onError(t);
                 } else {
                     get().cancel();
-                    RxJavaPlugins.onError(t);
+                    RxJavaCommonPlugins.onError(t);
                 }
             }
         }

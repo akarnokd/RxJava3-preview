@@ -11,16 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.*;
-import io.reactivex.internal.subscribers.*;
-import io.reactivex.internal.util.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.*;
+import io.reactivex.common.internal.utils.*;
+import io.reactivex.flowable.internal.subscribers.*;
+import io.reactivex.flowable.internal.utils.*;
 
 /**
  * Utility methods to consume a Publisher in a blocking manner with callbacks or Subscriber.
@@ -82,7 +83,7 @@ public final class FlowableBlockingSubscribe {
     public static <T> void subscribe(Publisher<? extends T> o) {
         BlockingIgnoringReceiver callback = new BlockingIgnoringReceiver();
         LambdaSubscriber<T> ls = new LambdaSubscriber<T>(Functions.emptyConsumer(),
-        callback, callback, Functions.REQUEST_MAX);
+        callback, callback, MaxRequestSubscription.REQUEST_MAX);
 
         o.subscribe(ls);
 
@@ -106,6 +107,6 @@ public final class FlowableBlockingSubscribe {
         ObjectHelper.requireNonNull(onNext, "onNext is null");
         ObjectHelper.requireNonNull(onError, "onError is null");
         ObjectHelper.requireNonNull(onComplete, "onComplete is null");
-        subscribe(o, new LambdaSubscriber<T>(onNext, onError, onComplete, Functions.REQUEST_MAX));
+        subscribe(o, new LambdaSubscriber<T>(onNext, onError, onComplete, MaxRequestSubscription.REQUEST_MAX));
     }
 }

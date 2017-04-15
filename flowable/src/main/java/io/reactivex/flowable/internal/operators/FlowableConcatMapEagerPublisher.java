@@ -11,14 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.operators.flowable.FlowableConcatMapEager.ConcatMapEagerDelayErrorSubscriber;
-import io.reactivex.internal.util.ErrorMode;
+import io.reactivex.common.ErrorMode;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.operators.FlowableConcatMapEager.ConcatMapEagerDelayErrorSubscriber;
 
 /**
  * ConcatMapEager which works with an arbitrary Publisher source.

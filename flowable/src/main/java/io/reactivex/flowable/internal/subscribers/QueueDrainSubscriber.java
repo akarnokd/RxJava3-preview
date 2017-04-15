@@ -11,18 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.flowable.internal.queues.SimplePlainQueue;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.*;
 
 /**
  * Abstract base class for subscribers that hold another subscriber, a queue
@@ -32,7 +32,7 @@ import io.reactivex.internal.util.*;
  * @param <U> the value type in the queue
  * @param <V> the value type the child subscriber accepts
  */
-public abstract class QueueDrainSubscriber<T, U, V> extends QueueDrainSubscriberPad4 implements FlowableSubscriber<T>, QueueDrain<U, V> {
+public abstract class QueueDrainSubscriber<T, U, V> extends QueueDrainSubscriberPad4 implements RelaxedSubscriber<T>, QueueDrain<U, V> {
     protected final Subscriber<? super V> actual;
     protected final SimplePlainQueue<U> queue;
 

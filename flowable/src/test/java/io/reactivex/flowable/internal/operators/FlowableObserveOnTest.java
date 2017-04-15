@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -31,7 +31,7 @@ import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.Functions;
 import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.operators.flowable.FlowableObserveOn.BaseObserveOnSubscriber;
+import io.reactivex.flowable.internal.operators.FlowableObserveOn.BaseObserveOnSubscriber;
 import io.reactivex.internal.schedulers.ImmediateThinScheduler;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.plugins.RxJavaPlugins;
@@ -1006,7 +1006,7 @@ public class FlowableObserveOnTest {
 
     @Test
     public void conditionalConsumerFused() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 5)
         .observeOn(Schedulers.single())
@@ -1020,14 +1020,14 @@ public class FlowableObserveOnTest {
 
         ts
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(2, 4);
     }
 
     @Test
     public void conditionalConsumerFusedReject() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.SYNC);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.SYNC);
 
         Flowable.range(1, 5)
         .observeOn(Schedulers.single())
@@ -1041,7 +1041,7 @@ public class FlowableObserveOnTest {
 
         ts
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.NONE))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.NONE))
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(2, 4);
     }
@@ -1071,7 +1071,7 @@ public class FlowableObserveOnTest {
 
     @Test
     public void conditionalConsumerFusedAsync() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
 
@@ -1094,14 +1094,14 @@ public class FlowableObserveOnTest {
 
         ts
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(2, 4);
     }
 
     @Test
     public void conditionalConsumerHidden() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 5).hide()
         .observeOn(Schedulers.single())
@@ -1115,14 +1115,14 @@ public class FlowableObserveOnTest {
 
         ts
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(2, 4);
     }
 
     @Test
     public void conditionalConsumerBarrier() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 5)
         .map(Functions.<Integer>identity())
@@ -1137,7 +1137,7 @@ public class FlowableObserveOnTest {
 
         ts
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(2, 4);
     }
@@ -1235,33 +1235,33 @@ public class FlowableObserveOnTest {
 
     @Test
     public void outputFused() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 5).hide()
         .observeOn(Schedulers.single())
         .subscribe(to);
 
-        SubscriberFusion.assertFusion(to, QueueSubscription.ASYNC)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.ASYNC)
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(1, 2, 3, 4, 5);
     }
 
     @Test
     public void outputFusedReject() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueSubscription.SYNC);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.SYNC);
 
         Flowable.range(1, 5).hide()
         .observeOn(Schedulers.single())
         .subscribe(to);
 
-        SubscriberFusion.assertFusion(to, QueueSubscription.NONE)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.NONE)
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(1, 2, 3, 4, 5);
     }
 
     @Test
     public void inputOutputAsyncFusedError() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         UnicastProcessor<Integer> us = UnicastProcessor.create();
 
@@ -1274,14 +1274,14 @@ public class FlowableObserveOnTest {
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(TestException.class);
 
-        SubscriberFusion.assertFusion(to, QueueSubscription.ASYNC)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.ASYNC)
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(TestException.class);
     }
 
     @Test
     public void inputOutputAsyncFusedErrorDelayed() {
-        TestSubscriber<Integer> to = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> to = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         UnicastProcessor<Integer> us = UnicastProcessor.create();
 
@@ -1294,7 +1294,7 @@ public class FlowableObserveOnTest {
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(TestException.class);
 
-        SubscriberFusion.assertFusion(to, QueueSubscription.ASYNC)
+        SubscriberFusion.assertFusion(to, FusedQueueSubscription.ASYNC)
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(TestException.class);
     }
@@ -1306,13 +1306,13 @@ public class FlowableObserveOnTest {
         final CountDownLatch cdl = new CountDownLatch(1);
 
         us.observeOn(Schedulers.single())
-        .subscribe(new FlowableSubscriber<Integer>() {
+        .subscribe(new RelaxedSubscriber<Integer>() {
             Subscription d;
             int count;
             @Override
             public void onSubscribe(Subscription d) {
                 this.d = d;
-                ((QueueSubscription<?>)d).requestFusion(QueueSubscription.ANY);
+                ((FusedQueueSubscription<?>)d).requestFusion(FusedQueueSubscription.ANY);
             }
 
             @Override
@@ -1352,7 +1352,7 @@ public class FlowableObserveOnTest {
 
                 oo.sourceMode = QueueFuseable.SYNC;
                 oo.requested.lazySet(1);
-                oo.queue = new SimpleQueue<Integer>() {
+                oo.queue = new FusedQueue<Integer>() {
 
                     @Override
                     public boolean offer(Integer value) {
@@ -1403,7 +1403,7 @@ public class FlowableObserveOnTest {
 
                 oo.sourceMode = QueueFuseable.SYNC;
                 oo.requested.lazySet(1);
-                oo.queue = new SimpleQueue<Integer>() {
+                oo.queue = new FusedQueue<Integer>() {
 
                     @Override
                     public boolean offer(Integer value) {
@@ -1455,7 +1455,7 @@ public class FlowableObserveOnTest {
 
                 oo.sourceMode = QueueFuseable.ASYNC;
                 oo.requested.lazySet(1);
-                oo.queue = new SimpleQueue<Integer>() {
+                oo.queue = new FusedQueue<Integer>() {
 
                     @Override
                     public boolean offer(Integer value) {
@@ -1506,7 +1506,7 @@ public class FlowableObserveOnTest {
 
                 oo.sourceMode = QueueFuseable.ASYNC;
                 oo.requested.lazySet(1);
-                oo.queue = new SimpleQueue<Integer>() {
+                oo.queue = new FusedQueue<Integer>() {
 
                     @Override
                     public boolean offer(Integer value) {
@@ -1712,14 +1712,14 @@ public class FlowableObserveOnTest {
 
     @Test
     public void backFusedConditional() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 100).hide()
         .observeOn(ImmediateThinScheduler.INSTANCE)
         .filter(Functions.alwaysTrue())
         .subscribe(ts);
 
-        SubscriberFusion.assertFusion(ts, QueueSubscription.ASYNC)
+        SubscriberFusion.assertFusion(ts, FusedQueueSubscription.ASYNC)
         .assertValueCount(100)
         .assertComplete()
         .assertNoErrors();
@@ -1727,21 +1727,21 @@ public class FlowableObserveOnTest {
 
     @Test
     public void backFusedErrorConditional() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.<Integer>error(new TestException())
         .observeOn(ImmediateThinScheduler.INSTANCE)
         .filter(Functions.alwaysTrue())
         .subscribe(ts);
 
-        SubscriberFusion.assertFusion(ts, QueueSubscription.ASYNC)
+        SubscriberFusion.assertFusion(ts, FusedQueueSubscription.ASYNC)
         .assertFailure(TestException.class);
     }
 
     @Test
     public void backFusedCancelConditional() {
         for (int i = 0; i < 500; i++) {
-            final TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+            final TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
             final TestScheduler scheduler = new TestScheduler();
 
@@ -1766,7 +1766,7 @@ public class FlowableObserveOnTest {
 
             TestHelper.race(r1, r2);
 
-            SubscriberFusion.assertFusion(ts, QueueSubscription.ASYNC);
+            SubscriberFusion.assertFusion(ts, FusedQueueSubscription.ASYNC);
 
             if (ts.valueCount() != 0) {
                 ts.assertResult(1);

@@ -44,7 +44,7 @@ public class DisposableHelperTest {
 
             TestHelper.assertError(list, 0, NullPointerException.class, "next is null");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

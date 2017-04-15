@@ -11,15 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Predicate;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Predicate;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 public final class FlowableTakeWhile<T> extends AbstractFlowableWithUpstream<T, T> {
     final Predicate<? super T> predicate;
@@ -33,7 +34,7 @@ public final class FlowableTakeWhile<T> extends AbstractFlowableWithUpstream<T, 
         source.subscribe(new TakeWhileSubscriber<T>(s, predicate));
     }
 
-    static final class TakeWhileSubscriber<T> implements FlowableSubscriber<T>, Subscription {
+    static final class TakeWhileSubscriber<T> implements RelaxedSubscriber<T>, Subscription {
         final Subscriber<? super T> actual;
         final Predicate<? super T> predicate;
 
@@ -82,7 +83,7 @@ public final class FlowableTakeWhile<T> extends AbstractFlowableWithUpstream<T, 
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;

@@ -2157,7 +2157,7 @@ public class FlowableNullTests {
 
     @Test(expected = NullPointerException.class)
     public void subscribeNull2() {
-        just1.subscribe((FlowableSubscriber<Integer>)null);
+        just1.subscribe((RelaxedSubscriber<Integer>)null);
     }
 
     @Test(expected = NullPointerException.class)
@@ -2825,7 +2825,7 @@ public class FlowableNullTests {
 
     @Test(expected = NullPointerException.class)
     public void unsafeSubscribeNull() {
-        just1.subscribe((FlowableSubscriber<Object>)null);
+        just1.subscribe((RelaxedSubscriber<Object>)null);
     }
 
     @SuppressWarnings("unchecked")

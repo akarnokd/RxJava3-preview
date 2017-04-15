@@ -11,18 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.subscribers.SerializedSubscriber;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.BiFunction;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.subscribers.SerializedSubscriber;
 
 public final class FlowableWithLatestFrom<T, U, R> extends AbstractFlowableWithUpstream<T, R> {
     final BiFunction<? super T, ? super U, ? extends R> combiner;
@@ -45,7 +46,7 @@ public final class FlowableWithLatestFrom<T, U, R> extends AbstractFlowableWithU
         source.subscribe(wlf);
     }
 
-    static final class WithLatestFromSubscriber<T, U, R> extends AtomicReference<U> implements FlowableSubscriber<T>, Subscription {
+    static final class WithLatestFromSubscriber<T, U, R> extends AtomicReference<U> implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = -312246233408980075L;
 
@@ -117,7 +118,7 @@ public final class FlowableWithLatestFrom<T, U, R> extends AbstractFlowableWithU
         }
     }
 
-    final class FlowableWithLatestSubscriber implements FlowableSubscriber<U> {
+    final class FlowableWithLatestSubscriber implements RelaxedSubscriber<U> {
         private final WithLatestFromSubscriber<T, U, R> wlf;
 
         FlowableWithLatestSubscriber(WithLatestFromSubscriber<T, U, R> wlf) {

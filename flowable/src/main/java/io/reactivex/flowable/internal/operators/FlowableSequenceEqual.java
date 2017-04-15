@@ -11,20 +11,20 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.BiPredicate;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.SpscArrayQueue;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.AtomicThrowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.BiPredicate;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.SpscArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 public final class FlowableSequenceEqual<T> extends Flowable<Boolean> {
     final Publisher<? extends T> first;
@@ -117,8 +117,8 @@ public final class FlowableSequenceEqual<T> extends Flowable<Boolean> {
             int missed = 1;
 
             for (;;) {
-                SimpleQueue<T> q1 = first.queue;
-                SimpleQueue<T> q2 = second.queue;
+                FusedQueue<T> q1 = first.queue;
+                FusedQueue<T> q2 = second.queue;
 
                 if (q1 != null && q2 != null) {
                     for (;;) {
@@ -237,14 +237,14 @@ public final class FlowableSequenceEqual<T> extends Flowable<Boolean> {
             if (error.addThrowable(t)) {
                 drain();
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
     }
 
     static final class EqualSubscriber<T>
     extends AtomicReference<Subscription>
-    implements FlowableSubscriber<T> {
+    implements RelaxedSubscriber<T> {
 
         private static final long serialVersionUID = 4804128302091633067L;
 
@@ -256,7 +256,7 @@ public final class FlowableSequenceEqual<T> extends Flowable<Boolean> {
 
         long produced;
 
-        volatile SimpleQueue<T> queue;
+        volatile FusedQueue<T> queue;
 
         volatile boolean done;
 
@@ -271,19 +271,19 @@ public final class FlowableSequenceEqual<T> extends Flowable<Boolean> {
         @Override
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.setOnce(this, s)) {
-                if (s instanceof QueueSubscription) {
+                if (s instanceof FusedQueueSubscription) {
                     @SuppressWarnings("unchecked")
-                    QueueSubscription<T> qs = (QueueSubscription<T>) s;
+                    FusedQueueSubscription<T> qs = (FusedQueueSubscription<T>) s;
 
-                    int m = qs.requestFusion(QueueSubscription.ANY);
-                    if (m == QueueSubscription.SYNC) {
+                    int m = qs.requestFusion(FusedQueueSubscription.ANY);
+                    if (m == FusedQueueSubscription.SYNC) {
                         sourceMode = m;
                         queue = qs;
                         done = true;
                         parent.drain();
                         return;
                     }
-                    if (m == QueueSubscription.ASYNC) {
+                    if (m == FusedQueueSubscription.ASYNC) {
                         sourceMode = m;
                         queue = qs;
                         s.request(prefetch);
@@ -299,7 +299,7 @@ public final class FlowableSequenceEqual<T> extends Flowable<Boolean> {
 
         @Override
         public void onNext(T t) {
-            if (sourceMode == QueueSubscription.NONE) {
+            if (sourceMode == FusedQueueSubscription.NONE) {
                 if (!queue.offer(t)) {
                     onError(new MissingBackpressureException());
                     return;
@@ -320,7 +320,7 @@ public final class FlowableSequenceEqual<T> extends Flowable<Boolean> {
         }
 
         public void request() {
-            if (sourceMode != QueueSubscription.SYNC) {
+            if (sourceMode != FusedQueueSubscription.SYNC) {
                 long p = produced + 1;
                 if (p >= limit) {
                     produced = 0;
@@ -336,7 +336,7 @@ public final class FlowableSequenceEqual<T> extends Flowable<Boolean> {
         }
 
         void clear() {
-            SimpleQueue<T> sq = queue;
+            FusedQueue<T> sq = queue;
             if (sq != null) {
                 sq.clear();
             }

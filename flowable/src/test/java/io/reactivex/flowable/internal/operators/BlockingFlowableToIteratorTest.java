@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
 
@@ -22,7 +22,7 @@ import org.reactivestreams.*;
 
 import io.reactivex.Flowable;
 import io.reactivex.exceptions.*;
-import io.reactivex.internal.operators.flowable.BlockingFlowableIterable.BlockingFlowableIterator;
+import io.reactivex.flowable.internal.operators.BlockingFlowableIterable.BlockingFlowableIterator;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 
 public class BlockingFlowableToIteratorTest {

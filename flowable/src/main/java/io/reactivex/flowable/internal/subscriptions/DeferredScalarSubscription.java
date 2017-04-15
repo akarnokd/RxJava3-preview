@@ -11,10 +11,11 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscriptions;
+package io.reactivex.flowable.internal.subscriptions;
 
-import io.reactivex.annotations.Nullable;
 import org.reactivestreams.Subscriber;
+
+import io.reactivex.common.annotations.Nullable;
 
 /**
  * A subscription that signals a single value eventually.
@@ -32,7 +33,7 @@ import org.reactivestreams.Subscriber;
  * Where exclusively set means any other bits are 0 when that bit is set.
  * @param <T> the value type
  */
-public class DeferredScalarSubscription<T> extends BasicIntQueueSubscription<T> {
+public class DeferredScalarSubscription<T> extends BasicIntFusedQueueSubscription<T> {
 
 
     private static final long serialVersionUID = -2151279923272604993L;

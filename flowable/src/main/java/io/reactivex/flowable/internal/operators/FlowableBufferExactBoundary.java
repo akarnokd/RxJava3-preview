@@ -11,22 +11,23 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.Collection;
 import java.util.concurrent.Callable;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.queue.MpscLinkedQueue;
-import io.reactivex.internal.subscribers.QueueDrainSubscriber;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.QueueDrainHelper;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.MpscLinkedQueue;
+import io.reactivex.flowable.internal.subscribers.QueueDrainSubscriber;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.QueueDrainHelper;
+import io.reactivex.flowable.subscribers.*;
 
 public final class FlowableBufferExactBoundary<T, U extends Collection<? super T>, B>
 extends AbstractFlowableWithUpstream<T, U> {
@@ -45,7 +46,7 @@ extends AbstractFlowableWithUpstream<T, U> {
     }
 
     static final class BufferExactBoundarySubscriber<T, U extends Collection<? super T>, B>
-    extends QueueDrainSubscriber<T, U, U> implements FlowableSubscriber<T>, Subscription, Disposable {
+    extends QueueDrainSubscriber<T, U, U> implements RelaxedSubscriber<T>, Subscription, Disposable {
 
         final Callable<U> bufferSupplier;
         final Publisher<B> boundary;

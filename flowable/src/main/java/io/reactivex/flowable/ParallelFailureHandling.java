@@ -11,10 +11,10 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.parallel;
+package io.reactivex.flowable;
 
-import io.reactivex.annotations.Experimental;
-import io.reactivex.functions.BiFunction;
+import io.reactivex.common.annotations.Experimental;
+import io.reactivex.common.functions.BiFunction;
 
 /**
  * Enumerations for handling failure within a parallel operator.

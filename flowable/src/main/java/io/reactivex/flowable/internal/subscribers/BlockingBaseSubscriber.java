@@ -10,18 +10,18 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import java.util.concurrent.CountDownLatch;
 
 import org.reactivestreams.Subscription;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.internal.utils.*;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 public abstract class BlockingBaseSubscriber<T> extends CountDownLatch
-implements FlowableSubscriber<T> {
+implements RelaxedSubscriber<T> {
 
     T value;
     Throwable error;

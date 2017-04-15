@@ -37,7 +37,7 @@ public class ScheduledDirectPeriodicTaskTest {
 
             TestHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

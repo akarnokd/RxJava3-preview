@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -172,7 +172,7 @@ public class FlowableGroupJoinTest {
                 });
 
         q.subscribe(
-                new FlowableSubscriber<PPF>() {
+                new RelaxedSubscriber<PPF>() {
                     @Override
                     public void onNext(final PPF ppf) {
                         ppf.fruits.filter(new Predicate<PersonFruit>() {

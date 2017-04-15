@@ -11,15 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.subscriptions.SubscriptionArbiter;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionArbiter;
 
 public final class FlowableOnErrorNext<T> extends AbstractFlowableWithUpstream<T, T> {
     final Function<? super Throwable, ? extends Publisher<? extends T>> nextSupplier;
@@ -39,7 +40,7 @@ public final class FlowableOnErrorNext<T> extends AbstractFlowableWithUpstream<T
         source.subscribe(parent);
     }
 
-    static final class OnErrorNextSubscriber<T> implements FlowableSubscriber<T> {
+    static final class OnErrorNextSubscriber<T> implements RelaxedSubscriber<T> {
         final Subscriber<? super T> actual;
         final Function<? super Throwable, ? extends Publisher<? extends T>> nextSupplier;
         final boolean allowFatal;
@@ -76,7 +77,7 @@ public final class FlowableOnErrorNext<T> extends AbstractFlowableWithUpstream<T
         public void onError(Throwable t) {
             if (once) {
                 if (done) {
-                    RxJavaPlugins.onError(t);
+                    RxJavaCommonPlugins.onError(t);
                     return;
                 }
                 actual.onError(t);

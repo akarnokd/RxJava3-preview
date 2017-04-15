@@ -16,7 +16,7 @@
 
 package io.reactivex.common.internal.schedulers;
 
-import io.reactivex.common.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
 
 /**
  * A Callable to be submitted to an ExecutorService that runs a Runnable
@@ -39,7 +39,7 @@ public final class ScheduledDirectPeriodicTask extends AbstractDirectTask implem
                 runnable.run();
             } catch (Throwable ex) {
                 lazySet(FINISHED);
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
         } finally {
             runner = null;

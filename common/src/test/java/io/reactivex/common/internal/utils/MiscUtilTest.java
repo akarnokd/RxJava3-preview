@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import io.reactivex.common.*;
 import io.reactivex.common.functions.BiPredicate;
-import io.reactivex.common.internal.utils.AppendOnlyLinkedArrayList.NonThrowingPredicate;
+import io.reactivex.common.internal.utils.AbstractAppendOnlyLinkedArrayList.NonThrowingPredicate;
 
 public class MiscUtilTest {
     @Test
@@ -66,8 +66,8 @@ public class MiscUtilTest {
     }
 
     @Test
-    public void appendOnlyLinkedArrayListForEachWhile() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(2) { };
+    public void AbstractAppendOnlyLinkedArrayListForEachWhile() throws Exception {
+        AbstractAppendOnlyLinkedArrayList<Integer> list = new AbstractAppendOnlyLinkedArrayList<Integer>(2) { };
 
         list.add(1);
         list.add(2);
@@ -88,8 +88,8 @@ public class MiscUtilTest {
 
 
     @Test
-    public void appendOnlyLinkedArrayListForEachWhilePreGrow() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(12) { };
+    public void AbstractAppendOnlyLinkedArrayListForEachWhilePreGrow() throws Exception {
+        AbstractAppendOnlyLinkedArrayList<Integer> list = new AbstractAppendOnlyLinkedArrayList<Integer>(12) { };
 
         list.add(1);
         list.add(2);
@@ -109,8 +109,8 @@ public class MiscUtilTest {
     }
 
     @Test
-    public void appendOnlyLinkedArrayListForEachWhileExact() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(3) { };
+    public void AbstractAppendOnlyLinkedArrayListForEachWhileExact() throws Exception {
+        AbstractAppendOnlyLinkedArrayList<Integer> list = new AbstractAppendOnlyLinkedArrayList<Integer>(3) { };
 
         list.add(1);
         list.add(2);
@@ -130,8 +130,8 @@ public class MiscUtilTest {
     }
 
     @Test
-    public void appendOnlyLinkedArrayListForEachWhileAll() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(2) { };
+    public void AbstractAppendOnlyLinkedArrayListForEachWhileAll() throws Exception {
+        AbstractAppendOnlyLinkedArrayList<Integer> list = new AbstractAppendOnlyLinkedArrayList<Integer>(2) { };
 
         list.add(1);
         list.add(2);
@@ -151,8 +151,8 @@ public class MiscUtilTest {
     }
 
     @Test
-    public void appendOnlyLinkedArrayListForEachWhileBigger() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(4) { };
+    public void AbstractAppendOnlyLinkedArrayListForEachWhileBigger() throws Exception {
+        AbstractAppendOnlyLinkedArrayList<Integer> list = new AbstractAppendOnlyLinkedArrayList<Integer>(4) { };
 
         list.add(1);
         list.add(2);
@@ -172,8 +172,8 @@ public class MiscUtilTest {
     }
 
     @Test
-    public void appendOnlyLinkedArrayListForEachWhileBiPreGrow() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(12) { };
+    public void AbstractAppendOnlyLinkedArrayListForEachWhileBiPreGrow() throws Exception {
+        AbstractAppendOnlyLinkedArrayList<Integer> list = new AbstractAppendOnlyLinkedArrayList<Integer>(12) { };
 
         list.add(1);
         list.add(2);
@@ -193,8 +193,8 @@ public class MiscUtilTest {
     }
 
     @Test
-    public void appendOnlyLinkedArrayListForEachWhileBiExact() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(3) { };
+    public void AbstractAppendOnlyLinkedArrayListForEachWhileBiExact() throws Exception {
+        AbstractAppendOnlyLinkedArrayList<Integer> list = new AbstractAppendOnlyLinkedArrayList<Integer>(3) { };
 
         list.add(1);
         list.add(2);
@@ -214,8 +214,8 @@ public class MiscUtilTest {
     }
 
     @Test
-    public void appendOnlyLinkedArrayListForEachWhileBiAll() throws Exception {
-        AppendOnlyLinkedArrayList<Integer> list = new AppendOnlyLinkedArrayList<Integer>(2) { };
+    public void AbstractAppendOnlyLinkedArrayListForEachWhileBiAll() throws Exception {
+        AbstractAppendOnlyLinkedArrayList<Integer> list = new AbstractAppendOnlyLinkedArrayList<Integer>(2) { };
 
         list.add(1);
         list.add(2);

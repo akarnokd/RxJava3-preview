@@ -10,22 +10,23 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.annotations.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.HalfSerializer;
 
 /**
  * Combines a main sequence of values with the latest from multiple other sequences via
@@ -95,7 +96,7 @@ public final class FlowableWithLatestFromMany<T, R> extends AbstractFlowableWith
 
     static final class WithLatestFromSubscriber<T, R>
     extends AtomicInteger
-    implements FlowableSubscriber<T>, Subscription {
+    implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = 1577321883966341961L;
 
@@ -182,7 +183,7 @@ public final class FlowableWithLatestFromMany<T, R> extends AbstractFlowableWith
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -243,7 +244,7 @@ public final class FlowableWithLatestFromMany<T, R> extends AbstractFlowableWith
 
     static final class WithLatestInnerSubscriber
     extends AtomicReference<Subscription>
-    implements FlowableSubscriber<Object>, Disposable {
+    implements RelaxedSubscriber<Object>, Disposable {
 
         private static final long serialVersionUID = 3256684027868224024L;
 

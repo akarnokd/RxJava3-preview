@@ -11,17 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.ParallelFlowable;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 /**
  * Execute a Consumer in each 'rail' for the current element passing through.
@@ -85,7 +85,7 @@ public final class ParallelPeek<T> extends ParallelFlowable<T> {
         return source.parallelism();
     }
 
-    static final class ParallelPeekSubscriber<T> implements FlowableSubscriber<T>, Subscription {
+    static final class ParallelPeekSubscriber<T> implements RelaxedSubscriber<T>, Subscription {
 
         final Subscriber<? super T> actual;
 
@@ -106,7 +106,7 @@ public final class ParallelPeek<T> extends ParallelFlowable<T> {
                 parent.onRequest.accept(n);
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
             s.request(n);
         }
@@ -117,7 +117,7 @@ public final class ParallelPeek<T> extends ParallelFlowable<T> {
                 parent.onCancel.run();
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
             s.cancel();
         }
@@ -166,7 +166,7 @@ public final class ParallelPeek<T> extends ParallelFlowable<T> {
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -183,7 +183,7 @@ public final class ParallelPeek<T> extends ParallelFlowable<T> {
                 parent.onAfterTerminated.run();
             } catch (Throwable ex) {
                 Exceptions.throwIfFatal(ex);
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
         }
 
@@ -204,7 +204,7 @@ public final class ParallelPeek<T> extends ParallelFlowable<T> {
                     parent.onAfterTerminated.run();
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    RxJavaPlugins.onError(ex);
+                    RxJavaCommonPlugins.onError(ex);
                 }
             }
         }

@@ -11,22 +11,21 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.Subscription;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 public final class ForEachWhileSubscriber<T>
 extends AtomicReference<Subscription>
-implements FlowableSubscriber<T>, Disposable {
+implements RelaxedSubscriber<T>, Disposable {
 
 
     private static final long serialVersionUID = -4403180040475402120L;
@@ -78,7 +77,7 @@ implements FlowableSubscriber<T>, Disposable {
     @Override
     public void onError(Throwable t) {
         if (done) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         done = true;
@@ -86,7 +85,7 @@ implements FlowableSubscriber<T>, Disposable {
             onError.accept(t);
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
-            RxJavaPlugins.onError(new CompositeException(t, ex));
+            RxJavaCommonPlugins.onError(new CompositeException(t, ex));
         }
     }
 
@@ -100,7 +99,7 @@ implements FlowableSubscriber<T>, Disposable {
             onComplete.run();
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
-            RxJavaPlugins.onError(ex);
+            RxJavaCommonPlugins.onError(ex);
         }
     }
 

@@ -11,19 +11,20 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.ArrayDeque;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.UnicastProcessor;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.SpscLinkedArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
+import io.reactivex.flowable.processors.UnicastProcessor;
 
 public final class FlowableWindow<T> extends AbstractFlowableWithUpstream<T, Flowable<T>> {
     final long size;
@@ -53,7 +54,7 @@ public final class FlowableWindow<T> extends AbstractFlowableWithUpstream<T, Flo
 
     static final class WindowExactSubscriber<T>
     extends AtomicInteger
-    implements FlowableSubscriber<T>, Subscription, Runnable {
+    implements RelaxedSubscriber<T>, Subscription, Runnable {
 
 
         private static final long serialVersionUID = -2365647875069161133L;
@@ -162,7 +163,7 @@ public final class FlowableWindow<T> extends AbstractFlowableWithUpstream<T, Flo
 
     static final class WindowSkipSubscriber<T>
     extends AtomicInteger
-    implements FlowableSubscriber<T>, Subscription, Runnable {
+    implements RelaxedSubscriber<T>, Subscription, Runnable {
 
 
         private static final long serialVersionUID = -8792836352386833856L;
@@ -290,7 +291,7 @@ public final class FlowableWindow<T> extends AbstractFlowableWithUpstream<T, Flo
 
     static final class WindowOverlapSubscriber<T>
     extends AtomicInteger
-    implements FlowableSubscriber<T>, Subscription, Runnable {
+    implements RelaxedSubscriber<T>, Subscription, Runnable {
 
 
         private static final long serialVersionUID = 2428527070996323976L;
@@ -397,7 +398,7 @@ public final class FlowableWindow<T> extends AbstractFlowableWithUpstream<T, Flo
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
 

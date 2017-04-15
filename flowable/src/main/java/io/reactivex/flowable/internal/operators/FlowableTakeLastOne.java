@@ -10,12 +10,13 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 public final class FlowableTakeLastOne<T> extends AbstractFlowableWithUpstream<T, T> {
 
@@ -29,7 +30,7 @@ public final class FlowableTakeLastOne<T> extends AbstractFlowableWithUpstream<T
     }
 
     static final class TakeLastOneSubscriber<T> extends DeferredScalarSubscription<T>
-    implements FlowableSubscriber<T> {
+    implements RelaxedSubscriber<T> {
 
         private static final long serialVersionUID = -5467847744262967226L;
 

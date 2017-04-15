@@ -11,14 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.internal.fuseable.QueueSubscription;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 public final class FlowableIgnoreElements<T> extends AbstractFlowableWithUpstream<T, T> {
 
@@ -31,7 +31,7 @@ public final class FlowableIgnoreElements<T> extends AbstractFlowableWithUpstrea
         source.subscribe(new IgnoreElementsSubscriber<T>(t));
     }
 
-    static final class IgnoreElementsSubscriber<T> implements FlowableSubscriber<T>, QueueSubscription<T> {
+    static final class IgnoreElementsSubscriber<T> implements RelaxedSubscriber<T>, FusedQueueSubscription<T> {
         final Subscriber<? super T> actual;
 
         Subscription s;
@@ -66,11 +66,6 @@ public final class FlowableIgnoreElements<T> extends AbstractFlowableWithUpstrea
 
         @Override
         public boolean offer(T e) {
-            throw new UnsupportedOperationException("Should not be called!");
-        }
-
-        @Override
-        public boolean offer(T v1, T v2) {
             throw new UnsupportedOperationException("Should not be called!");
         }
 

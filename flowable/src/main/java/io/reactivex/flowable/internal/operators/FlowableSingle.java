@@ -11,13 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 public final class FlowableSingle<T> extends AbstractFlowableWithUpstream<T, T> {
 
@@ -34,7 +35,7 @@ public final class FlowableSingle<T> extends AbstractFlowableWithUpstream<T, T> 
     }
 
     static final class SingleElementSubscriber<T> extends DeferredScalarSubscription<T>
-    implements FlowableSubscriber<T> {
+    implements RelaxedSubscriber<T> {
 
         private static final long serialVersionUID = -5526049321428043809L;
 
@@ -75,7 +76,7 @@ public final class FlowableSingle<T> extends AbstractFlowableWithUpstream<T, T> 
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;

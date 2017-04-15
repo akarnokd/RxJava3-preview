@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.*;
 
 /**
  * Multicasts a Flowable over a selector function.
@@ -74,7 +73,7 @@ public final class FlowablePublishMulticast<T, R> extends AbstractFlowableWithUp
         source.subscribe(mp);
     }
 
-    static final class OutputCanceller<R> implements FlowableSubscriber<R>, Subscription {
+    static final class OutputCanceller<R> implements RelaxedSubscriber<R>, Subscription {
         final Subscriber<? super R> actual;
 
         final MulticastProcessor<?> processor;
@@ -124,7 +123,7 @@ public final class FlowablePublishMulticast<T, R> extends AbstractFlowableWithUp
         }
     }
 
-    static final class MulticastProcessor<T> extends Flowable<T> implements FlowableSubscriber<T>, Disposable {
+    static final class MulticastProcessor<T> extends Flowable<T> implements RelaxedSubscriber<T>, Disposable {
 
         @SuppressWarnings("rawtypes")
         static final MulticastSubscription[] EMPTY = new MulticastSubscription[0];
@@ -144,7 +143,7 @@ public final class FlowablePublishMulticast<T, R> extends AbstractFlowableWithUp
 
         final AtomicReference<Subscription> s;
 
-        volatile SimpleQueue<T> queue;
+        volatile FusedQueue<T> queue;
 
         int sourceMode;
 
@@ -166,19 +165,19 @@ public final class FlowablePublishMulticast<T, R> extends AbstractFlowableWithUp
         @Override
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.setOnce(this.s, s)) {
-                if (s instanceof QueueSubscription) {
+                if (s instanceof FusedQueueSubscription) {
                     @SuppressWarnings("unchecked")
-                    QueueSubscription<T> qs = (QueueSubscription<T>) s;
+                    FusedQueueSubscription<T> qs = (FusedQueueSubscription<T>) s;
 
-                    int m = qs.requestFusion(QueueSubscription.ANY);
-                    if (m == QueueSubscription.SYNC) {
+                    int m = qs.requestFusion(FusedQueueSubscription.ANY);
+                    if (m == FusedQueueSubscription.SYNC) {
                         sourceMode = m;
                         queue = qs;
                         done = true;
                         drain();
                         return;
                     }
-                    if (m == QueueSubscription.ASYNC) {
+                    if (m == FusedQueueSubscription.ASYNC) {
                         sourceMode = m;
                         queue = qs;
                         QueueDrainHelper.request(s, prefetch);
@@ -196,7 +195,7 @@ public final class FlowablePublishMulticast<T, R> extends AbstractFlowableWithUp
         public void dispose() {
             SubscriptionHelper.cancel(s);
             if (wip.getAndIncrement() == 0) {
-                SimpleQueue<T> q = queue;
+                FusedQueue<T> q = queue;
                 if (q != null) {
                     q.clear();
                 }
@@ -213,7 +212,7 @@ public final class FlowablePublishMulticast<T, R> extends AbstractFlowableWithUp
             if (done) {
                 return;
             }
-            if (sourceMode == QueueSubscription.NONE && !queue.offer(t)) {
+            if (sourceMode == FusedQueueSubscription.NONE && !queue.offer(t)) {
                 s.get().cancel();
                 onError(new MissingBackpressureException());
                 return;
@@ -224,7 +223,7 @@ public final class FlowablePublishMulticast<T, R> extends AbstractFlowableWithUp
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             error = t;
@@ -318,11 +317,11 @@ public final class FlowablePublishMulticast<T, R> extends AbstractFlowableWithUp
 
             int missed = 1;
 
-            SimpleQueue<T> q = queue;
+            FusedQueue<T> q = queue;
 
             int upstreamConsumed = consumed;
             int localLimit = limit;
-            boolean canRequest = sourceMode != QueueSubscription.SYNC;
+            boolean canRequest = sourceMode != FusedQueueSubscription.SYNC;
 
             for (;;) {
                 MulticastSubscription<T>[] array = subscribers.get();

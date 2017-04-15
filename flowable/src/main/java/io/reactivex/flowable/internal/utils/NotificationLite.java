@@ -10,15 +10,13 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.util;
+package io.reactivex.flowable.internal.utils;
 
 import java.io.Serializable;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.functions.ObjectHelper;
 
 /**
  * Lightweight notification handling utility class.
@@ -76,24 +74,6 @@ public enum NotificationLite {
     }
 
     /**
-     * Wraps a Disposable.
-     */
-    static final class DisposableNotification implements Serializable {
-
-        private static final long serialVersionUID = -7482590109178395495L;
-        final Disposable d;
-
-        DisposableNotification(Disposable d) {
-            this.d = d;
-        }
-
-        @Override
-        public String toString() {
-            return "NotificationLite.Disposable[" + d + "]";
-        }
-    }
-
-    /**
      * Converts a value into a notification value.
      * @param <T> the actual value type
      * @param value the value to convert
@@ -130,15 +110,6 @@ public enum NotificationLite {
     }
 
     /**
-     * Converts a Disposable into a notification value.
-     * @param d the disposable to convert
-     * @return the notification representing the Disposable
-     */
-    public static Object disposable(Disposable d) {
-        return new DisposableNotification(d);
-    }
-
-    /**
      * Checks if the given object represents a complete notification.
      * @param o the object to check
      * @return true if the object represents a complete notification
@@ -163,10 +134,6 @@ public enum NotificationLite {
      */
     public static boolean isSubscription(Object o) {
         return o instanceof SubscriptionNotification;
-    }
-
-    public static boolean isDisposable(Object o) {
-        return o instanceof DisposableNotification;
     }
 
     /**
@@ -198,10 +165,6 @@ public enum NotificationLite {
         return ((SubscriptionNotification)o).s;
     }
 
-    public static Disposable getDisposable(Object o) {
-        return ((DisposableNotification)o).d;
-    }
-
     /**
      * Calls the appropriate Subscriber method based on the type of the notification.
      * <p>Does not check for a subscription notification, see {@link #acceptFull(Object, Subscriber)}.
@@ -213,28 +176,6 @@ public enum NotificationLite {
      */
     @SuppressWarnings("unchecked")
     public static <T> boolean accept(Object o, Subscriber<? super T> s) {
-        if (o == COMPLETE) {
-            s.onComplete();
-            return true;
-        } else
-        if (o instanceof ErrorNotification) {
-            s.onError(((ErrorNotification)o).e);
-            return true;
-        }
-        s.onNext((T)o);
-        return false;
-    }
-
-    /**
-     * Calls the appropriate Observer method based on the type of the notification.
-     * <p>Does not check for a subscription notification.
-     * @param <T> the expected value type when unwrapped
-     * @param o the notification object
-     * @param s the Observer to call methods on
-     * @return true if the notification was a terminal event (i.e., complete or error)
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> boolean accept(Object o, Observer<? super T> s) {
         if (o == COMPLETE) {
             s.onComplete();
             return true;
@@ -267,32 +208,6 @@ public enum NotificationLite {
         } else
         if (o instanceof SubscriptionNotification) {
             s.onSubscribe(((SubscriptionNotification)o).s);
-            return false;
-        }
-        s.onNext((T)o);
-        return false;
-    }
-
-    /**
-     * Calls the appropriate Observer method based on the type of the notification.
-     * @param <T> the expected value type when unwrapped
-     * @param o the notification object
-     * @param s the subscriber to call methods on
-     * @return true if the notification was a terminal event (i.e., complete or error)
-     * @see #accept(Object, Observer)
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> boolean acceptFull(Object o, Observer<? super T> s) {
-        if (o == COMPLETE) {
-            s.onComplete();
-            return true;
-        } else
-        if (o instanceof ErrorNotification) {
-            s.onError(((ErrorNotification)o).e);
-            return true;
-        } else
-        if (o instanceof DisposableNotification) {
-            s.onSubscribe(((DisposableNotification)o).d);
             return false;
         }
         s.onNext((T)o);

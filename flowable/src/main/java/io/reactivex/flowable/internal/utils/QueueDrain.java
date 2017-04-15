@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.flowable.internal.utils;
 
 import org.reactivestreams.Subscriber;
 

@@ -10,15 +10,16 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.processors;
+package io.reactivex.flowable.processors;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.annotations.*;
-import io.reactivex.internal.subscriptions.DeferredScalarSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
 import org.reactivestreams.*;
+
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.annotations.*;
+import io.reactivex.flowable.internal.subscriptions.DeferredScalarSubscription;
 
 /**
  * A Subject that emits the very last value followed by a completion event or the received error to Subscribers.
@@ -103,7 +104,7 @@ public final class AsyncProcessor<T> extends FlowableProcessor<T> {
             t = new NullPointerException("onError called with null. Null values are generally not allowed in 2.x operators and sources.");
         }
         if (subscribers.get() == TERMINATED) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         value = null;
@@ -319,7 +320,7 @@ public final class AsyncProcessor<T> extends FlowableProcessor<T> {
 
         void onError(Throwable t) {
             if (isCancelled()) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             } else {
                 actual.onError(t);
             }

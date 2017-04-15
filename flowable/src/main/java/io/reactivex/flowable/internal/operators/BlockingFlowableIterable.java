@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -19,12 +19,13 @@ import java.util.concurrent.locks.*;
 
 import org.reactivestreams.Subscription;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.internal.queue.SpscArrayQueue;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.common.internal.utils.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.SpscArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 public final class BlockingFlowableIterable<T> implements Iterable<T> {
     final Flowable<T> source;
@@ -45,7 +46,7 @@ public final class BlockingFlowableIterable<T> implements Iterable<T> {
 
     static final class BlockingFlowableIterator<T>
     extends AtomicReference<Subscription>
-    implements FlowableSubscriber<T>, Iterator<T>, Runnable, Disposable {
+    implements RelaxedSubscriber<T>, Iterator<T>, Runnable, Disposable {
 
         private static final long serialVersionUID = 6695226475494099826L;
 

@@ -11,19 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.Callable;
 
 import org.reactivestreams.*;
 
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BiConsumer;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscribers.DeferredScalarSubscriber;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.BiConsumer;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.ParallelFlowable;
+import io.reactivex.flowable.internal.subscribers.DeferredScalarSubscriber;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 /**
  * Reduce the sequence of values in each 'rail' to a single value.
@@ -132,7 +132,7 @@ public final class ParallelCollect<T, C> extends ParallelFlowable<C> {
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;

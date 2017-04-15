@@ -11,12 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.internal.operators.flowable.FlowableTake.TakeSubscriber;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.operators.FlowableTake.TakeSubscriber;
 
 /**
  * Take with a generic Publisher source.

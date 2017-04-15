@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.processors;
+package io.reactivex.flowable.processors;
 
 import java.lang.reflect.Array;
 import java.util.concurrent.atomic.*;
@@ -19,13 +19,14 @@ import java.util.concurrent.locks.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.annotations.*;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.internal.util.AppendOnlyLinkedArrayList.NonThrowingPredicate;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.AbstractAppendOnlyLinkedArrayList.NonThrowingPredicate;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.*;
 
 /**
  * Processor that emits the most recent item it has observed and all subsequent observed items to each subscribed
@@ -196,7 +197,7 @@ public final class BehaviorProcessor<T> extends FlowableProcessor<T> {
             t = new NullPointerException("onError called with null. Null values are generally not allowed in 2.x operators and sources.");
         }
         if (!terminalEvent.compareAndSet(null, t)) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         Object o = NotificationLite.error(t);

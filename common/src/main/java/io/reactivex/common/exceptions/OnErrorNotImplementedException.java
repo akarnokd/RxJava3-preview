@@ -16,7 +16,7 @@ package io.reactivex.common.exceptions;
 import io.reactivex.common.annotations.*;
 
 /**
- * Represents an exception used to signal to the {@code RxJavaPlugins.onError()} that a
+ * Represents an exception used to signal to the {@code RxJavaCommonPlugins.onError()} that a
  * callback-based subscribe() method on a base reactive type didn't specify
  * an onError handler.
  * @since 2.0.6 - experimental
@@ -28,7 +28,7 @@ public final class OnErrorNotImplementedException extends RuntimeException {
 
     /**
      * Customizes the {@code Throwable} with a custom message and wraps it before it
-     * is signalled to the {@code RxJavaPlugins.onError()} handler as {@code OnErrorNotImplementedException}.
+     * is signalled to the {@code RxJavaCommonPlugins.onError()} handler as {@code OnErrorNotImplementedException}.
      *
      * @param message
      *          the message to assign to the {@code Throwable} to signal
@@ -41,7 +41,7 @@ public final class OnErrorNotImplementedException extends RuntimeException {
 
     /**
      * Wraps the {@code Throwable} before it
-     * is signalled to the {@code RxJavaPlugins.onError()}
+     * is signalled to the {@code RxJavaCommonPlugins.onError()}
      * handler as {@code OnErrorNotImplementedException}.
      *
      * @param e

@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -19,17 +19,17 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.queue.MpscLinkedQueue;
-import io.reactivex.internal.subscribers.QueueDrainSubscriber;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.QueueDrainHelper;
-import io.reactivex.subscribers.SerializedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.MpscLinkedQueue;
+import io.reactivex.flowable.internal.subscribers.QueueDrainSubscriber;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.QueueDrainHelper;
+import io.reactivex.flowable.subscribers.SerializedSubscriber;
 
 public final class FlowableBufferTimed<T, U extends Collection<? super T>> extends AbstractFlowableWithUpstream<T, U> {
 

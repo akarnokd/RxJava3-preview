@@ -11,9 +11,9 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.parallel;
+package io.reactivex.flowable;
 
-import io.reactivex.annotations.*;
+import io.reactivex.common.annotations.*;
 
 /**
  * Interface to compose ParallelFlowable.

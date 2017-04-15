@@ -11,13 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscribers.SinglePostCompleteSubscriber;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscribers.SinglePostCompleteSubscriber;
 
 public final class FlowableMaterialize<T> extends AbstractFlowableWithUpstream<T, Notification<T>> {
 
@@ -57,7 +57,7 @@ public final class FlowableMaterialize<T> extends AbstractFlowableWithUpstream<T
         @Override
         protected void onDrop(Notification<T> n) {
             if (n.isOnError()) {
-                RxJavaPlugins.onError(n.getError());
+                RxJavaCommonPlugins.onError(n.getError());
             }
         }
     }

@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.junit.*;
 import org.reactivestreams.*;
@@ -620,7 +620,7 @@ public class FlowableFromSourceTest {
         ts1.assertNotComplete();
     }
 
-    static final class PublishAsyncEmitter implements FlowableOnSubscribe<Integer>, FlowableSubscriber<Integer> {
+    static final class PublishAsyncEmitter implements FlowableOnSubscribe<Integer>, RelaxedSubscriber<Integer> {
 
         final PublishProcessor<Integer> subject;
 
@@ -689,7 +689,7 @@ public class FlowableFromSourceTest {
         }
     }
 
-    static final class PublishAsyncEmitterNoCancel implements FlowableOnSubscribe<Integer>, FlowableSubscriber<Integer> {
+    static final class PublishAsyncEmitterNoCancel implements FlowableOnSubscribe<Integer>, RelaxedSubscriber<Integer> {
 
         final PublishProcessor<Integer> subject;
 
@@ -700,7 +700,7 @@ public class FlowableFromSourceTest {
         @Override
         public void subscribe(final FlowableEmitter<Integer> t) {
 
-            subject.subscribe(new FlowableSubscriber<Integer>() {
+            subject.subscribe(new RelaxedSubscriber<Integer>() {
 
                 @Override
                 public void onSubscribe(Subscription s) {

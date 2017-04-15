@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
 
@@ -24,7 +24,7 @@ import org.reactivestreams.*;
 import io.reactivex.Flowable;
 import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.internal.fuseable.FusedQueueSubscription;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.*;
@@ -251,23 +251,23 @@ public class FlowableOnBackpressureBufferTest {
 
     @Test
     public void fusedNormal() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 10).onBackpressureBuffer().subscribe(ts);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-          .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+          .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
           .assertResult(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
     }
 
     @Test
     public void fusedError() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.<Integer>error(new TestException()).onBackpressureBuffer().subscribe(ts);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-          .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+          .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
           .assertFailure(TestException.class);
     }
 
@@ -302,11 +302,11 @@ public class FlowableOnBackpressureBufferTest {
 
     @Test
     public void fusionRejected() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.SYNC);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.SYNC);
 
         Flowable.<Integer>never().onBackpressureBuffer().subscribe(ts);
 
-        SubscriberFusion.assertFusion(ts, QueueSubscription.NONE)
+        SubscriberFusion.assertFusion(ts, FusedQueueSubscription.NONE)
         .assertEmpty();
     }
 }

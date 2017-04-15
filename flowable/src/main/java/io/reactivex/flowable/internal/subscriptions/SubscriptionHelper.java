@@ -11,16 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscriptions;
+package io.reactivex.flowable.internal.subscriptions;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.Subscription;
 
-import io.reactivex.exceptions.ProtocolViolationException;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.ProtocolViolationException;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 /**
  * Utility methods to validate Subscriptions in the various onSubscribe calls.
@@ -45,14 +45,14 @@ public enum SubscriptionHelper implements Subscription {
 
     /**
      * Verifies that current is null, next is not null, otherwise signals errors
-     * to the RxJavaPlugins and returns false.
+     * to the RxJavaCommonPlugins and returns false.
      * @param current the current Subscription, expected to be null
      * @param next the next Subscription, expected to be non-null
      * @return true if the validation succeeded
      */
     public static boolean validate(Subscription current, Subscription next) {
         if (next == null) {
-            RxJavaPlugins.onError(new NullPointerException("next is null"));
+            RxJavaCommonPlugins.onError(new NullPointerException("next is null"));
             return false;
         }
         if (current != null) {
@@ -64,11 +64,11 @@ public enum SubscriptionHelper implements Subscription {
     }
 
     /**
-     * Reports that the subscription is already set to the RxJavaPlugins error handler,
+     * Reports that the subscription is already set to the RxJavaCommonPlugins error handler,
      * which is an indication of a onSubscribe management bug.
      */
     public static void reportSubscriptionSet() {
-        RxJavaPlugins.onError(new ProtocolViolationException("Subscription already set!"));
+        RxJavaCommonPlugins.onError(new ProtocolViolationException("Subscription already set!"));
     }
 
     /**
@@ -78,7 +78,7 @@ public enum SubscriptionHelper implements Subscription {
      */
     public static boolean validate(long n) {
         if (n <= 0) {
-            RxJavaPlugins.onError(new IllegalArgumentException("n > 0 required but it was " + n));
+            RxJavaCommonPlugins.onError(new IllegalArgumentException("n > 0 required but it was " + n));
             return false;
         }
         return true;
@@ -90,7 +90,7 @@ public enum SubscriptionHelper implements Subscription {
      * @param n the overproduction amount
      */
     public static void reportMoreProduced(long n) {
-        RxJavaPlugins.onError(new ProtocolViolationException("More produced than requested: " + n));
+        RxJavaCommonPlugins.onError(new ProtocolViolationException("More produced than requested: " + n));
     }
     /**
      * Check if the given subscription is the common cancelled subscription.

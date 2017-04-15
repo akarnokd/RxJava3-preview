@@ -11,16 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BooleanSupplier;
-import io.reactivex.internal.subscriptions.SubscriptionArbiter;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.BooleanSupplier;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionArbiter;
 
 public final class FlowableRepeatUntil<T> extends AbstractFlowableWithUpstream<T, T> {
     final BooleanSupplier until;
@@ -39,7 +40,7 @@ public final class FlowableRepeatUntil<T> extends AbstractFlowableWithUpstream<T
     }
 
     // FIXME update to a fresh Rsc algorithm
-    static final class RepeatSubscriber<T> extends AtomicInteger implements FlowableSubscriber<T> {
+    static final class RepeatSubscriber<T> extends AtomicInteger implements RelaxedSubscriber<T> {
 
         private static final long serialVersionUID = -7098360935104053232L;
 

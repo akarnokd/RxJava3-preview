@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
 
@@ -26,7 +26,7 @@ import io.reactivex.*;
 import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.internal.fuseable.FusedQueueSubscription;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.internal.util.ExceptionHelper;
 import io.reactivex.processors.PublishProcessor;
@@ -609,13 +609,13 @@ public class FlowableFlattenIterableTest {
     public void fusionMethods() {
         Flowable.just(1, 2)
         .flatMapIterable(Functions.justFunction(Arrays.asList(1, 2, 3)))
-        .subscribe(new FlowableSubscriber<Integer>() {
+        .subscribe(new RelaxedSubscriber<Integer>() {
             @Override
             public void onSubscribe(Subscription s) {
                 @SuppressWarnings("unchecked")
-                QueueSubscription<Integer> qs = (QueueSubscription<Integer>)s;
+                FusedQueueSubscription<Integer> qs = (FusedQueueSubscription<Integer>)s;
 
-                assertEquals(QueueSubscription.SYNC, qs.requestFusion(QueueSubscription.ANY));
+                assertEquals(FusedQueueSubscription.SYNC, qs.requestFusion(FusedQueueSubscription.ANY));
 
                 try {
                     assertFalse("Source reports being empty!", qs.isEmpty());
@@ -670,7 +670,7 @@ public class FlowableFlattenIterableTest {
 
     @Test
     public void mixedInnerSource() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.just(1, 2, 3)
         .flatMapIterable(new Function<Integer, Iterable<Integer>>() {
@@ -684,13 +684,13 @@ public class FlowableFlattenIterableTest {
         })
         .subscribe(ts);
 
-        SubscriberFusion.assertFusion(ts, QueueSubscription.SYNC)
+        SubscriberFusion.assertFusion(ts, FusedQueueSubscription.SYNC)
         .assertResult(1, 2, 1, 2);
     }
 
     @Test
     public void mixedInnerSource2() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.just(1, 2, 3)
         .flatMapIterable(new Function<Integer, Iterable<Integer>>() {
@@ -704,13 +704,13 @@ public class FlowableFlattenIterableTest {
         })
         .subscribe(ts);
 
-        SubscriberFusion.assertFusion(ts, QueueSubscription.SYNC)
+        SubscriberFusion.assertFusion(ts, FusedQueueSubscription.SYNC)
         .assertResult(1, 2);
     }
 
     @Test
     public void fusionRejected() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.just(1, 2, 3).hide()
         .flatMapIterable(new Function<Integer, Iterable<Integer>>() {
@@ -721,7 +721,7 @@ public class FlowableFlattenIterableTest {
         })
         .subscribe(ts);
 
-        SubscriberFusion.assertFusion(ts, QueueSubscription.NONE)
+        SubscriberFusion.assertFusion(ts, FusedQueueSubscription.NONE)
         .assertResult(1, 2, 1, 2, 1, 2);
     }
 
@@ -737,13 +737,13 @@ public class FlowableFlattenIterableTest {
                 return Arrays.asList(v);
             }
         })
-        .subscribe(new FlowableSubscriber<Integer>() {
+        .subscribe(new RelaxedSubscriber<Integer>() {
             @Override
             public void onSubscribe(Subscription s) {
                 @SuppressWarnings("unchecked")
-                QueueSubscription<Integer> qs = (QueueSubscription<Integer>)s;
+                FusedQueueSubscription<Integer> qs = (FusedQueueSubscription<Integer>)s;
 
-                assertEquals(QueueSubscription.SYNC, qs.requestFusion(QueueSubscription.ANY));
+                assertEquals(FusedQueueSubscription.SYNC, qs.requestFusion(FusedQueueSubscription.ANY));
 
                 try {
                     assertFalse("Source reports being empty!", qs.isEmpty());

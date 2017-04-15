@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -19,10 +19,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.Publisher;
 
-import io.reactivex.*;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subscribers.DisposableSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.utils.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.subscribers.DisposableSubscriber;
 
 /**
  * Wait for and iterate over the latest values of the source observable. If the source works faster than the
@@ -63,7 +63,7 @@ public final class BlockingFlowableLatest<T> implements Iterable<T> {
 
         @Override
         public void onError(Throwable e) {
-            RxJavaPlugins.onError(e);
+            RxJavaCommonPlugins.onError(e);
         }
 
         @Override

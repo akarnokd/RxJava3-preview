@@ -11,15 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.TimeUnit;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.schedulers.Timed;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 public final class FlowableTimeInterval<T> extends AbstractFlowableWithUpstream<T, Timed<T>> {
     final Scheduler scheduler;
@@ -37,7 +38,7 @@ public final class FlowableTimeInterval<T> extends AbstractFlowableWithUpstream<
         source.subscribe(new TimeIntervalSubscriber<T>(s, unit, scheduler));
     }
 
-    static final class TimeIntervalSubscriber<T> implements FlowableSubscriber<T>, Subscription {
+    static final class TimeIntervalSubscriber<T> implements RelaxedSubscriber<T>, Subscription {
         final Subscriber<? super Timed<T>> actual;
         final TimeUnit unit;
         final Scheduler scheduler;

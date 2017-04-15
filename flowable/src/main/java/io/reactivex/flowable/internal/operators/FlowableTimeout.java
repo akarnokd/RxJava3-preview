@@ -11,23 +11,23 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscribers.FullArbiterSubscriber;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscribers.FullArbiterSubscriber;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.subscribers.*;
 
 public final class FlowableTimeout<T, U, V> extends AbstractFlowableWithUpstream<T, T> {
     final Publisher<U> firstTimeoutIndicator;
@@ -57,7 +57,7 @@ public final class FlowableTimeout<T, U, V> extends AbstractFlowableWithUpstream
         }
     }
 
-    static final class TimeoutSubscriber<T, U, V> implements FlowableSubscriber<T>, Subscription, OnTimeout {
+    static final class TimeoutSubscriber<T, U, V> implements RelaxedSubscriber<T>, Subscription, OnTimeout {
         final Subscriber<? super T> actual;
         final Publisher<U> firstTimeoutIndicator;
         final Function<? super T, ? extends Publisher<V>> itemTimeoutIndicator;
@@ -198,7 +198,7 @@ public final class FlowableTimeout<T, U, V> extends AbstractFlowableWithUpstream
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -215,7 +215,7 @@ public final class FlowableTimeout<T, U, V> extends AbstractFlowableWithUpstream
         }
     }
 
-    static final class TimeoutOtherSubscriber<T, U, V> implements FlowableSubscriber<T>, Disposable, OnTimeout {
+    static final class TimeoutOtherSubscriber<T, U, V> implements RelaxedSubscriber<T>, Disposable, OnTimeout {
         final Subscriber<? super T> actual;
         final Publisher<U> firstTimeoutIndicator;
         final Function<? super T, ? extends Publisher<V>> itemTimeoutIndicator;
@@ -305,7 +305,7 @@ public final class FlowableTimeout<T, U, V> extends AbstractFlowableWithUpstream
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;

@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
 
@@ -673,7 +673,7 @@ public class FlowableCreateTest {
                     assertTrue(d.isDisposed());
                 }
             }, m)
-            .subscribe(new FlowableSubscriber<Object>() {
+            .subscribe(new RelaxedSubscriber<Object>() {
                 @Override
                 public void onSubscribe(Subscription d) {
                 }
@@ -711,7 +711,7 @@ public class FlowableCreateTest {
                     assertTrue(d.isDisposed());
                 }
             }, m)
-            .subscribe(new FlowableSubscriber<Object>() {
+            .subscribe(new RelaxedSubscriber<Object>() {
                 @Override
                 public void onSubscribe(Subscription d) {
                 }

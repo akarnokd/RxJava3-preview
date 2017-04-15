@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -245,7 +245,7 @@ public class FlowableFilterTest {
 
     @Test
     public void conditionalFusedSync() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 5)
         .filter(Functions.alwaysTrue())
@@ -253,13 +253,13 @@ public class FlowableFilterTest {
         .subscribe(ts);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.SYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.SYNC))
         .assertResult(1, 2, 3, 4, 5);
     }
 
     @Test
     public void conditionalFusedSync2() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 5)
         .filter(Functions.alwaysFalse())
@@ -267,13 +267,13 @@ public class FlowableFilterTest {
         .subscribe(ts);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.SYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.SYNC))
         .assertResult();
     }
 
     @Test
     public void conditionalFusedAsync() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
 
@@ -290,13 +290,13 @@ public class FlowableFilterTest {
         up.onComplete();
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .assertResult(1, 2, 3, 4, 5);
     }
 
     @Test
     public void conditionalFusedNoneAsync() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
 
@@ -313,13 +313,13 @@ public class FlowableFilterTest {
         up.onComplete();
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .assertResult();
     }
 
     @Test
     public void conditionalFusedNoneAsync2() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
 
@@ -336,7 +336,7 @@ public class FlowableFilterTest {
         up.onComplete();
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .assertResult();
     }
 
@@ -415,33 +415,33 @@ public class FlowableFilterTest {
 
     @Test
     public void syncFused() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 5)
         .filter(Functions.alwaysTrue())
         .subscribe(ts);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.SYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.SYNC))
         .assertResult(1, 2, 3, 4, 5);
     }
 
     @Test
     public void syncNoneFused() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 5)
         .filter(Functions.alwaysFalse())
         .subscribe(ts);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.SYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.SYNC))
         .assertResult();
     }
 
     @Test
     public void syncNoneFused2() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 5)
         .filter(Functions.alwaysFalse())
@@ -449,7 +449,7 @@ public class FlowableFilterTest {
         .subscribe(ts);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.SYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.SYNC))
         .assertResult();
     }
 

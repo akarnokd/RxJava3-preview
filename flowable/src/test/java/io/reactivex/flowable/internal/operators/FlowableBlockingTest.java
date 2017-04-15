@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.assertEquals;
 
@@ -127,7 +127,7 @@ public class FlowableBlockingTest {
 
         Flowable.range(1, 5)
         .subscribeOn(Schedulers.computation())
-        .blockingSubscribe(new FlowableSubscriber<Object>() {
+        .blockingSubscribe(new RelaxedSubscriber<Object>() {
 
             @Override
             public void onSubscribe(Subscription d) {
@@ -162,7 +162,7 @@ public class FlowableBlockingTest {
 
         Flowable.range(1, 5).concatWith(Flowable.<Integer>error(ex))
         .subscribeOn(Schedulers.computation())
-        .blockingSubscribe(new FlowableSubscriber<Object>() {
+        .blockingSubscribe(new RelaxedSubscriber<Object>() {
 
             @Override
             public void onSubscribe(Subscription d) {

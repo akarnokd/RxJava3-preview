@@ -18,4 +18,4 @@
  * Classes extending the Flowable base reactive class and implementing
  * the Subscriber interface at the same time (aka hot Flowables).
  */
-package io.reactivex.processors;
+package io.reactivex.flowable.processors;

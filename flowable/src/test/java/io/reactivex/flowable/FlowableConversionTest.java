@@ -22,7 +22,7 @@ import org.reactivestreams.*;
 
 import io.reactivex.*;
 import io.reactivex.functions.*;
-import io.reactivex.internal.operators.flowable.*;
+import io.reactivex.flowable.internal.operators.*;
 import io.reactivex.internal.util.ExceptionHelper;
 import io.reactivex.observers.*;
 import io.reactivex.schedulers.Schedulers;

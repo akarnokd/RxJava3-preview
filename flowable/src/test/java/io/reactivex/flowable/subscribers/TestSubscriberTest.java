@@ -31,7 +31,7 @@ import io.reactivex.Scheduler.Worker;
 import io.reactivex.exceptions.*;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.internal.fuseable.FusedQueueSubscription;
 import io.reactivex.internal.subscriptions.*;
 import io.reactivex.observers.BaseTestConsumer;
 import io.reactivex.observers.BaseTestConsumer.TestWaitStrategy;
@@ -984,22 +984,22 @@ public class TestSubscriberTest {
         }
 
         try {
-            ts.assertFusionMode(QueueSubscription.SYNC);
+            ts.assertFusionMode(FusedQueueSubscription.SYNC);
             throw new RuntimeException("Should have thrown");
         } catch (AssertionError ex) {
             // expected
         }
         ts = TestSubscriber.create();
-        ts.setInitialFusionMode(QueueSubscription.ANY);
+        ts.setInitialFusionMode(FusedQueueSubscription.ANY);
 
         ts.onSubscribe(new ScalarSubscription<Integer>(ts, 1));
 
         ts.assertFuseable();
 
-        ts.assertFusionMode(QueueSubscription.SYNC);
+        ts.assertFusionMode(FusedQueueSubscription.SYNC);
 
         try {
-            ts.assertFusionMode(QueueSubscription.NONE);
+            ts.assertFusionMode(FusedQueueSubscription.NONE);
             throw new RuntimeException("Should have thrown");
         } catch (AssertionError ex) {
             // expected
@@ -1195,9 +1195,9 @@ public class TestSubscriberTest {
 
     @Test
     public void fusionModeToString() {
-        assertEquals("NONE", TestSubscriber.fusionModeToString(QueueSubscription.NONE));
-        assertEquals("SYNC", TestSubscriber.fusionModeToString(QueueSubscription.SYNC));
-        assertEquals("ASYNC", TestSubscriber.fusionModeToString(QueueSubscription.ASYNC));
+        assertEquals("NONE", TestSubscriber.fusionModeToString(FusedQueueSubscription.NONE));
+        assertEquals("SYNC", TestSubscriber.fusionModeToString(FusedQueueSubscription.SYNC));
+        assertEquals("ASYNC", TestSubscriber.fusionModeToString(FusedQueueSubscription.ASYNC));
         assertEquals("Unknown(100)", TestSubscriber.fusionModeToString(100));
     }
 
@@ -1541,7 +1541,7 @@ public class TestSubscriberTest {
 
     @Test
     public void completeDelegateThrows() {
-        TestSubscriber<Integer> ts = new TestSubscriber<Integer>(new FlowableSubscriber<Integer>() {
+        TestSubscriber<Integer> ts = new TestSubscriber<Integer>(new RelaxedSubscriber<Integer>() {
 
             @Override
             public void onSubscribe(Subscription d) {
@@ -1577,7 +1577,7 @@ public class TestSubscriberTest {
 
     @Test
     public void errorDelegateThrows() {
-        TestSubscriber<Integer> ts = new TestSubscriber<Integer>(new FlowableSubscriber<Integer>() {
+        TestSubscriber<Integer> ts = new TestSubscriber<Integer>(new RelaxedSubscriber<Integer>() {
 
             @Override
             public void onSubscribe(Subscription d) {
@@ -1615,7 +1615,7 @@ public class TestSubscriberTest {
     @Test
     public void syncQueueThrows() {
         TestSubscriber<Object> ts = new TestSubscriber<Object>();
-        ts.setInitialFusionMode(QueueSubscription.SYNC);
+        ts.setInitialFusionMode(FusedQueueSubscription.SYNC);
 
         Flowable.range(1, 5)
         .map(new Function<Integer, Object>() {
@@ -1626,14 +1626,14 @@ public class TestSubscriberTest {
 
         ts.assertSubscribed()
         .assertFuseable()
-        .assertFusionMode(QueueSubscription.SYNC)
+        .assertFusionMode(FusedQueueSubscription.SYNC)
         .assertFailure(TestException.class);
     }
 
     @Test
     public void asyncQueueThrows() {
         TestSubscriber<Object> ts = new TestSubscriber<Object>();
-        ts.setInitialFusionMode(QueueSubscription.ANY);
+        ts.setInitialFusionMode(FusedQueueSubscription.ANY);
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
 
@@ -1648,7 +1648,7 @@ public class TestSubscriberTest {
 
         ts.assertSubscribed()
         .assertFuseable()
-        .assertFusionMode(QueueSubscription.ASYNC)
+        .assertFusionMode(FusedQueueSubscription.ASYNC)
         .assertFailure(TestException.class);
     }
 

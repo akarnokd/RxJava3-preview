@@ -57,7 +57,7 @@ public class NewThreadWorker extends Scheduler.Worker implements Disposable {
      * @return the ScheduledRunnable instance
      */
     public Disposable scheduleDirect(final Runnable run, long delayTime, TimeUnit unit) {
-        ScheduledDirectTask task = new ScheduledDirectTask(RxJavaPlugins.onSchedule(run));
+        ScheduledDirectTask task = new ScheduledDirectTask(RxJavaCommonPlugins.onSchedule(run));
         try {
             Future<?> f;
             if (delayTime <= 0L) {
@@ -68,7 +68,7 @@ public class NewThreadWorker extends Scheduler.Worker implements Disposable {
             task.setFuture(f);
             return task;
         } catch (RejectedExecutionException ex) {
-            RxJavaPlugins.onError(ex);
+            RxJavaCommonPlugins.onError(ex);
             return Scheduler.REJECTED;
         }
     }
@@ -83,13 +83,13 @@ public class NewThreadWorker extends Scheduler.Worker implements Disposable {
      * @return the ScheduledRunnable instance
      */
     public Disposable schedulePeriodicallyDirect(final Runnable run, long initialDelay, long period, TimeUnit unit) {
-        ScheduledDirectPeriodicTask task = new ScheduledDirectPeriodicTask(RxJavaPlugins.onSchedule(run));
+        ScheduledDirectPeriodicTask task = new ScheduledDirectPeriodicTask(RxJavaCommonPlugins.onSchedule(run));
         try {
             Future<?> f = executor.scheduleAtFixedRate(task, initialDelay, period, unit);
             task.setFuture(f);
             return task;
         } catch (RejectedExecutionException ex) {
-            RxJavaPlugins.onError(ex);
+            RxJavaCommonPlugins.onError(ex);
             return Scheduler.REJECTED;
         }
     }
@@ -108,7 +108,7 @@ public class NewThreadWorker extends Scheduler.Worker implements Disposable {
      */
     @NonNull
     public ScheduledRunnable scheduleActual(final Runnable run, long delayTime, @NonNull TimeUnit unit, @Nullable DisposableContainer parent) {
-        Runnable decoratedRun = RxJavaPlugins.onSchedule(run);
+        Runnable decoratedRun = RxJavaCommonPlugins.onSchedule(run);
 
         ScheduledRunnable sr = new ScheduledRunnable(decoratedRun, parent);
 
@@ -130,7 +130,7 @@ public class NewThreadWorker extends Scheduler.Worker implements Disposable {
             if (parent != null) {
                 parent.remove(sr);
             }
-            RxJavaPlugins.onError(ex);
+            RxJavaCommonPlugins.onError(ex);
         }
 
         return sr;

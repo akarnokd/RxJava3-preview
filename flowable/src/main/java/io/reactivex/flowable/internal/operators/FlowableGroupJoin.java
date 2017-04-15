@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.SimpleQueue;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.UnicastProcessor;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.SpscLinkedArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
+import io.reactivex.flowable.processors.UnicastProcessor;
 
 public final class FlowableGroupJoin<TLeft, TRight, TLeftEnd, TRightEnd, R> extends AbstractFlowableWithUpstream<TLeft, R> {
 
@@ -180,7 +181,7 @@ public final class FlowableGroupJoin<TLeft, TRight, TLeftEnd, TRightEnd, R> exte
             a.onError(ex);
         }
 
-        void fail(Throwable exc, Subscriber<?> a, SimpleQueue<?> q) {
+        void fail(Throwable exc, Subscriber<?> a, FusedQueue<?> q) {
             Exceptions.throwIfFatal(exc);
             ExceptionHelper.addThrowable(error, exc);
             q.clear();
@@ -353,7 +354,7 @@ public final class FlowableGroupJoin<TLeft, TRight, TLeftEnd, TRightEnd, R> exte
                 active.decrementAndGet();
                 drain();
             } else {
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
         }
 
@@ -385,14 +386,14 @@ public final class FlowableGroupJoin<TLeft, TRight, TLeftEnd, TRightEnd, R> exte
             if (ExceptionHelper.addThrowable(error, ex)) {
                 drain();
             } else {
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
         }
     }
 
     static final class LeftRightSubscriber
     extends AtomicReference<Subscription>
-    implements FlowableSubscriber<Object>, Disposable {
+    implements RelaxedSubscriber<Object>, Disposable {
 
         private static final long serialVersionUID = 1883890389173668373L;
 
@@ -441,7 +442,7 @@ public final class FlowableGroupJoin<TLeft, TRight, TLeftEnd, TRightEnd, R> exte
 
     static final class LeftRightEndSubscriber
     extends AtomicReference<Subscription>
-    implements FlowableSubscriber<Object>, Disposable {
+    implements RelaxedSubscriber<Object>, Disposable {
 
         private static final long serialVersionUID = 1883890389173668373L;
 

@@ -11,14 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Predicate;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Predicate;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 public final class FlowableSkipWhile<T> extends AbstractFlowableWithUpstream<T, T> {
     final Predicate<? super T> predicate;
@@ -32,7 +33,7 @@ public final class FlowableSkipWhile<T> extends AbstractFlowableWithUpstream<T, 
         source.subscribe(new SkipWhileSubscriber<T>(s, predicate));
     }
 
-    static final class SkipWhileSubscriber<T> implements FlowableSubscriber<T>, Subscription {
+    static final class SkipWhileSubscriber<T> implements RelaxedSubscriber<T>, Subscription {
         final Subscriber<? super T> actual;
         final Predicate<? super T> predicate;
         Subscription s;

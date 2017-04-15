@@ -16,9 +16,8 @@ package io.reactivex.common.internal.schedulers;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
-import io.reactivex.common.Disposable;
+import io.reactivex.common.*;
 import io.reactivex.common.internal.disposables.DisposableContainer;
-import io.reactivex.common.RxJavaPlugins;
 
 public final class ScheduledRunnable extends AtomicReferenceArray<Object>
 implements Runnable, Callable<Object>, Disposable {
@@ -61,7 +60,7 @@ implements Runnable, Callable<Object>, Disposable {
                 actual.run();
             } catch (Throwable e) {
                 // Exceptions.throwIfFatal(e); nowhere to go
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         } finally {
             lazySet(THREAD_INDEX, null);

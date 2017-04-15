@@ -11,16 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.internal.utils.LinkedArrayList;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.*;
 
 /**
  * An observable which auto-connects to another observable, caches the elements
@@ -91,7 +93,7 @@ public final class FlowableCache<T> extends AbstractFlowableWithUpstream<T, T> {
      *
      * @param <T> the value type of the cached items
      */
-    static final class CacheState<T> extends LinkedArrayList implements FlowableSubscriber<T> {
+    static final class CacheState<T> extends LinkedArrayList implements RelaxedSubscriber<T> {
         /** The source observable to connect to. */
         final Flowable<T> source;
         /** Holds onto the subscriber connected to source. */
@@ -215,7 +217,7 @@ public final class FlowableCache<T> extends AbstractFlowableWithUpstream<T, T> {
                     rp.replay();
                 }
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
         @SuppressWarnings("unchecked")

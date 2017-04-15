@@ -10,10 +10,9 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.flowables;
+package io.reactivex.flowable;
 
-import io.reactivex.Flowable;
-import io.reactivex.annotations.Nullable;
+import io.reactivex.common.annotations.Nullable;
 
 /**
  * A {@link Flowable} that has been grouped by key, the value of which can be obtained with {@link #getKey()}.

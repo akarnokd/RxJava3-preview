@@ -11,9 +11,9 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
 
 /**
  * Blocks until the upstream signals its first value or completes.
@@ -36,7 +36,7 @@ public final class BlockingFirstSubscriber<T> extends BlockingBaseSubscriber<T> 
         if (value == null) {
             error = t;
         } else {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
         }
         countDown();
     }

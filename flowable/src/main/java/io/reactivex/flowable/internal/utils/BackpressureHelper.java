@@ -10,11 +10,11 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.util;
+package io.reactivex.flowable.internal.utils;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
 
 /**
  * Utility class to help with backpressure-related operations such as request aggregation.
@@ -113,7 +113,7 @@ public final class BackpressureHelper {
             }
             long update = current - n;
             if (update < 0L) {
-                RxJavaPlugins.onError(new IllegalStateException("More produced than requested: " + update));
+                RxJavaCommonPlugins.onError(new IllegalStateException("More produced than requested: " + update));
                 update = 0L;
             }
             if (requested.compareAndSet(current, update)) {
@@ -140,7 +140,7 @@ public final class BackpressureHelper {
             }
             long update = current - n;
             if (update < 0L) {
-                RxJavaPlugins.onError(new IllegalStateException("More produced than requested: " + update));
+                RxJavaCommonPlugins.onError(new IllegalStateException("More produced than requested: " + update));
                 update = 0L;
             }
             if (requested.compareAndSet(current, update)) {

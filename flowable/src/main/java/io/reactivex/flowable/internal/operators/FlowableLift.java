@@ -11,13 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.flowable.*;
 
 /**
  * Allows lifting operators into a chain of Publishers.
@@ -53,7 +53,7 @@ public final class FlowableLift<R, T> extends AbstractFlowableWithUpstream<T, R>
             Exceptions.throwIfFatal(e);
             // can't call onError because no way to know if a Subscription has been set or not
             // can't call onSubscribe because the call might have set a Subscription already
-            RxJavaPlugins.onError(e);
+            RxJavaCommonPlugins.onError(e);
 
             NullPointerException npe = new NullPointerException("Actually not, but can't throw other exceptions due to RS");
             npe.initCause(e);

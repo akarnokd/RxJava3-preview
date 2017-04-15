@@ -11,21 +11,21 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.subscribers.FullArbiterSubscriber;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subscribers.SerializedSubscriber;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscribers.FullArbiterSubscriber;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.subscribers.SerializedSubscriber;
 
 public final class FlowableTimeoutTimed<T> extends AbstractFlowableWithUpstream<T, T> {
     final long timeout;
@@ -57,7 +57,7 @@ public final class FlowableTimeoutTimed<T> extends AbstractFlowableWithUpstream<
         }
     }
 
-    static final class TimeoutTimedOtherSubscriber<T> implements FlowableSubscriber<T>, Disposable {
+    static final class TimeoutTimedOtherSubscriber<T> implements RelaxedSubscriber<T>, Disposable {
         final Subscriber<? super T> actual;
         final long timeout;
         final TimeUnit unit;
@@ -129,7 +129,7 @@ public final class FlowableTimeoutTimed<T> extends AbstractFlowableWithUpstream<
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -180,7 +180,7 @@ public final class FlowableTimeoutTimed<T> extends AbstractFlowableWithUpstream<
         }
     }
 
-    static final class TimeoutTimedSubscriber<T> implements FlowableSubscriber<T>, Disposable, Subscription {
+    static final class TimeoutTimedSubscriber<T> implements RelaxedSubscriber<T>, Disposable, Subscription {
         final Subscriber<? super T> actual;
         final long timeout;
         final TimeUnit unit;
@@ -239,7 +239,7 @@ public final class FlowableTimeoutTimed<T> extends AbstractFlowableWithUpstream<
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;

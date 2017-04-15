@@ -10,15 +10,16 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 public final class FlowableDoOnLifecycle<T> extends AbstractFlowableWithUpstream<T, T> {
     private final Consumer<? super Subscription> onSubscribe;
@@ -38,7 +39,7 @@ public final class FlowableDoOnLifecycle<T> extends AbstractFlowableWithUpstream
         source.subscribe(new SubscriptionLambdaSubscriber<T>(s, onSubscribe, onRequest, onCancel));
     }
 
-    static final class SubscriptionLambdaSubscriber<T> implements FlowableSubscriber<T>, Subscription {
+    static final class SubscriptionLambdaSubscriber<T> implements RelaxedSubscriber<T>, Subscription {
         final Subscriber<? super T> actual;
         final Consumer<? super Subscription> onSubscribe;
         final LongConsumer onRequest;
@@ -84,7 +85,7 @@ public final class FlowableDoOnLifecycle<T> extends AbstractFlowableWithUpstream
             if (s != SubscriptionHelper.CANCELLED) {
                 actual.onError(t);
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 
@@ -101,7 +102,7 @@ public final class FlowableDoOnLifecycle<T> extends AbstractFlowableWithUpstream
                 onRequest.accept(n);
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
             s.request(n);
         }
@@ -112,7 +113,7 @@ public final class FlowableDoOnLifecycle<T> extends AbstractFlowableWithUpstream
                 onCancel.run();
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
             s.cancel();
         }

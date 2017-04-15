@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
 
@@ -23,7 +23,7 @@ import org.reactivestreams.*;
 import io.reactivex.*;
 import io.reactivex.exceptions.TestException;
 import io.reactivex.functions.*;
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.internal.fuseable.FusedQueueSubscription;
 import io.reactivex.observers.*;
 import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subscribers.*;
@@ -260,25 +260,25 @@ public class FlowableIgnoreElementsTest {
 
     @Test
     public void fused() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.just(1).hide().ignoreElements().<Integer>toFlowable()
         .subscribe(ts);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .assertResult();
     }
 
     @Test
     public void fusedAPICalls() {
         Flowable.just(1).hide().ignoreElements().<Integer>toFlowable()
-        .subscribe(new FlowableSubscriber<Integer>() {
+        .subscribe(new RelaxedSubscriber<Integer>() {
 
             @Override
             public void onSubscribe(Subscription s) {
                 @SuppressWarnings("unchecked")
-                QueueSubscription<Integer> qs = (QueueSubscription<Integer>)s;
+                FusedQueueSubscription<Integer> qs = (FusedQueueSubscription<Integer>)s;
 
                 try {
                     assertNull(qs.poll());

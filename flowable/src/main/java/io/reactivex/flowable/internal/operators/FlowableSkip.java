@@ -11,12 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 public final class FlowableSkip<T> extends AbstractFlowableWithUpstream<T, T> {
     final long n;
@@ -30,7 +31,7 @@ public final class FlowableSkip<T> extends AbstractFlowableWithUpstream<T, T> {
         source.subscribe(new SkipSubscriber<T>(s, n));
     }
 
-    static final class SkipSubscriber<T> implements FlowableSubscriber<T>, Subscription {
+    static final class SkipSubscriber<T> implements RelaxedSubscriber<T>, Subscription {
         final Subscriber<? super T> actual;
         long remaining;
 

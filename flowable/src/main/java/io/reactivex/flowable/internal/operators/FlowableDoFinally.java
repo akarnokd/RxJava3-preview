@@ -11,17 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.annotations.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Action;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Action;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 /**
  * Execute an action after an onError, onComplete or a cancel event.
@@ -48,7 +48,7 @@ public final class FlowableDoFinally<T> extends AbstractFlowableWithUpstream<T, 
         }
     }
 
-    static final class DoFinallySubscriber<T> extends BasicIntQueueSubscription<T> implements FlowableSubscriber<T> {
+    static final class DoFinallySubscriber<T> extends BasicIntFusedQueueSubscription<T> implements RelaxedSubscriber<T> {
 
         private static final long serialVersionUID = 4109457741734051389L;
 
@@ -58,7 +58,7 @@ public final class FlowableDoFinally<T> extends AbstractFlowableWithUpstream<T, 
 
         Subscription s;
 
-        QueueSubscription<T> qs;
+        FusedQueueSubscription<T> qs;
 
         boolean syncFused;
 
@@ -72,8 +72,8 @@ public final class FlowableDoFinally<T> extends AbstractFlowableWithUpstream<T, 
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
-                if (s instanceof QueueSubscription) {
-                    this.qs = (QueueSubscription<T>)s;
+                if (s instanceof FusedQueueSubscription) {
+                    this.qs = (FusedQueueSubscription<T>)s;
                 }
 
                 actual.onSubscribe(this);
@@ -110,7 +110,7 @@ public final class FlowableDoFinally<T> extends AbstractFlowableWithUpstream<T, 
 
         @Override
         public int requestFusion(int mode) {
-            QueueSubscription<T> qs = this.qs;
+            FusedQueueSubscription<T> qs = this.qs;
             if (qs != null && (mode & BOUNDARY) == 0) {
                 int m = qs.requestFusion(mode);
                 if (m != NONE) {
@@ -133,7 +133,7 @@ public final class FlowableDoFinally<T> extends AbstractFlowableWithUpstream<T, 
 
         @Nullable
         @Override
-        public T poll() throws Exception {
+        public T poll() throws Throwable {
             T v = qs.poll();
             if (v == null && syncFused) {
                 runFinally();
@@ -147,13 +147,13 @@ public final class FlowableDoFinally<T> extends AbstractFlowableWithUpstream<T, 
                     onFinally.run();
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    RxJavaPlugins.onError(ex);
+                    RxJavaCommonPlugins.onError(ex);
                 }
             }
         }
     }
 
-    static final class DoFinallyConditionalSubscriber<T> extends BasicIntQueueSubscription<T> implements ConditionalSubscriber<T> {
+    static final class DoFinallyConditionalSubscriber<T> extends BasicIntFusedQueueSubscription<T> implements ConditionalSubscriber<T> {
 
         private static final long serialVersionUID = 4109457741734051389L;
 
@@ -163,7 +163,7 @@ public final class FlowableDoFinally<T> extends AbstractFlowableWithUpstream<T, 
 
         Subscription s;
 
-        QueueSubscription<T> qs;
+        FusedQueueSubscription<T> qs;
 
         boolean syncFused;
 
@@ -177,8 +177,8 @@ public final class FlowableDoFinally<T> extends AbstractFlowableWithUpstream<T, 
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
-                if (s instanceof QueueSubscription) {
-                    this.qs = (QueueSubscription<T>)s;
+                if (s instanceof FusedQueueSubscription) {
+                    this.qs = (FusedQueueSubscription<T>)s;
                 }
 
                 actual.onSubscribe(this);
@@ -220,7 +220,7 @@ public final class FlowableDoFinally<T> extends AbstractFlowableWithUpstream<T, 
 
         @Override
         public int requestFusion(int mode) {
-            QueueSubscription<T> qs = this.qs;
+            FusedQueueSubscription<T> qs = this.qs;
             if (qs != null && (mode & BOUNDARY) == 0) {
                 int m = qs.requestFusion(mode);
                 if (m != NONE) {
@@ -243,7 +243,7 @@ public final class FlowableDoFinally<T> extends AbstractFlowableWithUpstream<T, 
 
         @Nullable
         @Override
-        public T poll() throws Exception {
+        public T poll() throws Throwable {
             T v = qs.poll();
             if (v == null && syncFused) {
                 runFinally();
@@ -257,7 +257,7 @@ public final class FlowableDoFinally<T> extends AbstractFlowableWithUpstream<T, 
                     onFinally.run();
                 } catch (Throwable ex) {
                     Exceptions.throwIfFatal(ex);
-                    RxJavaPlugins.onError(ex);
+                    RxJavaCommonPlugins.onError(ex);
                 }
             }
         }

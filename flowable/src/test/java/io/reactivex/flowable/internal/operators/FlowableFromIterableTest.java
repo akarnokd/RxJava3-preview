@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -569,12 +569,12 @@ public class FlowableFromIterableTest {
     @Test
     public void fusedAPICalls() {
         Flowable.fromIterable(Arrays.asList(1, 2, 3))
-        .subscribe(new FlowableSubscriber<Integer>() {
+        .subscribe(new RelaxedSubscriber<Integer>() {
 
             @Override
             public void onSubscribe(Subscription s) {
                 @SuppressWarnings("unchecked")
-                QueueSubscription<Integer> qs = (QueueSubscription<Integer>)s;
+                FusedQueueSubscription<Integer> qs = (FusedQueueSubscription<Integer>)s;
 
                 assertFalse(qs.isEmpty());
 
@@ -880,13 +880,13 @@ public class FlowableFromIterableTest {
     @Test
     public void fusionClear() {
         Flowable.fromIterable(Arrays.asList(1, 2, 3))
-        .subscribe(new FlowableSubscriber<Integer>() {
+        .subscribe(new RelaxedSubscriber<Integer>() {
             @Override
             public void onSubscribe(Subscription d) {
                 @SuppressWarnings("unchecked")
-                QueueSubscription<Integer> qd = (QueueSubscription<Integer>)d;
+                FusedQueueSubscription<Integer> qd = (FusedQueueSubscription<Integer>)d;
 
-                qd.requestFusion(QueueSubscription.ANY);
+                qd.requestFusion(FusedQueueSubscription.ANY);
 
                 try {
                     assertEquals(1, qd.poll().intValue());

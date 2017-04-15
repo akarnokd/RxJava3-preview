@@ -10,14 +10,14 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.subscribers;
+package io.reactivex.flowable.subscribers;
 
 import org.reactivestreams.*;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.exceptions.*;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 /**
  * Wraps another Subscriber and ensures all onXXX methods conform the protocol
@@ -25,7 +25,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  *
  * @param <T> the value type
  */
-public final class SafeSubscriber<T> implements FlowableSubscriber<T>, Subscription {
+public final class SafeSubscriber<T> implements RelaxedSubscriber<T>, Subscription {
     /** The actual Subscriber. */
     final Subscriber<? super T> actual;
     /** The subscription. */
@@ -55,10 +55,10 @@ public final class SafeSubscriber<T> implements FlowableSubscriber<T>, Subscript
                     s.cancel();
                 } catch (Throwable e1) {
                     Exceptions.throwIfFatal(e1);
-                    RxJavaPlugins.onError(new CompositeException(e, e1));
+                    RxJavaCommonPlugins.onError(new CompositeException(e, e1));
                     return;
                 }
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
     }
@@ -110,7 +110,7 @@ public final class SafeSubscriber<T> implements FlowableSubscriber<T>, Subscript
         } catch (Throwable e) {
             Exceptions.throwIfFatal(e);
             // can't call onError because the actual's state may be corrupt at this point
-            RxJavaPlugins.onError(new CompositeException(ex, e));
+            RxJavaCommonPlugins.onError(new CompositeException(ex, e));
             return;
         }
         try {
@@ -118,14 +118,14 @@ public final class SafeSubscriber<T> implements FlowableSubscriber<T>, Subscript
         } catch (Throwable e) {
             Exceptions.throwIfFatal(e);
             // if onError failed, all that's left is to report the error to plugins
-            RxJavaPlugins.onError(new CompositeException(ex, e));
+            RxJavaCommonPlugins.onError(new CompositeException(ex, e));
         }
     }
 
     @Override
     public void onError(Throwable t) {
         if (done) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         done = true;
@@ -138,7 +138,7 @@ public final class SafeSubscriber<T> implements FlowableSubscriber<T>, Subscript
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
                 // can't call onError because the actual's state may be corrupt at this point
-                RxJavaPlugins.onError(new CompositeException(t, npe, e));
+                RxJavaCommonPlugins.onError(new CompositeException(t, npe, e));
                 return;
             }
             try {
@@ -146,7 +146,7 @@ public final class SafeSubscriber<T> implements FlowableSubscriber<T>, Subscript
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
                 // if onError failed, all that's left is to report the error to plugins
-                RxJavaPlugins.onError(new CompositeException(t, npe, e));
+                RxJavaCommonPlugins.onError(new CompositeException(t, npe, e));
             }
             return;
         }
@@ -160,7 +160,7 @@ public final class SafeSubscriber<T> implements FlowableSubscriber<T>, Subscript
         } catch (Throwable ex) {
             Exceptions.throwIfFatal(ex);
 
-            RxJavaPlugins.onError(new CompositeException(t, ex));
+            RxJavaCommonPlugins.onError(new CompositeException(t, ex));
         }
     }
 
@@ -181,7 +181,7 @@ public final class SafeSubscriber<T> implements FlowableSubscriber<T>, Subscript
             actual.onComplete();
         } catch (Throwable e) {
             Exceptions.throwIfFatal(e);
-            RxJavaPlugins.onError(e);
+            RxJavaCommonPlugins.onError(e);
         }
     }
 
@@ -194,7 +194,7 @@ public final class SafeSubscriber<T> implements FlowableSubscriber<T>, Subscript
         } catch (Throwable e) {
             Exceptions.throwIfFatal(e);
             // can't call onError because the actual's state may be corrupt at this point
-            RxJavaPlugins.onError(new CompositeException(ex, e));
+            RxJavaCommonPlugins.onError(new CompositeException(ex, e));
             return;
         }
         try {
@@ -202,7 +202,7 @@ public final class SafeSubscriber<T> implements FlowableSubscriber<T>, Subscript
         } catch (Throwable e) {
             Exceptions.throwIfFatal(e);
             // if onError failed, all that's left is to report the error to plugins
-            RxJavaPlugins.onError(new CompositeException(ex, e));
+            RxJavaCommonPlugins.onError(new CompositeException(ex, e));
         }
     }
 
@@ -216,10 +216,10 @@ public final class SafeSubscriber<T> implements FlowableSubscriber<T>, Subscript
                 s.cancel();
             } catch (Throwable e1) {
                 Exceptions.throwIfFatal(e1);
-                RxJavaPlugins.onError(new CompositeException(e, e1));
+                RxJavaCommonPlugins.onError(new CompositeException(e, e1));
                 return;
             }
-            RxJavaPlugins.onError(e);
+            RxJavaCommonPlugins.onError(e);
         }
     }
 
@@ -229,7 +229,7 @@ public final class SafeSubscriber<T> implements FlowableSubscriber<T>, Subscript
             s.cancel();
         } catch (Throwable e1) {
             Exceptions.throwIfFatal(e1);
-            RxJavaPlugins.onError(e1);
+            RxJavaCommonPlugins.onError(e1);
         }
     }
 }

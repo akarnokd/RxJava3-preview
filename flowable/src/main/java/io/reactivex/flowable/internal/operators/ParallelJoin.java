@@ -11,20 +11,20 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.SpscArrayQueue;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.queues.*;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 /**
  * Merges the individual 'rails' of the source ParallelFlowable, unordered,
@@ -158,7 +158,7 @@ public final class ParallelJoin<T> extends Flowable<T> {
                         if (errors.compareAndSet(null, mbe)) {
                             actual.onError(mbe);
                         } else {
-                            RxJavaPlugins.onError(mbe);
+                            RxJavaCommonPlugins.onError(mbe);
                         }
                         return;
                     }
@@ -190,7 +190,7 @@ public final class ParallelJoin<T> extends Flowable<T> {
                 drain();
             } else {
                 if (e != errors.get()) {
-                    RxJavaPlugins.onError(e);
+                    RxJavaCommonPlugins.onError(e);
                 }
             }
         }
@@ -287,7 +287,7 @@ public final class ParallelJoin<T> extends Flowable<T> {
                     for (int i = 0; i < n; i++) {
                         JoinInnerSubscriber<T> inner = s[i];
 
-                        SimpleQueue<T> q = inner.queue;
+                        FusedQueue<T> q = inner.queue;
                         if (q != null && !q.isEmpty()) {
                             empty = false;
                             break;
@@ -457,7 +457,7 @@ public final class ParallelJoin<T> extends Flowable<T> {
                     for (int i = 0; i < n; i++) {
                         JoinInnerSubscriber<T> inner = s[i];
 
-                        SimpleQueue<T> q = inner.queue;
+                        FusedQueue<T> q = inner.queue;
                         if (q != null && !q.isEmpty()) {
                             empty = false;
                             break;
@@ -494,7 +494,7 @@ public final class ParallelJoin<T> extends Flowable<T> {
 
     static final class JoinInnerSubscriber<T>
     extends AtomicReference<Subscription>
-    implements FlowableSubscriber<T> {
+    implements RelaxedSubscriber<T> {
 
         private static final long serialVersionUID = 8410034718427740355L;
 

@@ -11,23 +11,25 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.Iterator;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.annotations.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.operators.flowable.FlowableMap.MapSubscriber;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.operators.FlowableMap.MapSubscriber;
+import io.reactivex.flowable.internal.queues.SpscLinkedArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 /**
  * Combines the latest values from multiple sources through a function.
@@ -146,7 +148,7 @@ extends Flowable<R> {
     }
 
     static final class CombineLatestCoordinator<T, R>
-    extends BasicIntQueueSubscription<R> {
+    extends BasicIntFusedQueueSubscription<R> {
 
 
         private static final long serialVersionUID = -5082275438355852221L;
@@ -284,7 +286,7 @@ extends Flowable<R> {
                     innerComplete(index);
                 }
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -492,7 +494,7 @@ extends Flowable<R> {
 
     static final class CombineLatestInnerSubscriber<T>
     extends AtomicReference<Subscription>
-            implements FlowableSubscriber<T> {
+            implements RelaxedSubscriber<T> {
 
 
         private static final long serialVersionUID = -8730235182291002949L;

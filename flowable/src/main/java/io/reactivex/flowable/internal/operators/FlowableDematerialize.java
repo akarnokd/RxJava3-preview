@@ -11,13 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 public final class FlowableDematerialize<T> extends AbstractFlowableWithUpstream<Notification<T>, T> {
 
@@ -30,7 +31,7 @@ public final class FlowableDematerialize<T> extends AbstractFlowableWithUpstream
         source.subscribe(new DematerializeSubscriber<T>(s));
     }
 
-    static final class DematerializeSubscriber<T> implements FlowableSubscriber<Notification<T>>, Subscription {
+    static final class DematerializeSubscriber<T> implements RelaxedSubscriber<Notification<T>>, Subscription {
         final Subscriber<? super T> actual;
 
         boolean done;
@@ -53,7 +54,7 @@ public final class FlowableDematerialize<T> extends AbstractFlowableWithUpstream
         public void onNext(Notification<T> t) {
             if (done) {
                 if (t.isOnError()) {
-                    RxJavaPlugins.onError(t.getError());
+                    RxJavaCommonPlugins.onError(t.getError());
                 }
                 return;
             }
@@ -72,7 +73,7 @@ public final class FlowableDematerialize<T> extends AbstractFlowableWithUpstream
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;

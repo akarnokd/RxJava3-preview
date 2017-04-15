@@ -10,19 +10,19 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.util;
+package io.reactivex.flowable.internal.utils;
 
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.BooleanSupplier;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.*;
+import hu.akarnokd.reactivestreams.extensions.FusedQueue;
+import io.reactivex.common.Disposable;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.BooleanSupplier;
+import io.reactivex.flowable.internal.queues.*;
+import io.reactivex.flowable.internal.queues.SimplePlainQueue;
 
 /**
  * Utility class to help with the queue-drain serialization idiom.
@@ -91,7 +91,7 @@ public final class QueueDrainHelper {
     }
 
     public static <T, U> boolean checkTerminated(boolean d, boolean empty,
-            Subscriber<?> s, boolean delayError, SimpleQueue<?> q, QueueDrain<T, U> qd) {
+            Subscriber<?> s, boolean delayError, FusedQueue<?> q, QueueDrain<T, U> qd) {
         if (qd.cancelled()) {
             q.clear();
             return true;
@@ -116,77 +116,6 @@ public final class QueueDrainHelper {
                     return true;
                 } else
                 if (empty) {
-                    s.onComplete();
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public static <T, U> void drainLoop(SimplePlainQueue<T> q, Observer<? super U> a, boolean delayError, Disposable dispose, ObservableQueueDrain<T, U> qd) {
-
-        int missed = 1;
-
-        for (;;) {
-            if (checkTerminated(qd.done(), q.isEmpty(), a, delayError, q, dispose, qd)) {
-                return;
-            }
-
-            for (;;) {
-                boolean d = qd.done();
-                T v = q.poll();
-                boolean empty = v == null;
-
-                if (checkTerminated(d, empty, a, delayError, q, dispose, qd)) {
-                    return;
-                }
-
-                if (empty) {
-                    break;
-                }
-
-                qd.accept(a, v);
-            }
-
-            missed = qd.leave(-missed);
-            if (missed == 0) {
-                break;
-            }
-        }
-    }
-
-    public static <T, U> boolean checkTerminated(boolean d, boolean empty,
-            Observer<?> s, boolean delayError, SimpleQueue<?> q, Disposable disposable, ObservableQueueDrain<T, U> qd) {
-        if (qd.cancelled()) {
-            q.clear();
-            disposable.dispose();
-            return true;
-        }
-
-        if (d) {
-            if (delayError) {
-                if (empty) {
-                    disposable.dispose();
-                    Throwable err = qd.error();
-                    if (err != null) {
-                        s.onError(err);
-                    } else {
-                        s.onComplete();
-                    }
-                    return true;
-                }
-            } else {
-                Throwable err = qd.error();
-                if (err != null) {
-                    q.clear();
-                    disposable.dispose();
-                    s.onError(err);
-                    return true;
-                } else
-                if (empty) {
-                    disposable.dispose();
                     s.onComplete();
                     return true;
                 }
@@ -204,7 +133,7 @@ public final class QueueDrainHelper {
      * @param capacityHint the capacity hint, negative value will create an array-based SPSC queue
      * @return the queue instance
      */
-    public static <T> SimpleQueue<T> createQueue(int capacityHint) {
+    public static <T> FusedQueue<T> createQueue(int capacityHint) {
         if (capacityHint < 0) {
             return new SpscLinkedArrayQueue<T>(-capacityHint);
         }

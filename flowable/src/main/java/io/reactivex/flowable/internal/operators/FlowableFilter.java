@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.functions.Predicate;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.functions.Predicate;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscribers.*;
 
 public final class FlowableFilter<T> extends AbstractFlowableWithUpstream<T, T> {
     final Predicate<? super T> predicate;
@@ -83,8 +83,8 @@ public final class FlowableFilter<T> extends AbstractFlowableWithUpstream<T, T> 
 
         @Nullable
         @Override
-        public T poll() throws Exception {
-            QueueSubscription<T> qs = this.qs;
+        public T poll() throws Throwable {
+            FusedQueueSubscription<T> qs = this.qs;
             Predicate<? super T> f = filter;
 
             for (;;) {
@@ -148,8 +148,8 @@ public final class FlowableFilter<T> extends AbstractFlowableWithUpstream<T, T> 
 
         @Nullable
         @Override
-        public T poll() throws Exception {
-            QueueSubscription<T> qs = this.qs;
+        public T poll() throws Throwable {
+            FusedQueueSubscription<T> qs = this.qs;
             Predicate<? super T> f = filter;
 
             for (;;) {

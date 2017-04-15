@@ -10,12 +10,12 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.subscribers.SerializedSubscriber;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.subscribers.SerializedSubscriber;
 
 public final class FlowableSerialized<T> extends AbstractFlowableWithUpstream<T, T> {
     public FlowableSerialized(Flowable<T> source) {

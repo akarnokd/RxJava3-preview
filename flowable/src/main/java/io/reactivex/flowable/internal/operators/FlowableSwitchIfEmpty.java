@@ -11,12 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.SubscriptionArbiter;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionArbiter;
 
 public final class FlowableSwitchIfEmpty<T> extends AbstractFlowableWithUpstream<T, T> {
     final Publisher<? extends T> other;
@@ -32,7 +33,7 @@ public final class FlowableSwitchIfEmpty<T> extends AbstractFlowableWithUpstream
         source.subscribe(parent);
     }
 
-    static final class SwitchIfEmptySubscriber<T> implements FlowableSubscriber<T> {
+    static final class SwitchIfEmptySubscriber<T> implements RelaxedSubscriber<T> {
         final Subscriber<? super T> actual;
         final Publisher<? extends T> other;
         final SubscriptionArbiter arbiter;

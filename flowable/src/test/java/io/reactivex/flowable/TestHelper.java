@@ -56,8 +56,8 @@ public enum TestHelper {
      * @return the mocked subscriber
      */
     @SuppressWarnings("unchecked")
-    public static <T> FlowableSubscriber<T> mockSubscriber() {
-        FlowableSubscriber<T> w = mock(FlowableSubscriber.class);
+    public static <T> RelaxedSubscriber<T> mockSubscriber() {
+        RelaxedSubscriber<T> w = mock(RelaxedSubscriber.class);
 
         Mockito.doAnswer(new Answer<Object>() {
             @Override
@@ -296,7 +296,7 @@ public enum TestHelper {
         try {
             final CountDownLatch cdl = new CountDownLatch(1);
 
-            source.subscribe(new FlowableSubscriber<Object>() {
+            source.subscribe(new RelaxedSubscriber<Object>() {
 
                 @Override
                 public void onSubscribe(Subscription s) {
@@ -432,7 +432,7 @@ public enum TestHelper {
      * Assert that the offer methods throw UnsupportedOperationExcetpion.
      * @param q the queue implementation
      */
-    public static void assertNoOffer(SimpleQueue<?> q) {
+    public static void assertNoOffer(FusedQueue<?> q) {
         try {
             q.offer(null);
             fail("Should have thrown!");
@@ -648,7 +648,7 @@ public enum TestHelper {
      */
     public static <T> void checkDisposed(Flowable<T> source) {
         final TestSubscriber<Object> ts = new TestSubscriber<Object>(0L);
-        source.subscribe(new FlowableSubscriber<Object>() {
+        source.subscribe(new RelaxedSubscriber<Object>() {
             @Override
             public void onSubscribe(Subscription s) {
                 ts.onSubscribe(new BooleanSubscription());
@@ -872,7 +872,7 @@ public enum TestHelper {
     /**
      * Consumer for all base reactive types.
      */
-    enum NoOpConsumer implements FlowableSubscriber<Object>, Observer<Object>, MaybeObserver<Object>, SingleObserver<Object>, CompletableObserver {
+    enum NoOpConsumer implements RelaxedSubscriber<Object>, Observer<Object>, MaybeObserver<Object>, SingleObserver<Object>, CompletableObserver {
         INSTANCE;
 
         @Override
@@ -2239,18 +2239,18 @@ public enum TestHelper {
 
         final Boolean[] state = { null, null, null, null };
 
-        source.subscribe(new FlowableSubscriber<T>() {
+        source.subscribe(new RelaxedSubscriber<T>() {
             @Override
             public void onSubscribe(Subscription d) {
                 try {
-                    if (d instanceof QueueSubscription) {
+                    if (d instanceof FusedQueueSubscription) {
                         @SuppressWarnings("unchecked")
-                        QueueSubscription<Object> qd = (QueueSubscription<Object>) d;
+                        FusedQueueSubscription<Object> qd = (FusedQueueSubscription<Object>) d;
                         state[0] = true;
 
-                        int m = qd.requestFusion(QueueSubscription.ANY);
+                        int m = qd.requestFusion(FusedQueueSubscription.ANY);
 
-                        if (m != QueueSubscription.NONE) {
+                        if (m != FusedQueueSubscription.NONE) {
                             state[1] = true;
 
                             state[2] = qd.isEmpty();

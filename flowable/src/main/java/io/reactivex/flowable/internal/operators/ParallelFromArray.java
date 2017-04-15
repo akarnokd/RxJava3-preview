@@ -11,11 +11,11 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.parallel.ParallelFlowable;
+import io.reactivex.flowable.ParallelFlowable;
 
 /**
  * Wraps multiple Publishers into a ParallelFlowable which runs them

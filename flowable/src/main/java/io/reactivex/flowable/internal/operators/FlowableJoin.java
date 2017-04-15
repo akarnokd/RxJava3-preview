@@ -11,24 +11,25 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.SimpleQueue;
-import io.reactivex.internal.operators.flowable.FlowableGroupJoin.*;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.FusedQueue;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.disposables.CompositeDisposable;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.operators.FlowableGroupJoin.*;
+import io.reactivex.flowable.internal.queues.SpscLinkedArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 public final class FlowableJoin<TLeft, TRight, TLeftEnd, TRightEnd, R> extends AbstractFlowableWithUpstream<TLeft, R> {
 
@@ -160,7 +161,7 @@ public final class FlowableJoin<TLeft, TRight, TLeftEnd, TRightEnd, R> extends A
             a.onError(ex);
         }
 
-        void fail(Throwable exc, Subscriber<?> a, SimpleQueue<?> q) {
+        void fail(Throwable exc, Subscriber<?> a, FusedQueue<?> q) {
             Exceptions.throwIfFatal(exc);
             ExceptionHelper.addThrowable(error, exc);
             q.clear();
@@ -362,7 +363,7 @@ public final class FlowableJoin<TLeft, TRight, TLeftEnd, TRightEnd, R> extends A
                 active.decrementAndGet();
                 drain();
             } else {
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
         }
 
@@ -394,7 +395,7 @@ public final class FlowableJoin<TLeft, TRight, TLeftEnd, TRightEnd, R> extends A
             if (ExceptionHelper.addThrowable(error, ex)) {
                 drain();
             } else {
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
             }
         }
     }

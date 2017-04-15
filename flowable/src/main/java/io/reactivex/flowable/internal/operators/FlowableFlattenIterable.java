@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.Iterator;
 import java.util.concurrent.Callable;
@@ -19,15 +19,16 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.SpscArrayQueue;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.SpscArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 public final class FlowableFlattenIterable<T, R> extends AbstractFlowableWithUpstream<T, R> {
 
@@ -81,8 +82,8 @@ public final class FlowableFlattenIterable<T, R> extends AbstractFlowableWithUps
     }
 
     static final class FlattenIterableSubscriber<T, R>
-    extends BasicIntQueueSubscription<R>
-    implements FlowableSubscriber<T> {
+    extends BasicIntFusedQueueSubscription<R>
+    implements RelaxedSubscriber<T> {
 
 
         private static final long serialVersionUID = -3096000382929934955L;
@@ -99,7 +100,7 @@ public final class FlowableFlattenIterable<T, R> extends AbstractFlowableWithUps
 
         Subscription s;
 
-        SimpleQueue<T> queue;
+        FusedQueue<T> queue;
 
         volatile boolean done;
 
@@ -128,9 +129,9 @@ public final class FlowableFlattenIterable<T, R> extends AbstractFlowableWithUps
             if (SubscriptionHelper.validate(this.s, s)) {
                 this.s = s;
 
-                if (s instanceof QueueSubscription) {
+                if (s instanceof FusedQueueSubscription) {
                     @SuppressWarnings("unchecked")
-                    QueueSubscription<T> qs = (QueueSubscription<T>) s;
+                    FusedQueueSubscription<T> qs = (FusedQueueSubscription<T>) s;
 
                     int m = qs.requestFusion(ANY);
 
@@ -180,7 +181,7 @@ public final class FlowableFlattenIterable<T, R> extends AbstractFlowableWithUps
                 done = true;
                 drain();
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 
@@ -220,7 +221,7 @@ public final class FlowableFlattenIterable<T, R> extends AbstractFlowableWithUps
             }
 
             final Subscriber<? super R> a = actual;
-            final SimpleQueue<T> q = queue;
+            final FusedQueue<T> q = queue;
             final boolean replenish = fusionMode != SYNC;
 
             int missed = 1;
@@ -378,7 +379,7 @@ public final class FlowableFlattenIterable<T, R> extends AbstractFlowableWithUps
             }
         }
 
-        boolean checkTerminated(boolean d, boolean empty, Subscriber<?> a, SimpleQueue<?> q) {
+        boolean checkTerminated(boolean d, boolean empty, Subscriber<?> a, FusedQueue<?> q) {
             if (cancelled) {
                 current = null;
                 q.clear();
@@ -419,7 +420,7 @@ public final class FlowableFlattenIterable<T, R> extends AbstractFlowableWithUps
 
         @Nullable
         @Override
-        public R poll() throws Exception {
+        public R poll() throws Throwable {
             Iterator<? extends R> it = current;
             for (;;) {
                 if (it == null) {

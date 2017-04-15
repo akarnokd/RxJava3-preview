@@ -10,17 +10,17 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.List;
 import java.util.concurrent.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.flowables.ConnectableFlowable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
 
 /**
  * Helper utility class to support Flowable with inner classes.

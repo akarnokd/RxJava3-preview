@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -190,7 +190,7 @@ public class FlowableOnErrorResumeNextViaFunctionTest {
 
             @Override
             public Subscriber<? super Integer> apply(final Subscriber<? super String> t1) {
-                return new FlowableSubscriber<Integer>() {
+                return new RelaxedSubscriber<Integer>() {
 
                     @Override
                     public void onSubscribe(Subscription s) {

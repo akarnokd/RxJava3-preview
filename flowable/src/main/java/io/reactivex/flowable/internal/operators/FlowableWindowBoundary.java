@@ -11,24 +11,22 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.internal.disposables.DisposableHelper;
-import io.reactivex.internal.fuseable.SimplePlainQueue;
-import io.reactivex.internal.queue.MpscLinkedQueue;
-import io.reactivex.internal.subscribers.QueueDrainSubscriber;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.NotificationLite;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.UnicastProcessor;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.*;
+import io.reactivex.flowable.internal.subscribers.QueueDrainSubscriber;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.NotificationLite;
+import io.reactivex.flowable.processors.UnicastProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public final class FlowableWindowBoundary<T, B> extends AbstractFlowableWithUpstream<T, Flowable<T>> {
     final Publisher<B> other;
@@ -131,7 +129,7 @@ public final class FlowableWindowBoundary<T, B> extends AbstractFlowableWithUpst
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             error = t;
@@ -281,7 +279,7 @@ public final class FlowableWindowBoundary<T, B> extends AbstractFlowableWithUpst
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;

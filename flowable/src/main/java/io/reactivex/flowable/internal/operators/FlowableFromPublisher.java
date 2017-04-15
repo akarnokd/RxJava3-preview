@@ -11,11 +11,11 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
+import io.reactivex.flowable.Flowable;
 
 public final class FlowableFromPublisher<T> extends Flowable<T> {
     final Publisher<? extends T> publisher;

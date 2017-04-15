@@ -10,14 +10,14 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.subscribers;
+package io.reactivex.flowable.subscribers;
 
 import org.reactivestreams.*;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.*;
 
 /**
  * Serializes access to the onNext, onError and onComplete methods of another Subscriber.
@@ -30,7 +30,7 @@ import io.reactivex.plugins.RxJavaPlugins;
  *
  * @param <T> the value type
  */
-public final class SerializedSubscriber<T> implements FlowableSubscriber<T>, Subscription {
+public final class SerializedSubscriber<T> implements RelaxedSubscriber<T>, Subscription {
     final Subscriber<? super T> actual;
     final boolean delayError;
 
@@ -105,7 +105,7 @@ public final class SerializedSubscriber<T> implements FlowableSubscriber<T>, Sub
     @Override
     public void onError(Throwable t) {
         if (done) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         boolean reportError;
@@ -135,7 +135,7 @@ public final class SerializedSubscriber<T> implements FlowableSubscriber<T>, Sub
         }
 
         if (reportError) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
 

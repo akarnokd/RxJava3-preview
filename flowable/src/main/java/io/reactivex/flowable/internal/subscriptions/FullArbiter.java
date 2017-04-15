@@ -11,17 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscriptions;
+package io.reactivex.flowable.internal.subscriptions;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.internal.queues.SpscLinkedArrayQueue;
+import io.reactivex.flowable.internal.utils.*;
 
 /**
  * Performs full arbitration of Subscriber events with strict drain (i.e., old emissions of another
@@ -103,7 +102,7 @@ public final class FullArbiter<T> extends FullArbiterPad2 implements Subscriptio
 
     public void onError(Throwable value, Subscription s) {
         if (cancelled) {
-            RxJavaPlugins.onError(value);
+            RxJavaCommonPlugins.onError(value);
             return;
         }
         queue.offer(s, NotificationLite.error(value));
@@ -163,7 +162,7 @@ public final class FullArbiter<T> extends FullArbiterPad2 implements Subscriptio
                             cancelled = true;
                             a.onError(ex);
                         } else {
-                            RxJavaPlugins.onError(ex);
+                            RxJavaCommonPlugins.onError(ex);
                         }
                     } else if (NotificationLite.isComplete(v)) {
                         q.clear();

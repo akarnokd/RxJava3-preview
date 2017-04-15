@@ -11,16 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.Subscription;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.QueueDrainHelper;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.QueueDrainHelper;
 
 /**
  * Subscriber that can fuse with the upstream and calls a support interface
@@ -30,7 +29,7 @@ import io.reactivex.internal.util.QueueDrainHelper;
  */
 public final class InnerQueuedSubscriber<T>
 extends AtomicReference<Subscription>
-implements FlowableSubscriber<T>, Subscription {
+implements RelaxedSubscriber<T>, Subscription {
 
 
     private static final long serialVersionUID = 22876611072430776L;
@@ -41,7 +40,7 @@ implements FlowableSubscriber<T>, Subscription {
 
     final int limit;
 
-    volatile SimpleQueue<T> queue;
+    volatile FusedQueue<T> queue;
 
     volatile boolean done;
 
@@ -58,19 +57,19 @@ implements FlowableSubscriber<T>, Subscription {
     @Override
     public void onSubscribe(Subscription s) {
         if (SubscriptionHelper.setOnce(this, s)) {
-            if (s instanceof QueueSubscription) {
+            if (s instanceof FusedQueueSubscription) {
                 @SuppressWarnings("unchecked")
-                QueueSubscription<T> qs = (QueueSubscription<T>) s;
+                FusedQueueSubscription<T> qs = (FusedQueueSubscription<T>) s;
 
-                int m = qs.requestFusion(QueueSubscription.ANY);
-                if (m == QueueSubscription.SYNC) {
+                int m = qs.requestFusion(FusedQueueSubscription.ANY);
+                if (m == FusedQueueSubscription.SYNC) {
                     fusionMode = m;
                     queue = qs;
                     done = true;
                     parent.innerComplete(this);
                     return;
                 }
-                if (m == QueueSubscription.ASYNC) {
+                if (m == FusedQueueSubscription.ASYNC) {
                     fusionMode = m;
                     queue = qs;
                     QueueDrainHelper.request(s, prefetch);
@@ -86,7 +85,7 @@ implements FlowableSubscriber<T>, Subscription {
 
     @Override
     public void onNext(T t) {
-        if (fusionMode == QueueSubscription.NONE) {
+        if (fusionMode == FusedQueueSubscription.NONE) {
             parent.innerNext(this, t);
         } else {
             parent.drain();
@@ -105,7 +104,7 @@ implements FlowableSubscriber<T>, Subscription {
 
     @Override
     public void request(long n) {
-        if (fusionMode != QueueSubscription.SYNC) {
+        if (fusionMode != FusedQueueSubscription.SYNC) {
             long p = produced + n;
             if (p >= limit) {
                 produced = 0L;
@@ -117,7 +116,7 @@ implements FlowableSubscriber<T>, Subscription {
     }
 
     public void requestOne() {
-        if (fusionMode != QueueSubscription.SYNC) {
+        if (fusionMode != FusedQueueSubscription.SYNC) {
             long p = produced + 1;
             if (p == limit) {
                 produced = 0L;
@@ -141,7 +140,7 @@ implements FlowableSubscriber<T>, Subscription {
         this.done = true;
     }
 
-    public SimpleQueue<T> queue() {
+    public FusedQueue<T> queue() {
         return queue;
     }
 }

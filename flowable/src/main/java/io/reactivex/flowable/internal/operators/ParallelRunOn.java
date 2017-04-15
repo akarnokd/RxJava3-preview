@@ -11,21 +11,20 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.parallel;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
-import io.reactivex.internal.queue.SpscArrayQueue;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.parallel.ParallelFlowable;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.flowable.ParallelFlowable;
+import io.reactivex.flowable.internal.queues.SpscArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 /**
  * Ensures each 'rail' from upstream runs on a Worker from a Scheduler.
@@ -82,7 +81,7 @@ public final class ParallelRunOn<T> extends ParallelFlowable<T> {
     }
 
     abstract static class BaseRunOnSubscriber<T> extends AtomicInteger
-    implements FlowableSubscriber<T>, Subscription, Runnable {
+    implements RelaxedSubscriber<T>, Subscription, Runnable {
 
         private static final long serialVersionUID = 9222303586456402150L;
 
@@ -129,7 +128,7 @@ public final class ParallelRunOn<T> extends ParallelFlowable<T> {
         @Override
         public final void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             error = t;

@@ -28,25 +28,25 @@ public class SimpleQueueTest {
 
     @Test(expected = NullPointerException.class)
     public void spscArrayQueueNull() {
-        SpscArrayQueue<Object> q = new SpscArrayQueue<Object>(16) { };
+        AbstractSpscArrayQueue<Object> q = new AbstractSpscArrayQueue<Object>(16) { };
         q.offer(null);
     }
 
     @Test(expected = NullPointerException.class)
     public void spscLinkedArrayQueueNull() {
-        SpscLinkedArrayQueue<Object> q = new SpscLinkedArrayQueue<Object>(16) { };
+        AbstractSpscLinkedArrayQueue<Object> q = new AbstractSpscLinkedArrayQueue<Object>(16) { };
         q.offer(null);
     }
 
     @Test(expected = NullPointerException.class)
     public void mpscLinkedQueueNull() {
-        MpscLinkedQueue<Object> q = new MpscLinkedQueue<Object>() { };
+        AbstractMpscLinkedQueue<Object> q = new AbstractMpscLinkedQueue<Object>() { };
         q.offer(null);
     }
 
     @Test
     public void spscArrayQueueBiOffer() {
-        SpscArrayQueue<Object> q = new SpscArrayQueue<Object>(16) { };
+        AbstractSpscArrayQueue<Object> q = new AbstractSpscArrayQueue<Object>(16) { };
         q.offer(1, 2);
 
         assertEquals(1, q.poll());
@@ -56,7 +56,7 @@ public class SimpleQueueTest {
 
     @Test
     public void spscLinkedArrayQueueBiOffer() {
-        SpscLinkedArrayQueue<Object> q = new SpscLinkedArrayQueue<Object>(16) { };
+        AbstractSpscLinkedArrayQueue<Object> q = new AbstractSpscLinkedArrayQueue<Object>(16) { };
         q.offer(1, 2);
 
         assertEquals(1, q.poll());
@@ -66,7 +66,7 @@ public class SimpleQueueTest {
 
     @Test
     public void mpscLinkedQueueBiOffer() {
-        MpscLinkedQueue<Object> q = new MpscLinkedQueue<Object>() { };
+        AbstractMpscLinkedQueue<Object> q = new AbstractMpscLinkedQueue<Object>() { };
         q.offer(1, 2);
 
         assertEquals(1, q.poll());
@@ -76,7 +76,7 @@ public class SimpleQueueTest {
 
     @Test
     public void spscBiOfferCapacity() {
-        SpscArrayQueue<Integer> q = new SpscArrayQueue<Integer>(8) { };
+        AbstractSpscArrayQueue<Integer> q = new AbstractSpscArrayQueue<Integer>(8) { };
         assertTrue(q.offer(1, 2));
         assertTrue(q.offer(3, 4));
         assertTrue(q.offer(5, 6));
@@ -88,7 +88,7 @@ public class SimpleQueueTest {
 
     @Test
     public void spscLinkedNewBufferPeek() {
-        SpscLinkedArrayQueue<Integer> q = new SpscLinkedArrayQueue<Integer>(8) { };
+        AbstractSpscLinkedArrayQueue<Integer> q = new AbstractSpscLinkedArrayQueue<Integer>(8) { };
         assertTrue(q.offer(1, 2));
         assertTrue(q.offer(3, 4));
         assertTrue(q.offer(5, 6));
@@ -105,7 +105,7 @@ public class SimpleQueueTest {
 
     @Test
     public void mpscOfferPollRace() throws Exception {
-        final MpscLinkedQueue<Integer> q = new MpscLinkedQueue<Integer>() { };
+        final AbstractMpscLinkedQueue<Integer> q = new AbstractMpscLinkedQueue<Integer>() { };
 
         final AtomicInteger c = new AtomicInteger(3);
 

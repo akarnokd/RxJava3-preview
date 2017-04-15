@@ -15,10 +15,9 @@ package io.reactivex.common.internal.disposables;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.common.Disposable;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.ProtocolViolationException;
 import io.reactivex.common.internal.functions.ObjectHelper;
-import io.reactivex.common.RxJavaPlugins;
 
 
 /**
@@ -69,7 +68,7 @@ public enum DisposableHelper implements Disposable {
      * or returns false if the field is non-null.
      * If the target field contains the common DISPOSED instance, the supplied disposable
      * is disposed. If the field contains other non-null Disposable, an IllegalStateException
-     * is signalled to the RxJavaPlugins.onError hook.
+     * is signalled to the RxJavaCommonPlugins.onError hook.
      * 
      * @param field the target field
      * @param d the disposable to set, not null
@@ -139,7 +138,7 @@ public enum DisposableHelper implements Disposable {
      */
     public static boolean validate(Disposable current, Disposable next) {
         if (next == null) {
-            RxJavaPlugins.onError(new NullPointerException("next is null"));
+            RxJavaCommonPlugins.onError(new NullPointerException("next is null"));
             return false;
         }
         if (current != null) {
@@ -154,7 +153,7 @@ public enum DisposableHelper implements Disposable {
      * Reports that the disposable is already set to the RxJavaPlugins error handler.
      */
     public static void reportDisposableSet() {
-        RxJavaPlugins.onError(new ProtocolViolationException("Disposable already set!"));
+        RxJavaCommonPlugins.onError(new ProtocolViolationException("Disposable already set!"));
     }
 
     /**

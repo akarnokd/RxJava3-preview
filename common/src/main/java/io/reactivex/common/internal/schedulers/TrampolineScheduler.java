@@ -68,7 +68,7 @@ public final class TrampolineScheduler extends Scheduler {
             run.run();
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
-            RxJavaPlugins.onError(ex);
+            RxJavaCommonPlugins.onError(ex);
         }
         return DONE;
     }
@@ -198,7 +198,7 @@ public final class TrampolineScheduler extends Scheduler {
                             Thread.sleep(delay);
                         } catch (InterruptedException e) {
                             Thread.currentThread().interrupt();
-                            RxJavaPlugins.onError(e);
+                            RxJavaCommonPlugins.onError(e);
                             return;
                         }
                     }

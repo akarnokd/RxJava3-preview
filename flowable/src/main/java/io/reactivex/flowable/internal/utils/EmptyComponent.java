@@ -11,29 +11,23 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.flowable.internal.utils;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
 
 /**
  * Singleton implementing many interfaces as empty.
  */
-public enum EmptyComponent implements FlowableSubscriber<Object>, Observer<Object>, MaybeObserver<Object>,
-SingleObserver<Object>, CompletableObserver, Subscription, Disposable {
+public enum EmptyComponent implements RelaxedSubscriber<Object>,
+Subscription, Disposable {
     INSTANCE;
 
     @SuppressWarnings("unchecked")
     public static <T> Subscriber<T> asSubscriber() {
         return (Subscriber<T>)INSTANCE;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> Observer<T> asObserver() {
-        return (Observer<T>)INSTANCE;
     }
 
     @Override
@@ -57,11 +51,6 @@ SingleObserver<Object>, CompletableObserver, Subscription, Disposable {
     }
 
     @Override
-    public void onSubscribe(Disposable d) {
-        d.dispose();
-    }
-
-    @Override
     public void onSubscribe(Subscription s) {
         s.cancel();
     }
@@ -73,7 +62,7 @@ SingleObserver<Object>, CompletableObserver, Subscription, Disposable {
 
     @Override
     public void onError(Throwable t) {
-        RxJavaPlugins.onError(t);
+        RxJavaCommonPlugins.onError(t);
     }
 
     @Override
@@ -81,8 +70,4 @@ SingleObserver<Object>, CompletableObserver, Subscription, Disposable {
         // deliberately no-op
     }
 
-    @Override
-    public void onSuccess(Object value) {
-        // deliberately no-op
-    }
 }

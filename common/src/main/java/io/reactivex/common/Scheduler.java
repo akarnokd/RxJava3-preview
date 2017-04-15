@@ -127,7 +127,7 @@ public abstract class Scheduler {
     public Disposable scheduleDirect(@NonNull Runnable run, long delay, @NonNull TimeUnit unit) {
         final Worker w = createWorker();
 
-        final Runnable decoratedRun = RxJavaPlugins.onSchedule(run);
+        final Runnable decoratedRun = RxJavaCommonPlugins.onSchedule(run);
 
         DisposeTask task = new DisposeTask(decoratedRun, w);
 
@@ -158,7 +158,7 @@ public abstract class Scheduler {
     public Disposable schedulePeriodicallyDirect(@NonNull Runnable run, long initialDelay, long period, @NonNull TimeUnit unit) {
         final Worker w = createWorker();
 
-        final Runnable decoratedRun = RxJavaPlugins.onSchedule(run);
+        final Runnable decoratedRun = RxJavaCommonPlugins.onSchedule(run);
 
         PeriodicDirectTask periodicTask = new PeriodicDirectTask(decoratedRun, w);
 
@@ -234,7 +234,7 @@ public abstract class Scheduler {
 
             final SequentialDisposable sd = new SequentialDisposable(first);
 
-            final Runnable decoratedRun = RxJavaPlugins.onSchedule(run);
+            final Runnable decoratedRun = RxJavaCommonPlugins.onSchedule(run);
 
             final long periodInNanoseconds = unit.toNanos(period);
             final long firstNowNanoseconds = now(TimeUnit.NANOSECONDS);

@@ -11,16 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.BackpressureHelper;
+import hu.akarnokd.reactivestreams.extensions.ConditionalSubscriber;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 public final class FlowableFromArray<T> extends Flowable<T> {
     final T[] array;
@@ -38,7 +38,7 @@ public final class FlowableFromArray<T> extends Flowable<T> {
         }
     }
 
-    abstract static class BaseArraySubscription<T> extends BasicQueueSubscription<T> {
+    abstract static class BaseArraySubscription<T> extends BasicFusedQueueSubscription<T> {
         private static final long serialVersionUID = -2252972430506210021L;
 
         final T[] array;

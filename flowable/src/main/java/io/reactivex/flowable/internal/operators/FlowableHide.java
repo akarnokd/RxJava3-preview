@@ -11,12 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 /**
  * Hides the identity of the wrapped Flowable and its Subscription.
@@ -35,7 +36,7 @@ public final class FlowableHide<T> extends AbstractFlowableWithUpstream<T, T> {
         source.subscribe(new HideSubscriber<T>(s));
     }
 
-    static final class HideSubscriber<T> implements FlowableSubscriber<T>, Subscription {
+    static final class HideSubscriber<T> implements RelaxedSubscriber<T>, Subscription {
 
         final Subscriber<? super T> actual;
 

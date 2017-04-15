@@ -11,16 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.ArrayDeque;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 public final class FlowableTakeLast<T> extends AbstractFlowableWithUpstream<T, T> {
     final int count;
@@ -35,7 +36,7 @@ public final class FlowableTakeLast<T> extends AbstractFlowableWithUpstream<T, T
         source.subscribe(new TakeLastSubscriber<T>(s, count));
     }
 
-    static final class TakeLastSubscriber<T> extends ArrayDeque<T> implements FlowableSubscriber<T>, Subscription {
+    static final class TakeLastSubscriber<T> extends ArrayDeque<T> implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = 7240042530241604978L;
         final Subscriber<? super T> actual;

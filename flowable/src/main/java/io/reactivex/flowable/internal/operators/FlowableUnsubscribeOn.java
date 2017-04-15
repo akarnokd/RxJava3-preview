@@ -11,15 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 public final class FlowableUnsubscribeOn<T> extends AbstractFlowableWithUpstream<T, T> {
     final Scheduler scheduler;
@@ -33,7 +34,7 @@ public final class FlowableUnsubscribeOn<T> extends AbstractFlowableWithUpstream
         source.subscribe(new UnsubscribeSubscriber<T>(s, scheduler));
     }
 
-    static final class UnsubscribeSubscriber<T> extends AtomicBoolean implements FlowableSubscriber<T>, Subscription {
+    static final class UnsubscribeSubscriber<T> extends AtomicBoolean implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = 1015244841293359600L;
 
@@ -65,7 +66,7 @@ public final class FlowableUnsubscribeOn<T> extends AbstractFlowableWithUpstream
         @Override
         public void onError(Throwable t) {
             if (get()) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             actual.onError(t);

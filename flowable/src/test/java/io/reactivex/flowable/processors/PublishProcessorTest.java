@@ -544,7 +544,7 @@ public class PublishProcessorTest extends FlowableProcessorTest<Object> {
 
         TestSubscriber<Integer> ts = pp.test();
 
-        pp.subscribe(new FlowableSubscriber<Integer>() {
+        pp.subscribe(new RelaxedSubscriber<Integer>() {
 
             @Override
             public void onSubscribe(Subscription s) {

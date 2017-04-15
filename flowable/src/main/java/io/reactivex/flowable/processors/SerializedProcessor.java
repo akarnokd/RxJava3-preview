@@ -11,12 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.processors;
+package io.reactivex.flowable.processors;
 
 import org.reactivestreams.*;
 
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.flowable.internal.utils.*;
 
 /**
  * Serializes calls to the Subscriber methods.
@@ -106,7 +106,7 @@ import io.reactivex.plugins.RxJavaPlugins;
     @Override
     public void onError(Throwable t) {
         if (done) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         boolean reportError;
@@ -129,7 +129,7 @@ import io.reactivex.plugins.RxJavaPlugins;
             }
         }
         if (reportError) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         actual.onError(t);

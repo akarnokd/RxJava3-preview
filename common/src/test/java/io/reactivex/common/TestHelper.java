@@ -58,7 +58,7 @@ public enum TestHelper {
     public static List<Throwable> trackPluginErrors() {
         final List<Throwable> list = Collections.synchronizedList(new ArrayList<Throwable>());
 
-        RxJavaPlugins.setErrorHandler(new Consumer<Throwable>() {
+        RxJavaCommonPlugins.setErrorHandler(new Consumer<Throwable>() {
             @Override
             public void accept(Throwable t) {
                 list.add(t);

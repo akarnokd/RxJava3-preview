@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -503,7 +503,7 @@ public class FlowableDoOnEachTest {
 
     @Test
     public void fused() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         final int[] call = { 0, 0 };
 
@@ -523,7 +523,7 @@ public class FlowableDoOnEachTest {
         .subscribe(ts);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.SYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.SYNC))
         .assertResult(1, 2, 3, 4, 5);
 
         assertEquals(5, call[0]);
@@ -532,7 +532,7 @@ public class FlowableDoOnEachTest {
 
     @Test
     public void fusedOnErrorCrash() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         final int[] call = { 0 };
 
@@ -552,7 +552,7 @@ public class FlowableDoOnEachTest {
         .subscribe(ts);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.SYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.SYNC))
         .assertFailure(TestException.class);
 
         assertEquals(0, call[0]);
@@ -560,7 +560,7 @@ public class FlowableDoOnEachTest {
 
     @Test
     public void fusedConditional() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         final int[] call = { 0, 0 };
 
@@ -581,7 +581,7 @@ public class FlowableDoOnEachTest {
         .subscribe(ts);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.SYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.SYNC))
         .assertResult(1, 2, 3, 4, 5);
 
         assertEquals(5, call[0]);
@@ -590,7 +590,7 @@ public class FlowableDoOnEachTest {
 
     @Test
     public void fusedOnErrorCrashConditional() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         final int[] call = { 0 };
 
@@ -611,7 +611,7 @@ public class FlowableDoOnEachTest {
         .subscribe(ts);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.SYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.SYNC))
         .assertFailure(TestException.class);
 
         assertEquals(0, call[0]);
@@ -619,7 +619,7 @@ public class FlowableDoOnEachTest {
 
     @Test
     public void fusedAsync() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         final int[] call = { 0, 0 };
 
@@ -643,7 +643,7 @@ public class FlowableDoOnEachTest {
         TestHelper.emit(up, 1, 2, 3, 4, 5);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .assertResult(1, 2, 3, 4, 5);
 
         assertEquals(5, call[0]);
@@ -652,7 +652,7 @@ public class FlowableDoOnEachTest {
 
     @Test
     public void fusedAsyncConditional() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         final int[] call = { 0, 0 };
 
@@ -677,7 +677,7 @@ public class FlowableDoOnEachTest {
         TestHelper.emit(up, 1, 2, 3, 4, 5);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .assertResult(1, 2, 3, 4, 5);
 
         assertEquals(5, call[0]);
@@ -686,7 +686,7 @@ public class FlowableDoOnEachTest {
 
     @Test
     public void fusedAsyncConditional2() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         final int[] call = { 0, 0 };
 
@@ -711,7 +711,7 @@ public class FlowableDoOnEachTest {
         TestHelper.emit(up, 1, 2, 3, 4, 5);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.NONE))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.NONE))
         .assertResult(1, 2, 3, 4, 5);
 
         assertEquals(5, call[0]);

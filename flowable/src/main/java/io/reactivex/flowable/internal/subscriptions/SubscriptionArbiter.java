@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscriptions;
+package io.reactivex.flowable.internal.subscriptions;
 /**
  * Copyright (c) 2016-present, RxJava Contributors.
  *
@@ -29,8 +29,8 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.Subscription;
 
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.util.BackpressureHelper;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 /**
  * Arbitrates requests and cancellation between Subscriptions.

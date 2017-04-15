@@ -383,7 +383,7 @@ public class SerializedSubscriberTest {
 
             @Override
             public void onError(Throwable t) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
 
             @Override
@@ -400,7 +400,7 @@ public class SerializedSubscriberTest {
 
             @Override
             public void onError(Throwable t) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
 
             @Override

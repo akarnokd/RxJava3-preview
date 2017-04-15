@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,16 +19,16 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.flowables.GroupedFlowable;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.queues.SpscLinkedArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 public final class FlowableGroupBy<T, K, V> extends AbstractFlowableWithUpstream<T, GroupedFlowable<K, V>> {
     final Function<? super T, ? extends K> keySelector;
@@ -50,8 +50,8 @@ public final class FlowableGroupBy<T, K, V> extends AbstractFlowableWithUpstream
     }
 
     public static final class GroupBySubscriber<T, K, V>
-    extends BasicIntQueueSubscription<GroupedFlowable<K, V>>
-    implements FlowableSubscriber<T> {
+    extends BasicIntFusedQueueSubscription<GroupedFlowable<K, V>>
+    implements RelaxedSubscriber<T> {
 
         private static final long serialVersionUID = -3688291656102519502L;
 
@@ -154,7 +154,7 @@ public final class FlowableGroupBy<T, K, V> extends AbstractFlowableWithUpstream
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             for (GroupedUnicast<K, V> g : groups.values()) {
@@ -404,7 +404,7 @@ public final class FlowableGroupBy<T, K, V> extends AbstractFlowableWithUpstream
         }
     }
 
-    static final class State<T, K> extends BasicIntQueueSubscription<T> implements Publisher<T> {
+    static final class State<T, K> extends BasicIntFusedQueueSubscription<T> implements Publisher<T> {
 
         private static final long serialVersionUID = -3852313036005250360L;
 

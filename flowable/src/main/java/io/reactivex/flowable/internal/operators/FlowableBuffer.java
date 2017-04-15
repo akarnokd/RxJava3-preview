@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -19,13 +19,14 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BooleanSupplier;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.BooleanSupplier;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.*;
 
 public final class FlowableBuffer<T, C extends Collection<? super T>> extends AbstractFlowableWithUpstream<T, C> {
     final int size;
@@ -53,7 +54,7 @@ public final class FlowableBuffer<T, C extends Collection<? super T>> extends Ab
     }
 
     static final class PublisherBufferExactSubscriber<T, C extends Collection<? super T>>
-      implements FlowableSubscriber<T>, Subscription {
+      implements RelaxedSubscriber<T>, Subscription {
 
         final Subscriber<? super C> actual;
 
@@ -132,7 +133,7 @@ public final class FlowableBuffer<T, C extends Collection<? super T>> extends Ab
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -157,7 +158,7 @@ public final class FlowableBuffer<T, C extends Collection<? super T>> extends Ab
 
     static final class PublisherBufferSkipSubscriber<T, C extends Collection<? super T>>
     extends AtomicInteger
-    implements FlowableSubscriber<T>, Subscription {
+    implements RelaxedSubscriber<T>, Subscription {
 
 
         private static final long serialVersionUID = -5616169793639412593L;
@@ -258,7 +259,7 @@ public final class FlowableBuffer<T, C extends Collection<? super T>> extends Ab
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
 
@@ -289,7 +290,7 @@ public final class FlowableBuffer<T, C extends Collection<? super T>> extends Ab
 
     static final class PublisherBufferOverlappingSubscriber<T, C extends Collection<? super T>>
     extends AtomicLong
-    implements FlowableSubscriber<T>, Subscription, BooleanSupplier {
+    implements RelaxedSubscriber<T>, Subscription, BooleanSupplier {
 
         private static final long serialVersionUID = -7370244972039324525L;
 
@@ -417,7 +418,7 @@ public final class FlowableBuffer<T, C extends Collection<? super T>> extends Ab
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
 

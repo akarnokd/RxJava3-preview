@@ -11,17 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.Scheduler;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.SpscLinkedArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 public final class FlowableTakeLastTimed<T> extends AbstractFlowableWithUpstream<T, T> {
     final long count;
@@ -48,7 +50,7 @@ public final class FlowableTakeLastTimed<T> extends AbstractFlowableWithUpstream
         source.subscribe(new TakeLastTimedSubscriber<T>(s, count, time, unit, scheduler, bufferSize, delayError));
     }
 
-    static final class TakeLastTimedSubscriber<T> extends AtomicInteger implements FlowableSubscriber<T>, Subscription {
+    static final class TakeLastTimedSubscriber<T> extends AtomicInteger implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = -5677354903406201275L;
         final Subscriber<? super T> actual;

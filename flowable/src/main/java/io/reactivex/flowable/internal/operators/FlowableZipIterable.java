@@ -11,18 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.Iterator;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.BiFunction;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 public final class FlowableZipIterable<T, U, V> extends AbstractFlowableWithUpstream<T, V> {
     final Iterable<U> other;
@@ -66,7 +67,7 @@ public final class FlowableZipIterable<T, U, V> extends AbstractFlowableWithUpst
         source.subscribe(new ZipIterableSubscriber<T, U, V>(t, it, zipper));
     }
 
-    static final class ZipIterableSubscriber<T, U, V> implements FlowableSubscriber<T>, Subscription {
+    static final class ZipIterableSubscriber<T, U, V> implements RelaxedSubscriber<T>, Subscription {
         final Subscriber<? super V> actual;
         final Iterator<U> iterator;
         final BiFunction<? super T, ? super U, ? extends V> zipper;
@@ -141,7 +142,7 @@ public final class FlowableZipIterable<T, U, V> extends AbstractFlowableWithUpst
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;

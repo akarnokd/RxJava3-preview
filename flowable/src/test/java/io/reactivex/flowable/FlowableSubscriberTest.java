@@ -33,7 +33,7 @@ import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subscribers.*;
 
-public class FlowableSubscriberTest {
+public class RelaxedSubscriberTest {
 
     /**
      * Should request n for whatever the final Subscriber asks for.
@@ -88,7 +88,7 @@ public class FlowableSubscriberTest {
         FlowableOperator<String, String> o = new FlowableOperator<String, String>() {
             @Override
             public Subscriber<? super String> apply(final Subscriber<? super String> s1) {
-                return new FlowableSubscriber<String>() {
+                return new RelaxedSubscriber<String>() {
 
                     @Override
                     public void onSubscribe(Subscription a) {
@@ -140,7 +140,7 @@ public class FlowableSubscriberTest {
         FlowableOperator<String, String> o = new FlowableOperator<String, String>() {
             @Override
             public Subscriber<? super String> apply(final Subscriber<? super String> s1) {
-                return new FlowableSubscriber<String>() {
+                return new RelaxedSubscriber<String>() {
 
                     @Override
                     public void onSubscribe(Subscription a) {

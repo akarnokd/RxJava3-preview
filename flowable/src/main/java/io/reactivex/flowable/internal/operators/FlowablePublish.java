@@ -11,22 +11,22 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.flowables.ConnectableFlowable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.SpscArrayQueue;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Consumer;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.extensions.HasUpstreamPublisher;
+import io.reactivex.flowable.internal.queues.SpscArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.*;
 
 /**
  * A connectable observable which shares an underlying source and dispatches source values to subscribers in a backpressure-aware
@@ -61,7 +61,7 @@ public final class FlowablePublish<T> extends ConnectableFlowable<T> implements 
         // the current connection to source needs to be shared between the operator and its onSubscribe call
         final AtomicReference<PublishSubscriber<T>> curr = new AtomicReference<PublishSubscriber<T>>();
         Publisher<T> onSubscribe = new FlowablePublisher<T>(curr, bufferSize);
-        return RxJavaPlugins.onAssembly(new FlowablePublish<T>(onSubscribe, source, curr, bufferSize));
+        return RxJavaFlowablePlugins.onAssembly(new FlowablePublish<T>(onSubscribe, source, curr, bufferSize));
     }
 
     private FlowablePublish(Publisher<T> onSubscribe, Flowable<T> source,
@@ -134,7 +134,7 @@ public final class FlowablePublish<T> extends ConnectableFlowable<T> implements 
     @SuppressWarnings("rawtypes")
     static final class PublishSubscriber<T>
     extends AtomicInteger
-    implements FlowableSubscriber<T>, Disposable {
+    implements RelaxedSubscriber<T>, Disposable {
         private static final long serialVersionUID = -202316842419149694L;
 
         /** Indicates an empty array of inner subscribers. */
@@ -163,7 +163,7 @@ public final class FlowablePublish<T> extends ConnectableFlowable<T> implements 
         int sourceMode;
 
         /** Holds notifications from upstream. */
-        volatile SimpleQueue<T> queue;
+        volatile FusedQueue<T> queue;
 
         PublishSubscriber(AtomicReference<PublishSubscriber<T>> current, int bufferSize) {
             this.subscribers = new AtomicReference<InnerSubscriber[]>(EMPTY);
@@ -191,19 +191,19 @@ public final class FlowablePublish<T> extends ConnectableFlowable<T> implements 
         @Override
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.setOnce(this.s, s)) {
-                if (s instanceof QueueSubscription) {
+                if (s instanceof FusedQueueSubscription) {
                     @SuppressWarnings("unchecked")
-                    QueueSubscription<T> qs = (QueueSubscription<T>) s;
+                    FusedQueueSubscription<T> qs = (FusedQueueSubscription<T>) s;
 
-                    int m = qs.requestFusion(QueueSubscription.ANY);
-                    if (m == QueueSubscription.SYNC) {
+                    int m = qs.requestFusion(FusedQueueSubscription.ANY);
+                    if (m == FusedQueueSubscription.SYNC) {
                         sourceMode = m;
                         queue = qs;
                         terminalEvent = NotificationLite.complete();
                         dispatch();
                         return;
                     }
-                    if (m == QueueSubscription.ASYNC) {
+                    if (m == FusedQueueSubscription.ASYNC) {
                         sourceMode = m;
                         queue = qs;
                         s.request(bufferSize);
@@ -220,7 +220,7 @@ public final class FlowablePublish<T> extends ConnectableFlowable<T> implements 
         @Override
         public void onNext(T t) {
             // we expect upstream to honor backpressure requests
-            if (sourceMode == QueueSubscription.NONE && !queue.offer(t)) {
+            if (sourceMode == FusedQueueSubscription.NONE && !queue.offer(t)) {
                 onError(new MissingBackpressureException("Prefetch queue is full?!"));
                 return;
             }
@@ -238,7 +238,7 @@ public final class FlowablePublish<T> extends ConnectableFlowable<T> implements 
                 // loop to act on the current state serially
                 dispatch();
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
         @Override
@@ -382,7 +382,7 @@ public final class FlowablePublish<T> extends ConnectableFlowable<T> implements 
                             ip.child.onError(t);
                         }
                     } else {
-                        RxJavaPlugins.onError(t);
+                        RxJavaCommonPlugins.onError(t);
                     }
                     // indicate we reached the terminal state
                     return true;
@@ -420,7 +420,7 @@ public final class FlowablePublish<T> extends ConnectableFlowable<T> implements 
                  * Although the queue can become non-empty in the mean time, we will
                  * detect it through the missing flag and will do another iteration.
                  */
-                SimpleQueue<T> q = queue;
+                FusedQueue<T> q = queue;
 
                 boolean empty = q == null || q.isEmpty();
                 // if the queue is empty and the terminal event was received, quit
@@ -483,7 +483,7 @@ public final class FlowablePublish<T> extends ConnectableFlowable<T> implements 
                             return;
                         }
                         // otherwise, just ask for a new value
-                        if (sourceMode != QueueSubscription.SYNC) {
+                        if (sourceMode != FusedQueueSubscription.SYNC) {
                             s.get().request(1);
                         }
                         // and retry emitting to potential new child subscribers
@@ -536,7 +536,7 @@ public final class FlowablePublish<T> extends ConnectableFlowable<T> implements 
 
                     // if we did emit at least one element, request more to replenish the queue
                     if (d > 0) {
-                        if (sourceMode != QueueSubscription.SYNC) {
+                        if (sourceMode != FusedQueueSubscription.SYNC) {
                             s.get().request(d);
                         }
                     }

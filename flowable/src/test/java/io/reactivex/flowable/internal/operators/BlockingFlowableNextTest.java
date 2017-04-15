@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
 
@@ -25,7 +25,7 @@ import org.reactivestreams.*;
 import io.reactivex.*;
 import io.reactivex.disposables.SerialDisposable;
 import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.operators.flowable.BlockingFlowableNext.NextSubscriber;
+import io.reactivex.flowable.internal.operators.BlockingFlowableNext.NextSubscriber;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.processors.*;

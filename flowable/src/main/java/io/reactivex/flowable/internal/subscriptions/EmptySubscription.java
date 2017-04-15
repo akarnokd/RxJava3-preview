@@ -11,17 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscriptions;
+package io.reactivex.flowable.internal.subscriptions;
 
-import io.reactivex.annotations.Nullable;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.internal.fuseable.QueueSubscription;
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
+import io.reactivex.common.annotations.Nullable;
 
 /**
  * An empty subscription that does nothing other than validates the request amount.
  */
-public enum EmptySubscription implements QueueSubscription<Object> {
+public enum EmptySubscription implements FusedQueueSubscription<Object> {
     /** A singleton, stateless instance. */
     INSTANCE;
 
@@ -86,10 +86,6 @@ public enum EmptySubscription implements QueueSubscription<Object> {
     }
     @Override
     public boolean offer(Object value) {
-        throw new UnsupportedOperationException("Should not be called!");
-    }
-    @Override
-    public boolean offer(Object v1, Object v2) {
         throw new UnsupportedOperationException("Should not be called!");
     }
 }

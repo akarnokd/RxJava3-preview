@@ -11,13 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.internal.util.*;
-import io.reactivex.subscribers.DefaultSubscriber;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.utils.NotificationLite;
+import io.reactivex.flowable.subscribers.DefaultSubscriber;
 
 /**
  * Returns an Iterable that always returns the item most recently emitted by an Observable, or a

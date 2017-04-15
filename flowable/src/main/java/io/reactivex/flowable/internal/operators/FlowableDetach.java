@@ -11,13 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.EmptyComponent;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.EmptyComponent;
 
 public final class FlowableDetach<T> extends AbstractFlowableWithUpstream<T, T> {
 
@@ -30,7 +31,7 @@ public final class FlowableDetach<T> extends AbstractFlowableWithUpstream<T, T> 
         source.subscribe(new DetachSubscriber<T>(s));
     }
 
-    static final class DetachSubscriber<T> implements FlowableSubscriber<T>, Subscription {
+    static final class DetachSubscriber<T> implements RelaxedSubscriber<T>, Subscription {
 
         Subscriber<? super T> actual;
 

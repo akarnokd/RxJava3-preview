@@ -234,7 +234,7 @@ public class SchedulerTest {
             TestHelper.assertUndeliverable(list, 0, TestException.class, null);
 
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

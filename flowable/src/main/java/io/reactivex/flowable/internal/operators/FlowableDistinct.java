@@ -11,22 +11,22 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.Collection;
 import java.util.concurrent.Callable;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.QueueFuseable;
-import io.reactivex.internal.subscribers.BasicFuseableSubscriber;
-import io.reactivex.internal.subscriptions.EmptySubscription;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscribers.BasicFuseableSubscriber;
+import io.reactivex.flowable.internal.subscriptions.EmptySubscription;
 
 public final class FlowableDistinct<T, K> extends AbstractFlowableWithUpstream<T, T> {
 
@@ -97,7 +97,7 @@ public final class FlowableDistinct<T, K> extends AbstractFlowableWithUpstream<T
         @Override
         public void onError(Throwable e) {
             if (done) {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             } else {
                 done = true;
                 collection.clear();
@@ -121,14 +121,14 @@ public final class FlowableDistinct<T, K> extends AbstractFlowableWithUpstream<T
 
         @Nullable
         @Override
-        public T poll() throws Exception {
+        public T poll() throws Throwable {
             for (;;) {
                 T v = qs.poll();
 
                 if (v == null || collection.add(ObjectHelper.requireNonNull(keySelector.apply(v), "The keySelector returned a null key"))) {
                     return v;
                 } else {
-                    if (sourceMode == QueueFuseable.ASYNC) {
+                    if (sourceMode == FusedQueueSubscription.ASYNC) {
                         s.request(1);
                     }
                 }

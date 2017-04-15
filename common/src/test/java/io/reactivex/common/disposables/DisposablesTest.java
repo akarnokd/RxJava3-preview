@@ -152,7 +152,7 @@ public class DisposablesTest {
 
             TestHelper.assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

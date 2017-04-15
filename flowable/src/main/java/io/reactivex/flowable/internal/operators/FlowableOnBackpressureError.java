@@ -11,17 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 public final class FlowableOnBackpressureError<T> extends AbstractFlowableWithUpstream<T, T> {
 
@@ -37,7 +38,7 @@ public final class FlowableOnBackpressureError<T> extends AbstractFlowableWithUp
     }
 
     static final class BackpressureErrorSubscriber<T>
-            extends AtomicLong implements FlowableSubscriber<T>, Subscription {
+            extends AtomicLong implements RelaxedSubscriber<T>, Subscription {
         private static final long serialVersionUID = -3176480756392482682L;
 
         final Subscriber<? super T> actual;
@@ -74,7 +75,7 @@ public final class FlowableOnBackpressureError<T> extends AbstractFlowableWithUp
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;

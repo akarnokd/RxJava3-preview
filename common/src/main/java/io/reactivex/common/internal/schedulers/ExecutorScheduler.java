@@ -20,7 +20,7 @@ import io.reactivex.common.*;
 import io.reactivex.common.annotations.NonNull;
 import io.reactivex.common.disposables.CompositeDisposable;
 import io.reactivex.common.internal.disposables.*;
-import io.reactivex.common.internal.queues.MpscLinkedQueue;
+import io.reactivex.common.internal.queues.AbstractMpscLinkedQueue;
 import io.reactivex.common.internal.schedulers.ExecutorScheduler.ExecutorWorker.BooleanRunnable;
 
 /**
@@ -46,7 +46,7 @@ public final class ExecutorScheduler extends Scheduler {
     @NonNull
     @Override
     public Disposable scheduleDirect(@NonNull Runnable run) {
-        Runnable decoratedRun = RxJavaPlugins.onSchedule(run);
+        Runnable decoratedRun = RxJavaCommonPlugins.onSchedule(run);
         try {
             if (executor instanceof ExecutorService) {
                 ScheduledDirectTask task = new ScheduledDirectTask(decoratedRun);
@@ -59,7 +59,7 @@ public final class ExecutorScheduler extends Scheduler {
             executor.execute(br);
             return br;
         } catch (RejectedExecutionException ex) {
-            RxJavaPlugins.onError(ex);
+            RxJavaCommonPlugins.onError(ex);
             return REJECTED;
         }
     }
@@ -67,7 +67,7 @@ public final class ExecutorScheduler extends Scheduler {
     @NonNull
     @Override
     public Disposable scheduleDirect(@NonNull Runnable run, final long delay, final TimeUnit unit) {
-        final Runnable decoratedRun = RxJavaPlugins.onSchedule(run);
+        final Runnable decoratedRun = RxJavaCommonPlugins.onSchedule(run);
         if (executor instanceof ScheduledExecutorService) {
             try {
                 ScheduledDirectTask task = new ScheduledDirectTask(decoratedRun);
@@ -75,7 +75,7 @@ public final class ExecutorScheduler extends Scheduler {
                 task.setFuture(f);
                 return task;
             } catch (RejectedExecutionException ex) {
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
                 return REJECTED;
             }
         }
@@ -93,14 +93,14 @@ public final class ExecutorScheduler extends Scheduler {
     @Override
     public Disposable schedulePeriodicallyDirect(@NonNull Runnable run, long initialDelay, long period, TimeUnit unit) {
         if (executor instanceof ScheduledExecutorService) {
-            Runnable decoratedRun = RxJavaPlugins.onSchedule(run);
+            Runnable decoratedRun = RxJavaCommonPlugins.onSchedule(run);
             try {
                 ScheduledDirectPeriodicTask task = new ScheduledDirectPeriodicTask(decoratedRun);
                 Future<?> f = ((ScheduledExecutorService)executor).scheduleAtFixedRate(task, initialDelay, period, unit);
                 task.setFuture(f);
                 return task;
             } catch (RejectedExecutionException ex) {
-                RxJavaPlugins.onError(ex);
+                RxJavaCommonPlugins.onError(ex);
                 return REJECTED;
             }
         }
@@ -110,7 +110,7 @@ public final class ExecutorScheduler extends Scheduler {
     public static final class ExecutorWorker extends Scheduler.Worker implements Runnable {
         final Executor executor;
 
-        final MpscLinkedQueue<Runnable> queue;
+        final AbstractMpscLinkedQueue<Runnable> queue;
 
         volatile boolean disposed;
 
@@ -120,7 +120,7 @@ public final class ExecutorScheduler extends Scheduler {
 
         public ExecutorWorker(Executor executor) {
             this.executor = executor;
-            this.queue = new MpscLinkedQueue<Runnable>() { };
+            this.queue = new AbstractMpscLinkedQueue<Runnable>() { };
         }
 
         @NonNull
@@ -130,7 +130,7 @@ public final class ExecutorScheduler extends Scheduler {
                 return REJECTED;
             }
 
-            Runnable decoratedRun = RxJavaPlugins.onSchedule(run);
+            Runnable decoratedRun = RxJavaCommonPlugins.onSchedule(run);
             BooleanRunnable br = new BooleanRunnable(decoratedRun);
 
             queue.offer(br);
@@ -141,7 +141,7 @@ public final class ExecutorScheduler extends Scheduler {
                 } catch (RejectedExecutionException ex) {
                     disposed = true;
                     queue.clear();
-                    RxJavaPlugins.onError(ex);
+                    RxJavaCommonPlugins.onError(ex);
                     return REJECTED;
                 }
             }
@@ -164,7 +164,7 @@ public final class ExecutorScheduler extends Scheduler {
 
             final SequentialDisposable mar = new SequentialDisposable(first);
 
-            final Runnable decoratedRun = RxJavaPlugins.onSchedule(run);
+            final Runnable decoratedRun = RxJavaCommonPlugins.onSchedule(run);
 
             ScheduledRunnable sr = new ScheduledRunnable(new SequentialDispose(mar, decoratedRun), tasks);
             tasks.add(sr);
@@ -175,7 +175,7 @@ public final class ExecutorScheduler extends Scheduler {
                     sr.setFuture(f);
                 } catch (RejectedExecutionException ex) {
                     disposed = true;
-                    RxJavaPlugins.onError(ex);
+                    RxJavaCommonPlugins.onError(ex);
                     return REJECTED;
                 }
             } else {
@@ -207,7 +207,7 @@ public final class ExecutorScheduler extends Scheduler {
         @Override
         public void run() {
             int missed = 1;
-            final MpscLinkedQueue<Runnable> q = queue;
+            final AbstractMpscLinkedQueue<Runnable> q = queue;
             for (;;) {
 
                 if (disposed) {

@@ -11,20 +11,20 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscriptions;
+package io.reactivex.flowable.internal.subscriptions;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.reactivex.annotations.Nullable;
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.internal.fuseable.QueueSubscription;
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
+import io.reactivex.common.annotations.Nullable;
 
 /**
  * A Subscription that holds a constant value and emits it only when requested.
  * @param <T> the value type
  */
-public final class ScalarSubscription<T> extends AtomicInteger implements QueueSubscription<T> {
+public final class ScalarSubscription<T> extends AtomicInteger implements FusedQueueSubscription<T> {
 
     private static final long serialVersionUID = -3830916580126663321L;
     /** The single value to emit, set to null. */
@@ -75,11 +75,6 @@ public final class ScalarSubscription<T> extends AtomicInteger implements QueueS
 
     @Override
     public boolean offer(T e) {
-        throw new UnsupportedOperationException("Should not be called!");
-    }
-
-    @Override
-    public boolean offer(T v1, T v2) {
         throw new UnsupportedOperationException("Should not be called!");
     }
 

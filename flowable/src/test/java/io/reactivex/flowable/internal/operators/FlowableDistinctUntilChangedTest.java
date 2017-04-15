@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -182,9 +182,9 @@ public class FlowableDistinctUntilChangedTest {
                 return a.equals(b);
             }
         })
-        .to(SubscriberFusion.<Integer>test(Long.MAX_VALUE, QueueSubscription.ANY, false))
+        .to(SubscriberFusion.<Integer>test(Long.MAX_VALUE, FusedQueueSubscription.ANY, false))
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.SYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.SYNC))
         .assertResult(1, 2, 3, 2, 4, 1, 2);
     }
 
@@ -203,9 +203,9 @@ public class FlowableDistinctUntilChangedTest {
                 return true;
             }
         })
-        .to(SubscriberFusion.<Integer>test(Long.MAX_VALUE, QueueSubscription.ANY, false))
+        .to(SubscriberFusion.<Integer>test(Long.MAX_VALUE, FusedQueueSubscription.ANY, false))
         .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.SYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.SYNC))
         .assertResult(1, 2, 3, 2, 4, 1, 2);
     }
 
@@ -438,7 +438,7 @@ public class FlowableDistinctUntilChangedTest {
 
     @Test
     public void conditionalFused() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.just(1, 2, 1, 3, 3, 4, 3, 5, 5)
         .distinctUntilChanged()
@@ -450,13 +450,13 @@ public class FlowableDistinctUntilChangedTest {
         })
         .subscribe(ts);
 
-        SubscriberFusion.assertFusion(ts, QueueSubscription.SYNC)
+        SubscriberFusion.assertFusion(ts, FusedQueueSubscription.SYNC)
         .assertResult(2, 4);
     }
 
     @Test
     public void conditionalAsyncFused() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
         UnicastProcessor<Integer> up = UnicastProcessor.create();
 
         up
@@ -472,7 +472,7 @@ public class FlowableDistinctUntilChangedTest {
 
         TestHelper.emit(up, 1, 2, 1, 3, 3, 4, 3, 5, 5);
 
-        SubscriberFusion.assertFusion(ts, QueueSubscription.ASYNC)
+        SubscriberFusion.assertFusion(ts, FusedQueueSubscription.ASYNC)
         .assertResult(2, 4);
     }
 

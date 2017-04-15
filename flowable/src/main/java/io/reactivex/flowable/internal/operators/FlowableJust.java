@@ -11,19 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.internal.fuseable.ScalarCallable;
-import io.reactivex.internal.subscriptions.ScalarSubscription;
+import hu.akarnokd.reactivestreams.extensions.ConstantValuePublisher;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.ScalarSubscription;
 
 /**
  * Represents a constant scalar value.
  * @param <T> the value type
  */
-public final class FlowableJust<T> extends Flowable<T> implements ScalarCallable<T> {
+public final class FlowableJust<T> extends Flowable<T> implements ConstantValuePublisher<T> {
     private final T value;
     public FlowableJust(final T value) {
         this.value = value;
@@ -35,7 +35,7 @@ public final class FlowableJust<T> extends Flowable<T> implements ScalarCallable
     }
 
     @Override
-    public T call() {
+    public T value() {
         return value;
     }
 }

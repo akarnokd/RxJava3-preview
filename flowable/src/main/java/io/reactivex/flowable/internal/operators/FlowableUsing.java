@@ -11,18 +11,19 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 public final class FlowableUsing<T, D> extends Flowable<T> {
     final Callable<? extends D> resourceSupplier;
@@ -73,7 +74,7 @@ public final class FlowableUsing<T, D> extends Flowable<T> {
         source.subscribe(us);
     }
 
-    static final class UsingSubscriber<T, D> extends AtomicBoolean implements FlowableSubscriber<T>, Subscription {
+    static final class UsingSubscriber<T, D> extends AtomicBoolean implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = 5904473792286235046L;
 
@@ -170,7 +171,7 @@ public final class FlowableUsing<T, D> extends Flowable<T> {
                 } catch (Throwable e) {
                     Exceptions.throwIfFatal(e);
                     // can't call actual.onError unless it is serialized, which is expensive
-                    RxJavaPlugins.onError(e);
+                    RxJavaCommonPlugins.onError(e);
                 }
             }
         }

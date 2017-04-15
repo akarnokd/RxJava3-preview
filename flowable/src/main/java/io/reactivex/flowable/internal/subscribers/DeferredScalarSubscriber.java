@@ -11,12 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import org.reactivestreams.*;
 
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.internal.subscriptions.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.flowable.internal.subscriptions.*;
 
 /**
  * A subscriber, extending a DeferredScalarSubscription,
@@ -25,7 +25,7 @@ import io.reactivex.internal.subscriptions.*;
  * @param <R> the output value type
  */
 public abstract class DeferredScalarSubscriber<T, R> extends DeferredScalarSubscription<R>
-implements FlowableSubscriber<T> {
+implements RelaxedSubscriber<T> {
 
     private static final long serialVersionUID = 2984505488220891551L;
 

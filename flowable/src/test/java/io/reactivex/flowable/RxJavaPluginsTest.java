@@ -38,10 +38,10 @@ import io.reactivex.flowables.ConnectableFlowable;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.Functions;
 import io.reactivex.internal.operators.completable.CompletableError;
-import io.reactivex.internal.operators.flowable.FlowableRange;
+import io.reactivex.flowable.internal.operators.FlowableRange;
 import io.reactivex.internal.operators.maybe.MaybeError;
 import io.reactivex.internal.operators.observable.ObservableRange;
-import io.reactivex.internal.operators.parallel.ParallelFromPublisher;
+import io.reactivex.flowable.internal.operators.ParallelFromPublisher;
 import io.reactivex.internal.operators.single.SingleJust;
 import io.reactivex.internal.schedulers.ImmediateThinScheduler;
 import io.reactivex.internal.subscriptions.ScalarSubscription;
@@ -1029,7 +1029,7 @@ public class RxJavaPluginsTest {
                 }
             });
 
-            RxJavaPlugins.onError(new TestException("Forced failure"));
+            RxJavaCommonPlugins.onError(new TestException("Forced failure"));
 
             assertEquals(1, list.size());
             assertUndeliverableTestException(list, 0, "Forced failure");
@@ -1079,12 +1079,12 @@ public class RxJavaPluginsTest {
                 }
             });
 
-            RxJavaPlugins.onError(new TestException("Forced failure"));
+            RxJavaCommonPlugins.onError(new TestException("Forced failure"));
 
             Thread.currentThread().setUncaughtExceptionHandler(null);
 
             // this will be printed on the console and should not crash
-            RxJavaPlugins.onError(new TestException("Forced failure 3"));
+            RxJavaCommonPlugins.onError(new TestException("Forced failure 3"));
 
             assertEquals(1, list.size());
             assertUndeliverableTestException(list, 0, "Forced failure");
@@ -1115,7 +1115,7 @@ public class RxJavaPluginsTest {
                 }
             });
 
-            RxJavaPlugins.onError(new TestException("Forced failure"));
+            RxJavaCommonPlugins.onError(new TestException("Forced failure"));
 
             assertEquals(2, list.size());
             assertTestException(list, 0, "Forced failure 2");
@@ -1150,7 +1150,7 @@ public class RxJavaPluginsTest {
                 }
             });
 
-            RxJavaPlugins.onError(null);
+            RxJavaCommonPlugins.onError(null);
 
             assertEquals(2, list.size());
             assertTestException(list, 0, "Forced failure 2");
@@ -1158,7 +1158,7 @@ public class RxJavaPluginsTest {
 
             RxJavaPlugins.reset();
 
-            RxJavaPlugins.onError(null);
+            RxJavaCommonPlugins.onError(null);
 
             assertNPE(list, 2);
 
@@ -1319,13 +1319,13 @@ public class RxJavaPluginsTest {
         try {
             RxJavaPlugins.reset();
 
-            assertNull(RxJavaPlugins.onAssembly((Observable)null));
+            assertNull(RxJavaFlowablePlugins.onAssembly((Observable)null));
 
-            assertNull(RxJavaPlugins.onAssembly((ConnectableObservable)null));
+            assertNull(RxJavaFlowablePlugins.onAssembly((ConnectableObservable)null));
 
-            assertNull(RxJavaPlugins.onAssembly((Flowable)null));
+            assertNull(RxJavaFlowablePlugins.onAssembly((Flowable)null));
 
-            assertNull(RxJavaPlugins.onAssembly((ConnectableFlowable)null));
+            assertNull(RxJavaFlowablePlugins.onAssembly((ConnectableFlowable)null));
 
             Observable oos = new Observable() {
                 @Override
@@ -1341,11 +1341,11 @@ public class RxJavaPluginsTest {
                 }
             };
 
-            assertSame(oos, RxJavaPlugins.onAssembly(oos));
+            assertSame(oos, RxJavaFlowablePlugins.onAssembly(oos));
 
-            assertSame(fos, RxJavaPlugins.onAssembly(fos));
+            assertSame(fos, RxJavaFlowablePlugins.onAssembly(fos));
 
-            assertNull(RxJavaPlugins.onAssembly((Single)null));
+            assertNull(RxJavaFlowablePlugins.onAssembly((Single)null));
 
             Single sos = new Single() {
                 @Override
@@ -1354,9 +1354,9 @@ public class RxJavaPluginsTest {
                 }
             };
 
-            assertSame(sos, RxJavaPlugins.onAssembly(sos));
+            assertSame(sos, RxJavaFlowablePlugins.onAssembly(sos));
 
-            assertNull(RxJavaPlugins.onAssembly((Completable)null));
+            assertNull(RxJavaFlowablePlugins.onAssembly((Completable)null));
 
             Completable cos = new Completable() {
                 @Override
@@ -1365,9 +1365,9 @@ public class RxJavaPluginsTest {
                 }
             };
 
-            assertSame(cos, RxJavaPlugins.onAssembly(cos));
+            assertSame(cos, RxJavaFlowablePlugins.onAssembly(cos));
 
-            assertNull(RxJavaPlugins.onAssembly((Maybe)null));
+            assertNull(RxJavaFlowablePlugins.onAssembly((Maybe)null));
 
             assertNull(RxJavaPlugins.onSchedule(null));
 
@@ -1378,7 +1378,7 @@ public class RxJavaPluginsTest {
                 }
             };
 
-            assertSame(myb, RxJavaPlugins.onAssembly(myb));
+            assertSame(myb, RxJavaFlowablePlugins.onAssembly(myb));
 
 
             assertNull(RxJavaPlugins.onSchedule(null));
@@ -2048,7 +2048,7 @@ public class RxJavaPluginsTest {
                 }
             });
 
-            RxJavaPlugins.onError(null);
+            RxJavaCommonPlugins.onError(null);
 
             final Throwable throwable = t.get();
             assertEquals("onError called with null. Null values are generally not allowed in 2.x operators and sources.", throwable.getMessage());

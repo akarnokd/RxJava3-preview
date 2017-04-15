@@ -11,22 +11,23 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.SimpleQueue;
-import io.reactivex.internal.queue.SpscLinkedArrayQueue;
-import io.reactivex.internal.subscribers.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.SpscLinkedArrayQueue;
+import io.reactivex.flowable.internal.subscribers.*;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 public final class FlowableConcatMapEager<T, R> extends AbstractFlowableWithUpstream<T, R> {
 
@@ -58,7 +59,7 @@ public final class FlowableConcatMapEager<T, R> extends AbstractFlowableWithUpst
 
     static final class ConcatMapEagerDelayErrorSubscriber<T, R>
     extends AtomicInteger
-    implements FlowableSubscriber<T>, Subscription, InnerQueuedSubscriberSupport<R> {
+    implements RelaxedSubscriber<T>, Subscription, InnerQueuedSubscriberSupport<R> {
 
         private static final long serialVersionUID = -4255299542215038287L;
 
@@ -150,7 +151,7 @@ public final class FlowableConcatMapEager<T, R> extends AbstractFlowableWithUpst
                 done = true;
                 drain();
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 
@@ -214,7 +215,7 @@ public final class FlowableConcatMapEager<T, R> extends AbstractFlowableWithUpst
                 }
                 drain();
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -273,7 +274,7 @@ public final class FlowableConcatMapEager<T, R> extends AbstractFlowableWithUpst
                 boolean continueNextSource = false;
 
                 if (inner != null) {
-                    SimpleQueue<R> q = inner.queue();
+                    FusedQueue<R> q = inner.queue();
                     if (q != null) {
                         while (e != r) {
                             if (cancelled) {

@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -19,18 +19,17 @@ import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.flowables.ConnectableFlowable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.HasUpstreamPublisher;
-import io.reactivex.internal.subscribers.SubscriberResourceWrapper;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Timed;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.ExceptionHelper;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.extensions.HasUpstreamPublisher;
+import io.reactivex.flowable.internal.subscribers.SubscriberResourceWrapper;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.*;
 
 public final class FlowableReplay<T> extends ConnectableFlowable<T> implements HasUpstreamPublisher<T>, Disposable {
     /** The source observable. */
@@ -70,7 +69,7 @@ public final class FlowableReplay<T> extends ConnectableFlowable<T> implements H
      */
     public static <T> ConnectableFlowable<T> observeOn(final ConnectableFlowable<T> co, final Scheduler scheduler) {
         final Flowable<T> observable = co.observeOn(scheduler);
-        return RxJavaPlugins.onAssembly(new ConnectableFlowableReplay<T>(co, observable));
+        return RxJavaFlowablePlugins.onAssembly(new ConnectableFlowableReplay<T>(co, observable));
     }
 
     /**
@@ -139,7 +138,7 @@ public final class FlowableReplay<T> extends ConnectableFlowable<T> implements H
         // the current connection to source needs to be shared between the operator and its onSubscribe call
         final AtomicReference<ReplaySubscriber<T>> curr = new AtomicReference<ReplaySubscriber<T>>();
         Publisher<T> onSubscribe = new ReplayPublisher<T>(curr, bufferFactory);
-        return RxJavaPlugins.onAssembly(new FlowableReplay<T>(onSubscribe, source, curr, bufferFactory));
+        return RxJavaFlowablePlugins.onAssembly(new FlowableReplay<T>(onSubscribe, source, curr, bufferFactory));
     }
 
     private FlowableReplay(Publisher<T> onSubscribe, Flowable<T> source,
@@ -237,7 +236,7 @@ public final class FlowableReplay<T> extends ConnectableFlowable<T> implements H
     @SuppressWarnings("rawtypes")
     static final class ReplaySubscriber<T>
     extends AtomicReference<Subscription>
-    implements FlowableSubscriber<T>, Disposable {
+    implements RelaxedSubscriber<T>, Disposable {
         private static final long serialVersionUID = 7224554242710036740L;
         /** Holds notifications from upstream. */
         final ReplayBuffer<T> buffer;
@@ -406,7 +405,7 @@ public final class FlowableReplay<T> extends ConnectableFlowable<T> implements H
                     buffer.replay(rp);
                 }
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
         @SuppressWarnings("unchecked")

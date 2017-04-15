@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
-import io.reactivex.internal.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.ConditionalSubscriber;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscribers.*;
 
 public final class FlowableDistinctUntilChanged<T, K> extends AbstractFlowableWithUpstream<T, T> {
 
@@ -110,7 +110,7 @@ public final class FlowableDistinctUntilChanged<T, K> extends AbstractFlowableWi
 
         @Nullable
         @Override
-        public T poll() throws Exception {
+        public T poll() throws Throwable {
             for (;;) {
                 T v = qs.poll();
                 if (v == null) {
@@ -200,7 +200,7 @@ public final class FlowableDistinctUntilChanged<T, K> extends AbstractFlowableWi
 
         @Nullable
         @Override
-        public T poll() throws Exception {
+        public T poll() throws Throwable {
             for (;;) {
                 T v = qs.poll();
                 if (v == null) {

@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -30,7 +30,7 @@ import io.reactivex.exceptions.TestException;
 import io.reactivex.flowables.GroupedFlowable;
 import io.reactivex.functions.*;
 import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.QueueSubscription;
+import io.reactivex.internal.fuseable.FusedQueueSubscription;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.processors.PublishProcessor;
 import io.reactivex.schedulers.Schedulers;
@@ -1598,9 +1598,9 @@ public class FlowableGroupByTest {
 
     @Test
     public void outerInnerFusion() {
-        final TestSubscriber<Integer> ts1 = SubscriberFusion.newTest(QueueSubscription.ANY);
+        final TestSubscriber<Integer> ts1 = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
-        final TestSubscriber<GroupedFlowable<Integer, Integer>> ts2 = SubscriberFusion.newTest(QueueSubscription.ANY);
+        final TestSubscriber<GroupedFlowable<Integer, Integer>> ts2 = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.range(1, 10).groupBy(new Function<Integer, Integer>() {
             @Override
@@ -1622,13 +1622,13 @@ public class FlowableGroupByTest {
         .subscribe(ts2);
 
         ts1
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
         .assertValues(2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
         .assertNoErrors()
         .assertComplete();
 
         ts2
-        .assertOf(SubscriberFusion.<GroupedFlowable<Integer, Integer>>assertFusionMode(QueueSubscription.ASYNC))
+        .assertOf(SubscriberFusion.<GroupedFlowable<Integer, Integer>>assertFusionMode(FusedQueueSubscription.ASYNC))
         .assertValueCount(1)
         .assertNoErrors()
         .assertComplete();
@@ -1734,13 +1734,13 @@ public class FlowableGroupByTest {
 
     @Test
     public void mainFusionRejected() {
-        TestSubscriber<Flowable<Integer>> ts = SubscriberFusion.newTest(QueueSubscription.SYNC);
+        TestSubscriber<Flowable<Integer>> ts = SubscriberFusion.newTest(FusedQueueSubscription.SYNC);
 
         Flowable.just(1)
         .groupBy(Functions.justFunction(1))
         .subscribe(ts);
 
-        SubscriberFusion.assertFusion(ts, QueueSubscription.NONE)
+        SubscriberFusion.assertFusion(ts, FusedQueueSubscription.NONE)
         .assertValueCount(1)
         .assertComplete()
         .assertNoErrors();
@@ -1793,25 +1793,25 @@ public class FlowableGroupByTest {
 
     @Test
     public void errorFused() {
-        TestSubscriber<Object> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Object> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.error(new TestException())
         .groupBy(Functions.justFunction(1))
         .subscribe(ts);
 
-        SubscriberFusion.assertFusion(ts, QueueSubscription.ASYNC)
+        SubscriberFusion.assertFusion(ts, FusedQueueSubscription.ASYNC)
         .assertFailure(TestException.class);
     }
 
     @Test
     public void errorFusedDelayed() {
-        TestSubscriber<Object> ts = SubscriberFusion.newTest(QueueSubscription.ANY);
+        TestSubscriber<Object> ts = SubscriberFusion.newTest(FusedQueueSubscription.ANY);
 
         Flowable.error(new TestException())
         .groupBy(Functions.justFunction(1), true)
         .subscribe(ts);
 
-        SubscriberFusion.assertFusion(ts, QueueSubscription.ASYNC)
+        SubscriberFusion.assertFusion(ts, FusedQueueSubscription.ASYNC)
         .assertFailure(TestException.class);
     }
 

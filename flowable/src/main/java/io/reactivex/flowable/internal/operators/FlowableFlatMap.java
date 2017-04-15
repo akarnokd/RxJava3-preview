@@ -11,23 +11,23 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.*;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T, U> {
     final Function<? super T, ? extends Publisher<? extends U>> mapper;
@@ -53,13 +53,13 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
         source.subscribe(subscribe(s, mapper, delayErrors, maxConcurrency, bufferSize));
     }
 
-    public static <T, U> FlowableSubscriber<T> subscribe(Subscriber<? super U> s,
+    public static <T, U> RelaxedSubscriber<T> subscribe(Subscriber<? super U> s,
             Function<? super T, ? extends Publisher<? extends U>> mapper,
             boolean delayErrors, int maxConcurrency, int bufferSize) {
         return new MergeSubscriber<T, U>(s, mapper, delayErrors, maxConcurrency, bufferSize);
     }
 
-    static final class MergeSubscriber<T, U> extends AtomicInteger implements FlowableSubscriber<T>, Subscription {
+    static final class MergeSubscriber<T, U> extends AtomicInteger implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = -2117620485640801370L;
 
@@ -213,7 +213,7 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
             }
         }
 
-        SimpleQueue<U> getMainQueue() {
+        FusedQueue<U> getMainQueue() {
             SimplePlainQueue<U> q = queue;
             if (q == null) {
                 if (maxConcurrency == Integer.MAX_VALUE) {
@@ -229,7 +229,7 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
         void tryEmitScalar(U value) {
             if (get() == 0 && compareAndSet(0, 1)) {
                 long r = requested.get();
-                SimpleQueue<U> q = queue;
+                FusedQueue<U> q = queue;
                 if (r != 0L && (q == null || q.isEmpty())) {
                     actual.onNext(value);
                     if (r != Long.MAX_VALUE) {
@@ -253,7 +253,7 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
                     return;
                 }
             } else {
-                SimpleQueue<U> q = getMainQueue();
+                FusedQueue<U> q = getMainQueue();
                 if (!q.offer(value)) {
                     onError(new IllegalStateException("Scalar queue full?!"));
                     return;
@@ -265,8 +265,8 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
             drainLoop();
         }
 
-        SimpleQueue<U> getInnerQueue(InnerSubscriber<T, U> inner) {
-            SimpleQueue<U> q = inner.queue;
+        FusedQueue<U> getInnerQueue(InnerSubscriber<T, U> inner) {
+            FusedQueue<U> q = inner.queue;
             if (q == null) {
                 q = new SpscArrayQueue<U>(bufferSize);
                 inner.queue = q;
@@ -277,7 +277,7 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
         void tryEmit(U value, InnerSubscriber<T, U> inner) {
             if (get() == 0 && compareAndSet(0, 1)) {
                 long r = requested.get();
-                SimpleQueue<U> q = inner.queue;
+                FusedQueue<U> q = inner.queue;
                 if (r != 0L && (q == null || q.isEmpty())) {
                     actual.onNext(value);
                     if (r != Long.MAX_VALUE) {
@@ -297,7 +297,7 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
                     return;
                 }
             } else {
-                SimpleQueue<U> q = inner.queue;
+                FusedQueue<U> q = inner.queue;
                 if (q == null) {
                     q = new SpscArrayQueue<U>(bufferSize);
                     inner.queue = q;
@@ -317,14 +317,14 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
         public void onError(Throwable t) {
             // safeguard against misbehaving sources
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             if (errs.addThrowable(t)) {
                 done = true;
                 drain();
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 
@@ -353,7 +353,7 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
                 s.cancel();
                 disposeAll();
                 if (getAndIncrement() == 0) {
-                    SimpleQueue<U> q = queue;
+                    FusedQueue<U> q = queue;
                     if (q != null) {
                         q.clear();
                     }
@@ -469,7 +469,7 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
                             if (checkTerminate()) {
                                 return;
                             }
-                            SimpleQueue<U> q = is.queue;
+                            FusedQueue<U> q = is.queue;
                             if (q == null) {
                                 break;
                             }
@@ -516,7 +516,7 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
                             }
                         }
                         boolean innerDone = is.done;
-                        SimpleQueue<U> innerQueue = is.queue;
+                        FusedQueue<U> innerQueue = is.queue;
                         if (innerDone && (innerQueue == null || innerQueue.isEmpty())) {
                             removeInner(is);
                             if (checkTerminate()) {
@@ -568,7 +568,7 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
         }
 
         void clearScalarQueue() {
-            SimpleQueue<U> q = queue;
+            FusedQueue<U> q = queue;
             if (q != null) {
                 q.clear();
             }
@@ -584,7 +584,7 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
                     }
                     Throwable ex = errs.terminate();
                     if (ex != null && ex != ExceptionHelper.TERMINATED) {
-                        RxJavaPlugins.onError(ex);
+                        RxJavaCommonPlugins.onError(ex);
                     }
                 }
             }
@@ -601,13 +601,13 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
                 }
                 drain();
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
     }
 
     static final class InnerSubscriber<T, U> extends AtomicReference<Subscription>
-    implements FlowableSubscriber<U>, Disposable {
+    implements RelaxedSubscriber<U>, Disposable {
 
         private static final long serialVersionUID = -4606175640614850599L;
         final long id;
@@ -616,7 +616,7 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
         final int bufferSize;
 
         volatile boolean done;
-        volatile SimpleQueue<U> queue;
+        volatile FusedQueue<U> queue;
         long produced;
         int fusionMode;
 
@@ -630,18 +630,18 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.setOnce(this, s)) {
 
-                if (s instanceof QueueSubscription) {
+                if (s instanceof FusedQueueSubscription) {
                     @SuppressWarnings("unchecked")
-                    QueueSubscription<U> qs = (QueueSubscription<U>) s;
-                    int m = qs.requestFusion(QueueSubscription.ANY | QueueSubscription.BOUNDARY);
-                    if (m == QueueSubscription.SYNC) {
+                    FusedQueueSubscription<U> qs = (FusedQueueSubscription<U>) s;
+                    int m = qs.requestFusion(FusedQueueSubscription.ANY | FusedQueueSubscription.BOUNDARY);
+                    if (m == FusedQueueSubscription.SYNC) {
                         fusionMode = m;
                         queue = qs;
                         done = true;
                         parent.drain();
                         return;
                     }
-                    if (m == QueueSubscription.ASYNC) {
+                    if (m == FusedQueueSubscription.ASYNC) {
                         fusionMode = m;
                         queue = qs;
                     }
@@ -653,7 +653,7 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
         }
         @Override
         public void onNext(U t) {
-            if (fusionMode != QueueSubscription.ASYNC) {
+            if (fusionMode != FusedQueueSubscription.ASYNC) {
                 parent.tryEmit(t, this);
             } else {
                 parent.drain();
@@ -671,7 +671,7 @@ public final class FlowableFlatMap<T, U> extends AbstractFlowableWithUpstream<T,
         }
 
         void requestMore(long n) {
-            if (fusionMode != QueueSubscription.SYNC) {
+            if (fusionMode != FusedQueueSubscription.SYNC) {
                 long p = produced + n;
                 if (p >= limit) {
                     produced = 0;

@@ -11,19 +11,21 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.subscribers.SerializedSubscriber;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.Scheduler;
+import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.common.internal.disposables.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
+import io.reactivex.flowable.subscribers.SerializedSubscriber;
 
 public final class FlowableSampleTimed<T> extends AbstractFlowableWithUpstream<T, T> {
     final long period;
@@ -50,7 +52,7 @@ public final class FlowableSampleTimed<T> extends AbstractFlowableWithUpstream<T
         }
     }
 
-    abstract static class SampleTimedSubscriber<T> extends AtomicReference<T> implements FlowableSubscriber<T>, Subscription, Runnable {
+    abstract static class SampleTimedSubscriber<T> extends AtomicReference<T> implements RelaxedSubscriber<T>, Subscription, Runnable {
 
         private static final long serialVersionUID = -3517602651313910099L;
 

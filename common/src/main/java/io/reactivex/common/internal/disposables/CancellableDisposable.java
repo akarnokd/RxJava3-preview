@@ -15,10 +15,9 @@ package io.reactivex.common.internal.disposables;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.common.Disposable;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.Exceptions;
 import io.reactivex.common.functions.Cancellable;
-import io.reactivex.common.RxJavaPlugins;
 
 /**
  * A disposable container that wraps a Cancellable instance.
@@ -49,7 +48,7 @@ implements Disposable {
                     c.cancel();
                 } catch (Exception ex) {
                     Exceptions.throwIfFatal(ex);
-                    RxJavaPlugins.onError(ex);
+                    RxJavaCommonPlugins.onError(ex);
                 }
             }
         }

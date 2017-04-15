@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.Callable;
 
@@ -21,7 +21,7 @@ import org.reactivestreams.Subscriber;
 import io.reactivex.*;
 import io.reactivex.functions.Function;
 import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.operators.flowable.FlowableMapNotification.MapNotificationSubscriber;
+import io.reactivex.flowable.internal.operators.FlowableMapNotification.MapNotificationSubscriber;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subscribers.TestSubscriber;

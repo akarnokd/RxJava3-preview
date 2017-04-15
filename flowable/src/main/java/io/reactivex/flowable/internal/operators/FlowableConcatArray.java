@@ -10,16 +10,17 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.CompositeException;
-import io.reactivex.internal.subscriptions.SubscriptionArbiter;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.exceptions.CompositeException;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionArbiter;
 
 public final class FlowableConcatArray<T> extends Flowable<T> {
 
@@ -40,7 +41,7 @@ public final class FlowableConcatArray<T> extends Flowable<T> {
         parent.onComplete();
     }
 
-    static final class ConcatArraySubscriber<T> extends SubscriptionArbiter implements FlowableSubscriber<T> {
+    static final class ConcatArraySubscriber<T> extends SubscriptionArbiter implements RelaxedSubscriber<T> {
 
         private static final long serialVersionUID = -8158322871608889516L;
 

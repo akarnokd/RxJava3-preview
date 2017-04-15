@@ -10,17 +10,17 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.processors;
+package io.reactivex.flowable.processors;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.annotations.*;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.annotations.*;
+import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 /**
  * A Subject that multicasts events to Subscribers that are currently subscribed to it.
@@ -203,7 +203,7 @@ public final class PublishProcessor<T> extends FlowableProcessor<T> {
     @Override
     public void onError(Throwable t) {
         if (subscribers.get() == TERMINATED) {
-            RxJavaPlugins.onError(t);
+            RxJavaCommonPlugins.onError(t);
             return;
         }
         if (t == null) {
@@ -327,7 +327,7 @@ public final class PublishProcessor<T> extends FlowableProcessor<T> {
             if (get() != Long.MIN_VALUE) {
                 actual.onError(t);
             } else {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
             }
         }
 

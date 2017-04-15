@@ -11,17 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.subscribers.SerializedSubscriber;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
+import io.reactivex.flowable.subscribers.SerializedSubscriber;
 
 public final class FlowableSamplePublisher<T> extends Flowable<T> {
     final Publisher<T> source;
@@ -45,7 +46,7 @@ public final class FlowableSamplePublisher<T> extends Flowable<T> {
         }
     }
 
-    abstract static class SamplePublisherSubscriber<T> extends AtomicReference<T> implements FlowableSubscriber<T>, Subscription {
+    abstract static class SamplePublisherSubscriber<T> extends AtomicReference<T> implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = -3517602651313910099L;
 
@@ -141,7 +142,7 @@ public final class FlowableSamplePublisher<T> extends Flowable<T> {
         abstract void run();
     }
 
-    static final class SamplerSubscriber<T> implements FlowableSubscriber<Object> {
+    static final class SamplerSubscriber<T> implements RelaxedSubscriber<Object> {
         final SamplePublisherSubscriber<T> parent;
         SamplerSubscriber(SamplePublisherSubscriber<T> parent) {
             this.parent = parent;

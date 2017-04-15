@@ -11,17 +11,17 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.annotations.Nullable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.fuseable.ConditionalSubscriber;
-import io.reactivex.internal.subscribers.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.ConditionalSubscriber;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscribers.*;
 
 public final class FlowableDoOnEach<T> extends AbstractFlowableWithUpstream<T, T> {
     final Consumer<? super T> onNext;
@@ -94,7 +94,7 @@ public final class FlowableDoOnEach<T> extends AbstractFlowableWithUpstream<T, T
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -114,7 +114,7 @@ public final class FlowableDoOnEach<T> extends AbstractFlowableWithUpstream<T, T
                 onAfterTerminate.run();
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -137,7 +137,7 @@ public final class FlowableDoOnEach<T> extends AbstractFlowableWithUpstream<T, T
                 onAfterTerminate.run();
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -148,7 +148,7 @@ public final class FlowableDoOnEach<T> extends AbstractFlowableWithUpstream<T, T
 
         @Nullable
         @Override
-        public T poll() throws Exception {
+        public T poll() throws Throwable {
             T v = qs.poll();
 
             if (v != null) {
@@ -227,7 +227,7 @@ public final class FlowableDoOnEach<T> extends AbstractFlowableWithUpstream<T, T
         @Override
         public void onError(Throwable t) {
             if (done) {
-                RxJavaPlugins.onError(t);
+                RxJavaCommonPlugins.onError(t);
                 return;
             }
             done = true;
@@ -247,7 +247,7 @@ public final class FlowableDoOnEach<T> extends AbstractFlowableWithUpstream<T, T
                 onAfterTerminate.run();
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -270,7 +270,7 @@ public final class FlowableDoOnEach<T> extends AbstractFlowableWithUpstream<T, T
                 onAfterTerminate.run();
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -281,7 +281,7 @@ public final class FlowableDoOnEach<T> extends AbstractFlowableWithUpstream<T, T
 
         @Nullable
         @Override
-        public T poll() throws Exception {
+        public T poll() throws Throwable {
             T v = qs.poll();
 
             if (v != null) {

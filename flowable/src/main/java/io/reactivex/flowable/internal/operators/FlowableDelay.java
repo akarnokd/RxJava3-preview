@@ -11,16 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.TimeUnit;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.subscribers.SerializedSubscriber;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.Scheduler;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.subscribers.SerializedSubscriber;
 
 public final class FlowableDelay<T> extends AbstractFlowableWithUpstream<T, T> {
     final long delay;
@@ -50,7 +52,7 @@ public final class FlowableDelay<T> extends AbstractFlowableWithUpstream<T, T> {
         source.subscribe(new DelaySubscriber<T>(s, delay, unit, w, delayError));
     }
 
-    static final class DelaySubscriber<T> implements FlowableSubscriber<T>, Subscription {
+    static final class DelaySubscriber<T> implements RelaxedSubscriber<T>, Subscription {
         final Subscriber<? super T> actual;
         final long delay;
         final TimeUnit unit;

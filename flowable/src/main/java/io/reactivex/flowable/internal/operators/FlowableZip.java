@@ -11,22 +11,23 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.*;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.Exceptions;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.ObjectHelper;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.internal.queue.SpscArrayQueue;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.internal.util.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.queues.SpscArrayQueue;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 public final class FlowableZip<T, R> extends Flowable<R> {
 
@@ -150,7 +151,7 @@ public final class FlowableZip<T, R> extends Flowable<R> {
                 inner.done = true;
                 drain();
             } else {
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
 
@@ -197,7 +198,7 @@ public final class FlowableZip<T, R> extends Flowable<R> {
                         if (values[j] == null) {
                             try {
                                 boolean d = inner.done;
-                                SimpleQueue<T> q = inner.queue;
+                                FusedQueue<T> q = inner.queue;
 
                                 T v = q != null ? q.poll() : null;
 
@@ -270,7 +271,7 @@ public final class FlowableZip<T, R> extends Flowable<R> {
                         if (values[j] == null) {
                             try {
                                 boolean d = inner.done;
-                                SimpleQueue<T> q = inner.queue;
+                                FusedQueue<T> q = inner.queue;
                                 T v = q != null ? q.poll() : null;
 
                                 boolean empty = v == null;
@@ -321,7 +322,7 @@ public final class FlowableZip<T, R> extends Flowable<R> {
     }
 
 
-    static final class ZipSubscriber<T, R> extends AtomicReference<Subscription> implements FlowableSubscriber<T>, Subscription {
+    static final class ZipSubscriber<T, R> extends AtomicReference<Subscription> implements RelaxedSubscriber<T>, Subscription {
 
         private static final long serialVersionUID = -4627193790118206028L;
 
@@ -331,7 +332,7 @@ public final class FlowableZip<T, R> extends Flowable<R> {
 
         final int limit;
 
-        SimpleQueue<T> queue;
+        FusedQueue<T> queue;
 
         long produced;
 
@@ -349,19 +350,19 @@ public final class FlowableZip<T, R> extends Flowable<R> {
         @Override
         public void onSubscribe(Subscription s) {
             if (SubscriptionHelper.setOnce(this, s)) {
-                if (s instanceof QueueSubscription) {
-                    QueueSubscription<T> f = (QueueSubscription<T>) s;
+                if (s instanceof FusedQueueSubscription) {
+                    FusedQueueSubscription<T> f = (FusedQueueSubscription<T>) s;
 
-                    int m = f.requestFusion(QueueSubscription.ANY | QueueSubscription.BOUNDARY);
+                    int m = f.requestFusion(FusedQueueSubscription.ANY | FusedQueueSubscription.BOUNDARY);
 
-                    if (m == QueueSubscription.SYNC) {
+                    if (m == FusedQueueSubscription.SYNC) {
                         sourceMode = m;
                         queue = f;
                         done = true;
                         parent.drain();
                         return;
                     }
-                    if (m == QueueSubscription.ASYNC) {
+                    if (m == FusedQueueSubscription.ASYNC) {
                         sourceMode = m;
                         queue = f;
                         s.request(prefetch);
@@ -377,7 +378,7 @@ public final class FlowableZip<T, R> extends Flowable<R> {
 
         @Override
         public void onNext(T t) {
-            if (sourceMode != QueueSubscription.ASYNC) {
+            if (sourceMode != FusedQueueSubscription.ASYNC) {
                 queue.offer(t);
             }
             parent.drain();
@@ -401,7 +402,7 @@ public final class FlowableZip<T, R> extends Flowable<R> {
 
         @Override
         public void request(long n) {
-            if (sourceMode != QueueSubscription.SYNC) {
+            if (sourceMode != FusedQueueSubscription.SYNC) {
                 long p = produced + n;
                 if (p >= limit) {
                     produced = 0L;

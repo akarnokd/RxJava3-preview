@@ -11,18 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import org.reactivestreams.Subscriber;
 
-import io.reactivex.Flowable;
-import io.reactivex.internal.fuseable.ScalarCallable;
-import io.reactivex.internal.subscriptions.EmptySubscription;
+import hu.akarnokd.reactivestreams.extensions.ConstantValuePublisher;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.EmptySubscription;
 
 /**
  * A source Flowable that signals an onSubscribe() + onComplete() only.
  */
-public final class FlowableEmpty extends Flowable<Object> implements ScalarCallable<Object> {
+public final class FlowableEmpty extends Flowable<Object> implements ConstantValuePublisher<Object> {
 
     public static final Flowable<Object> INSTANCE = new FlowableEmpty();
 
@@ -35,7 +35,7 @@ public final class FlowableEmpty extends Flowable<Object> implements ScalarCalla
     }
 
     @Override
-    public Object call() {
+    public Object value() {
         return null; // null scalar is interpreted as being empty
     }
 }

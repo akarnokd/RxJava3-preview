@@ -11,18 +11,18 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.operators.flowable;
+package io.reactivex.flowable.internal.operators;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.internal.disposables.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.common.internal.disposables.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 
 public final class FlowableTimer extends Flowable<Long> {
     final Scheduler scheduler;
@@ -74,10 +74,10 @@ public final class FlowableTimer extends Flowable<Long> {
             if (get() != DisposableHelper.DISPOSED) {
                 if (requested) {
                     actual.onNext(0L);
-                    lazySet(EmptyDisposable.INSTANCE);
+                    lazySet(DisposedDisposable.INSTANCE);
                     actual.onComplete();
                 } else {
-                    lazySet(EmptyDisposable.INSTANCE);
+                    lazySet(DisposedDisposable.INSTANCE);
                     actual.onError(new MissingBackpressureException("Can't deliver value due to lack of requests"));
                 }
             }

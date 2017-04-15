@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.reactivex.common.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
 
 /**
  * Manages the creating of ScheduledExecutorServices and sets up purging.
@@ -129,7 +129,7 @@ public final class SchedulerPoolFactory {
                 }
             } catch (Throwable e) {
                 // Exceptions.throwIfFatal(e); nowhere to go
-                RxJavaPlugins.onError(e);
+                RxJavaCommonPlugins.onError(e);
             }
         }
     }
