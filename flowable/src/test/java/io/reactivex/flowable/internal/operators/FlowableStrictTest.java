@@ -296,7 +296,7 @@ public class FlowableStrictTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             if (ts.valueCount() == 0) {
                 ts.assertFailure(IllegalArgumentException.class);

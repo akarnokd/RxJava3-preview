@@ -273,12 +273,12 @@ public class FlowableTakeWhileTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().takeWhile(Functions.alwaysTrue()));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().takeWhile(Functions.alwaysTrue()));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.takeWhile(Functions.alwaysTrue());

@@ -196,7 +196,7 @@ public class SchedulerTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.io());
+            TestCommonHelper.race(r1, r2, Schedulers.io());
         }
 
     }
@@ -219,7 +219,7 @@ public class SchedulerTest {
 
     @Test
     public void scheduleDirectThrows() throws Exception {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
         try {
             Schedulers.io().scheduleDirect(new Runnable() {
                 @Override
@@ -231,7 +231,7 @@ public class SchedulerTest {
             Thread.sleep(250);
 
             assertEquals(1, list.size());
-            TestHelper.assertUndeliverable(list, 0, TestException.class, null);
+            TestCommonHelper.assertUndeliverable(list, 0, TestException.class, null);
 
         } finally {
             RxJavaCommonPlugins.reset();
@@ -240,7 +240,7 @@ public class SchedulerTest {
 
     @Test
     public void schedulersUtility() {
-        TestHelper.checkUtilityClass(Schedulers.class);
+        TestCommonHelper.checkUtilityClass(Schedulers.class);
     }
 
     @Test

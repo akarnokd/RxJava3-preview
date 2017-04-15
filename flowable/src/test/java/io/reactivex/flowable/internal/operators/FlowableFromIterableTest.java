@@ -588,13 +588,13 @@ public class FlowableFromIterableTest {
 
                 qs.clear();
 
-                List<Throwable> errors = TestHelper.trackPluginErrors();
+                List<Throwable> errors = TestCommonHelper.trackPluginErrors();
                 try {
                     qs.request(-99);
 
-                    TestHelper.assertError(errors, 0, IllegalArgumentException.class, "n > 0 required but it was -99");
+                    TestCommonHelper.assertError(errors, 0, IllegalArgumentException.class, "n > 0 required but it was -99");
                 } finally {
-                    RxJavaPlugins.reset();
+                    RxJavaCommonPlugins.reset();
                 }
             }
 
@@ -736,7 +736,7 @@ public class FlowableFromIterableTest {
             .filter(Functions.alwaysTrue())
             .subscribe(ts);
 
-            TestHelper.race(r, r, Schedulers.single());
+            TestCommonHelper.race(r, r, Schedulers.single());
         }
     }
 
@@ -756,7 +756,7 @@ public class FlowableFromIterableTest {
             .filter(Functions.alwaysFalse())
             .subscribe(ts);
 
-            TestHelper.race(r, r, Schedulers.single());
+            TestCommonHelper.race(r, r, Schedulers.single());
         }
     }
 
@@ -783,7 +783,7 @@ public class FlowableFromIterableTest {
             .filter(Functions.alwaysTrue())
             .subscribe(ts);
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -810,7 +810,7 @@ public class FlowableFromIterableTest {
             .filter(Functions.alwaysTrue())
             .subscribe(ts);
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -836,7 +836,7 @@ public class FlowableFromIterableTest {
             Flowable.fromIterable(Arrays.asList(1, 2, 3, 4))
             .subscribe(ts);
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -862,7 +862,7 @@ public class FlowableFromIterableTest {
             Flowable.fromIterable(Arrays.asList(1, 2, 3, 4))
             .subscribe(ts);
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 

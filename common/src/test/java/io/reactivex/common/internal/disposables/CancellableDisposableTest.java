@@ -65,12 +65,12 @@ public class CancellableDisposableTest {
 
         assertFalse(cd.isDisposed());
 
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
         try {
             cd.dispose();
             cd.dispose();
 
-            TestHelper.assertUndeliverable(list, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(list, 0, TestException.class);
         } finally {
             RxJavaCommonPlugins.reset();
         }
@@ -101,7 +101,7 @@ public class CancellableDisposableTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.io());
+            TestCommonHelper.race(r, r, Schedulers.io());
 
             assertEquals(1, count.get());
         }

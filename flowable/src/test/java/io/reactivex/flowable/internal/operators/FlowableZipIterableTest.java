@@ -365,7 +365,7 @@ public class FlowableZipIterableTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).zipWith(Arrays.asList(1), new BiFunction<Integer, Integer, Object>() {
+        TestCommonHelper.checkDisposed(Flowable.just(1).zipWith(Arrays.asList(1), new BiFunction<Integer, Integer, Object>() {
             @Override
             public Object apply(Integer a, Integer b) throws Exception {
                 return a + b;
@@ -375,7 +375,7 @@ public class FlowableZipIterableTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Integer>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Integer>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Integer> o) throws Exception {
                 return o.zipWith(Arrays.asList(1), new BiFunction<Integer, Integer, Object>() {
@@ -402,7 +402,7 @@ public class FlowableZipIterableTest {
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -424,9 +424,9 @@ public class FlowableZipIterableTest {
             .test()
             .assertResult(2);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

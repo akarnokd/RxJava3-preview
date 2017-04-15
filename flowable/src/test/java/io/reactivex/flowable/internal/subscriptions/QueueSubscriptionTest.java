@@ -96,20 +96,20 @@ public class FusedQueueSubscriptionTest {
 
     @Test
     public void noOfferBasic() {
-        TestHelper.assertNoOffer(new EmptyQS());
+        TestCommonHelper.assertNoOffer(new EmptyQS());
     }
 
     @Test
     public void noOfferBasicInt() {
-        TestHelper.assertNoOffer(new EmptyIntQS());
+        TestCommonHelper.assertNoOffer(new EmptyIntQS());
     }
 
     @Test
     public void empty() {
-        TestHelper.checkEnum(EmptySubscription.class);
+        TestCommonHelper.checkEnum(EmptySubscription.class);
 
         assertEquals("EmptySubscription", EmptySubscription.INSTANCE.toString());
 
-        TestHelper.assertNoOffer(EmptySubscription.INSTANCE);
+        TestCommonHelper.assertNoOffer(EmptySubscription.INSTANCE);
     }
 }

@@ -18,11 +18,11 @@ package io.reactivex.flowable;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
+import io.reactivex.common.TestCommonHelper;
 
 public class FlowableEventStreamTest {
     @Test
     public void constructorShouldBePrivate() {
-        TestHelper.checkUtilityClass(FlowableEventStream.class);
+        TestCommonHelper.checkUtilityClass(FlowableEventStream.class);
     }
 }

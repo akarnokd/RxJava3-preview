@@ -16,11 +16,9 @@ package io.reactivex.flowable;
 import org.junit.Test;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.Flowable;
+import io.reactivex.common.functions.*;
 import io.reactivex.flowable.FlowableEventStream.Event;
-import io.reactivex.flowables.GroupedFlowable;
-import io.reactivex.functions.*;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class FlowableGroupByTests {
 

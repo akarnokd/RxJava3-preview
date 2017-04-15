@@ -22,16 +22,15 @@ import java.util.concurrent.atomic.*;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.subscribers.ForEachWhileSubscriber;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.internal.subscribers.ForEachWhileSubscriber;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.flowable.subscribers.*;
 
 public class RelaxedSubscriberTest {
 
@@ -584,7 +583,7 @@ public class RelaxedSubscriberTest {
             }
         }, Functions.<Throwable>emptyConsumer(), Functions.EMPTY_ACTION);
 
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             s.onSubscribe(new BooleanSubscription());
@@ -594,9 +593,9 @@ public class RelaxedSubscriberTest {
 
             assertTrue(d.isCancelled());
 
-            TestHelper.assertError(list, 0, IllegalStateException.class, "Subscription already set!");
+            TestCommonHelper.assertError(list, 0, IllegalStateException.class, "Subscription already set!");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -681,19 +680,19 @@ public class RelaxedSubscriberTest {
             }
         });
 
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             s.onSubscribe(new BooleanSubscription());
 
             s.onError(new TestException("Outer"));
 
-            TestHelper.assertError(list, 0, CompositeException.class);
-            List<Throwable> cel = TestHelper.compositeList(list.get(0));
-            TestHelper.assertError(cel, 0, TestException.class, "Outer");
-            TestHelper.assertError(cel, 1, TestException.class, "Inner");
+            TestCommonHelper.assertError(list, 0, CompositeException.class);
+            List<Throwable> cel = TestCommonHelper.compositeList(list.get(0));
+            TestCommonHelper.assertError(cel, 0, TestException.class, "Outer");
+            TestCommonHelper.assertError(cel, 1, TestException.class, "Inner");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -715,16 +714,16 @@ public class RelaxedSubscriberTest {
             }
         });
 
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             s.onSubscribe(new BooleanSubscription());
 
             s.onComplete();
 
-            TestHelper.assertUndeliverable(list, 0, TestException.class, "Inner");
+            TestCommonHelper.assertUndeliverable(list, 0, TestException.class, "Inner");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -796,7 +795,7 @@ public class RelaxedSubscriberTest {
     @SuppressWarnings("rawtypes")
     @Test
     public void pluginNull() {
-        RxJavaPlugins.setOnFlowableSubscribe(new BiFunction<Flowable, Subscriber, Subscriber>() {
+        RxJavaFlowablePlugins.setOnFlowableSubscribe(new BiFunction<Flowable, Subscriber, Subscriber>() {
             @Override
             public Subscriber apply(Flowable a, Subscriber b) throws Exception {
                 return null;
@@ -812,7 +811,7 @@ public class RelaxedSubscriberTest {
                 assertEquals("Plugin returned null Subscriber", ex.getMessage());
             }
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -825,7 +824,7 @@ public class RelaxedSubscriberTest {
 
     @Test
     public void subscribeActualThrows() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
         try {
             try {
                 new BadFlowable().test();
@@ -836,9 +835,9 @@ public class RelaxedSubscriberTest {
                 }
             }
 
-            TestHelper.assertError(list, 0, IllegalArgumentException.class);
+            TestCommonHelper.assertError(list, 0, IllegalArgumentException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

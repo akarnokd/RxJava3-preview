@@ -11,13 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.tck;
+package io.reactivex.flowable.tck;
 
 import org.reactivestreams.Publisher;
 import org.testng.annotations.Test;
 
-import io.reactivex.processors.BehaviorProcessor;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.Schedulers;
+import io.reactivex.flowable.processors.BehaviorProcessor;
 
 @Test
 public class BehaviorProcessorAsPublisherTckTest extends BaseTck<Integer> {

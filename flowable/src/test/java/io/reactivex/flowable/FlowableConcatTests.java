@@ -19,7 +19,6 @@ import java.util.*;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
 import io.reactivex.flowable.FlowableCovarianceTest.*;
 
 public class FlowableConcatTests {
@@ -29,7 +28,7 @@ public class FlowableConcatTests {
         Flowable<String> o1 = Flowable.just("one", "two");
         Flowable<String> o2 = Flowable.just("three", "four");
 
-        List<String> values = Flowable.concat(o1, o2).toList().blockingGet();
+        List<String> values = Flowable.concat(o1, o2).toList().blockingLast();
 
         assertEquals("one", values.get(0));
         assertEquals("two", values.get(1));
@@ -45,7 +44,7 @@ public class FlowableConcatTests {
 
         Flowable<Flowable<String>> os = Flowable.just(o1, o2, o3);
 
-        List<String> values = Flowable.concat(os).toList().blockingGet();
+        List<String> values = Flowable.concat(os).toList().blockingLast();
 
         assertEquals("one", values.get(0));
         assertEquals("two", values.get(1));
@@ -64,7 +63,7 @@ public class FlowableConcatTests {
         @SuppressWarnings("unchecked")
         Iterable<Flowable<String>> is = Arrays.asList(o1, o2, o3);
 
-        List<String> values = Flowable.concat(Flowable.fromIterable(is)).toList().blockingGet();
+        List<String> values = Flowable.concat(Flowable.fromIterable(is)).toList().blockingLast();
 
         assertEquals("one", values.get(0));
         assertEquals("two", values.get(1));
@@ -86,7 +85,7 @@ public class FlowableConcatTests {
 
         Flowable<Flowable<Media>> os = Flowable.just(o1, o2);
 
-        List<Media> values = Flowable.concat(os).toList().blockingGet();
+        List<Media> values = Flowable.concat(os).toList().blockingLast();
 
         assertEquals(horrorMovie1, values.get(0));
         assertEquals(movie, values.get(1));
@@ -108,7 +107,7 @@ public class FlowableConcatTests {
 
         Flowable<Flowable<Media>> os = Flowable.just(o1, o2);
 
-        List<Media> values = Flowable.concat(os).toList().blockingGet();
+        List<Media> values = Flowable.concat(os).toList().blockingLast();
 
         assertEquals(horrorMovie1, values.get(0));
         assertEquals(movie, values.get(1));
@@ -128,7 +127,7 @@ public class FlowableConcatTests {
         Flowable<Movie> o1 = Flowable.just(horrorMovie1, movie);
         Flowable<Media> o2 = Flowable.just(media, horrorMovie2);
 
-        List<Media> values = Flowable.concat(o1, o2).toList().blockingGet();
+        List<Media> values = Flowable.concat(o1, o2).toList().blockingLast();
 
         assertEquals(horrorMovie1, values.get(0));
         assertEquals(movie, values.get(1));
@@ -156,7 +155,7 @@ public class FlowableConcatTests {
 
         Flowable<Media> o2 = Flowable.just(media, horrorMovie2);
 
-        List<Media> values = Flowable.concat(o1, o2).toList().blockingGet();
+        List<Media> values = Flowable.concat(o1, o2).toList().blockingLast();
 
         assertEquals(horrorMovie1, values.get(0));
         assertEquals(movie, values.get(1));

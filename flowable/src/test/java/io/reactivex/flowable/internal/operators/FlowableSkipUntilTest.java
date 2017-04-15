@@ -156,19 +156,19 @@ public class FlowableSkipUntilTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().skipUntil(PublishProcessor.create()));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().skipUntil(PublishProcessor.create()));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.skipUntil(Flowable.never());
             }
         });
 
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return Flowable.never().skipUntil(o);

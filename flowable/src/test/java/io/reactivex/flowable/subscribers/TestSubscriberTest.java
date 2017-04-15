@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subscribers;
+package io.reactivex.flowable.subscribers;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -26,17 +26,16 @@ import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.internal.fuseable.FusedQueueSubscription;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.observers.BaseTestConsumer;
-import io.reactivex.observers.BaseTestConsumer.TestWaitStrategy;
-import io.reactivex.processors.*;
-import io.reactivex.schedulers.Schedulers;
+import hu.akarnokd.reactivestreams.extensions.*;
+import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.TestConsumer.TestWaitStrategy;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.*;
+import io.reactivex.flowable.processors.*;
 
 public class TestSubscriberTest {
 
@@ -1161,7 +1160,7 @@ public class TestSubscriberTest {
 
         assertEquals(1, ts.errors().size());
 
-        TestHelper.assertError(ts.errors(), 0, TestException.class);
+        TestCommonHelper.assertError(ts.errors(), 0, TestException.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -1856,7 +1855,7 @@ public class TestSubscriberTest {
 
     @Test
     public void checkTestWaitStrategyEnum() {
-        TestHelper.checkEnum(BaseTestConsumer.TestWaitStrategy.class);
+        TestCommonHelper.checkEnum(TestConsumer.TestWaitStrategy.class);
     }
 
     @Test

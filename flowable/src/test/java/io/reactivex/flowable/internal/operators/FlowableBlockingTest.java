@@ -236,7 +236,7 @@ public class FlowableBlockingTest {
 
     @Test
     public void firstIgnoredCancelAndOnError() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
         try {
             Flowable<Integer> source = Flowable.fromPublisher(new Publisher<Integer>() {
                 @Override
@@ -249,9 +249,9 @@ public class FlowableBlockingTest {
 
             assertEquals(1, source.blockingFirst().intValue());
 
-            TestHelper.assertUndeliverable(list, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(list, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -301,7 +301,7 @@ public class FlowableBlockingTest {
 
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(FlowableBlockingSubscribe.class);
+        TestCommonHelper.checkUtilityClass(FlowableBlockingSubscribe.class);
     }
 
     @Test
@@ -372,7 +372,7 @@ public class FlowableBlockingTest {
                     c.decrementAndGet();
                     while (c.get() != 0 && !pp.hasSubscribers()) { }
 
-                    TestHelper.race(r1, r2);
+                    TestCommonHelper.race(r1, r2);
                 }
             });
 

@@ -77,7 +77,7 @@ public class FlowableIntervalRangeTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.intervalRange(1, 2, 1, 1, TimeUnit.MILLISECONDS));
+        TestCommonHelper.checkDisposed(Flowable.intervalRange(1, 2, 1, 1, TimeUnit.MILLISECONDS));
     }
 
     @Test
@@ -98,7 +98,7 @@ public class FlowableIntervalRangeTest {
 
     @Test
     public void badRequest() {
-        TestHelper.assertBadRequestReported(Flowable.intervalRange(1, 3, 1, 1, TimeUnit.MILLISECONDS));
+        TestCommonHelper.assertBadRequestReported(Flowable.intervalRange(1, 3, 1, 1, TimeUnit.MILLISECONDS));
     }
 
     @Test

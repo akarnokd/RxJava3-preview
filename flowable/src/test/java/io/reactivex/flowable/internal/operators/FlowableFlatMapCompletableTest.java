@@ -143,10 +143,10 @@ public class FlowableFlatMapCompletableTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
         for (int i = 0; i < 11; i++) {
-            TestHelper.assertError(errors, i, TestException.class);
+            TestCommonHelper.assertError(errors, i, TestException.class);
         }
     }
 
@@ -162,10 +162,10 @@ public class FlowableFlatMapCompletableTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
         for (int i = 0; i < 10; i++) {
-            TestHelper.assertError(errors, i, TestException.class);
+            TestCommonHelper.assertError(errors, i, TestException.class);
         }
     }
 
@@ -298,10 +298,10 @@ public class FlowableFlatMapCompletableTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
         for (int i = 0; i < 11; i++) {
-            TestHelper.assertError(errors, i, TestException.class);
+            TestCommonHelper.assertError(errors, i, TestException.class);
         }
     }
 
@@ -317,10 +317,10 @@ public class FlowableFlatMapCompletableTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
         for (int i = 0; i < 10; i++) {
-            TestHelper.assertError(errors, i, TestException.class);
+            TestCommonHelper.assertError(errors, i, TestException.class);
         }
     }
 
@@ -360,7 +360,7 @@ public class FlowableFlatMapCompletableTest {
 
     @Test
     public void disposed() {
-        TestHelper.checkDisposed(Flowable.range(1, 10)
+        TestCommonHelper.checkDisposed(Flowable.range(1, 10)
         .flatMapCompletable(new Function<Integer, CompletableSource>() {
             @Override
             public CompletableSource apply(Integer v) throws Exception {
@@ -385,7 +385,7 @@ public class FlowableFlatMapCompletableTest {
 
     @Test
     public void disposedFlowable() {
-        TestHelper.checkDisposed(Flowable.range(1, 10)
+        TestCommonHelper.checkDisposed(Flowable.range(1, 10)
         .flatMapCompletable(new Function<Integer, CompletableSource>() {
             @Override
             public CompletableSource apply(Integer v) throws Exception {
@@ -396,7 +396,7 @@ public class FlowableFlatMapCompletableTest {
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> o) throws Exception {
                 return o.flatMapCompletable(new Function<Integer, CompletableSource>() {
@@ -472,7 +472,7 @@ public class FlowableFlatMapCompletableTest {
 
     @Test
     public void badSourceFlowable() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> o) throws Exception {
                 return o.flatMapCompletable(new Function<Integer, CompletableSource>() {

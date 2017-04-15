@@ -133,7 +133,7 @@ public class FlowableOnBackpressureLatestTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
             @Override
             public Publisher<Object> apply(Flowable<Object> f) throws Exception {
                 return f.onBackpressureLatest();
@@ -152,11 +152,11 @@ public class FlowableOnBackpressureLatestTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.never().onBackpressureLatest());
+        TestCommonHelper.checkDisposed(Flowable.never().onBackpressureLatest());
     }
 
     @Test
     public void badRequest() {
-        TestHelper.assertBadRequestReported(Flowable.never().onBackpressureLatest());
+        TestCommonHelper.assertBadRequestReported(Flowable.never().onBackpressureLatest());
     }
 }

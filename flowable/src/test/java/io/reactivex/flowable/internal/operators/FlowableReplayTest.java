@@ -1321,7 +1321,7 @@ public class FlowableReplayTest {
                 }
             };
 
-            TestHelper.race(r, r);
+            TestCommonHelper.race(r, r);
         }
     }
 
@@ -1347,7 +1347,7 @@ public class FlowableReplayTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -1375,7 +1375,7 @@ public class FlowableReplayTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -1427,7 +1427,7 @@ public class FlowableReplayTest {
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -1443,9 +1443,9 @@ public class FlowableReplayTest {
             .test()
             .assertFailureAndMessage(TestException.class, "First");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -1474,7 +1474,7 @@ public class FlowableReplayTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -1505,7 +1505,7 @@ public class FlowableReplayTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -1532,7 +1532,7 @@ public class FlowableReplayTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 

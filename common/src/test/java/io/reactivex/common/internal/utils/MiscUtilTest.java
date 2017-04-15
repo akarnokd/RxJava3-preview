@@ -26,7 +26,7 @@ import io.reactivex.common.internal.utils.AbstractAppendOnlyLinkedArrayList.NonT
 public class MiscUtilTest {
     @Test
     public void pow2UtilityClass() {
-        TestHelper.checkUtilityClass(Pow2.class);
+        TestCommonHelper.checkUtilityClass(Pow2.class);
     }
 
     @Test
@@ -43,17 +43,17 @@ public class MiscUtilTest {
 
     @Test
     public void hashMapSupplier() {
-        TestHelper.checkEnum(HashMapSupplier.class);
+        TestCommonHelper.checkEnum(HashMapSupplier.class);
     }
 
     @Test
     public void arrayListSupplier() {
-        TestHelper.checkEnum(ArrayListSupplier.class);
+        TestCommonHelper.checkEnum(ArrayListSupplier.class);
     }
 
     @Test
     public void errorModeEnum() {
-        TestHelper.checkEnum(ErrorMode.class);
+        TestCommonHelper.checkEnum(ErrorMode.class);
     }
 
     @Test

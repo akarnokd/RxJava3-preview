@@ -582,14 +582,14 @@ public class FlowableWithLatestFromTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).withLatestFrom(Flowable.just(2), new BiFunction<Integer, Integer, Object>() {
+        TestCommonHelper.checkDisposed(Flowable.just(1).withLatestFrom(Flowable.just(2), new BiFunction<Integer, Integer, Object>() {
             @Override
             public Object apply(Integer a, Integer b) throws Exception {
                 return a;
             }
         }));
 
-        TestHelper.checkDisposed(Flowable.just(1).withLatestFrom(Flowable.just(2), Flowable.just(3), new Function3<Integer, Integer, Integer, Object>() {
+        TestCommonHelper.checkDisposed(Flowable.just(1).withLatestFrom(Flowable.just(2), Flowable.just(3), new Function3<Integer, Integer, Integer, Object>() {
             @Override
             public Object apply(Integer a, Integer b, Integer c) throws Exception {
                 return a;
@@ -629,7 +629,7 @@ public class FlowableWithLatestFromTest {
 
     @Test
     public void manyErrors() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -649,15 +649,15 @@ public class FlowableWithLatestFromTest {
             .test()
             .assertFailureAndMessage(TestException.class, "First");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void otherErrors() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Flowable.just(1)
             .withLatestFrom(new Flowable<Integer>() {
@@ -676,9 +676,9 @@ public class FlowableWithLatestFromTest {
             .test()
             .assertFailureAndMessage(TestException.class, "First");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

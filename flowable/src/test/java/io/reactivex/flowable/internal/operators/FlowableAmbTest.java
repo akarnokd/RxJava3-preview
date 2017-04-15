@@ -537,7 +537,7 @@ public class FlowableAmbTest {
     @SuppressWarnings("unchecked")
     @Test
     public void disposed() {
-        TestHelper.checkDisposed(Flowable.ambArray(Flowable.never(), Flowable.never()));
+        TestCommonHelper.checkDisposed(Flowable.ambArray(Flowable.never(), Flowable.never()));
     }
 
     @Test
@@ -587,7 +587,7 @@ public class FlowableAmbTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             to.assertSubscribed().assertNoErrors()
             .assertNotComplete().assertValueCount(1);
@@ -616,7 +616,7 @@ public class FlowableAmbTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             to.assertResult();
         }
@@ -646,16 +646,16 @@ public class FlowableAmbTest {
                 }
             };
 
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
 
             to.assertFailure(TestException.class);
             if (!errors.isEmpty()) {
-                TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
             }
         }
     }

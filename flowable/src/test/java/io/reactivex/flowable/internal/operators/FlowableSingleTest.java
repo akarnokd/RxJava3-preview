@@ -395,7 +395,7 @@ public class FlowableSingleTest {
     public void testSingle() {
         Maybe<Integer> observable = Flowable.just(1).singleElement();
 
-        MaybeObserver<Integer> observer = TestHelper.mockMaybeObserver();
+        MaybeObserver<Integer> observer = TestCommonHelper.mockMaybeObserver();
         observable.subscribe(observer);
 
         InOrder inOrder = inOrder(observer);
@@ -407,7 +407,7 @@ public class FlowableSingleTest {
     public void testSingleWithTooManyElements() {
         Maybe<Integer> observable = Flowable.just(1, 2).singleElement();
 
-        MaybeObserver<Integer> observer = TestHelper.mockMaybeObserver();
+        MaybeObserver<Integer> observer = TestCommonHelper.mockMaybeObserver();
         observable.subscribe(observer);
 
         InOrder inOrder = inOrder(observer);
@@ -420,7 +420,7 @@ public class FlowableSingleTest {
     public void testSingleWithEmpty() {
         Maybe<Integer> observable = Flowable.<Integer> empty().singleElement();
 
-        MaybeObserver<Integer> observer = TestHelper.mockMaybeObserver();
+        MaybeObserver<Integer> observer = TestCommonHelper.mockMaybeObserver();
         observable.subscribe(observer);
 
         InOrder inOrder = inOrder(observer);
@@ -487,7 +487,7 @@ public class FlowableSingleTest {
                 })
                 .singleElement();
 
-        MaybeObserver<Integer> observer = TestHelper.mockMaybeObserver();
+        MaybeObserver<Integer> observer = TestCommonHelper.mockMaybeObserver();
         observable.subscribe(observer);
 
         InOrder inOrder = inOrder(observer);
@@ -508,7 +508,7 @@ public class FlowableSingleTest {
                 })
                 .singleElement();
 
-        MaybeObserver<Integer> observer = TestHelper.mockMaybeObserver();
+        MaybeObserver<Integer> observer = TestCommonHelper.mockMaybeObserver();
         observable.subscribe(observer);
 
         InOrder inOrder = inOrder(observer);
@@ -530,7 +530,7 @@ public class FlowableSingleTest {
                 })
                 .singleElement();
 
-        MaybeObserver<Integer> observer = TestHelper.mockMaybeObserver();
+        MaybeObserver<Integer> observer = TestCommonHelper.mockMaybeObserver();
         observable.subscribe(observer);
 
         InOrder inOrder = inOrder(observer);
@@ -543,7 +543,7 @@ public class FlowableSingleTest {
     public void testSingleOrDefault() {
         Single<Integer> observable = Flowable.just(1).single(2);
 
-        SingleObserver<Integer> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Integer> observer = TestCommonHelper.mockSingleObserver();
         observable.subscribe(observer);
 
         InOrder inOrder = inOrder(observer);
@@ -555,7 +555,7 @@ public class FlowableSingleTest {
     public void testSingleOrDefaultWithTooManyElements() {
         Single<Integer> observable = Flowable.just(1, 2).single(3);
 
-        SingleObserver<Integer> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Integer> observer = TestCommonHelper.mockSingleObserver();
         observable.subscribe(observer);
 
         InOrder inOrder = inOrder(observer);
@@ -569,7 +569,7 @@ public class FlowableSingleTest {
         Single<Integer> observable = Flowable.<Integer> empty()
                 .single(1);
 
-        SingleObserver<Integer> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Integer> observer = TestCommonHelper.mockSingleObserver();
         observable.subscribe(observer);
 
         InOrder inOrder = inOrder(observer);
@@ -588,7 +588,7 @@ public class FlowableSingleTest {
                 })
                 .single(4);
 
-        SingleObserver<Integer> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Integer> observer = TestCommonHelper.mockSingleObserver();
         observable.subscribe(observer);
 
         InOrder inOrder = inOrder(observer);
@@ -607,7 +607,7 @@ public class FlowableSingleTest {
                 })
                 .single(6);
 
-        SingleObserver<Integer> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Integer> observer = TestCommonHelper.mockSingleObserver();
         observable.subscribe(observer);
 
         InOrder inOrder = inOrder(observer);
@@ -627,7 +627,7 @@ public class FlowableSingleTest {
                 })
                 .single(2);
 
-        SingleObserver<Integer> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Integer> observer = TestCommonHelper.mockSingleObserver();
         observable.subscribe(observer);
 
         InOrder inOrder = inOrder(observer);
@@ -723,27 +723,27 @@ public class FlowableSingleTest {
 
             assertSame(exception, error.get().getCause());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> o) throws Exception {
                 return o.singleOrError();
             }
         }, false, 1, 1, 1);
 
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> o) throws Exception {
                 return o.singleElement();
             }
         }, false, 1, 1, 1);
 
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> o) throws Exception {
                 return o.singleOrError().toFlowable();
@@ -753,14 +753,14 @@ public class FlowableSingleTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowableToSingle(new Function<Flowable<Object>, SingleSource<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowableToSingle(new Function<Flowable<Object>, SingleSource<Object>>() {
             @Override
             public SingleSource<Object> apply(Flowable<Object> o) throws Exception {
                 return o.singleOrError();
             }
         });
 
-        TestHelper.checkDoubleOnSubscribeFlowableToMaybe(new Function<Flowable<Object>, MaybeSource<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowableToMaybe(new Function<Flowable<Object>, MaybeSource<Object>>() {
             @Override
             public MaybeSource<Object> apply(Flowable<Object> o) throws Exception {
                 return o.singleElement();

@@ -296,7 +296,7 @@ public class FlowablePublishFunctionTest {
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.publish(Functions.<Flowable<Integer>>identity());
@@ -450,7 +450,7 @@ public class FlowablePublishFunctionTest {
                         }
                     };
 
-                    TestHelper.race(r1, r2);
+                    TestCommonHelper.race(r1, r2);
                     return f;
                 }
             }).test()

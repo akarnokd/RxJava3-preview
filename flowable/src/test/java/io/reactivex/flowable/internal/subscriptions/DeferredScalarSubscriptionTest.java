@@ -71,7 +71,7 @@ public class DeferredScalarSubscriptionTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -98,7 +98,7 @@ public class DeferredScalarSubscriptionTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             if (ts.valueCount() >= 1) {
                 ts.assertValue(1);
@@ -129,7 +129,7 @@ public class DeferredScalarSubscriptionTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             if (ts.valueCount() >= 1) {
                 ts.assertValue(1);

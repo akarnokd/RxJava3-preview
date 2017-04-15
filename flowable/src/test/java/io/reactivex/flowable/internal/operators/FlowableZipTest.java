@@ -1404,9 +1404,9 @@ public class FlowableZipTest {
         .test()
         .assertFailure(CompositeException.class, "11", "22");
 
-        List<Throwable> errors = TestHelper.compositeList(ts.errors().get(0));
-        TestHelper.assertError(errors, 0, TestException.class, "One");
-        TestHelper.assertError(errors, 1, TestException.class, "Two");
+        List<Throwable> errors = TestCommonHelper.compositeList(ts.errors().get(0));
+        TestCommonHelper.assertError(errors, 0, TestException.class, "One");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Two");
         assertEquals(2, errors.size());
     }
 
@@ -1427,9 +1427,9 @@ public class FlowableZipTest {
         .test()
         .assertFailure(CompositeException.class, "11", "22");
 
-        List<Throwable> errors = TestHelper.compositeList(ts.errors().get(0));
-        TestHelper.assertError(errors, 0, TestException.class, "One");
-        TestHelper.assertError(errors, 1, TestException.class, "Two");
+        List<Throwable> errors = TestCommonHelper.compositeList(ts.errors().get(0));
+        TestCommonHelper.assertError(errors, 0, TestException.class, "One");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Two");
         assertEquals(2, errors.size());
     }
 
@@ -1609,7 +1609,7 @@ public class FlowableZipTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.zip(Flowable.just(1), Flowable.just(1), new BiFunction<Integer, Integer, Object>() {
+        TestCommonHelper.checkDisposed(Flowable.zip(Flowable.just(1), Flowable.just(1), new BiFunction<Integer, Integer, Object>() {
             @Override
             public Object apply(Integer a, Integer b) throws Exception {
                 return a + b;
@@ -1619,7 +1619,7 @@ public class FlowableZipTest {
 
     @Test
     public void badRequest() {
-        TestHelper.assertBadRequestReported(Flowable.zip(Flowable.just(1), Flowable.just(1), new BiFunction<Integer, Integer, Object>() {
+        TestCommonHelper.assertBadRequestReported(Flowable.zip(Flowable.just(1), Flowable.just(1), new BiFunction<Integer, Integer, Object>() {
             @Override
             public Object apply(Integer a, Integer b) throws Exception {
                 return a + b;
@@ -1629,7 +1629,7 @@ public class FlowableZipTest {
 
     @Test
     public void multiError() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             PublishProcessor<Object> pp = PublishProcessor.create();
 
@@ -1655,9 +1655,9 @@ public class FlowableZipTest {
 
             sub[0].onError(new TestException("Second"));
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

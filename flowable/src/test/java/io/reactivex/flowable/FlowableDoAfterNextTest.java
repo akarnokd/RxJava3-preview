@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
-import io.reactivex.functions.Consumer;
+import io.reactivex.common.functions.Consumer;
 
 public class FlowableDoAfterNextTest {
 

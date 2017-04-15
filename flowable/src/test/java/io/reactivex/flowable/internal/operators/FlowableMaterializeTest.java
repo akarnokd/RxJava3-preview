@@ -285,12 +285,12 @@ public class FlowableMaterializeTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).materialize());
+        TestCommonHelper.checkDisposed(Flowable.just(1).materialize());
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Notification<Object>>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Notification<Object>>>() {
             @Override
             public Flowable<Notification<Object>> apply(Flowable<Object> o) throws Exception {
                 return o.materialize();
@@ -300,7 +300,7 @@ public class FlowableMaterializeTest {
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> f) throws Exception {
                 return f.materialize();
@@ -310,6 +310,6 @@ public class FlowableMaterializeTest {
 
     @Test
     public void badRequest() {
-        TestHelper.assertBadRequestReported(Flowable.just(1).materialize());
+        TestCommonHelper.assertBadRequestReported(Flowable.just(1).materialize());
     }
 }

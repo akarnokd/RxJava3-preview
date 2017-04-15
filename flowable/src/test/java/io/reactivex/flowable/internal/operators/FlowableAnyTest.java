@@ -45,7 +45,7 @@ public class FlowableAnyTest {
             }
         });
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         observable.subscribe(observer);
 
@@ -59,7 +59,7 @@ public class FlowableAnyTest {
         Flowable<Integer> w = Flowable.just(1, 2);
         Single<Boolean> observable = w.isEmpty();
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         observable.subscribe(observer);
 
@@ -78,7 +78,7 @@ public class FlowableAnyTest {
             }
         });
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         observable.subscribe(observer);
 
@@ -92,7 +92,7 @@ public class FlowableAnyTest {
         Flowable<Integer> w = Flowable.just(1);
         Single<Boolean> observable = w.isEmpty();
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         observable.subscribe(observer);
 
@@ -111,7 +111,7 @@ public class FlowableAnyTest {
             }
         });
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         observable.subscribe(observer);
 
@@ -125,7 +125,7 @@ public class FlowableAnyTest {
         Flowable<Integer> w = Flowable.empty();
         Single<Boolean> observable = w.isEmpty();
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         observable.subscribe(observer);
 
@@ -144,7 +144,7 @@ public class FlowableAnyTest {
             }
         });
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         observable.subscribe(observer);
 
@@ -163,7 +163,7 @@ public class FlowableAnyTest {
             }
         });
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         observable.subscribe(observer);
 
@@ -182,7 +182,7 @@ public class FlowableAnyTest {
             }
         });
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         observable.subscribe(observer);
 
@@ -202,7 +202,7 @@ public class FlowableAnyTest {
             }
         });
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         observable.subscribe(observer);
 
@@ -352,7 +352,7 @@ public class FlowableAnyTest {
         Flowable<Integer> w = Flowable.just(1);
         Single<Boolean> observable = w.isEmpty();
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         observable.subscribe(observer);
 
@@ -557,21 +557,21 @@ public class FlowableAnyTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).any(Functions.alwaysTrue()).toFlowable());
+        TestCommonHelper.checkDisposed(Flowable.just(1).any(Functions.alwaysTrue()).toFlowable());
 
-        TestHelper.checkDisposed(Flowable.just(1).any(Functions.alwaysTrue()));
+        TestCommonHelper.checkDisposed(Flowable.just(1).any(Functions.alwaysTrue()));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Boolean>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Boolean>>() {
             @Override
             public Publisher<Boolean> apply(Flowable<Object> o) throws Exception {
                 return o.any(Functions.alwaysTrue()).toFlowable();
             }
         });
 
-        TestHelper.checkDoubleOnSubscribeFlowableToSingle(new Function<Flowable<Object>, Single<Boolean>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowableToSingle(new Function<Flowable<Object>, Single<Boolean>>() {
             @Override
             public Single<Boolean> apply(Flowable<Object> o) throws Exception {
                 return o.any(Functions.alwaysTrue());
@@ -581,7 +581,7 @@ public class FlowableAnyTest {
 
     @Test
     public void predicateThrowsSuppressOthers() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -604,15 +604,15 @@ public class FlowableAnyTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void badSourceSingle() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -629,9 +629,9 @@ public class FlowableAnyTest {
             .test()
             .assertFailureAndMessage(TestException.class, "First");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

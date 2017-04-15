@@ -25,7 +25,7 @@ import io.reactivex.common.exceptions.TestException;
 public class ExceptionHelperTest {
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(ExceptionHelper.class);
+        TestCommonHelper.checkUtilityClass(ExceptionHelper.class);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class ExceptionHelperTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.single());
+            TestCommonHelper.race(r, r, Schedulers.single());
         }
     }
 }

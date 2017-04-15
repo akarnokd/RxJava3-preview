@@ -38,11 +38,11 @@ public class DisposableHelperTest {
 
     @Test
     public void validationNull() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
         try {
             assertFalse(DisposableHelper.validate(null, null));
 
-            TestHelper.assertError(list, 0, NullPointerException.class, "next is null");
+            TestCommonHelper.assertError(list, 0, NullPointerException.class, "next is null");
         } finally {
             RxJavaCommonPlugins.reset();
         }
@@ -60,7 +60,7 @@ public class DisposableHelperTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.io());
+            TestCommonHelper.race(r, r, Schedulers.io());
         }
     }
 
@@ -76,7 +76,7 @@ public class DisposableHelperTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.io());
+            TestCommonHelper.race(r, r, Schedulers.io());
         }
     }
 
@@ -92,7 +92,7 @@ public class DisposableHelperTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.io());
+            TestCommonHelper.race(r, r, Schedulers.io());
         }
     }
 

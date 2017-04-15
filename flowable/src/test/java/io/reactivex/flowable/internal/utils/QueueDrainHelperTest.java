@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.flowable.internal.utils;
 
 import static org.junit.Assert.*;
 
@@ -22,10 +22,10 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.junit.Test;
 import org.reactivestreams.Subscription;
 
-import io.reactivex.TestHelper;
-import io.reactivex.functions.BooleanSupplier;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.TestCommonHelper;
+import io.reactivex.common.functions.BooleanSupplier;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class QueueDrainHelperTest {
 
@@ -151,7 +151,7 @@ public class QueueDrainHelperTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             ts.assertResult(1);
         }

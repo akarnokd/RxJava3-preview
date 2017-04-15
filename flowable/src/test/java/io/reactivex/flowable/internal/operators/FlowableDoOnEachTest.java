@@ -226,7 +226,7 @@ public class FlowableDoOnEachTest {
 
     @Test
     public void ignoreCancel() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Object>() {
@@ -248,15 +248,15 @@ public class FlowableDoOnEachTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void onErrorAfterCrash() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Object>() {
@@ -275,15 +275,15 @@ public class FlowableDoOnEachTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void onCompleteAfterCrash() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Object>() {
@@ -302,9 +302,9 @@ public class FlowableDoOnEachTest {
             .test()
             .assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -329,7 +329,7 @@ public class FlowableDoOnEachTest {
 
     @Test
     public void ignoreCancelConditional() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Object>() {
@@ -352,15 +352,15 @@ public class FlowableDoOnEachTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void ignoreCancelConditional2() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Object>() {
@@ -384,15 +384,15 @@ public class FlowableDoOnEachTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void onErrorAfterCrashConditional() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Object>() {
@@ -412,9 +412,9 @@ public class FlowableDoOnEachTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -436,7 +436,7 @@ public class FlowableDoOnEachTest {
 
     @Test
     public void onCompleteAfterCrashConditional() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Object>() {
@@ -456,9 +456,9 @@ public class FlowableDoOnEachTest {
             .test()
             .assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -495,10 +495,10 @@ public class FlowableDoOnEachTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(ts.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(ts.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "Outer");
-        TestHelper.assertError(errors, 1, TestException.class, "Inner");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "Outer");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Inner");
     }
 
     @Test
@@ -640,7 +640,7 @@ public class FlowableDoOnEachTest {
         })
         .subscribe(ts);
 
-        TestHelper.emit(up, 1, 2, 3, 4, 5);
+        TestCommonHelper.emit(up, 1, 2, 3, 4, 5);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
         .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
@@ -674,7 +674,7 @@ public class FlowableDoOnEachTest {
         .filter(Functions.alwaysTrue())
         .subscribe(ts);
 
-        TestHelper.emit(up, 1, 2, 3, 4, 5);
+        TestCommonHelper.emit(up, 1, 2, 3, 4, 5);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
         .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
@@ -708,7 +708,7 @@ public class FlowableDoOnEachTest {
         .filter(Functions.alwaysTrue())
         .subscribe(ts);
 
-        TestHelper.emit(up, 1, 2, 3, 4, 5);
+        TestCommonHelper.emit(up, 1, 2, 3, 4, 5);
 
         ts.assertOf(SubscriberFusion.<Integer>assertFuseable())
         .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.NONE))
@@ -720,12 +720,12 @@ public class FlowableDoOnEachTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).doOnEach(new TestSubscriber<Integer>()));
+        TestCommonHelper.checkDisposed(Flowable.just(1).doOnEach(new TestSubscriber<Integer>()));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.doOnEach(new TestSubscriber<Object>());

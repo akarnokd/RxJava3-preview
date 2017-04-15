@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import static org.junit.Assert.*;
 
@@ -21,14 +21,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Test;
 import org.reactivestreams.Subscription;
 
-import io.reactivex.TestHelper;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
 
 public class BlockingSubscriberTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.doubleOnSubscribe(new BlockingSubscriber<Integer>(new ArrayDeque<Object>()));
+        TestCommonHelper.doubleOnSubscribe(new BlockingSubscriber<Integer>(new ArrayDeque<Object>()));
     }
 
     @Test
@@ -48,7 +47,7 @@ public class BlockingSubscriberTest {
 
     @Test
     public void blockingFirstDoubleOnSubscribe() {
-        TestHelper.doubleOnSubscribe(new BlockingFirstSubscriber<Integer>());
+        TestCommonHelper.doubleOnSubscribe(new BlockingFirstSubscriber<Integer>());
     }
 
     @Test(timeout = 5000)

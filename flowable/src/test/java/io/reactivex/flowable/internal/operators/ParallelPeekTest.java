@@ -52,7 +52,7 @@ public class ParallelPeekTest {
 
     @Test
     public void doubleError() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new ParallelInvalid()
             .doOnNext(Functions.emptyConsumer())
@@ -65,13 +65,13 @@ public class ParallelPeekTest {
                 assertTrue(ex.toString(), ex.getCause() instanceof TestException);
             }
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void requestCrash() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.range(1, 5)
@@ -92,13 +92,13 @@ public class ParallelPeekTest {
                 assertTrue(ex.toString(), ex.getCause() instanceof TestException);
             }
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void cancelCrash() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.<Integer>never()
@@ -119,7 +119,7 @@ public class ParallelPeekTest {
                 assertTrue(ex.toString(), ex.getCause() instanceof TestException);
             }
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -140,7 +140,7 @@ public class ParallelPeekTest {
 
     @Test
     public void onAfterTerminatedCrash() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.just(1)
@@ -161,13 +161,13 @@ public class ParallelPeekTest {
                 assertTrue(ex.toString(), ex.getCause() instanceof TestException);
             }
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void onAfterTerminatedCrash2() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.<Integer>error(new IOException())
@@ -190,7 +190,7 @@ public class ParallelPeekTest {
                         || exc instanceof IOException);
             }
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

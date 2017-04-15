@@ -180,12 +180,12 @@ public class FlowableSkipLastTimedTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().skipLast(1, TimeUnit.DAYS));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().skipLast(1, TimeUnit.DAYS));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.skipLast(1, TimeUnit.DAYS);
@@ -215,7 +215,7 @@ public class FlowableSkipLastTimedTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 

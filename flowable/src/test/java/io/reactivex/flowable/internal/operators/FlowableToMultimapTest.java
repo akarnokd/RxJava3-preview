@@ -32,7 +32,7 @@ public class FlowableToMultimapTest {
     @Before
     public void before() {
         objectObserver = TestHelper.mockSubscriber();
-        singleObserver = TestHelper.mockSingleObserver();
+        singleObserver = TestCommonHelper.mockSingleObserver();
     }
 
     Function<String, Integer> lengthFunc = new Function<String, Integer>() {

@@ -289,7 +289,7 @@ public class FlowableSubscribeOnTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).subscribeOn(Schedulers.single()));
+        TestCommonHelper.checkDisposed(Flowable.just(1).subscribeOn(Schedulers.single()));
     }
 
     @Test
@@ -320,7 +320,7 @@ public class FlowableSubscribeOnTest {
                     }
                 };
 
-                TestHelper.race(r1, r2);
+                TestCommonHelper.race(r1, r2);
             } finally {
                 w.dispose();
             }

@@ -291,7 +291,7 @@ public class FlowableTimerTest {
 
     @Test
     public void disposed() {
-        TestHelper.checkDisposed(Flowable.timer(1, TimeUnit.DAYS));
+        TestCommonHelper.checkDisposed(Flowable.timer(1, TimeUnit.DAYS));
     }
 
     @Test
@@ -326,13 +326,13 @@ public class FlowableTimerTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
     @Test
     public void timerDelayZero() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             for (int i = 0; i < 1000; i++) {
                 Flowable.timer(0, TimeUnit.MILLISECONDS).blockingFirst();
@@ -340,7 +340,7 @@ public class FlowableTimerTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

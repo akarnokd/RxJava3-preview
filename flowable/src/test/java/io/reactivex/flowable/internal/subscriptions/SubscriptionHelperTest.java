@@ -29,18 +29,18 @@ public class SubscriptionHelperTest {
 
     @Test
     public void checkEnum() {
-        TestHelper.checkEnum(SubscriptionHelper.class);
+        TestCommonHelper.checkEnum(SubscriptionHelper.class);
     }
 
     @Test
     public void validateNullThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             SubscriptionHelper.validate(null, null);
 
-            TestHelper.assertError(errors, 0, NullPointerException.class, "next is null");
+            TestCommonHelper.assertError(errors, 0, NullPointerException.class, "next is null");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -95,7 +95,7 @@ public class SubscriptionHelperTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.single());
+            TestCommonHelper.race(r, r, Schedulers.single());
         }
     }
 
@@ -121,7 +121,7 @@ public class SubscriptionHelperTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             assertTrue(bs1.isCancelled() ^ bs2.isCancelled());
         }
@@ -149,7 +149,7 @@ public class SubscriptionHelperTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             assertFalse(bs1.isCancelled());
             assertFalse(bs2.isCancelled());
@@ -180,13 +180,13 @@ public class SubscriptionHelperTest {
         AtomicReference<Subscription> s = new AtomicReference<Subscription>();
         AtomicLong r = new AtomicLong();
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             SubscriptionHelper.deferredRequest(s, r, -99);
 
-            TestHelper.assertError(errors, 0, IllegalArgumentException.class, "n > 0 required but it was -99");
+            TestCommonHelper.assertError(errors, 0, IllegalArgumentException.class, "n > 0 required but it was -99");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -224,7 +224,7 @@ public class SubscriptionHelperTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             assertSame(a, s.get());
             assertEquals(1, q.get());

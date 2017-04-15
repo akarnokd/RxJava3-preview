@@ -15,7 +15,7 @@ package io.reactivex.flowable;
 
 import org.junit.*;
 
-import io.reactivex.*;
+import io.reactivex.common.Notification;
 
 public class FlowableNotificationTest {
 

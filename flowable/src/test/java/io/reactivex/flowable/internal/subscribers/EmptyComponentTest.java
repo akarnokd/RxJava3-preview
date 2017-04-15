@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import static org.junit.Assert.assertTrue;
 
@@ -19,21 +19,20 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.internal.util.EmptyComponent;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.internal.utils.EmptyComponent;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public class EmptyComponentTest {
 
     @Test
     public void normal() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
-            TestHelper.checkEnum(EmptyComponent.class);
+            TestCommonHelper.checkEnum(EmptyComponent.class);
 
             EmptyComponent c = EmptyComponent.INSTANCE;
 
@@ -67,9 +66,9 @@ public class EmptyComponentTest {
 
             c.cancel();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

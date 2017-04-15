@@ -458,12 +458,12 @@ public class FlowableTakeTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().take(2));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().take(2));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.take(2);

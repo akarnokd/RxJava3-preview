@@ -78,7 +78,7 @@ public class ArrayCompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.io());
+            TestCommonHelper.race(r, r, Schedulers.io());
         }
     }
 
@@ -94,7 +94,7 @@ public class ArrayCompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.io());
+            TestCommonHelper.race(r, r, Schedulers.io());
         }
     }
 
@@ -110,7 +110,7 @@ public class ArrayCompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.io());
+            TestCommonHelper.race(r, r, Schedulers.io());
         }
     }
 

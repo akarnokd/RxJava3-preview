@@ -380,7 +380,7 @@ public class FlowableOnErrorResumeNextViaFunctionTest {
 
     @Test
     public void badOtherSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> o) throws Exception {
                 return Flowable.error(new IOException())

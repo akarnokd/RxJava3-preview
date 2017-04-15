@@ -23,11 +23,8 @@ import java.util.*;
 import org.junit.Test;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.Flowable;
-import io.reactivex.FlowableTransformer;
-import io.reactivex.flowables.GroupedFlowable;
-import io.reactivex.functions.*;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 /**
  * Test super/extends of generics.

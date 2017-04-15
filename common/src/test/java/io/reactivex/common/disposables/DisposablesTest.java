@@ -53,7 +53,7 @@ public class DisposablesTest {
 
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(Disposables.class);
+        TestCommonHelper.checkUtilityClass(Disposables.class);
     }
 
     @Test
@@ -130,13 +130,13 @@ public class DisposablesTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.io());
+            TestCommonHelper.race(r, r, Schedulers.io());
         }
     }
 
     @Test
     public void setOnceTwice() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
 
             AtomicReference<Disposable> target = new AtomicReference<Disposable>();
@@ -150,7 +150,7 @@ public class DisposablesTest {
 
             assertTrue(d1.isDisposed());
 
-            TestHelper.assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
+            TestCommonHelper.assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } finally {
             RxJavaCommonPlugins.reset();
         }

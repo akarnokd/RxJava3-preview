@@ -112,7 +112,7 @@ public class FlowableFromArrayTest {
 
     @Test
     public void badRequest() {
-        TestHelper.assertBadRequestReported(Flowable.just(1, 2, 3));
+        TestCommonHelper.assertBadRequestReported(Flowable.just(1, 2, 3));
     }
 
     @Test

@@ -610,13 +610,13 @@ public class BehaviorProcessorTest extends DelayedFlowableProcessorTest<Object> 
 
         p.onComplete();
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             p.onError(new TestException());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -655,7 +655,7 @@ public class BehaviorProcessorTest extends DelayedFlowableProcessorTest<Object> 
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -681,7 +681,7 @@ public class BehaviorProcessorTest extends DelayedFlowableProcessorTest<Object> 
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             if (ts[0].valueCount() == 1) {
                 ts[0].assertValue(2).assertNoErrors().assertNotComplete();
@@ -778,7 +778,7 @@ public class BehaviorProcessorTest extends DelayedFlowableProcessorTest<Object> 
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             ts.assertResult();
         }
@@ -807,7 +807,7 @@ public class BehaviorProcessorTest extends DelayedFlowableProcessorTest<Object> 
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             ts.assertFailure(TestException.class);
         }

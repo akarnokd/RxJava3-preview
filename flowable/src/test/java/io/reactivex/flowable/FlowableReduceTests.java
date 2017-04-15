@@ -17,9 +17,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
+import io.reactivex.common.functions.BiFunction;
 import io.reactivex.flowable.FlowableCovarianceTest.*;
-import io.reactivex.functions.BiFunction;
 
 public class FlowableReduceTests {
 
@@ -31,7 +30,7 @@ public class FlowableReduceTests {
             public Integer apply(Integer t1, Integer t2) {
                 return t1 + t2;
             }
-        }).toFlowable().blockingSingle();
+        }).blockingSingle();
 
         assertEquals(6, value);
     }
@@ -53,7 +52,7 @@ public class FlowableReduceTests {
             public Movie apply(Movie t1, Movie t2) {
                 return t2;
             }
-        }).toFlowable();
+        });
 
         assertNotNull(reduceResult2);
     }
@@ -72,7 +71,7 @@ public class FlowableReduceTests {
             public Movie apply(Movie t1, Movie t2) {
                 return t2;
             }
-        }).toFlowable();
+        });
 
         assertNotNull(reduceResult2);
     }
@@ -86,7 +85,7 @@ public class FlowableReduceTests {
             public Integer apply(Integer t1, Integer t2) {
                 return t1 + t2;
             }
-        }).toFlowable().blockingSingle();
+        }).blockingSingle();
 
         assertEquals(6, value);
     }
@@ -103,7 +102,7 @@ public class FlowableReduceTests {
             }
         }).takeLast(1);
 
-        Maybe<Movie> reduceResult2 = horrorMovies.reduce(new BiFunction<Movie, Movie, Movie>() {
+        Flowable<Movie> reduceResult2 = horrorMovies.reduce(new BiFunction<Movie, Movie, Movie>() {
             @Override
             public Movie apply(Movie t1, Movie t2) {
                 return t2;
@@ -122,7 +121,7 @@ public class FlowableReduceTests {
     public void reduceWithCovariantObjects() {
         Flowable<Movie> horrorMovies = Flowable.<Movie> just(new HorrorMovie());
 
-        Maybe<Movie> reduceResult2 = horrorMovies.reduce(new BiFunction<Movie, Movie, Movie>() {
+        Flowable<Movie> reduceResult2 = horrorMovies.reduce(new BiFunction<Movie, Movie, Movie>() {
             @Override
             public Movie apply(Movie t1, Movie t2) {
                 return t2;

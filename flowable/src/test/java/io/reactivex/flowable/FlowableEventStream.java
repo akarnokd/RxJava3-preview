@@ -15,9 +15,8 @@ package io.reactivex.flowable;
 
 import java.util.*;
 
-import io.reactivex.*;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.Consumer;
 
 /**
  * Utility for retrieving a mock eventstream for testing.

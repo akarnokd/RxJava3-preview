@@ -11,16 +11,16 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.tck;
+package io.reactivex.flowable.tck;
 
 import java.util.List;
 
 import org.reactivestreams.Publisher;
 import org.testng.annotations.Test;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.BiConsumer;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.functions.BiConsumer;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.Flowable;
 
 @Test
 public class CollectTckTest extends BaseTck<List<Integer>> {
@@ -33,7 +33,7 @@ public class CollectTckTest extends BaseTck<List<Integer>> {
                     public void accept(List<Integer> a, Integer b) throws Exception {
                         a.add(b);
                     }
-                }).toFlowable()
+                })
             ;
     }
 

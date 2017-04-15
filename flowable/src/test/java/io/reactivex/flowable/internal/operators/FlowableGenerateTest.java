@@ -88,7 +88,7 @@ public class FlowableGenerateTest {
 
     @Test
     public void disposerThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Flowable.generate(new Callable<Object>() {
                 @Override
@@ -109,15 +109,15 @@ public class FlowableGenerateTest {
             .test()
             .assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.generate(new Callable<Object>() {
+        TestCommonHelper.checkDisposed(Flowable.generate(new Callable<Object>() {
                 @Override
                 public Object call() throws Exception {
                     return 1;
@@ -152,7 +152,7 @@ public class FlowableGenerateTest {
 
     @Test
     public void badRequest() {
-        TestHelper.assertBadRequestReported(Flowable.generate(new Callable<Object>() {
+        TestCommonHelper.assertBadRequestReported(Flowable.generate(new Callable<Object>() {
                 @Override
                 public Object call() throws Exception {
                     return 1;
@@ -231,7 +231,7 @@ public class FlowableGenerateTest {
                 }
             };
 
-            TestHelper.race(r, r);
+            TestCommonHelper.race(r, r);
 
             ts.assertValueCount(1000);
         }
@@ -252,7 +252,7 @@ public class FlowableGenerateTest {
 
     @Test
     public void multipleOnError() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Flowable.generate(new Consumer<Emitter<Object>>() {
                 @Override
@@ -264,9 +264,9 @@ public class FlowableGenerateTest {
             .test(1)
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import static org.junit.Assert.*;
 
@@ -20,12 +20,12 @@ import java.util.*;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
 
 public class LambdaSubscriberTest {
 
@@ -105,7 +105,7 @@ public class LambdaSubscriberTest {
 
     @Test
     public void onErrorThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             final List<Object> received = new ArrayList<Object>();
@@ -141,18 +141,18 @@ public class LambdaSubscriberTest {
 
             assertTrue(o.isDisposed());
 
-            TestHelper.assertError(errors, 0, CompositeException.class);
-            List<Throwable> ce = TestHelper.compositeList(errors.get(0));
-            TestHelper.assertError(ce, 0, TestException.class, "Outer");
-            TestHelper.assertError(ce, 1, TestException.class, "Inner");
+            TestCommonHelper.assertError(errors, 0, CompositeException.class);
+            List<Throwable> ce = TestCommonHelper.compositeList(errors.get(0));
+            TestCommonHelper.assertError(ce, 0, TestException.class, "Outer");
+            TestCommonHelper.assertError(ce, 1, TestException.class, "Inner");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void onCompleteThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             final List<Object> received = new ArrayList<Object>();
@@ -188,9 +188,9 @@ public class LambdaSubscriberTest {
 
             assertTrue(o.isDisposed());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

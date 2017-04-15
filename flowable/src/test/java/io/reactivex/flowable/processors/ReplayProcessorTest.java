@@ -1063,7 +1063,7 @@ public class ReplayProcessorTest extends FlowableProcessorTest<Object> {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -1091,7 +1091,7 @@ public class ReplayProcessorTest extends FlowableProcessorTest<Object> {
                 }
             };
 
-            TestHelper.race(r1, r1, Schedulers.single());
+            TestCommonHelper.race(r1, r1, Schedulers.single());
         }
     }
 
@@ -1130,7 +1130,7 @@ public class ReplayProcessorTest extends FlowableProcessorTest<Object> {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             assertFalse(rp.hasSubscribers());
         }
@@ -1185,7 +1185,7 @@ public class ReplayProcessorTest extends FlowableProcessorTest<Object> {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 

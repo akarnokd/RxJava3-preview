@@ -11,13 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.tck;
+package io.reactivex.flowable.tck;
 
 import org.reactivestreams.Publisher;
 import org.testng.annotations.Test;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.Predicate;
+import io.reactivex.common.functions.Predicate;
+import io.reactivex.flowable.Flowable;
 
 @Test
 public class AnyTckTest extends BaseTck<Boolean> {
@@ -30,7 +30,7 @@ public class AnyTckTest extends BaseTck<Boolean> {
                     public boolean test(Integer e) throws Exception {
                         return e == 500;
                     }
-                }).toFlowable()
+                })
             ;
     }
 

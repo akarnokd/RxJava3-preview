@@ -162,12 +162,12 @@ public class FlowableDetachTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.never().onTerminateDetach());
+        TestCommonHelper.checkDisposed(Flowable.never().onTerminateDetach());
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.onTerminateDetach();

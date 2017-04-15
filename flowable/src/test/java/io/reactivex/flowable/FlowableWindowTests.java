@@ -19,8 +19,7 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.*;
+import io.reactivex.common.functions.*;
 
 public class FlowableWindowTests {
 
@@ -34,7 +33,7 @@ public class FlowableWindowTests {
             .map(new Function<Flowable<Integer>, Flowable<List<Integer>>>() {
                 @Override
                 public Flowable<List<Integer>> apply(Flowable<Integer> xs) {
-                    return xs.toList().toFlowable();
+                    return xs.toList();
                 }
             })
         )

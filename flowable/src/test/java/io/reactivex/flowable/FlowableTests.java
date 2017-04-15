@@ -14,6 +14,7 @@
 package io.reactivex.flowable;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
@@ -24,23 +25,16 @@ import org.junit.*;
 import org.mockito.InOrder;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.flowables.ConnectableFlowable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.processors.*;
-import io.reactivex.schedulers.*;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.*;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableTests {
 
     Subscriber<Number> w;
-
-    SingleObserver<Number> wo;
-
-    MaybeObserver<Number> wm;
 
     private static final Predicate<Integer> IS_EVEN = new Predicate<Integer>() {
         @Override
@@ -52,14 +46,12 @@ public class FlowableTests {
     @Before
     public void before() {
         w = TestHelper.mockSubscriber();
-        wo = TestHelper.mockSingleObserver();
-        wm = TestHelper.mockMaybeObserver();
     }
 
     @Test
     public void fromArray() {
         String[] items = new String[] { "one", "two", "three" };
-        assertEquals((Long)3L, Flowable.fromArray(items).count().blockingGet());
+        assertEquals((Long)3L, Flowable.fromArray(items).count().blockingLast());
         assertEquals("two", Flowable.fromArray(items).skip(1).take(1).blockingSingle());
         assertEquals("three", Flowable.fromArray(items).takeLast(1).blockingSingle());
     }
@@ -71,7 +63,7 @@ public class FlowableTests {
         items.add("two");
         items.add("three");
 
-        assertEquals((Long)3L, Flowable.fromIterable(items).count().blockingGet());
+        assertEquals((Long)3L, Flowable.fromIterable(items).count().blockingLast());
         assertEquals("two", Flowable.fromIterable(items).skip(1).take(1).blockingSingle());
         assertEquals("three", Flowable.fromIterable(items).takeLast(1).blockingSingle());
     }
@@ -80,7 +72,7 @@ public class FlowableTests {
     public void fromArityArgs3() {
         Flowable<String> items = Flowable.just("one", "two", "three");
 
-        assertEquals((Long)3L, items.count().blockingGet());
+        assertEquals((Long)3L, items.count().blockingLast());
         assertEquals("two", items.skip(1).take(1).blockingSingle());
         assertEquals("three", items.takeLast(1).blockingSingle());
     }
@@ -89,7 +81,7 @@ public class FlowableTests {
     public void fromArityArgs1() {
         Flowable<String> items = Flowable.just("one");
 
-        assertEquals((Long)1L, items.count().blockingGet());
+        assertEquals((Long)1L, items.count().blockingLast());
         assertEquals("one", items.takeLast(1).blockingSingle());
     }
 
@@ -113,7 +105,7 @@ public class FlowableTests {
     public void testCountAFewItemsFlowable() {
         Flowable<String> observable = Flowable.just("a", "b", "c", "d");
 
-        observable.count().toFlowable().subscribe(w);
+        observable.count().subscribe(w);
 
         // we should be called only once
         verify(w).onNext(4L);
@@ -124,7 +116,7 @@ public class FlowableTests {
     @Test
     public void testCountZeroItemsFlowable() {
         Flowable<String> observable = Flowable.empty();
-        observable.count().toFlowable().subscribe(w);
+        observable.count().subscribe(w);
         // we should be called only once
         verify(w).onNext(0L);
         verify(w, never()).onError(any(Throwable.class));
@@ -140,7 +132,7 @@ public class FlowableTests {
             }
         });
 
-        o.count().toFlowable().subscribe(w);
+        o.count().subscribe(w);
         verify(w, never()).onNext(anyInt());
         verify(w, never()).onComplete();
         verify(w, times(1)).onError(any(RuntimeException.class));
@@ -151,20 +143,20 @@ public class FlowableTests {
     public void testCountAFewItems() {
         Flowable<String> observable = Flowable.just("a", "b", "c", "d");
 
-        observable.count().subscribe(wo);
+        observable.count().subscribe(w);
 
         // we should be called only once
-        verify(wo).onSuccess(4L);
-        verify(wo, never()).onError(any(Throwable.class));
+        verify(w).onNext(4L);
+        verify(w, never()).onError(any(Throwable.class));
     }
 
     @Test
     public void testCountZeroItems() {
         Flowable<String> observable = Flowable.empty();
-        observable.count().subscribe(wo);
+        observable.count().subscribe(w);
         // we should be called only once
-        verify(wo).onSuccess(0L);
-        verify(wo, never()).onError(any(Throwable.class));
+        verify(w).onNext(0L);
+        verify(w, never()).onError(any(Throwable.class));
     }
 
     @Test
@@ -176,9 +168,9 @@ public class FlowableTests {
             }
         });
 
-        o.count().subscribe(wo);
-        verify(wo, never()).onSuccess(anyInt());
-        verify(wo, times(1)).onError(any(RuntimeException.class));
+        o.count().subscribe(w);
+        verify(w, never()).onNext(anyInt());
+        verify(w, times(1)).onError(any(RuntimeException.class));
     }
 
     @Test
@@ -222,7 +214,7 @@ public class FlowableTests {
     @Test
     public void testFirstOfNoneFlowable() {
         Flowable<Integer> observable = Flowable.empty();
-        observable.firstElement().toFlowable().subscribe(w);
+        observable.firstElement().subscribe(w);
         verify(w, never()).onNext(anyInt());
         verify(w).onComplete();
         verify(w, never()).onError(any(Throwable.class));
@@ -231,7 +223,7 @@ public class FlowableTests {
     @Test
     public void testFirstWithPredicateOfNoneMatchingThePredicateFlowable() {
         Flowable<Integer> observable = Flowable.just(1, 3, 5, 7, 9, 7, 5, 3, 1);
-        observable.filter(IS_EVEN).firstElement().toFlowable().subscribe(w);
+        observable.filter(IS_EVEN).firstElement().subscribe(w);
         verify(w, never()).onNext(anyInt());
         verify(w).onComplete();
         verify(w, never()).onError(any(Throwable.class));
@@ -240,19 +232,19 @@ public class FlowableTests {
     @Test
     public void testFirstOfNone() {
         Flowable<Integer> observable = Flowable.empty();
-        observable.firstElement().subscribe(wm);
-        verify(wm, never()).onSuccess(anyInt());
-        verify(wm).onComplete();
-        verify(wm, never()).onError(isA(NoSuchElementException.class));
+        observable.firstElement().subscribe(w);
+        verify(w, never()).onNext(anyInt());
+        verify(w).onComplete();
+        verify(w, never()).onError(isA(NoSuchElementException.class));
     }
 
     @Test
     public void testFirstWithPredicateOfNoneMatchingThePredicate() {
         Flowable<Integer> observable = Flowable.just(1, 3, 5, 7, 9, 7, 5, 3, 1);
-        observable.filter(IS_EVEN).firstElement().subscribe(wm);
-        verify(wm, never()).onSuccess(anyInt());
-        verify(wm, times(1)).onComplete();
-        verify(wm, never()).onError(isA(NoSuchElementException.class));
+        observable.filter(IS_EVEN).firstElement().subscribe(w);
+        verify(w, never()).onNext(anyInt());
+        verify(w, times(1)).onComplete();
+        verify(w, never()).onError(isA(NoSuchElementException.class));
     }
 
     @Test
@@ -264,7 +256,7 @@ public class FlowableTests {
                 return t1 + t2;
             }
         })
-        .toFlowable()
+        
         .subscribe(w);
         // we should be called only once
         verify(w, times(1)).onNext(anyInt());
@@ -280,7 +272,7 @@ public class FlowableTests {
                 return t1 + t2;
             }
         })
-        .toFlowable()
+        
         .test()
         .assertResult();
     }
@@ -299,7 +291,7 @@ public class FlowableTests {
                 return t1 + t2;
             }
         })
-        .blockingGet();
+        .blockingLast();
 
         assertEquals(1, value);
     }
@@ -313,10 +305,10 @@ public class FlowableTests {
                 return t1 + t2;
             }
         })
-        .subscribe(wo);
+        .subscribe(w);
         // we should be called only once
-        verify(wo, times(1)).onSuccess(anyInt());
-        verify(wo).onSuccess(60);
+        verify(w, times(1)).onNext(anyInt());
+        verify(w).onNext(60);
     }
 
     @Ignore("Throwing is not allowed from the unsafeCreate?!")
@@ -806,7 +798,7 @@ public class FlowableTests {
 
     @Test
     public void testContainsFlowable() {
-        Flowable<Boolean> observable = Flowable.just("a", "b", "c").contains("b").toFlowable();
+        Flowable<Boolean> observable = Flowable.just("a", "b", "c").contains("b");
 
         RelaxedSubscriber<Boolean> observer = TestHelper.mockSubscriber();
 
@@ -821,7 +813,7 @@ public class FlowableTests {
 
     @Test
     public void testContainsWithInexistenceFlowable() {
-        Flowable<Boolean> observable = Flowable.just("a", "b").contains("c").toFlowable();
+        Flowable<Boolean> observable = Flowable.just("a", "b").contains("c");
 
         Subscriber<Object> observer = TestHelper.mockSubscriber();
 
@@ -837,7 +829,7 @@ public class FlowableTests {
     @Test
     @Ignore("null values are not allowed")
     public void testContainsWithNullFlowable() {
-        Flowable<Boolean> observable = Flowable.just("a", "b", null).contains(null).toFlowable();
+        Flowable<Boolean> observable = Flowable.just("a", "b", null).contains(null);
 
         Subscriber<Object> observer = TestHelper.mockSubscriber();
 
@@ -852,7 +844,7 @@ public class FlowableTests {
 
     @Test
     public void testContainsWithEmptyObservableFlowable() {
-        Flowable<Boolean> observable = Flowable.<String> empty().contains("a").toFlowable();
+        Flowable<Boolean> observable = Flowable.<String> empty().contains("a");
 
         RelaxedSubscriber<Object> observer = TestHelper.mockSubscriber();
 
@@ -868,28 +860,28 @@ public class FlowableTests {
 
     @Test
     public void testContains() {
-        Single<Boolean> observable = Flowable.just("a", "b", "c").contains("b"); // FIXME nulls not allowed, changed to "c"
+        Flowable<Boolean> observable = Flowable.just("a", "b", "c").contains("b"); // FIXME nulls not allowed, changed to "c"
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        Subscriber<Boolean> observer = TestHelper.mockSubscriber();
 
         observable.subscribe(observer);
 
-        verify(observer, times(1)).onSuccess(true);
-        verify(observer, never()).onSuccess(false);
+        verify(observer, times(1)).onNext(true);
+        verify(observer, never()).onNext(false);
         verify(observer, never()).onError(
                 any(Throwable.class));
     }
 
     @Test
     public void testContainsWithInexistence() {
-        Single<Boolean> observable = Flowable.just("a", "b").contains("c"); // FIXME null values are not allowed, removed
+        Flowable<Boolean> observable = Flowable.just("a", "b").contains("c"); // FIXME null values are not allowed, removed
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        Subscriber<Boolean> observer = TestHelper.mockSubscriber();
 
         observable.subscribe(observer);
 
-        verify(observer, times(1)).onSuccess(false);
-        verify(observer, never()).onSuccess(true);
+        verify(observer, times(1)).onNext(false);
+        verify(observer, never()).onNext(true);
         verify(observer, never()).onError(
                 any(Throwable.class));
     }
@@ -897,35 +889,35 @@ public class FlowableTests {
     @Test
     @Ignore("null values are not allowed")
     public void testContainsWithNull() {
-        Single<Boolean> observable = Flowable.just("a", "b", null).contains(null);
+        Flowable<Boolean> observable = Flowable.just("a", "b", null).contains(null);
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        Subscriber<Boolean> observer = TestHelper.mockSubscriber();
 
         observable.subscribe(observer);
 
-        verify(observer, times(1)).onSuccess(true);
-        verify(observer, never()).onSuccess(false);
+        verify(observer, times(1)).onNext(true);
+        verify(observer, never()).onNext(false);
         verify(observer, never()).onError(
                 any(Throwable.class));
     }
 
     @Test
     public void testContainsWithEmptyObservable() {
-        Single<Boolean> observable = Flowable.<String> empty().contains("a");
+        Flowable<Boolean> observable = Flowable.<String> empty().contains("a");
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        Subscriber<Boolean> observer = TestHelper.mockSubscriber();
 
         observable.subscribe(observer);
 
-        verify(observer, times(1)).onSuccess(false);
-        verify(observer, never()).onSuccess(true);
+        verify(observer, times(1)).onNext(false);
+        verify(observer, never()).onNext(true);
         verify(observer, never()).onError(
                 any(Throwable.class));
     }
 
     @Test
     public void testIgnoreElementsFlowable() {
-        Flowable<Integer> observable = Flowable.just(1, 2, 3).ignoreElements().toFlowable();
+        Flowable<Integer> observable = Flowable.just(1, 2, 3).ignoreElements();
 
         Subscriber<Object> observer = TestHelper.mockSubscriber();
 
@@ -938,9 +930,9 @@ public class FlowableTests {
 
     @Test
     public void testIgnoreElements() {
-        Completable observable = Flowable.just(1, 2, 3).ignoreElements();
+        Flowable<Integer> observable = Flowable.just(1, 2, 3).ignoreElements();
 
-        CompletableObserver observer = TestHelper.mockCompletableObserver();
+        Subscriber<Integer> observer = TestHelper.mockSubscriber();
 
         observable.subscribe(observer);
 
@@ -1052,7 +1044,7 @@ public class FlowableTests {
                         }
                     })
                     .toList()
-                    .doOnSuccess(new Consumer<List<Boolean>>() {
+                    .doOnNext(new Consumer<List<Boolean>>() {
                         @Override
                         public void accept(List<Boolean> booleans) {
                             count.incrementAndGet();
@@ -1156,26 +1148,6 @@ public class FlowableTests {
                     return subscriber.values().get(0);
                 }
         });
-    }
-
-    @Test
-    public void toObservableEmpty() {
-        Flowable.empty().toObservable().test().assertResult();
-    }
-
-    @Test
-    public void toObservableJust() {
-        Flowable.just(1).toObservable().test().assertResult(1);
-    }
-
-    @Test
-    public void toObservableRange() {
-        Flowable.range(1, 5).toObservable().test().assertResult(1, 2, 3, 4, 5);
-    }
-
-    @Test
-    public void toObservableError() {
-        Flowable.error(new TestException()).toObservable().test().assertFailure(TestException.class);
     }
 
     @Test

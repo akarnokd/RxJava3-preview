@@ -1231,7 +1231,7 @@ public class FlowableCombineLatestTest {
 
     @Test
     public void disposed() {
-        TestHelper.checkDisposed(Flowable.combineLatest(Flowable.never(), Flowable.never(), new BiFunction<Object, Object, Object>() {
+        TestCommonHelper.checkDisposed(Flowable.combineLatest(Flowable.never(), Flowable.never(), new BiFunction<Object, Object, Object>() {
             @Override
             public Object apply(Object a, Object b) throws Exception {
                 return a;
@@ -1264,7 +1264,7 @@ public class FlowableCombineLatestTest {
     @Test
     public void onErrorRace() {
         for (int i = 0; i < 500; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
                 final PublishProcessor<Integer> ps1 = PublishProcessor.create();
                 final PublishProcessor<Integer> ps2 = PublishProcessor.create();
@@ -1292,7 +1292,7 @@ public class FlowableCombineLatestTest {
                     }
                 };
 
-                TestHelper.race(r1, r2);
+                TestCommonHelper.race(r1, r2);
 
                 if (to.errorCount() != 0) {
                     if (to.errors().get(0) instanceof CompositeException) {
@@ -1300,7 +1300,7 @@ public class FlowableCombineLatestTest {
                         .assertNotComplete()
                         .assertNoValues();
 
-                        for (Throwable e : TestHelper.errorList(to)) {
+                        for (Throwable e : TestCommonHelper.errorList(to)) {
                             assertTrue(e.toString(), e instanceof TestException);
                         }
 
@@ -1313,7 +1313,7 @@ public class FlowableCombineLatestTest {
                     assertTrue(e.toString(), e.getCause() instanceof TestException);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -1373,7 +1373,7 @@ public class FlowableCombineLatestTest {
 
     @Test
     public void dontSubscribeIfDone() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             final int[] count = { 0 };
 
@@ -1398,14 +1398,14 @@ public class FlowableCombineLatestTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void dontSubscribeIfDone2() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             final int[] count = { 0 };
 
@@ -1432,14 +1432,14 @@ public class FlowableCombineLatestTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void combine2Flowable2Errors() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestSubscriber<Object> testObserver = TestSubscriber.create();
 
@@ -1514,7 +1514,7 @@ public class FlowableCombineLatestTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

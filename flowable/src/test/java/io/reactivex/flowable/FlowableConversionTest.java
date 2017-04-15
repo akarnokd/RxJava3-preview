@@ -13,20 +13,17 @@
 
 package io.reactivex.flowable;
 
-import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.*;
 
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.functions.*;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.utils.ExceptionHelper;
 import io.reactivex.flowable.internal.operators.*;
-import io.reactivex.internal.util.ExceptionHelper;
-import io.reactivex.observers.*;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.DefaultSubscriber;
+import io.reactivex.flowable.subscribers.DefaultSubscriber;
 
 public class FlowableConversionTest {
 
@@ -143,63 +140,6 @@ public class FlowableConversionTest {
         public Flowable<T> apply(final Publisher<T> onSubscribe) {
             return Flowable.fromPublisher(onSubscribe);
         }
-    }
-
-    @Test
-    public void testConversionBetweenObservableClasses() {
-        final TestObserver<String> subscriber = new TestObserver<String>(new DefaultObserver<String>() {
-
-            @Override
-            public void onComplete() {
-                System.out.println("Complete");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                System.out.println("error: " + e.getMessage());
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onNext(String t) {
-                System.out.println(t);
-            }
-        });
-
-        List<Object> crewOfBattlestarGalactica = Arrays.asList(new Object[] {"William Adama", "Laura Roslin", "Lee Adama", new Cylon()});
-
-        Flowable.fromIterable(crewOfBattlestarGalactica)
-            .doOnNext(new Consumer<Object>() {
-                @Override
-                public void accept(Object pv) {
-                    System.out.println(pv);
-                }
-            })
-            .to(new ConvertToCylonDetector<Object>())
-            .beep(new Predicate<Object>() {
-                @Override
-                public boolean test(Object t) {
-                    return t instanceof Cylon;
-                }
-            })
-            .boop(new Function<Object, Object>() {
-                @Override
-                public Object apply(Object cylon) {
-                    return new Jail(cylon);
-                }
-            })
-            .DESTROY()
-            .x(new ConvertToObservable<String>())
-            .reduce("Cylon Detector finished. Report:\n", new BiFunction<String, String, String>() {
-                @Override
-                public String apply(String a, String n) {
-                    return a + n + "\n";
-                }
-            })
-            .subscribe(subscriber);
-
-        subscriber.assertNoErrors();
-        subscriber.assertComplete();
     }
 
     @Test

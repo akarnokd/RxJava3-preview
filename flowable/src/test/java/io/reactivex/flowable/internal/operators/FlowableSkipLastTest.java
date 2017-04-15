@@ -110,7 +110,7 @@ public class FlowableSkipLastTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).skipLast(1));
+        TestCommonHelper.checkDisposed(Flowable.just(1).skipLast(1));
     }
 
     @Test

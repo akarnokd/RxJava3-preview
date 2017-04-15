@@ -205,7 +205,7 @@ public class FlowableUnsubscribeOnTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).unsubscribeOn(Schedulers.single()));
+        TestCommonHelper.checkDisposed(Flowable.just(1).unsubscribeOn(Schedulers.single()));
     }
 
     @Test
@@ -246,7 +246,7 @@ public class FlowableUnsubscribeOnTest {
 
     @Test
     public void signalAfterDispose() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -263,9 +263,9 @@ public class FlowableUnsubscribeOnTest {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

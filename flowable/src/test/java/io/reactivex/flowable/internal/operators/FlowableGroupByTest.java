@@ -1665,14 +1665,14 @@ public class FlowableGroupByTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).groupBy(Functions.justFunction(1)));
+        TestCommonHelper.checkDisposed(Flowable.just(1).groupBy(Functions.justFunction(1)));
 
         Flowable.just(1)
         .groupBy(Functions.justFunction(1))
         .doOnNext(new Consumer<GroupedFlowable<Integer, Integer>>() {
             @Override
             public void accept(GroupedFlowable<Integer, Integer> g) throws Exception {
-                TestHelper.checkDisposed(g);
+                TestCommonHelper.checkDisposed(g);
             }
         })
         .test();
@@ -1748,7 +1748,7 @@ public class FlowableGroupByTest {
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> f) throws Exception {
                 return f.groupBy(Functions.justFunction(1));
@@ -1758,13 +1758,13 @@ public class FlowableGroupByTest {
 
     @Test
     public void badRequest() {
-        TestHelper.assertBadRequestReported(Flowable.just(1)
+        TestCommonHelper.assertBadRequestReported(Flowable.just(1)
                 .groupBy(Functions.justFunction(1)));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<GroupedFlowable<Integer, Object>>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<GroupedFlowable<Integer, Object>>>() {
             @Override
             public Publisher<GroupedFlowable<Integer, Object>> apply(Flowable<Object> f) throws Exception {
                 return f.groupBy(Functions.justFunction(1));

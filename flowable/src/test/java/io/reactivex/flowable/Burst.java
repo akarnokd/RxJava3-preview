@@ -12,18 +12,14 @@
  */
 package io.reactivex.flowable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 /**
  * Creates {@link Flowable} of a number of items followed by either an error or

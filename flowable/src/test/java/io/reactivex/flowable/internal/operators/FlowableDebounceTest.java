@@ -320,9 +320,9 @@ public class FlowableDebounceTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().debounce(1, TimeUnit.SECONDS, new TestScheduler()));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().debounce(1, TimeUnit.SECONDS, new TestScheduler()));
 
-        TestHelper.checkDisposed(PublishProcessor.create().debounce(Functions.justFunction(Flowable.never())));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().debounce(Functions.justFunction(Flowable.never())));
 
         Disposable d = new FlowableDebounceTimed.DebounceEmitter<Integer>(1, 1, null);
         assertFalse(d.isDisposed());
@@ -334,7 +334,7 @@ public class FlowableDebounceTest {
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -350,15 +350,15 @@ public class FlowableDebounceTest {
             .test()
             .assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void badSourceSelector() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> o) throws Exception {
                 return o.debounce(new Function<Integer, Flowable<Long>>() {
@@ -370,7 +370,7 @@ public class FlowableDebounceTest {
             }
         }, false, 1, 1, 1);
 
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(final Flowable<Integer> o) throws Exception {
                 return Flowable.just(1).debounce(new Function<Integer, Flowable<Integer>>() {

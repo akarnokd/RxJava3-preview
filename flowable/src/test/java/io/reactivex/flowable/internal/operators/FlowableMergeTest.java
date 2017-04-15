@@ -1635,7 +1635,7 @@ public class FlowableMergeTest {
 
     @Test
     public void mergeErrors() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Flowable<Integer> source1 = Flowable.error(new TestException("First"));
             Flowable<Integer> source2 = Flowable.error(new TestException("Second"));
@@ -1646,7 +1646,7 @@ public class FlowableMergeTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

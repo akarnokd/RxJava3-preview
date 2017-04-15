@@ -18,12 +18,12 @@ package io.reactivex.common.internal.schedulers;
 
 import org.junit.Test;
 
-import io.reactivex.common.TestHelper;
+import io.reactivex.common.TestCommonHelper;
 
 public class SchedulerPoolFactoryTest {
 
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(SchedulerPoolFactory.class);
+        TestCommonHelper.checkUtilityClass(SchedulerPoolFactory.class);
     }
 }

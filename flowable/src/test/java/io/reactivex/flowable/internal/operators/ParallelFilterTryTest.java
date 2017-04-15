@@ -211,12 +211,12 @@ public class ParallelFilterTryTest implements Consumer<Object> {
         .test()
         .assertFailure(CompositeException.class);
 
-        TestHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
+        TestCommonHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
     }
 
     @Test
     public void filterWrongParallelism() {
-        TestHelper.checkInvalidParallelSubscribers(
+        TestCommonHelper.checkInvalidParallelSubscribers(
             Flowable.just(1).parallel(1)
             .filter(Functions.alwaysTrue(), ParallelFailureHandling.ERROR)
         );
@@ -224,16 +224,16 @@ public class ParallelFilterTryTest implements Consumer<Object> {
 
     @Test
     public void filterInvalidSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new ParallelInvalid()
             .filter(Functions.alwaysTrue(), ParallelFailureHandling.ERROR)
             .sequential()
             .test();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -347,12 +347,12 @@ public class ParallelFilterTryTest implements Consumer<Object> {
         .test()
         .assertFailure(CompositeException.class);
 
-        TestHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
+        TestCommonHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
     }
 
     @Test
     public void filterWrongParallelismConditional() {
-        TestHelper.checkInvalidParallelSubscribers(
+        TestCommonHelper.checkInvalidParallelSubscribers(
             Flowable.just(1).parallel(1)
             .filter(Functions.alwaysTrue(), ParallelFailureHandling.ERROR)
             .filter(Functions.alwaysTrue())
@@ -361,7 +361,7 @@ public class ParallelFilterTryTest implements Consumer<Object> {
 
     @Test
     public void filterInvalidSourceConditional() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new ParallelInvalid()
             .filter(Functions.alwaysTrue(), ParallelFailureHandling.ERROR)
@@ -369,9 +369,9 @@ public class ParallelFilterTryTest implements Consumer<Object> {
             .sequential()
             .test();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

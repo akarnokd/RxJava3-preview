@@ -20,11 +20,11 @@ public class FlowableInternalHelperTest {
 
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(FlowableInternalHelper.class);
+        TestCommonHelper.checkUtilityClass(FlowableInternalHelper.class);
     }
 
     @Test
     public void requestMaxEnum() {
-        TestHelper.checkEnum(FlowableInternalHelper.RequestMax.class);
+        TestCommonHelper.checkEnum(FlowableInternalHelper.RequestMax.class);
     }
 }

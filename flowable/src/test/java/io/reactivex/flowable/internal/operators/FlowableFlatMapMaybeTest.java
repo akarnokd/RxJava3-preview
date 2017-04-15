@@ -177,10 +177,10 @@ public class FlowableFlatMapMaybeTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
         for (int i = 0; i < 11; i++) {
-            TestHelper.assertError(errors, i, TestException.class);
+            TestCommonHelper.assertError(errors, i, TestException.class);
         }
     }
 
@@ -279,7 +279,7 @@ public class FlowableFlatMapMaybeTest {
 
     @Test
     public void disposed() {
-        TestHelper.checkDisposed(PublishProcessor.<Integer>create().flatMapMaybe(new Function<Integer, MaybeSource<Integer>>() {
+        TestCommonHelper.checkDisposed(PublishProcessor.<Integer>create().flatMapMaybe(new Function<Integer, MaybeSource<Integer>>() {
             @Override
             public MaybeSource<Integer> apply(Integer v) throws Exception {
                 return Maybe.<Integer>empty();
@@ -367,7 +367,7 @@ public class FlowableFlatMapMaybeTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Integer>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Integer>>() {
             @Override
             public Flowable<Integer> apply(Flowable<Object> f) throws Exception {
                 return f.flatMapMaybe(Functions.justFunction(Maybe.just(2)));
@@ -377,7 +377,7 @@ public class FlowableFlatMapMaybeTest {
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -391,15 +391,15 @@ public class FlowableFlatMapMaybeTest {
             .test()
             .assertFailureAndMessage(TestException.class, "First");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void badInnerSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Flowable.just(1)
             .flatMapMaybe(Functions.justFunction(new Maybe<Integer>() {
@@ -413,9 +413,9 @@ public class FlowableFlatMapMaybeTest {
             .test()
             .assertFailureAndMessage(TestException.class, "First");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -571,7 +571,7 @@ public class FlowableFlatMapMaybeTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 }

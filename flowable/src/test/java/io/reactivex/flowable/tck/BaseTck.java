@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.tck;
+package io.reactivex.flowable.tck;
 
 import java.util.*;
 
@@ -19,8 +19,8 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.tck.*;
 import org.testng.annotations.Test;
 
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.TestException;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.Flowable;
 
 /**
  * Base abstract class for Flowable verifications, contains support for creating

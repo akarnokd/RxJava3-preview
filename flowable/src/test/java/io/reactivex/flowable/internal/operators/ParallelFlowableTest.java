@@ -900,7 +900,7 @@ public class ParallelFlowableTest {
 
     @Test
     public void errorNotRepeating() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Flowable.error(new TestException())
             .parallel()
@@ -918,7 +918,7 @@ public class ParallelFlowableTest {
             }
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -979,9 +979,9 @@ public class ParallelFlowableTest {
         .assertError(CompositeException.class)
         .assertNotComplete();
 
-        List<Throwable> errors = TestHelper.errorList(ts);
-        TestHelper.assertError(errors, 0, TestException.class);
-        TestHelper.assertError(errors, 1, IOException.class);
+        List<Throwable> errors = TestCommonHelper.errorList(ts);
+        TestCommonHelper.assertError(errors, 0, TestException.class);
+        TestCommonHelper.assertError(errors, 1, IOException.class);
     }
 
     @Test
@@ -1312,7 +1312,7 @@ public class ParallelFlowableTest {
 
     @Test
     public void checkAddBiConsumer() {
-        TestHelper.checkEnum(ListAddBiConsumer.class);
+        TestCommonHelper.checkEnum(ListAddBiConsumer.class);
     }
 
     @Test

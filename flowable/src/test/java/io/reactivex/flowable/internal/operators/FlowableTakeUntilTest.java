@@ -280,6 +280,6 @@ public class FlowableTakeUntilTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().takeUntil(Flowable.never()));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().takeUntil(Flowable.never()));
     }
 }

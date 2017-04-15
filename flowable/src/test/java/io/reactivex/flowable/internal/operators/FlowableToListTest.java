@@ -171,7 +171,7 @@ public class FlowableToListTest {
         Flowable<String> w = Flowable.fromIterable(Arrays.asList("one", "two", "three"));
         Single<List<String>> observable = w.toList();
 
-        SingleObserver<List<String>> observer = TestHelper.mockSingleObserver();
+        SingleObserver<List<String>> observer = TestCommonHelper.mockSingleObserver();
         observable.subscribe(observer);
         verify(observer, times(1)).onSuccess(Arrays.asList("one", "two", "three"));
         verify(observer, Mockito.never()).onError(any(Throwable.class));
@@ -182,7 +182,7 @@ public class FlowableToListTest {
         Flowable<String> w = Flowable.fromIterable(Arrays.asList("one", "two", "three"));
         Single<List<String>> observable = w.toList();
 
-        SingleObserver<List<String>> observer = TestHelper.mockSingleObserver();
+        SingleObserver<List<String>> observer = TestCommonHelper.mockSingleObserver();
         observable.subscribe(observer);
         verify(observer, times(1)).onSuccess(Arrays.asList("one", "two", "three"));
         verify(observer, Mockito.never()).onError(any(Throwable.class));
@@ -193,10 +193,10 @@ public class FlowableToListTest {
         Flowable<String> w = Flowable.fromIterable(Arrays.asList("one", "two", "three"));
         Single<List<String>> observable = w.toList();
 
-        SingleObserver<List<String>> o1 = TestHelper.mockSingleObserver();
+        SingleObserver<List<String>> o1 = TestCommonHelper.mockSingleObserver();
         observable.subscribe(o1);
 
-        SingleObserver<List<String>> o2 = TestHelper.mockSingleObserver();
+        SingleObserver<List<String>> o2 = TestCommonHelper.mockSingleObserver();
         observable.subscribe(o2);
 
         List<String> expected = Arrays.asList("one", "two", "three");
@@ -214,7 +214,7 @@ public class FlowableToListTest {
         Flowable<String> w = Flowable.fromIterable(Arrays.asList("one", null, "three"));
         Single<List<String>> observable = w.toList();
 
-        SingleObserver<List<String>> observer = TestHelper.mockSingleObserver();
+        SingleObserver<List<String>> observer = TestCommonHelper.mockSingleObserver();
         observable.subscribe(observer);
         verify(observer, times(1)).onSuccess(Arrays.asList("one", null, "three"));
         verify(observer, Mockito.never()).onError(any(Throwable.class));
@@ -306,9 +306,9 @@ public class FlowableToListTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).toList().toFlowable());
+        TestCommonHelper.checkDisposed(Flowable.just(1).toList().toFlowable());
 
-        TestHelper.checkDisposed(Flowable.just(1).toList());
+        TestCommonHelper.checkDisposed(Flowable.just(1).toList());
     }
 
     @SuppressWarnings("unchecked")
@@ -409,7 +409,7 @@ public class FlowableToListTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -432,7 +432,7 @@ public class FlowableToListTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
 
     }
@@ -458,7 +458,7 @@ public class FlowableToListTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             if (ts.valueCount() != 0) {
                 ts.assertValue(Arrays.asList(1))

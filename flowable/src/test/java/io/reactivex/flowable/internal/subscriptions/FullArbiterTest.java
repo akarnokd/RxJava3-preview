@@ -39,13 +39,13 @@ public class FullArbiterTest {
 
     @Test
     public void invalidDeferredRequest() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new FullArbiter<Integer>(new TestSubscriber<Integer>(), null, 128).request(-99);
 
-            TestHelper.assertError(errors, 0, IllegalArgumentException.class, "n > 0 required but it was -99");
+            TestCommonHelper.assertError(errors, 0, IllegalArgumentException.class, "n > 0 required but it was -99");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -85,13 +85,13 @@ public class FullArbiterTest {
 
         fa.cancel();
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             fa.onError(new TestException(), bs);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -99,16 +99,16 @@ public class FullArbiterTest {
     public void cancelAfterError() {
         FullArbiter<Integer> fa = new FullArbiter<Integer>(new TestSubscriber<Integer>(), null, 128);
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             fa.queue.offer(fa.s, NotificationLite.error(new TestException()));
 
             fa.cancel();
 
             fa.drain();
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

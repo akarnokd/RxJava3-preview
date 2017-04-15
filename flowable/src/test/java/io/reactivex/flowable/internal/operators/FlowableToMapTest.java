@@ -31,7 +31,7 @@ public class FlowableToMapTest {
     @Before
     public void before() {
         objectObserver = TestHelper.mockSubscriber();
-        singleObserver = TestHelper.mockSingleObserver();
+        singleObserver = TestCommonHelper.mockSingleObserver();
     }
 
     Function<String, Integer> lengthFunc = new Function<String, Integer>() {

@@ -598,7 +598,7 @@ public class FlowableRefCountTest {
 
     @Test
     public void disposed() {
-        TestHelper.checkDisposed(Flowable.just(1).publish().refCount());
+        TestCommonHelper.checkDisposed(Flowable.just(1).publish().refCount());
     }
 
     @Test

@@ -19,14 +19,12 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.Flowable;
-
 public class FlowableStartWithTests {
 
     @Test
     public void startWith1() {
         List<String> values = Flowable.just("one", "two")
-                .startWithArray("zero").toList().blockingGet();
+                .startWithArray("zero").toList().blockingLast();
 
         assertEquals("zero", values.get(0));
         assertEquals("two", values.get(2));
@@ -37,7 +35,7 @@ public class FlowableStartWithTests {
         List<String> li = new ArrayList<String>();
         li.add("alpha");
         li.add("beta");
-        List<String> values = Flowable.just("one", "two").startWith(li).toList().blockingGet();
+        List<String> values = Flowable.just("one", "two").startWith(li).toList().blockingLast();
 
         assertEquals("alpha", values.get(0));
         assertEquals("beta", values.get(1));
@@ -53,7 +51,7 @@ public class FlowableStartWithTests {
         List<String> values = Flowable.just("one", "two")
                 .startWith(Flowable.fromIterable(li))
                 .toList()
-                .blockingGet();
+                .blockingLast();
 
         assertEquals("alpha", values.get(0));
         assertEquals("beta", values.get(1));

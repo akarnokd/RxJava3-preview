@@ -938,21 +938,21 @@ public class FlowableDelayTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().delay(1, TimeUnit.SECONDS));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().delay(1, TimeUnit.SECONDS));
 
-        TestHelper.checkDisposed(PublishProcessor.create().delay(Functions.justFunction(Flowable.never())));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().delay(Functions.justFunction(Flowable.never())));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.delay(1, TimeUnit.SECONDS);
             }
         });
 
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.delay(Functions.justFunction(Flowable.never()));

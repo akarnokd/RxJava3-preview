@@ -665,9 +665,9 @@ public class FlowableSwitchTest {
 
         List<Throwable> errors = ExceptionHelper.flatten(ts.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "Forced failure 1");
-        TestHelper.assertError(errors, 1, TestException.class, "Forced failure 2");
-        TestHelper.assertError(errors, 2, TestException.class, "Forced failure 3");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "Forced failure 1");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Forced failure 2");
+        TestCommonHelper.assertError(errors, 2, TestException.class, "Forced failure 3");
     }
 
     @Test
@@ -815,14 +815,14 @@ public class FlowableSwitchTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.switchOnNext(
+        TestCommonHelper.checkDisposed(Flowable.switchOnNext(
                 Flowable.just(Flowable.just(1)).hide()));
     }
 
     @Test
     public void nextSourceErrorRace() {
         for (int i = 0; i < 500; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
 
                 final PublishProcessor<Integer> ps1 = PublishProcessor.create();
@@ -855,13 +855,13 @@ public class FlowableSwitchTest {
                     }
                 };
 
-                TestHelper.race(r1, r2);
+                TestCommonHelper.race(r1, r2);
 
                 for (Throwable e : errors) {
                     assertTrue(e.toString(), e instanceof TestException);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -869,7 +869,7 @@ public class FlowableSwitchTest {
     @Test
     public void outerInnerErrorRace() {
         for (int i = 0; i < 500; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
 
                 final PublishProcessor<Integer> ps1 = PublishProcessor.create();
@@ -904,13 +904,13 @@ public class FlowableSwitchTest {
                     }
                 };
 
-                TestHelper.race(r1, r2);
+                TestCommonHelper.race(r1, r2);
 
                 for (Throwable e : errors) {
                     assertTrue(e.toString(), e instanceof TestException);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -942,7 +942,7 @@ public class FlowableSwitchTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -961,7 +961,7 @@ public class FlowableSwitchTest {
 
     @Test
     public void badMainSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -976,9 +976,9 @@ public class FlowableSwitchTest {
             .test()
             .assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -1000,7 +1000,7 @@ public class FlowableSwitchTest {
 
     @Test
     public void badInnerSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Flowable.just(1).hide()
             .switchMap(Functions.justFunction(new Flowable<Integer>() {
@@ -1016,9 +1016,9 @@ public class FlowableSwitchTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -1088,7 +1088,7 @@ public class FlowableSwitchTest {
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.switchMap(Functions.justFunction(Flowable.just(1)));
@@ -1137,7 +1137,7 @@ public class FlowableSwitchTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 

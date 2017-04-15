@@ -133,8 +133,8 @@ public class ListCompositeDisposableTest {
             fail("Should have thrown!");
         } catch (CompositeException ex) {
             List<Throwable> list = ex.getExceptions();
-            TestHelper.assertError(list, 0, TestException.class);
-            TestHelper.assertError(list, 1, TestException.class);
+            TestCommonHelper.assertError(list, 0, TestException.class);
+            TestCommonHelper.assertError(list, 1, TestException.class);
         }
 
         lcd = new ListCompositeDisposable(d);
@@ -187,7 +187,7 @@ public class ListCompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run, Schedulers.io());
+            TestCommonHelper.race(run, run, Schedulers.io());
         }
     }
 
@@ -203,7 +203,7 @@ public class ListCompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run, Schedulers.io());
+            TestCommonHelper.race(run, run, Schedulers.io());
         }
     }
 
@@ -219,7 +219,7 @@ public class ListCompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run, Schedulers.io());
+            TestCommonHelper.race(run, run, Schedulers.io());
         }
     }
 
@@ -239,7 +239,7 @@ public class ListCompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run, Schedulers.io());
+            TestCommonHelper.race(run, run, Schedulers.io());
         }
     }
 
@@ -259,7 +259,7 @@ public class ListCompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run, Schedulers.io());
+            TestCommonHelper.race(run, run, Schedulers.io());
         }
     }
 
@@ -279,7 +279,7 @@ public class ListCompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run, Schedulers.io());
+            TestCommonHelper.race(run, run, Schedulers.io());
         }
     }
 
@@ -302,7 +302,7 @@ public class ListCompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run2, Schedulers.io());
+            TestCommonHelper.race(run, run2, Schedulers.io());
         }
     }
 
@@ -325,7 +325,7 @@ public class ListCompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run2, Schedulers.io());
+            TestCommonHelper.race(run, run2, Schedulers.io());
         }
     }
 
@@ -352,7 +352,7 @@ public class ListCompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run2, Schedulers.io());
+            TestCommonHelper.race(run, run2, Schedulers.io());
         }
     }
 
@@ -379,7 +379,7 @@ public class ListCompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run2, Schedulers.io());
+            TestCommonHelper.race(run, run2, Schedulers.io());
         }
     }
 
@@ -406,7 +406,7 @@ public class ListCompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run2, Schedulers.io());
+            TestCommonHelper.race(run, run2, Schedulers.io());
         }
     }
 }

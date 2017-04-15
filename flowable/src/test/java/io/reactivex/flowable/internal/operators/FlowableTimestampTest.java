@@ -106,7 +106,7 @@ public class FlowableTimestampTest {
             .test()
             .assertResult(0L, 0L, 0L, 0L, 0L);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -133,7 +133,7 @@ public class FlowableTimestampTest {
             .test()
             .assertResult(0L, 0L, 0L, 0L, 0L);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

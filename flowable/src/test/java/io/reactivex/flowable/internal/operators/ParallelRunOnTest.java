@@ -42,7 +42,7 @@ public class ParallelRunOnTest {
 
     @Test
     public void doubleError() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new ParallelInvalid()
             .runOn(ImmediateThinScheduler.INSTANCE)
@@ -55,7 +55,7 @@ public class ParallelRunOnTest {
                 assertTrue(ex.toString(), ex.getCause() instanceof TestException);
             }
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -185,7 +185,7 @@ public class ParallelRunOnTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -215,7 +215,7 @@ public class ParallelRunOnTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -244,7 +244,7 @@ public class ParallelRunOnTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -275,7 +275,7 @@ public class ParallelRunOnTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 }

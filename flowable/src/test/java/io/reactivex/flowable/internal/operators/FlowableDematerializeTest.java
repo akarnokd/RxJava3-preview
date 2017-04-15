@@ -139,12 +139,12 @@ public class FlowableDematerializeTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(Notification.createOnComplete()).dematerialize());
+        TestCommonHelper.checkDisposed(Flowable.just(Notification.createOnComplete()).dematerialize());
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.dematerialize();
@@ -154,7 +154,7 @@ public class FlowableDematerializeTest {
 
     @Test
     public void eventsAfterDematerializedTerminal() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Object>() {
                 @Override
@@ -170,10 +170,10 @@ public class FlowableDematerializeTest {
             .test()
             .assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "First");
-            TestHelper.assertUndeliverable(errors, 1, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "First");
+            TestCommonHelper.assertUndeliverable(errors, 1, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

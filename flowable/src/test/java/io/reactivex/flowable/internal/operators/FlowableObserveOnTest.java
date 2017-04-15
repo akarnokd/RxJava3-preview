@@ -1144,12 +1144,12 @@ public class FlowableObserveOnTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().observeOn(new TestScheduler()));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().observeOn(new TestScheduler()));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.observeOn(new TestScheduler());
@@ -1159,7 +1159,7 @@ public class FlowableObserveOnTest {
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             TestScheduler scheduler = new TestScheduler();
             TestSubscriber<Integer> to = new Flowable<Integer>() {
@@ -1179,9 +1179,9 @@ public class FlowableObserveOnTest {
 
             to.assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -1200,7 +1200,7 @@ public class FlowableObserveOnTest {
 
         TestSubscriber<Integer> to = us.observeOn(Schedulers.single()).test();
 
-        TestHelper.emit(us, 1, 2, 3, 4, 5);
+        TestCommonHelper.emit(us, 1, 2, 3, 4, 5);
 
         to
         .awaitDone(5, TimeUnit.SECONDS)
@@ -1764,7 +1764,7 @@ public class FlowableObserveOnTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             SubscriberFusion.assertFusion(ts, FusedQueueSubscription.ASYNC);
 

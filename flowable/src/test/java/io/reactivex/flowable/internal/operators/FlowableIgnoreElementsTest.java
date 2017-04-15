@@ -329,8 +329,8 @@ public class FlowableIgnoreElementsTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).ignoreElements());
+        TestCommonHelper.checkDisposed(Flowable.just(1).ignoreElements());
 
-        TestHelper.checkDisposed(Flowable.just(1).ignoreElements().toFlowable());
+        TestCommonHelper.checkDisposed(Flowable.just(1).ignoreElements().toFlowable());
     }
 }

@@ -44,7 +44,7 @@ public class NotificationLiteTest {
 
     @Test
     public void soloEnum() {
-        TestHelper.checkEnum(NotificationLite.class);
+        TestCommonHelper.checkEnum(NotificationLite.class);
     }
 
     @Test

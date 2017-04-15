@@ -163,7 +163,7 @@ public class FlowableDistinctTest {
         .distinct()
         .subscribe(to);
 
-        TestHelper.emit(us, 1, 1, 2, 1, 3, 2, 4, 5, 4);
+        TestCommonHelper.emit(us, 1, 1, 2, 1, 3, 2, 4, 5, 4);
 
         SubscriberFusion.assertFusion(to, QueueDisposable.ASYNC)
         .assertResult(1, 2, 3, 4, 5);
@@ -228,7 +228,7 @@ public class FlowableDistinctTest {
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -246,9 +246,9 @@ public class FlowableDistinctTest {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

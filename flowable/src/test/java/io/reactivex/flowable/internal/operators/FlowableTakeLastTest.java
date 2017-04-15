@@ -321,12 +321,12 @@ public class FlowableTakeLastTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.range(1, 10).takeLast(5));
+        TestCommonHelper.checkDisposed(Flowable.range(1, 10).takeLast(5));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.takeLast(5);

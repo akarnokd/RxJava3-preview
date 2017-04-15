@@ -75,7 +75,7 @@ public class SingleSchedulerTest {
                 }
             };
 
-            TestHelper.race(r1, r1);
+            TestCommonHelper.race(r1, r1);
         }
     }
 

@@ -480,11 +480,11 @@ public class FlowableCreateTest {
                         }
                     };
 
-                    TestHelper.race(r1, r2, Schedulers.single());
+                    TestCommonHelper.race(r1, r2, Schedulers.single());
                 }
             }, m);
 
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
             try {
                 for (int i = 0; i < 500; i++) {
@@ -493,7 +493,7 @@ public class FlowableCreateTest {
                     .assertFailure(Throwable.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
             assertFalse(errors.isEmpty());
         }
@@ -521,7 +521,7 @@ public class FlowableCreateTest {
                         }
                     };
 
-                    TestHelper.race(r1, r2, Schedulers.single());
+                    TestCommonHelper.race(r1, r2, Schedulers.single());
                 }
             }, m);
 
@@ -589,7 +589,7 @@ public class FlowableCreateTest {
                         }
                     };
 
-                    TestHelper.race(r1, r2, Schedulers.single());
+                    TestCommonHelper.race(r1, r2, Schedulers.single());
                 }
             }, m)
             .test()
@@ -789,7 +789,7 @@ public class FlowableCreateTest {
                         }
                     };
 
-                    TestHelper.race(r1, r1, Schedulers.single());
+                    TestCommonHelper.race(r1, r1, Schedulers.single());
                 }
             }, m)
             .take(1000)
@@ -825,7 +825,7 @@ public class FlowableCreateTest {
                         }
                     };
 
-                    TestHelper.race(r1, r2, Schedulers.single());
+                    TestCommonHelper.race(r1, r2, Schedulers.single());
                 }
             }, m)
             .test()
@@ -840,7 +840,7 @@ public class FlowableCreateTest {
     @Test
     public void serialized() {
         for (BackpressureStrategy m : BackpressureStrategy.values()) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
                 Flowable.create(new FlowableOnSubscribe<Object>() {
                     @Override
@@ -872,7 +872,7 @@ public class FlowableCreateTest {
 
                 assertTrue(errors.toString(), errors.isEmpty());
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }

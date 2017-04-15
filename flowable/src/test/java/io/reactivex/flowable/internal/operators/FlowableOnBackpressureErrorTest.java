@@ -23,17 +23,17 @@ public class FlowableOnBackpressureErrorTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Observable.just(1).toFlowable(BackpressureStrategy.ERROR));
+        TestCommonHelper.checkDisposed(Observable.just(1).toFlowable(BackpressureStrategy.ERROR));
     }
 
     @Test
     public void badRequest() {
-        TestHelper.assertBadRequestReported(Observable.just(1).toFlowable(BackpressureStrategy.ERROR));
+        TestCommonHelper.assertBadRequestReported(Observable.just(1).toFlowable(BackpressureStrategy.ERROR));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
             @Override
             public Publisher<Object> apply(Flowable<Object> f) throws Exception {
                 return new FlowableOnBackpressureError<Object>(f);
@@ -43,7 +43,7 @@ public class FlowableOnBackpressureErrorTest {
 
     @Test
     public void badSource() {
-        TestHelper.<Integer>checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.<Integer>checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return new FlowableOnBackpressureError<Integer>(f);

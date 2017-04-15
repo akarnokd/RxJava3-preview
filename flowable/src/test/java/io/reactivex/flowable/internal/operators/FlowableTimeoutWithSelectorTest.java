@@ -373,21 +373,21 @@ public class FlowableTimeoutWithSelectorTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().timeout(Functions.justFunction(Flowable.never())));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().timeout(Functions.justFunction(Flowable.never())));
 
-        TestHelper.checkDisposed(PublishProcessor.create().timeout(Functions.justFunction(Flowable.never()), Flowable.never()));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().timeout(Functions.justFunction(Flowable.never()), Flowable.never()));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.timeout(Functions.justFunction(Flowable.never()));
             }
         });
 
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.timeout(Functions.justFunction(Flowable.never()), Flowable.never());
@@ -426,7 +426,7 @@ public class FlowableTimeoutWithSelectorTest {
 
     @Test
     public void badInnerSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             PublishProcessor<Integer> ps = PublishProcessor.create();
 
@@ -447,15 +447,15 @@ public class FlowableTimeoutWithSelectorTest {
 
             to.assertFailureAndMessage(TestException.class, "First", 1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void badInnerSourceOther() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             PublishProcessor<Integer> ps = PublishProcessor.create();
 
@@ -476,9 +476,9 @@ public class FlowableTimeoutWithSelectorTest {
 
             to.assertFailureAndMessage(TestException.class, "First", 1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

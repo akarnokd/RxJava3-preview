@@ -388,9 +388,9 @@ public class FlowableTimeoutTests {
 
     @Test
     public void disposed() {
-        TestHelper.checkDisposed(PublishProcessor.create().timeout(1, TimeUnit.DAYS));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().timeout(1, TimeUnit.DAYS));
 
-        TestHelper.checkDisposed(PublishProcessor.create().timeout(1, TimeUnit.DAYS, Flowable.just(1)));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().timeout(1, TimeUnit.DAYS, Flowable.just(1)));
     }
 
     @Test
@@ -433,7 +433,7 @@ public class FlowableTimeoutTests {
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -451,15 +451,15 @@ public class FlowableTimeoutTests {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void badSourceOther() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -477,9 +477,9 @@ public class FlowableTimeoutTests {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

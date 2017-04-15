@@ -40,7 +40,7 @@ public class FlowableReduceTest {
     @Before
     public void before() {
         observer = TestHelper.mockSubscriber();
-        singleObserver = TestHelper.mockSingleObserver();
+        singleObserver = TestCommonHelper.mockSingleObserver();
     }
 
     BiFunction<Integer, Integer, Integer> sum = new BiFunction<Integer, Integer, Integer>() {
@@ -238,7 +238,7 @@ public class FlowableReduceTest {
 
     @Test
     public void reducerCrashSuppressOnError() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.<Integer>fromPublisher(new Publisher<Integer>() {
@@ -261,9 +261,9 @@ public class FlowableReduceTest {
             .test()
             .assertFailureAndMessage(TestException.class, "Reducer");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Source");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Source");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -307,12 +307,12 @@ public class FlowableReduceTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.range(1, 2).reduce(sum));
+        TestCommonHelper.checkDisposed(Flowable.range(1, 2).reduce(sum));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowableToMaybe(new Function<Flowable<Integer>, MaybeSource<Integer>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowableToMaybe(new Function<Flowable<Integer>, MaybeSource<Integer>>() {
             @Override
             public MaybeSource<Integer> apply(Flowable<Integer> f) throws Exception {
                 return f.reduce(sum);
@@ -356,7 +356,7 @@ public class FlowableReduceTest {
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.reduce(sum);
@@ -366,7 +366,7 @@ public class FlowableReduceTest {
 
     @Test
     public void badSourceFlowable() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.reduce(sum).toFlowable();

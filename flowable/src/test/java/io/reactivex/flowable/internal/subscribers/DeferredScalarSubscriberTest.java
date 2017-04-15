@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import static org.junit.Assert.*;
 
@@ -25,15 +25,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.Scheduler.Worker;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.subscribers.DeferredScalarSubscriber;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
+import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
 
 public class DeferredScalarSubscriberTest {
 
@@ -275,7 +273,7 @@ public class DeferredScalarSubscriberTest {
 
     @Test
     public void negativeRequest() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         TestSubscriber<Integer> ts = TestSubscriber.create(0);
         TestingDeferredScalarSubscriber ds = new TestingDeferredScalarSubscriber(ts);
@@ -283,8 +281,8 @@ public class DeferredScalarSubscriberTest {
 
         ds.downstreamRequest(-99);
 
-        RxJavaPlugins.reset();
-        TestHelper.assertError(list, 0, IllegalArgumentException.class, "n > 0 required but it was -99");
+        RxJavaCommonPlugins.reset();
+        TestCommonHelper.assertError(list, 0, IllegalArgumentException.class, "n > 0 required but it was -99");
     }
 
     @Test

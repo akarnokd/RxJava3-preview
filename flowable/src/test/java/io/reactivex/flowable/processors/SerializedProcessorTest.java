@@ -415,13 +415,13 @@ public class SerializedProcessorTest {
 
         s.onNext(11);
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             s.onError(new TestException());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
         s.onComplete();
 
@@ -451,7 +451,7 @@ public class SerializedProcessorTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertSubscribed().assertNoErrors().assertNotComplete()
             .assertValueSet(Arrays.asList(1, 2));
@@ -481,7 +481,7 @@ public class SerializedProcessorTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertError(ex).assertNotComplete();
 
@@ -512,7 +512,7 @@ public class SerializedProcessorTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertComplete().assertNoErrors();
 
@@ -545,7 +545,7 @@ public class SerializedProcessorTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertValue(1).assertNotComplete().assertNoErrors();
         }
@@ -574,7 +574,7 @@ public class SerializedProcessorTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertResult();
         }
@@ -601,7 +601,7 @@ public class SerializedProcessorTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertResult();
         }
@@ -616,7 +616,7 @@ public class SerializedProcessorTest {
 
             final TestException ex = new TestException();
 
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
                 Runnable r1 = new Runnable() {
                     @Override
@@ -632,13 +632,13 @@ public class SerializedProcessorTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 ts.assertFailure(TestException.class);
 
-                TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -667,7 +667,7 @@ public class SerializedProcessorTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertEmpty();
         }

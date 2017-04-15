@@ -21,7 +21,6 @@ import java.util.concurrent.Callable;
 import org.junit.Test;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.Flowable;
 import io.reactivex.flowable.FlowableCovarianceTest.*;
 
 public class FlowableMergeTests {
@@ -43,7 +42,7 @@ public class FlowableMergeTests {
 
         Flowable<Flowable<Media>> os = Flowable.just(o1, o2);
 
-        List<Media> values = Flowable.merge(os).toList().blockingGet();
+        List<Media> values = Flowable.merge(os).toList().blockingLast();
 
         assertEquals(4, values.size());
     }
@@ -55,7 +54,7 @@ public class FlowableMergeTests {
 
         Flowable<Flowable<Media>> os = Flowable.just(o1, o2);
 
-        List<Media> values = Flowable.merge(os).toList().blockingGet();
+        List<Media> values = Flowable.merge(os).toList().blockingLast();
 
         assertEquals(5, values.size());
     }
@@ -65,7 +64,7 @@ public class FlowableMergeTests {
         Flowable<Movie> o1 = Flowable.just(new HorrorMovie(), new Movie());
         Flowable<Media> o2 = Flowable.just(new Media(), new HorrorMovie());
 
-        List<Media> values = Flowable.merge(o1, o2).toList().blockingGet();
+        List<Media> values = Flowable.merge(o1, o2).toList().blockingLast();
 
         assertTrue(values.get(0) instanceof HorrorMovie);
         assertTrue(values.get(1) instanceof Movie);
@@ -88,7 +87,7 @@ public class FlowableMergeTests {
 
         Flowable<Media> o2 = Flowable.just(new Media(), new HorrorMovie());
 
-        List<Media> values = Flowable.merge(o1, o2).toList().blockingGet();
+        List<Media> values = Flowable.merge(o1, o2).toList().blockingLast();
 
         assertTrue(values.get(0) instanceof HorrorMovie);
         assertTrue(values.get(1) instanceof Movie);

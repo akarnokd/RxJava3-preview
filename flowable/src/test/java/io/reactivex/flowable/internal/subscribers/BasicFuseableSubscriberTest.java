@@ -11,16 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import static org.junit.Assert.*;
 
-import io.reactivex.annotations.Nullable;
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.internal.subscriptions.ScalarSubscription;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.annotations.Nullable;
+import io.reactivex.flowable.internal.subscriptions.ScalarSubscription;
 
 public class BasicFuseableSubscriberTest {
 
@@ -46,7 +44,7 @@ public class BasicFuseableSubscriberTest {
 
         fcs.onSubscribe(new ScalarSubscription<Integer>(fcs, 1));
 
-        TestHelper.assertNoOffer(fcs);
+        TestCommonHelper.assertNoOffer(fcs);
 
         assertFalse(fcs.isEmpty());
         fcs.clear();

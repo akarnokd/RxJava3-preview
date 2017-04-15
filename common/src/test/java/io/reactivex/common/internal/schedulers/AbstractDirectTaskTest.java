@@ -19,7 +19,7 @@ import java.util.concurrent.FutureTask;
 
 import org.junit.Test;
 
-import io.reactivex.common.TestHelper;
+import io.reactivex.common.TestCommonHelper;
 import io.reactivex.common.internal.functions.Functions;
 
 public class AbstractDirectTaskTest {
@@ -236,7 +236,7 @@ public class AbstractDirectTaskTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 }

@@ -13,21 +13,22 @@
 
 package io.reactivex.flowable;
 
+import static org.junit.Assert.fail;
+
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.processors.*;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.*;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.processors.*;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 /**
  * Verifies the operators handle null values properly by emitting/throwing NullPointerExceptions.
@@ -921,7 +922,7 @@ public class FlowableNullTests {
         }, new BiConsumer<Object, Integer>() {
             @Override
             public void accept(Object a, Integer b) { }
-        }).blockingGet();
+        }).blockingLast();
     }
 
     @Test(expected = NullPointerException.class)
@@ -1683,10 +1684,10 @@ public class FlowableNullTests {
             }).blockingSubscribe();
             fail("Should have thrown");
         } catch (CompositeException ex) {
-            List<Throwable> errors = TestHelper.compositeList(ex);
+            List<Throwable> errors = TestCommonHelper.compositeList(ex);
 
-            TestHelper.assertError(errors, 0, TestException.class);
-            TestHelper.assertError(errors, 1, NullPointerException.class, "The valueSupplier returned a null value");
+            TestCommonHelper.assertError(errors, 0, TestException.class);
+            TestCommonHelper.assertError(errors, 1, NullPointerException.class, "The valueSupplier returned a null value");
         }
     }
 
@@ -1722,7 +1723,7 @@ public class FlowableNullTests {
             public Integer apply(Integer a, Integer b) {
                 return null;
             }
-        }).toFlowable().blockingSubscribe();
+        }).blockingSubscribe();
     }
 
     @Test(expected = NullPointerException.class)
@@ -1747,7 +1748,7 @@ public class FlowableNullTests {
             public Integer apply(Integer a, Integer b) {
                 return null;
             }
-        }).blockingGet();
+        }).blockingLast();
     }
 
     @Test(expected = NullPointerException.class)
@@ -1772,7 +1773,7 @@ public class FlowableNullTests {
             public Object apply(Object a, Integer b) {
                 return 1;
             }
-        }).blockingGet();
+        }).blockingLast();
     }
 
     @Test(expected = NullPointerException.class)
@@ -2362,7 +2363,7 @@ public class FlowableNullTests {
             public Collection<Integer> call() {
                 return null;
             }
-        }).toFlowable().blockingSubscribe();
+        }).blockingSubscribe();
     }
 
     @Test(expected = NullPointerException.class)
@@ -2372,7 +2373,7 @@ public class FlowableNullTests {
             public Collection<Integer> call() {
                 return null;
             }
-        }).blockingGet();
+        }).blockingLast();
     }
 
     @Test(expected = NullPointerException.class)
@@ -2407,7 +2408,7 @@ public class FlowableNullTests {
             public Object apply(Integer v) {
                 return null;
             }
-        }).blockingGet();
+        }).blockingLast();
     }
 
     @Test(expected = NullPointerException.class)
@@ -2442,7 +2443,7 @@ public class FlowableNullTests {
             public Map<Object, Object> call() {
                 return null;
             }
-        }).blockingGet();
+        }).blockingLast();
     }
 
     @Test(expected = NullPointerException.class)
@@ -2472,7 +2473,7 @@ public class FlowableNullTests {
             public Object apply(Integer v) {
                 return null;
             }
-        }).blockingGet();
+        }).blockingLast();
     }
 
     @Test(expected = NullPointerException.class)
@@ -2507,7 +2508,7 @@ public class FlowableNullTests {
             public Map<Object, Collection<Object>> call() {
                 return null;
             }
-        }).blockingGet();
+        }).blockingLast();
     }
 
     @Test(expected = NullPointerException.class)
@@ -2552,7 +2553,7 @@ public class FlowableNullTests {
             public Collection<Integer> apply(Integer v) {
                 return null;
             }
-        }).blockingGet();
+        }).blockingLast();
     }
 
     @Test(expected = NullPointerException.class)

@@ -342,7 +342,7 @@ public class FlowableFilterTest {
 
     @Test
     public void sourceIgnoresCancelConditional() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Integer>() {
@@ -371,15 +371,15 @@ public class FlowableFilterTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void mapCrashesBeforeFilter() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Integer>() {
@@ -407,9 +407,9 @@ public class FlowableFilterTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -455,7 +455,7 @@ public class FlowableFilterTest {
 
     @Test
     public void sourceIgnoresCancel() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Integer>() {
@@ -477,15 +477,15 @@ public class FlowableFilterTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void sourceIgnoresCancel2() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Integer>() {
@@ -508,15 +508,15 @@ public class FlowableFilterTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void sourceIgnoresCancelConditional2() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Integer>() {
@@ -540,20 +540,20 @@ public class FlowableFilterTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.range(1, 5).filter(Functions.alwaysTrue()));
+        TestCommonHelper.checkDisposed(Flowable.range(1, 5).filter(Functions.alwaysTrue()));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.filter(Functions.alwaysTrue());
@@ -593,7 +593,7 @@ public class FlowableFilterTest {
         })
         .subscribe(to);
 
-        TestHelper.emit(us, 1, 2, 3, 4, 5);
+        TestCommonHelper.emit(us, 1, 2, 3, 4, 5);
 
         SubscriberFusion.assertFusion(to, QueueDisposable.ASYNC)
         .assertResult(2, 4);

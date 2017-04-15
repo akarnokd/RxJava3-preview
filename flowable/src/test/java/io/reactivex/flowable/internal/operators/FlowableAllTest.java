@@ -39,7 +39,7 @@ public class FlowableAllTest {
     public void testAll() {
         Flowable<String> obs = Flowable.just("one", "two", "six");
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         obs.all(new Predicate<String>() {
             @Override
@@ -58,7 +58,7 @@ public class FlowableAllTest {
     public void testNotAll() {
         Flowable<String> obs = Flowable.just("one", "two", "three", "six");
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         obs.all(new Predicate<String>() {
             @Override
@@ -77,7 +77,7 @@ public class FlowableAllTest {
     public void testEmpty() {
         Flowable<String> obs = Flowable.empty();
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         obs.all(new Predicate<String>() {
             @Override
@@ -97,7 +97,7 @@ public class FlowableAllTest {
         Throwable error = new Throwable();
         Flowable<String> obs = Flowable.error(error);
 
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         obs.all(new Predicate<String>() {
             @Override
@@ -380,14 +380,14 @@ public class FlowableAllTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).all(Functions.alwaysTrue()).toFlowable());
+        TestCommonHelper.checkDisposed(Flowable.just(1).all(Functions.alwaysTrue()).toFlowable());
 
-        TestHelper.checkDisposed(Flowable.just(1).all(Functions.alwaysTrue()));
+        TestCommonHelper.checkDisposed(Flowable.just(1).all(Functions.alwaysTrue()));
     }
 
     @Test
     public void predicateThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -410,15 +410,15 @@ public class FlowableAllTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void predicateThrowsObservable() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -441,22 +441,22 @@ public class FlowableAllTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> o) throws Exception {
                 return o.all(Functions.alwaysTrue());
             }
         }, false, 1, 1, true);
 
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> o) throws Exception {
                 return o.all(Functions.alwaysTrue()).toFlowable();
@@ -466,13 +466,13 @@ public class FlowableAllTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Boolean>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Boolean>>() {
             @Override
             public Publisher<Boolean> apply(Flowable<Object> o) throws Exception {
                 return o.all(Functions.alwaysTrue()).toFlowable();
             }
         });
-        TestHelper.checkDoubleOnSubscribeFlowableToSingle(new Function<Flowable<Object>, Single<Boolean>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowableToSingle(new Function<Flowable<Object>, Single<Boolean>>() {
             @Override
             public Single<Boolean> apply(Flowable<Object> o) throws Exception {
                 return o.all(Functions.alwaysTrue());

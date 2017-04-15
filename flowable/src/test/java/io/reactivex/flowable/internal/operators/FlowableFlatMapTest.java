@@ -845,7 +845,7 @@ public class FlowableFlatMapTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -885,11 +885,11 @@ public class FlowableFlatMapTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.errorList(to);
+        List<Throwable> errors = TestCommonHelper.errorList(to);
 
-        TestHelper.assertError(errors, 0, TestException.class);
+        TestCommonHelper.assertError(errors, 0, TestException.class);
 
-        TestHelper.assertError(errors, 1, TestException.class);
+        TestCommonHelper.assertError(errors, 1, TestException.class);
     }
 
     @Test
@@ -931,7 +931,7 @@ public class FlowableFlatMapTest {
     @Test
     public void cancelScalarDrainRace() {
         for (int i = 0; i < 1000; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
 
                 final PublishProcessor<Flowable<Integer>> pp = PublishProcessor.create();
@@ -951,11 +951,11 @@ public class FlowableFlatMapTest {
                     }
                 };
 
-                TestHelper.race(r1, r2);
+                TestCommonHelper.race(r1, r2);
 
                 assertTrue(errors.toString(), errors.isEmpty());
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -964,7 +964,7 @@ public class FlowableFlatMapTest {
     public void cancelDrainRace() {
         for (int i = 0; i < 1000; i++) {
             for (int j = 1; j < 50; j += 5) {
-                List<Throwable> errors = TestHelper.trackPluginErrors();
+                List<Throwable> errors = TestCommonHelper.trackPluginErrors();
                 try {
 
                     final PublishProcessor<Flowable<Integer>> pp = PublishProcessor.create();
@@ -988,11 +988,11 @@ public class FlowableFlatMapTest {
                         }
                     };
 
-                    TestHelper.race(r1, r2);
+                    TestCommonHelper.race(r1, r2);
 
                     assertTrue(errors.toString(), errors.isEmpty());
                 } finally {
-                    RxJavaPlugins.reset();
+                    RxJavaCommonPlugins.reset();
                 }
             }
         }

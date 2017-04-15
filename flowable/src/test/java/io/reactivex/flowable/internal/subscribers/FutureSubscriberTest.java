@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import static org.junit.Assert.*;
 
@@ -20,12 +20,10 @@ import java.util.concurrent.*;
 
 import org.junit.*;
 
-import io.reactivex.TestHelper;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.subscribers.FutureSubscriber;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
 import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
 
 public class FutureSubscriberTest {
 
@@ -73,7 +71,7 @@ public class FutureSubscriberTest {
 
     @Test
     public void onError() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             fs.onError(new TestException("One"));
@@ -87,9 +85,9 @@ public class FutureSubscriberTest {
                 assertEquals("One", ex.getCause().getMessage());
             }
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Two");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Two");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -103,7 +101,7 @@ public class FutureSubscriberTest {
 
     @Test
     public void onSubscribe() throws Exception {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
 
@@ -118,9 +116,9 @@ public class FutureSubscriberTest {
             assertFalse(s.isCancelled());
             assertTrue(s2.isCancelled());
 
-            TestHelper.assertError(errors, 0, IllegalStateException.class, "Subscription already set!");
+            TestCommonHelper.assertError(errors, 0, IllegalStateException.class, "Subscription already set!");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -136,7 +134,7 @@ public class FutureSubscriberTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.single());
+            TestCommonHelper.race(r, r, Schedulers.single());
         }
     }
 
@@ -174,7 +172,7 @@ public class FutureSubscriberTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -205,7 +203,7 @@ public class FutureSubscriberTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 

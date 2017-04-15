@@ -255,7 +255,7 @@ public class FlowableSequenceEqualTest {
     }
 
     private void verifyResult(Single<Boolean> observable, boolean result) {
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
 
         observable.subscribe(observer);
 
@@ -274,7 +274,7 @@ public class FlowableSequenceEqualTest {
     }
 
     private void verifyError(Single<Boolean> observable) {
-        SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
+        SingleObserver<Boolean> observer = TestCommonHelper.mockSingleObserver();
         observable.subscribe(observer);
 
         InOrder inOrder = inOrder(observer);
@@ -292,7 +292,7 @@ public class FlowableSequenceEqualTest {
 
     @Test
     public void disposed() {
-        TestHelper.checkDisposed(Flowable.sequenceEqual(Flowable.just(1), Flowable.just(2)));
+        TestCommonHelper.checkDisposed(Flowable.sequenceEqual(Flowable.just(1), Flowable.just(2)));
     }
 
     @Test
@@ -331,7 +331,7 @@ public class FlowableSequenceEqualTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             to.assertEmpty();
         }
@@ -358,7 +358,7 @@ public class FlowableSequenceEqualTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             to.assertEmpty();
         }
@@ -366,7 +366,7 @@ public class FlowableSequenceEqualTest {
 
     @Test
     public void disposedFlowable() {
-        TestHelper.checkDisposed(Flowable.sequenceEqual(Flowable.just(1), Flowable.just(2)).toFlowable());
+        TestCommonHelper.checkDisposed(Flowable.sequenceEqual(Flowable.just(1), Flowable.just(2)).toFlowable());
     }
 
     @Test
@@ -439,7 +439,7 @@ public class FlowableSequenceEqualTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             ts.assertEmpty();
         }
@@ -463,7 +463,7 @@ public class FlowableSequenceEqualTest {
 
     @Test
     public void doubleErrorFlowable() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Flowable.sequenceEqual(Flowable.never(), new Flowable<Object>() {
                 @Override
@@ -477,9 +477,9 @@ public class FlowableSequenceEqualTest {
             .test()
             .assertFailureAndMessage(TestException.class, "First");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -542,7 +542,7 @@ public class FlowableSequenceEqualTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             ts.assertEmpty();
         }
@@ -565,7 +565,7 @@ public class FlowableSequenceEqualTest {
 
     @Test
     public void doubleError() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Flowable.sequenceEqual(Flowable.never(), new Flowable<Object>() {
                 @Override
@@ -578,9 +578,9 @@ public class FlowableSequenceEqualTest {
             .test()
             .assertFailureAndMessage(TestException.class, "First");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

@@ -322,7 +322,7 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
 
         Scheduler s = Schedulers.from(exec);
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             assertSame(Scheduler.REJECTED, s.scheduleDirect(Functions.EMPTY_RUNNABLE));
@@ -331,9 +331,9 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
 
             assertSame(Scheduler.REJECTED, s.schedulePeriodicallyDirect(Functions.EMPTY_RUNNABLE, 10, 10, TimeUnit.MILLISECONDS));
 
-            TestHelper.assertUndeliverable(errors, 0, RejectedExecutionException.class);
-            TestHelper.assertUndeliverable(errors, 1, RejectedExecutionException.class);
-            TestHelper.assertUndeliverable(errors, 2, RejectedExecutionException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, RejectedExecutionException.class);
+            TestCommonHelper.assertUndeliverable(errors, 1, RejectedExecutionException.class);
+            TestCommonHelper.assertUndeliverable(errors, 2, RejectedExecutionException.class);
         } finally {
             RxJavaCommonPlugins.reset();
         }
@@ -344,7 +344,7 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
         ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
         exec.shutdown();
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Worker s = Schedulers.from(exec).createWorker();
@@ -356,9 +356,9 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
             s = Schedulers.from(exec).createWorker();
             assertSame(Scheduler.REJECTED, s.schedulePeriodically(Functions.EMPTY_RUNNABLE, 10, 10, TimeUnit.MILLISECONDS));
 
-            TestHelper.assertUndeliverable(errors, 0, RejectedExecutionException.class);
-            TestHelper.assertUndeliverable(errors, 1, RejectedExecutionException.class);
-            TestHelper.assertUndeliverable(errors, 2, RejectedExecutionException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, RejectedExecutionException.class);
+            TestCommonHelper.assertUndeliverable(errors, 1, RejectedExecutionException.class);
+            TestCommonHelper.assertUndeliverable(errors, 2, RejectedExecutionException.class);
         } finally {
             RxJavaCommonPlugins.reset();
         }

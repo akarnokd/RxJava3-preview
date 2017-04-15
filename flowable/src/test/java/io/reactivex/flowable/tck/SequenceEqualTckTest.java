@@ -11,12 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.tck;
+package io.reactivex.flowable.tck;
 
 import org.reactivestreams.Publisher;
 import org.testng.annotations.Test;
 
-import io.reactivex.Flowable;
+import io.reactivex.flowable.Flowable;
 
 @Test
 public class SequenceEqualTckTest extends BaseTck<Boolean> {
@@ -26,8 +26,8 @@ public class SequenceEqualTckTest extends BaseTck<Boolean> {
         return
                 Flowable.sequenceEqual(
                         Flowable.range(1, 1000),
-                        Flowable.range(1, 1001))
-                .toFlowable()
+                        Flowable.range(1, 1001)
+                )
             ;
     }
 

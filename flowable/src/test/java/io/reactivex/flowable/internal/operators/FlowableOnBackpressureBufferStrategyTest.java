@@ -129,7 +129,7 @@ public class FlowableOnBackpressureBufferStrategyTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1)
+        TestCommonHelper.checkDisposed(Flowable.just(1)
                 .onBackpressureBuffer(16, Functions.EMPTY_ACTION, BackpressureOverflowStrategy.ERROR));
     }
 
@@ -152,7 +152,7 @@ public class FlowableOnBackpressureBufferStrategyTest {
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> f) throws Exception {
                 return f.onBackpressureBuffer(8, Functions.EMPTY_ACTION, BackpressureOverflowStrategy.ERROR);
@@ -162,7 +162,7 @@ public class FlowableOnBackpressureBufferStrategyTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> f) throws Exception {
                 return f.onBackpressureBuffer(8, Functions.EMPTY_ACTION, BackpressureOverflowStrategy.ERROR);
@@ -185,7 +185,7 @@ public class FlowableOnBackpressureBufferStrategyTest {
 
     @Test
     public void badRequest() {
-        TestHelper.assertBadRequestReported(Flowable.just(1)
+        TestCommonHelper.assertBadRequestReported(Flowable.just(1)
                 .onBackpressureBuffer(16, Functions.EMPTY_ACTION, BackpressureOverflowStrategy.ERROR));
     }
 

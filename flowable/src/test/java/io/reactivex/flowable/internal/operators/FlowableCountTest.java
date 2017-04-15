@@ -42,21 +42,21 @@ public class FlowableCountTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).count());
+        TestCommonHelper.checkDisposed(Flowable.just(1).count());
 
-        TestHelper.checkDisposed(Flowable.just(1).count().toFlowable());
+        TestCommonHelper.checkDisposed(Flowable.just(1).count().toFlowable());
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Long>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Long>>() {
             @Override
             public Flowable<Long> apply(Flowable<Object> o) throws Exception {
                 return o.count().toFlowable();
             }
         });
 
-        TestHelper.checkDoubleOnSubscribeFlowableToSingle(new Function<Flowable<Object>, SingleSource<Long>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowableToSingle(new Function<Flowable<Object>, SingleSource<Long>>() {
             @Override
             public SingleSource<Long> apply(Flowable<Object> o) throws Exception {
                 return o.count();

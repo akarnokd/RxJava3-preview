@@ -11,13 +11,11 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import org.junit.Test;
 
-import io.reactivex.TestHelper;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
 
 public class SinglePostCompleteSubscriberTest {
 
@@ -59,7 +57,7 @@ public class SinglePostCompleteSubscriberTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             ts.assertResult(1);
         }

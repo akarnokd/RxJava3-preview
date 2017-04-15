@@ -11,15 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.tck;
+package io.reactivex.flowable.tck;
 
 import java.util.concurrent.TimeUnit;
 
 import org.reactivestreams.Publisher;
 import org.testng.annotations.Test;
 
-import io.reactivex.processors.ReplayProcessor;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.Schedulers;
+import io.reactivex.flowable.processors.ReplayProcessor;
 
 @Test
 public class ReplayProcessorTimeBoundAsPublisherTckTest extends BaseTck<Integer> {

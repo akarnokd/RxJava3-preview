@@ -100,7 +100,7 @@ public class BlockingFlowableMostRecentTest {
     @Ignore("The target is an enum")
     @Test
     public void constructorshouldbeprivate() {
-        TestHelper.checkUtilityClass(BlockingFlowableMostRecent.class);
+        TestCommonHelper.checkUtilityClass(BlockingFlowableMostRecent.class);
     }
 
 

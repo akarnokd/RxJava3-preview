@@ -172,7 +172,7 @@ public class FlowableSkipTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).skip(2));
+        TestCommonHelper.checkDisposed(Flowable.just(1).skip(2));
     }
 
 }

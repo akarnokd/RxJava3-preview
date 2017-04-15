@@ -335,7 +335,7 @@ public class BlockingFlowableNextTest {
     @Ignore("THe target is an enum")
     @Test
     public void constructorshouldbeprivate() {
-        TestHelper.checkUtilityClass(BlockingFlowableNext.class);
+        TestCommonHelper.checkUtilityClass(BlockingFlowableNext.class);
     }
 
     @Test(expected = UnsupportedOperationException.class)
@@ -359,13 +359,13 @@ public class BlockingFlowableNextTest {
     public void nextObserverError() {
         NextSubscriber<Integer> no = new NextSubscriber<Integer>();
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             no.onError(new TestException());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

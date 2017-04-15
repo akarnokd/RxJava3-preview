@@ -13,7 +13,7 @@
 
 package io.reactivex.flowable;
 
-import static io.reactivex.internal.util.TestingHelper.*;
+import static io.reactivex.common.internal.utils.TestingHelper.*;
 import static org.junit.Assert.*;
 
 import java.util.*;
@@ -22,10 +22,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.functions.Functions;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.RxJavaCommonPlugins;
+import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
 
 public final class FlowableCollectTest {
 
@@ -42,7 +41,7 @@ public final class FlowableCollectTest {
             public void accept(List<Integer> list, Integer v) {
                 list.add(v);
             }
-        }).toFlowable();
+        });
 
         List<Integer> list =  o.blockingLast();
 
@@ -78,7 +77,7 @@ public final class FlowableCollectTest {
                     }
                     sb.append(v);
                 }
-            }).toFlowable().blockingLast().toString();
+            }).blockingLast().toString();
 
         assertEquals("1-2-3", value);
     }
@@ -110,13 +109,12 @@ public final class FlowableCollectTest {
     public void testCollectorFailureDoesNotResultInTwoErrorEmissionsFlowable() {
         try {
             final List<Throwable> list = new CopyOnWriteArrayList<Throwable>();
-            RxJavaPlugins.setErrorHandler(addToList(list));
+            RxJavaCommonPlugins.setErrorHandler(addToList(list));
             final RuntimeException e1 = new RuntimeException();
             final RuntimeException e2 = new RuntimeException();
 
             Burst.items(1).error(e2) //
                     .collect(callableListCreator(), biConsumerThrows(e1))
-                    .toFlowable()
                     .test() //
                     .assertError(e1) //
                     .assertNotComplete();
@@ -124,7 +122,7 @@ public final class FlowableCollectTest {
             assertEquals(1, list.size());
             assertEquals(e2, list.get(0).getCause());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -133,7 +131,6 @@ public final class FlowableCollectTest {
         final RuntimeException e = new RuntimeException();
         Burst.item(1).create() //
                 .collect(callableListCreator(), biConsumerThrows(e)) //
-                .toFlowable()
                 .test() //
                 .assertError(e) //
                 .assertNotComplete();
@@ -159,7 +156,6 @@ public final class FlowableCollectTest {
         };
         Burst.items(1, 2).create() //
                 .collect(callableListCreator(), throwOnFirstOnly)//
-                .toFlowable()
                 .test() //
                 .assertError(e) //
                 .assertNoValues() //
@@ -178,66 +174,9 @@ public final class FlowableCollectTest {
                 s.add(v);
             }
         })
-        .toFlowable()
         .test()
         .assertResult(new HashSet<Integer>(Arrays.asList(1, 2)));
     }
-
-
-    @Test
-    public void testCollectToList() {
-        Single<List<Integer>> o = Flowable.just(1, 2, 3)
-        .collect(new Callable<List<Integer>>() {
-            @Override
-            public List<Integer> call() {
-                return new ArrayList<Integer>();
-            }
-        }, new BiConsumer<List<Integer>, Integer>() {
-            @Override
-            public void accept(List<Integer> list, Integer v) {
-                list.add(v);
-            }
-        });
-
-        List<Integer> list =  o.blockingGet();
-
-        assertEquals(3, list.size());
-        assertEquals(1, list.get(0).intValue());
-        assertEquals(2, list.get(1).intValue());
-        assertEquals(3, list.get(2).intValue());
-
-        // test multiple subscribe
-        List<Integer> list2 =  o.blockingGet();
-
-        assertEquals(3, list2.size());
-        assertEquals(1, list2.get(0).intValue());
-        assertEquals(2, list2.get(1).intValue());
-        assertEquals(3, list2.get(2).intValue());
-    }
-
-    @Test
-    public void testCollectToString() {
-        String value = Flowable.just(1, 2, 3)
-            .collect(
-                new Callable<StringBuilder>() {
-                    @Override
-                    public StringBuilder call() {
-                        return new StringBuilder();
-                    }
-                },
-                new BiConsumer<StringBuilder, Integer>() {
-                    @Override
-                    public void accept(StringBuilder sb, Integer v) {
-                    if (sb.length() > 0) {
-                        sb.append("-");
-                    }
-                    sb.append(v);
-                }
-            }).blockingGet().toString();
-
-        assertEquals("1-2-3", value);
-    }
-
 
     @Test
     public void testFactoryFailureResultsInErrorEmission() {
@@ -265,7 +204,7 @@ public final class FlowableCollectTest {
     public void testCollectorFailureDoesNotResultInTwoErrorEmissions() {
         try {
             final List<Throwable> list = new CopyOnWriteArrayList<Throwable>();
-            RxJavaPlugins.setErrorHandler(addToList(list));
+            RxJavaCommonPlugins.setErrorHandler(addToList(list));
             final RuntimeException e1 = new RuntimeException();
             final RuntimeException e2 = new RuntimeException();
 
@@ -278,7 +217,7 @@ public final class FlowableCollectTest {
             assertEquals(1, list.size());
             assertEquals(e2, list.get(0).getCause());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -350,7 +289,7 @@ public final class FlowableCollectTest {
                     public void accept(ArrayList<Integer> a, Integer b) throws Exception {
                         a.add(b);
                     }
-                }).toFlowable());
+                }));
     }
 
     @Test
@@ -358,18 +297,6 @@ public final class FlowableCollectTest {
         TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Integer>, Flowable<ArrayList<Integer>>>() {
             @Override
             public Flowable<ArrayList<Integer>> apply(Flowable<Integer> f) throws Exception {
-                return f.collect(Functions.justCallable(new ArrayList<Integer>()),
-                        new BiConsumer<ArrayList<Integer>, Integer>() {
-                            @Override
-                            public void accept(ArrayList<Integer> a, Integer b) throws Exception {
-                                a.add(b);
-                            }
-                        }).toFlowable();
-            }
-        });
-        TestHelper.checkDoubleOnSubscribeFlowableToSingle(new Function<Flowable<Integer>, Single<ArrayList<Integer>>>() {
-            @Override
-            public Single<ArrayList<Integer>> apply(Flowable<Integer> f) throws Exception {
                 return f.collect(Functions.justCallable(new ArrayList<Integer>()),
                         new BiConsumer<ArrayList<Integer>, Integer>() {
                             @Override

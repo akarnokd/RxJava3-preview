@@ -310,12 +310,12 @@ public class FlowableRangeLongTest {
 
     @Test
     public void disposed() {
-        TestHelper.checkDisposed(Flowable.rangeLong(1, 2));
+        TestCommonHelper.checkDisposed(Flowable.rangeLong(1, 2));
     }
 
     @Test
     public void fusedClearIsEmpty() {
-        TestHelper.checkFusedIsEmptyClear(Flowable.rangeLong(1, 2));
+        TestCommonHelper.checkFusedIsEmptyClear(Flowable.rangeLong(1, 2));
     }
 
     @Test
@@ -335,9 +335,9 @@ public class FlowableRangeLongTest {
 
     @Test
     public void badRequest() {
-        TestHelper.assertBadRequestReported(Flowable.rangeLong(1L, 5L));
+        TestCommonHelper.assertBadRequestReported(Flowable.rangeLong(1L, 5L));
 
-        TestHelper.assertBadRequestReported(Flowable.rangeLong(1L, 5L).filter(Functions.alwaysTrue()));
+        TestCommonHelper.assertBadRequestReported(Flowable.rangeLong(1L, 5L).filter(Functions.alwaysTrue()));
     }
 
     @Test

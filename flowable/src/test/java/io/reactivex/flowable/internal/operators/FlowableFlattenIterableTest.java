@@ -569,7 +569,7 @@ public class FlowableFlattenIterableTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().flatMapIterable(new Function<Object, Iterable<Integer>>() {
+        TestCommonHelper.checkDisposed(PublishProcessor.create().flatMapIterable(new Function<Object, Iterable<Integer>>() {
             @Override
             public Iterable<Integer> apply(Object v) throws Exception {
                 return Arrays.asList(10, 20);
@@ -579,7 +579,7 @@ public class FlowableFlattenIterableTest {
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> o) throws Exception {
                 return o.flatMapIterable(new Function<Object, Iterable<Integer>>() {

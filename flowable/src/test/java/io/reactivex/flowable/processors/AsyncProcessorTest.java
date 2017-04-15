@@ -485,7 +485,7 @@ public class AsyncProcessorTest extends DelayedFlowableProcessorTest<Object> {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -513,7 +513,7 @@ public class AsyncProcessorTest extends DelayedFlowableProcessorTest<Object> {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             if (ts1.errorCount() != 0) {
                 ts1.assertFailure(TestException.class);

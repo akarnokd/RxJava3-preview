@@ -28,7 +28,7 @@ import io.reactivex.common.internal.utils.ExceptionHelper;
 /**
  * Common methods for helping with tests from 1.x mostly.
  */
-public enum TestHelper {
+public enum TestCommonHelper {
     ;
 
     /**

@@ -136,12 +136,12 @@ public class FlowableSkipWhileTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().skipWhile(Functions.alwaysFalse()));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().skipWhile(Functions.alwaysFalse()));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.skipWhile(Functions.alwaysFalse());

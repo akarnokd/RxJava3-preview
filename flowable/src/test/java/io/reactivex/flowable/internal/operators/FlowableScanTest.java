@@ -520,7 +520,7 @@ public class FlowableScanTest {
             assertTrue("" + list, list.get(0) instanceof UndeliverableException);
             assertEquals(e2, list.get(0).getCause());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -600,7 +600,7 @@ public class FlowableScanTest {
             assertTrue("" + list, list.get(0) instanceof UndeliverableException);
             assertEquals(e2, list.get(0).getCause());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

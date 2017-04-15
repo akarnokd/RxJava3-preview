@@ -210,12 +210,12 @@ public class ParallelDoOnNextTryTest implements Consumer<Object> {
         .test()
         .assertFailure(CompositeException.class);
 
-        TestHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
+        TestCommonHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
     }
 
     @Test
     public void doOnNextWrongParallelism() {
-        TestHelper.checkInvalidParallelSubscribers(
+        TestCommonHelper.checkInvalidParallelSubscribers(
             Flowable.just(1).parallel(1)
             .doOnNext(Functions.emptyConsumer(), ParallelFailureHandling.ERROR)
         );
@@ -223,16 +223,16 @@ public class ParallelDoOnNextTryTest implements Consumer<Object> {
 
     @Test
     public void filterInvalidSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new ParallelInvalid()
             .doOnNext(Functions.emptyConsumer(), ParallelFailureHandling.ERROR)
             .sequential()
             .test();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -358,12 +358,12 @@ public class ParallelDoOnNextTryTest implements Consumer<Object> {
         .test()
         .assertFailure(CompositeException.class);
 
-        TestHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
+        TestCommonHelper.assertCompositeExceptions(ts, ArithmeticException.class, TestException.class);
     }
 
     @Test
     public void doOnNextWrongParallelismConditional() {
-        TestHelper.checkInvalidParallelSubscribers(
+        TestCommonHelper.checkInvalidParallelSubscribers(
             Flowable.just(1).parallel(1)
             .doOnNext(Functions.emptyConsumer(), ParallelFailureHandling.ERROR)
             .filter(Functions.alwaysTrue())
@@ -372,7 +372,7 @@ public class ParallelDoOnNextTryTest implements Consumer<Object> {
 
     @Test
     public void filterInvalidSourceConditional() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new ParallelInvalid()
             .doOnNext(Functions.emptyConsumer(), ParallelFailureHandling.ERROR)
@@ -380,9 +380,9 @@ public class ParallelDoOnNextTryTest implements Consumer<Object> {
             .sequential()
             .test();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

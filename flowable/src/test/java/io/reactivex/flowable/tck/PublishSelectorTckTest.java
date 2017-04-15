@@ -11,14 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.tck;
+package io.reactivex.flowable.tck;
 
 import org.reactivestreams.Publisher;
 import org.testng.annotations.Test;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.Flowable;
 
 @Test
 public class PublishSelectorTckTest extends BaseTck<Integer> {

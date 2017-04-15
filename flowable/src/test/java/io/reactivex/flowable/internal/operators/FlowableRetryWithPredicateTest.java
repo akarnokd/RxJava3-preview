@@ -403,10 +403,10 @@ public class FlowableRetryWithPredicateTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "Outer");
-        TestHelper.assertError(errors, 1, TestException.class, "Inner");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "Outer");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Inner");
     }
 
     @Test
@@ -440,7 +440,7 @@ public class FlowableRetryWithPredicateTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             to.assertEmpty();
         }
@@ -459,10 +459,10 @@ public class FlowableRetryWithPredicateTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "Outer");
-        TestHelper.assertError(errors, 1, TestException.class, "Inner");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "Outer");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Inner");
     }
 
     @Test
@@ -493,7 +493,7 @@ public class FlowableRetryWithPredicateTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             to.assertEmpty();
         }

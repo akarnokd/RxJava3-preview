@@ -11,12 +11,12 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.tck;
+package io.reactivex.flowable.tck;
 
 import org.reactivestreams.Publisher;
 import org.testng.annotations.Test;
 
-import io.reactivex.Flowable;
+import io.reactivex.flowable.Flowable;
 
 @Test
 public class SingleTckTest extends BaseTck<Integer> {
@@ -24,7 +24,7 @@ public class SingleTckTest extends BaseTck<Integer> {
     @Override
     public Publisher<Integer> createPublisher(final long elements) {
         return
-                Flowable.just(1).singleElement().toFlowable()
+                Flowable.just(1).singleElement()
             ;
     }
 

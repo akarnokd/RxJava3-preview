@@ -451,7 +451,7 @@ public class PublishProcessorTest extends FlowableProcessorTest<Object> {
 
     @Test
     public void requestValidation() {
-        TestHelper.assertBadRequestReported(PublishProcessor.create());
+        TestCommonHelper.assertBadRequestReported(PublishProcessor.create());
     }
 
     @Test
@@ -588,7 +588,7 @@ public class PublishProcessorTest extends FlowableProcessorTest<Object> {
                 }
             };
 
-            TestHelper.race(task, task, Schedulers.io());
+            TestCommonHelper.race(task, task, Schedulers.io());
 
             ts
             .awaitDone(5, TimeUnit.SECONDS)
@@ -617,7 +617,7 @@ public class PublishProcessorTest extends FlowableProcessorTest<Object> {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.io());
+            TestCommonHelper.race(r1, r2, Schedulers.io());
         }
     }
 

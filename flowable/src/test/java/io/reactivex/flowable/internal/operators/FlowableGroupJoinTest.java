@@ -365,7 +365,7 @@ public class FlowableGroupJoinTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).groupJoin(
+        TestCommonHelper.checkDisposed(Flowable.just(1).groupJoin(
             Flowable.just(2),
             new Function<Integer, Flowable<Object>>() {
                 @Override
@@ -510,7 +510,7 @@ public class FlowableGroupJoinTest {
             final PublishProcessor<Object> ps1 = PublishProcessor.create();
             final PublishProcessor<Object> ps2 = PublishProcessor.create();
 
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
             try {
                 TestSubscriber<Flowable<Integer>> to = Flowable.just(1)
@@ -553,25 +553,25 @@ public class FlowableGroupJoinTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 to.assertError(Throwable.class).assertSubscribed().assertNotComplete().assertValueCount(1);
 
                 Throwable exc = to.errors().get(0);
 
                 if (exc instanceof CompositeException) {
-                    List<Throwable> es = TestHelper.compositeList(exc);
-                    TestHelper.assertError(es, 0, TestException.class);
-                    TestHelper.assertError(es, 1, TestException.class);
+                    List<Throwable> es = TestCommonHelper.compositeList(exc);
+                    TestCommonHelper.assertError(es, 0, TestException.class);
+                    TestCommonHelper.assertError(es, 1, TestException.class);
                 } else {
                     to.assertError(TestException.class);
                 }
 
                 if (!errors.isEmpty()) {
-                    TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                    TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -582,7 +582,7 @@ public class FlowableGroupJoinTest {
             final PublishProcessor<Object> ps1 = PublishProcessor.create();
             final PublishProcessor<Object> ps2 = PublishProcessor.create();
 
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
             try {
                 TestSubscriber<Object> to = ps1
@@ -626,25 +626,25 @@ public class FlowableGroupJoinTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 to.assertError(Throwable.class).assertSubscribed().assertNotComplete().assertNoValues();
 
                 Throwable exc = to.errors().get(0);
 
                 if (exc instanceof CompositeException) {
-                    List<Throwable> es = TestHelper.compositeList(exc);
-                    TestHelper.assertError(es, 0, TestException.class);
-                    TestHelper.assertError(es, 1, TestException.class);
+                    List<Throwable> es = TestCommonHelper.compositeList(exc);
+                    TestCommonHelper.assertError(es, 0, TestException.class);
+                    TestCommonHelper.assertError(es, 1, TestException.class);
                 } else {
                     to.assertError(TestException.class);
                 }
 
                 if (!errors.isEmpty()) {
-                    TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                    TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }

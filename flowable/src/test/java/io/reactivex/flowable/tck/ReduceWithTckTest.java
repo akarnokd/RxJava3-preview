@@ -11,14 +11,14 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.tck;
+package io.reactivex.flowable.tck;
 
 import org.reactivestreams.Publisher;
 import org.testng.annotations.Test;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.internal.functions.Functions;
+import io.reactivex.common.functions.BiFunction;
+import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.flowable.Flowable;
 
 @Test
 public class ReduceWithTckTest extends BaseTck<Integer> {
@@ -32,7 +32,7 @@ public class ReduceWithTckTest extends BaseTck<Integer> {
                     public Integer apply(Integer a, Integer b) throws Exception {
                         return a + b;
                     }
-                }).toFlowable()
+                })
             ;
     }
 

@@ -31,7 +31,7 @@ public class FlowableScalarXMapTest {
 
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(FlowableScalarXMap.class);
+        TestCommonHelper.checkUtilityClass(FlowableScalarXMap.class);
     }
 
     static final class CallablePublisher implements Publisher<Integer>, Callable<Integer> {
@@ -231,7 +231,7 @@ public class FlowableScalarXMapTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 

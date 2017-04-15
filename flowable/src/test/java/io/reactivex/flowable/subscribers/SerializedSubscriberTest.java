@@ -11,9 +11,10 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subscribers;
+package io.reactivex.flowable.subscribers;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -23,11 +24,10 @@ import java.util.concurrent.atomic.*;
 import org.junit.*;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.subscriptions.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.*;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
 
 public class SerializedSubscriberTest {
 
@@ -1031,7 +1031,7 @@ public class SerializedSubscriberTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.single());
+            TestCommonHelper.race(r, r, Schedulers.single());
 
             ts.awaitDone(5, TimeUnit.SECONDS)
             .assertResult();
@@ -1064,7 +1064,7 @@ public class SerializedSubscriberTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.awaitDone(5, TimeUnit.SECONDS)
             .assertNoErrors()
@@ -1102,7 +1102,7 @@ public class SerializedSubscriberTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.awaitDone(5, TimeUnit.SECONDS)
             .assertError(ex)
@@ -1140,7 +1140,7 @@ public class SerializedSubscriberTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.awaitDone(5, TimeUnit.SECONDS)
             .assertError(ex)
@@ -1154,7 +1154,7 @@ public class SerializedSubscriberTest {
     @Test
     public void startOnce() {
 
-        List<Throwable> error = TestHelper.trackPluginErrors();
+        List<Throwable> error = TestCommonHelper.trackPluginErrors();
 
         try {
             TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
@@ -1169,9 +1169,9 @@ public class SerializedSubscriberTest {
 
             assertTrue(d.isCancelled());
 
-            TestHelper.assertError(error, 0, IllegalStateException.class, "Subscription already set!");
+            TestCommonHelper.assertError(error, 0, IllegalStateException.class, "Subscription already set!");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -1202,7 +1202,7 @@ public class SerializedSubscriberTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.awaitDone(5, TimeUnit.SECONDS);
 

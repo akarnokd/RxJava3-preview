@@ -141,7 +141,7 @@ public class ParallelCollectTest {
     @SuppressWarnings("unchecked")
     @Test
     public void doubleError() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new ParallelInvalid()
             .collect(new Callable<List<Object>>() {
@@ -164,7 +164,7 @@ public class ParallelCollectTest {
                 assertTrue(ex.toString(), ex.getCause() instanceof TestException);
             }
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

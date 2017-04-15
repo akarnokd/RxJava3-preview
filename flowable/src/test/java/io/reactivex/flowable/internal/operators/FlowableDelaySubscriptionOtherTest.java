@@ -314,7 +314,7 @@ public class FlowableDelaySubscriptionOtherTest {
 
     @Test
     public void badSourceOther() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> o) throws Exception {
                 return Flowable.just(1).delaySubscription(o);

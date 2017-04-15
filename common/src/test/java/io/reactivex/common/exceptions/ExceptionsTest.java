@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import org.junit.*;
 
-import io.reactivex.common.TestHelper;
+import io.reactivex.common.TestCommonHelper;
 import io.reactivex.common.internal.utils.ExceptionHelper;
 
 public class ExceptionsTest {
@@ -29,12 +29,12 @@ public class ExceptionsTest {
     @Ignore("Exceptions is not an enum")
     @Test
     public void constructorShouldBePrivate() {
-        TestHelper.checkUtilityClass(ExceptionHelper.class);
+        TestCommonHelper.checkUtilityClass(ExceptionHelper.class);
     }
 
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(Exceptions.class);
+        TestCommonHelper.checkUtilityClass(Exceptions.class);
     }
 
     @Test

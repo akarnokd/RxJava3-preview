@@ -29,13 +29,13 @@ public class ScalarSubscriptionTest {
 
         ScalarSubscription<Integer> sc = new ScalarSubscription<Integer>(ts, 1);
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             sc.request(-99);
 
-            TestHelper.assertError(errors, 0, IllegalArgumentException.class, "n > 0 required but it was -99");
+            TestCommonHelper.assertError(errors, 0, IllegalArgumentException.class, "n > 0 required but it was -99");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -45,6 +45,6 @@ public class ScalarSubscriptionTest {
 
         ScalarSubscription<Integer> sc = new ScalarSubscription<Integer>(ts, 1);
 
-        TestHelper.assertNoOffer(sc);
+        TestCommonHelper.assertNoOffer(sc);
     }
 }

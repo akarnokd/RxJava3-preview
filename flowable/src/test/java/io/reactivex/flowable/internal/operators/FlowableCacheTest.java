@@ -301,7 +301,7 @@ public class FlowableCacheTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.range(1, 5).cache());
+        TestCommonHelper.checkDisposed(Flowable.range(1, 5).cache());
     }
 
     @Test
@@ -342,7 +342,7 @@ public class FlowableCacheTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             to
             .awaitDone(5, TimeUnit.SECONDS)
@@ -379,7 +379,7 @@ public class FlowableCacheTest {
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> f) throws Exception {
                 return f.cache();
@@ -389,7 +389,7 @@ public class FlowableCacheTest {
 
     @Test
     public void badRequest() {
-        TestHelper.assertBadRequestReported(Flowable.never().cache());
+        TestCommonHelper.assertBadRequestReported(Flowable.never().cache());
     }
 
     @Test

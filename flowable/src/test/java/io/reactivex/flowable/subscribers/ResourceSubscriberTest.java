@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subscribers;
+package io.reactivex.flowable.subscribers;
 
 import static org.junit.Assert.*;
 
@@ -19,11 +19,10 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.*;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
 
 public class ResourceSubscriberTest {
 
@@ -156,7 +155,7 @@ public class ResourceSubscriberTest {
     @Test
     public void startOnce() {
 
-        List<Throwable> error = TestHelper.trackPluginErrors();
+        List<Throwable> error = TestCommonHelper.trackPluginErrors();
 
         try {
             TestResourceSubscriber<Integer> tc = new TestResourceSubscriber<Integer>();
@@ -171,9 +170,9 @@ public class ResourceSubscriberTest {
 
             assertEquals(1, tc.start);
 
-            TestHelper.assertError(error, 0, IllegalStateException.class, "Subscription already set!");
+            TestCommonHelper.assertError(error, 0, IllegalStateException.class, "Subscription already set!");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

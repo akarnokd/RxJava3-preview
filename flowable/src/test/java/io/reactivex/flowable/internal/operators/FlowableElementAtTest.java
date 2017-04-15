@@ -189,21 +189,21 @@ public class FlowableElementAtTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
             @Override
             public Publisher<Object> apply(Flowable<Object> o) throws Exception {
                 return o.elementAt(0).toFlowable();
             }
         });
 
-        TestHelper.checkDoubleOnSubscribeFlowableToMaybe(new Function<Flowable<Object>, Maybe<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowableToMaybe(new Function<Flowable<Object>, Maybe<Object>>() {
             @Override
             public Maybe<Object> apply(Flowable<Object> o) throws Exception {
                 return o.elementAt(0);
             }
         });
 
-        TestHelper.checkDoubleOnSubscribeFlowableToSingle(new Function<Flowable<Object>, Single<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowableToSingle(new Function<Flowable<Object>, Single<Object>>() {
             @Override
             public Single<Object> apply(Flowable<Object> o) throws Exception {
                 return o.elementAt(0, 1);
@@ -245,7 +245,7 @@ public class FlowableElementAtTest {
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -263,33 +263,33 @@ public class FlowableElementAtTest {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.elementAt(0);
             }
         }, false, null, 1);
 
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.elementAt(0, 1);
             }
         }, false, null, 1, 1);
 
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.elementAt(0).toFlowable();
             }
         }, false, null, 1);
 
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.elementAt(0, 1).toFlowable();
@@ -299,16 +299,16 @@ public class FlowableElementAtTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().elementAt(0).toFlowable());
-        TestHelper.checkDisposed(PublishProcessor.create().elementAt(0, 1).toFlowable());
+        TestCommonHelper.checkDisposed(PublishProcessor.create().elementAt(0).toFlowable());
+        TestCommonHelper.checkDisposed(PublishProcessor.create().elementAt(0, 1).toFlowable());
 
-        TestHelper.checkDisposed(PublishProcessor.create().elementAt(0));
-        TestHelper.checkDisposed(PublishProcessor.create().elementAt(0, 1));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().elementAt(0));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().elementAt(0, 1));
     }
 
     @Test
     public void badSourceObservable() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Observable<Integer>() {
                 @Override
@@ -326,15 +326,15 @@ public class FlowableElementAtTest {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void badSource2() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -351,9 +351,9 @@ public class FlowableElementAtTest {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

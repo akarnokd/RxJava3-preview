@@ -170,9 +170,9 @@ public class ParallelJoinTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> error = TestHelper.errorList(flow);
-        TestHelper.assertError(error, 0, TestException.class);
-        TestHelper.assertError(error, 1, TestException.class);
+        List<Throwable> error = TestCommonHelper.errorList(flow);
+        TestCommonHelper.assertError(error, 0, TestException.class);
+        TestCommonHelper.assertError(error, 1, TestException.class);
     }
 
     @Test

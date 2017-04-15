@@ -145,7 +145,7 @@ public class ParallelReduceTest {
     @SuppressWarnings("unchecked")
     @Test
     public void doubleError() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new ParallelInvalid()
             .reduce(new Callable<List<Object>>() {
@@ -169,7 +169,7 @@ public class ParallelReduceTest {
                 assertTrue(ex.toString(), ex.getCause() instanceof TestException);
             }
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

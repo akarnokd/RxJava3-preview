@@ -1218,7 +1218,7 @@ public class FlowableBufferTest {
             ts.assertNoErrors();
             ts.assertComplete();
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -1266,7 +1266,7 @@ public class FlowableBufferTest {
             ts.assertNoErrors();
             ts.assertComplete();
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -1523,20 +1523,20 @@ public class FlowableBufferTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.range(1, 5).buffer(1, TimeUnit.DAYS, Schedulers.single()));
+        TestCommonHelper.checkDisposed(Flowable.range(1, 5).buffer(1, TimeUnit.DAYS, Schedulers.single()));
 
-        TestHelper.checkDisposed(Flowable.range(1, 5).buffer(2, 1, TimeUnit.DAYS, Schedulers.single()));
+        TestCommonHelper.checkDisposed(Flowable.range(1, 5).buffer(2, 1, TimeUnit.DAYS, Schedulers.single()));
 
-        TestHelper.checkDisposed(Flowable.range(1, 5).buffer(1, 2, TimeUnit.DAYS, Schedulers.single()));
+        TestCommonHelper.checkDisposed(Flowable.range(1, 5).buffer(1, 2, TimeUnit.DAYS, Schedulers.single()));
 
-        TestHelper.checkDisposed(Flowable.range(1, 5)
+        TestCommonHelper.checkDisposed(Flowable.range(1, 5)
                 .buffer(1, TimeUnit.DAYS, Schedulers.single(), 2, Functions.<Integer>createArrayList(16), true));
 
-        TestHelper.checkDisposed(Flowable.range(1, 5).buffer(1));
+        TestCommonHelper.checkDisposed(Flowable.range(1, 5).buffer(1));
 
-        TestHelper.checkDisposed(Flowable.range(1, 5).buffer(2, 1));
+        TestCommonHelper.checkDisposed(Flowable.range(1, 5).buffer(2, 1));
 
-        TestHelper.checkDisposed(Flowable.range(1, 5).buffer(1, 2));
+        TestCommonHelper.checkDisposed(Flowable.range(1, 5).buffer(1, 2));
     }
 
     @Test
@@ -1891,21 +1891,21 @@ public class FlowableBufferTest {
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.buffer(1);
             }
         }, false, 1, 1, Arrays.asList(1));
 
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.buffer(1, 2);
             }
         }, false, 1, 1, Arrays.asList(1));
 
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.buffer(2, 1);
@@ -1915,21 +1915,21 @@ public class FlowableBufferTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<List<Object>>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<List<Object>>>() {
             @Override
             public Publisher<List<Object>> apply(Flowable<Object> f) throws Exception {
                 return f.buffer(1);
             }
         });
 
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<List<Object>>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<List<Object>>>() {
             @Override
             public Publisher<List<Object>> apply(Flowable<Object> f) throws Exception {
                 return f.buffer(1, 2);
             }
         });
 
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<List<Object>>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<List<Object>>>() {
             @Override
             public Publisher<List<Object>> apply(Flowable<Object> f) throws Exception {
                 return f.buffer(2, 1);
@@ -1939,11 +1939,11 @@ public class FlowableBufferTest {
 
     @Test
     public void badRequest() {
-        TestHelper.assertBadRequestReported(PublishProcessor.create().buffer(1));
+        TestCommonHelper.assertBadRequestReported(PublishProcessor.create().buffer(1));
 
-        TestHelper.assertBadRequestReported(PublishProcessor.create().buffer(1, 2));
+        TestCommonHelper.assertBadRequestReported(PublishProcessor.create().buffer(1, 2));
 
-        TestHelper.assertBadRequestReported(PublishProcessor.create().buffer(2, 1));
+        TestCommonHelper.assertBadRequestReported(PublishProcessor.create().buffer(2, 1));
     }
 
     @SuppressWarnings("unchecked")

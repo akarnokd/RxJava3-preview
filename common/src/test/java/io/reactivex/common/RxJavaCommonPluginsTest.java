@@ -37,7 +37,7 @@ public class RxJavaCommonPluginsTest {
 
     @Test
     public void constructorShouldBePrivate() {
-        TestHelper.checkUtilityClass(RxJavaCommonPlugins.class);
+        TestCommonHelper.checkUtilityClass(RxJavaCommonPlugins.class);
     }
 
     @Test

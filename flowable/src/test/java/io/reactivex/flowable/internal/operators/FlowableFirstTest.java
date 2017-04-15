@@ -42,8 +42,8 @@ public class FlowableFirstTest {
     @Before
     public void before() {
         w = TestHelper.mockSubscriber();
-        wo = TestHelper.mockSingleObserver();
-        wm = TestHelper.mockMaybeObserver();
+        wo = TestCommonHelper.mockSingleObserver();
+        wm = TestCommonHelper.mockMaybeObserver();
     }
 
     @Test

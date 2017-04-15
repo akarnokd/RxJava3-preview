@@ -11,16 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.subscribers;
+package io.reactivex.flowable.internal.subscribers;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
 
 public class SubscriberResourceWrapperTest {
 

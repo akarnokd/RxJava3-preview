@@ -272,7 +272,7 @@ public class FlowableTakeLastTimedTest {
 
     @Test
     public void disposed() {
-        TestHelper.checkDisposed(PublishProcessor.create().takeLast(1, TimeUnit.MINUTES));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().takeLast(1, TimeUnit.MINUTES));
     }
 
     @Test
@@ -310,7 +310,7 @@ public class FlowableTakeLastTimedTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -324,7 +324,7 @@ public class FlowableTakeLastTimedTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
             @Override
             public Publisher<Object> apply(Flowable<Object> f) throws Exception {
                 return f.takeLast(1, TimeUnit.SECONDS);
@@ -334,6 +334,6 @@ public class FlowableTakeLastTimedTest {
 
     @Test
     public void badRequest() {
-        TestHelper.assertBadRequestReported(PublishProcessor.create().takeLast(1, TimeUnit.SECONDS));
+        TestCommonHelper.assertBadRequestReported(PublishProcessor.create().takeLast(1, TimeUnit.SECONDS));
     }
 }

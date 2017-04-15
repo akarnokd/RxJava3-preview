@@ -23,13 +23,12 @@ import org.junit.*;
 import org.junit.rules.TestName;
 import org.reactivestreams.*;
 
-import io.reactivex.Flowable;
-import io.reactivex.exceptions.MissingBackpressureException;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.SubscriptionHelper;
-import io.reactivex.internal.util.BackpressureHelper;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.*;
+import io.reactivex.common.Schedulers;
+import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.flowable.internal.utils.BackpressureHelper;
+import io.reactivex.flowable.subscribers.*;
 
 public class FlowableBackpressureTests {
 

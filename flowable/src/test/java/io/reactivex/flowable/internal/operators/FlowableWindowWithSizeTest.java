@@ -332,30 +332,30 @@ public class FlowableWindowWithSizeTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().window(1));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().window(1));
 
-        TestHelper.checkDisposed(PublishProcessor.create().window(2, 1));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().window(2, 1));
 
-        TestHelper.checkDisposed(PublishProcessor.create().window(1, 2));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().window(1, 2));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Flowable<Object>>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Flowable<Object>>>() {
             @Override
             public Flowable<Flowable<Object>> apply(Flowable<Object> o) throws Exception {
                 return o.window(1);
             }
         });
 
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Flowable<Object>>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Flowable<Object>>>() {
             @Override
             public Flowable<Flowable<Object>> apply(Flowable<Object> o) throws Exception {
                 return o.window(2, 1);
             }
         });
 
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Flowable<Object>>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Flowable<Object>>>() {
             @Override
             public Flowable<Flowable<Object>> apply(Flowable<Object> o) throws Exception {
                 return o.window(1, 2);

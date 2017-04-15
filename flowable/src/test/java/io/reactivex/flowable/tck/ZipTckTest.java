@@ -11,13 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.tck;
+package io.reactivex.flowable.tck;
 
 import org.reactivestreams.Publisher;
 import org.testng.annotations.Test;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.BiFunction;
+import io.reactivex.common.functions.BiFunction;
+import io.reactivex.flowable.Flowable;
 
 @Test
 public class ZipTckTest extends BaseTck<Long> {

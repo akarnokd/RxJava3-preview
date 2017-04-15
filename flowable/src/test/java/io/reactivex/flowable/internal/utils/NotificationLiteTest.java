@@ -11,32 +11,15 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.internal.util;
+package io.reactivex.flowable.internal.utils;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.common.exceptions.TestException;
 
 public class NotificationLiteTest {
-
-    @Test
-    public void acceptFullObserver() {
-        TestObserver<Integer> to = new TestObserver<Integer>();
-
-        Disposable d = Disposables.empty();
-
-        assertFalse(NotificationLite.acceptFull(NotificationLite.disposable(d), to));
-
-        to.assertSubscribed();
-
-        to.cancel();
-
-        assertTrue(d.isDisposed());
-    }
 
     @Test
     public void errorNotificationCompare() {

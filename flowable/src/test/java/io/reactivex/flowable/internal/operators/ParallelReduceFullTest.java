@@ -52,7 +52,7 @@ public class ParallelReduceFullTest {
 
     @Test
     public void error() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.<Integer>error(new TestException())
@@ -68,14 +68,14 @@ public class ParallelReduceFullTest {
 
             assertTrue(errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void error2() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             ParallelFlowable.fromArray(Flowable.<Integer>error(new IOException()), Flowable.<Integer>error(new TestException()))
@@ -88,9 +88,9 @@ public class ParallelReduceFullTest {
             .test()
             .assertFailure(IOException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -110,7 +110,7 @@ public class ParallelReduceFullTest {
 
     @Test
     public void doubleError() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new ParallelInvalid()
             .reduce(new BiFunction<Object, Object, Object>() {
@@ -127,7 +127,7 @@ public class ParallelReduceFullTest {
                 assertTrue(ex.toString(), ex.getCause() instanceof TestException);
             }
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

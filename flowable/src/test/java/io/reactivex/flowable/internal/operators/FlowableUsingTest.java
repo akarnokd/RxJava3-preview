@@ -506,7 +506,7 @@ public class FlowableUsingTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.using(
+        TestCommonHelper.checkDisposed(Flowable.using(
                 new Callable<Object>() {
                     @Override
                     public Object call() throws Exception {
@@ -544,10 +544,10 @@ public class FlowableUsingTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "First");
-        TestHelper.assertError(errors, 1, TestException.class, "Second");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "First");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Second");
     }
 
     @Test
@@ -571,10 +571,10 @@ public class FlowableUsingTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "First");
-        TestHelper.assertError(errors, 1, TestException.class, "Second");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "First");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Second");
     }
 
     @Test
@@ -601,7 +601,7 @@ public class FlowableUsingTest {
 
     @Test
     public void nonEagerDisposerCrash() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Flowable.using(new Callable<Object>() {
                 @Override
@@ -622,9 +622,9 @@ public class FlowableUsingTest {
             .test()
             .assertResult();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

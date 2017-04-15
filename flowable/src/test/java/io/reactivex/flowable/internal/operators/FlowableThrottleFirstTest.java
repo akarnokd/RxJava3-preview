@@ -164,12 +164,12 @@ public class FlowableThrottleFirstTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).throttleFirst(1, TimeUnit.DAYS));
+        TestCommonHelper.checkDisposed(Flowable.just(1).throttleFirst(1, TimeUnit.DAYS));
     }
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -187,9 +187,9 @@ public class FlowableThrottleFirstTest {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

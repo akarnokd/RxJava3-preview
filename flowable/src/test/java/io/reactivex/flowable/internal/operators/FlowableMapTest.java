@@ -519,7 +519,7 @@ public class FlowableMapTest {
 
     @Test
     public void sourceIgnoresCancel() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Integer>() {
@@ -541,9 +541,9 @@ public class FlowableMapTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -573,7 +573,7 @@ public class FlowableMapTest {
 
     @Test
     public void sourceIgnoresCancelFilter() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Integer>() {
@@ -601,9 +601,9 @@ public class FlowableMapTest {
            .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -639,7 +639,7 @@ public class FlowableMapTest {
 
     @Test
     public void sourceIgnoresCancelConditional() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.fromPublisher(new Publisher<Integer>() {
@@ -668,20 +668,20 @@ public class FlowableMapTest {
             .test()
             .assertFailure(TestException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.range(1, 5).map(Functions.identity()));
+        TestCommonHelper.checkDisposed(Flowable.range(1, 5).map(Functions.identity()));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.map(Functions.identity());
@@ -711,7 +711,7 @@ public class FlowableMapTest {
         .map(Functions.<Integer>identity())
         .subscribe(to);
 
-        TestHelper.emit(us, 1, 2, 3, 4, 5);
+        TestCommonHelper.emit(us, 1, 2, 3, 4, 5);
 
         SubscriberFusion.assertFusion(to, QueueDisposable.ASYNC)
         .assertResult(1, 2, 3, 4, 5);
@@ -731,7 +731,7 @@ public class FlowableMapTest {
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Object>, Object>() {
             @Override
             public Object apply(Flowable<Object> o) throws Exception {
                 return o.map(Functions.identity());

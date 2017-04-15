@@ -310,7 +310,7 @@ public class FlowableJoinTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.<Integer>create().join(Flowable.just(1),
+        TestCommonHelper.checkDisposed(PublishProcessor.<Integer>create().join(Flowable.just(1),
                 Functions.justFunction(Flowable.never()),
                 Functions.justFunction(Flowable.never()), new BiFunction<Integer, Integer, Integer>() {
                     @Override
@@ -382,7 +382,7 @@ public class FlowableJoinTest {
 
     @Test
     public void badOuterSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -404,15 +404,15 @@ public class FlowableJoinTest {
             .test()
             .assertFailureAndMessage(TestException.class, "First");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void badEndSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             @SuppressWarnings("rawtypes")
             final Subscriber[] o = { null };
@@ -441,9 +441,9 @@ public class FlowableJoinTest {
             to
             .assertFailureAndMessage(TestException.class, "First");
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

@@ -498,13 +498,13 @@ public class FlowableWindowWithTimeTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.range(1, 5).window(1, TimeUnit.DAYS, Schedulers.single()).onBackpressureDrop());
+        TestCommonHelper.checkDisposed(Flowable.range(1, 5).window(1, TimeUnit.DAYS, Schedulers.single()).onBackpressureDrop());
 
-        TestHelper.checkDisposed(Flowable.range(1, 5).window(2, 1, TimeUnit.DAYS, Schedulers.single()).onBackpressureDrop());
+        TestCommonHelper.checkDisposed(Flowable.range(1, 5).window(2, 1, TimeUnit.DAYS, Schedulers.single()).onBackpressureDrop());
 
-        TestHelper.checkDisposed(Flowable.range(1, 5).window(1, 2, TimeUnit.DAYS, Schedulers.single()).onBackpressureDrop());
+        TestCommonHelper.checkDisposed(Flowable.range(1, 5).window(1, 2, TimeUnit.DAYS, Schedulers.single()).onBackpressureDrop());
 
-        TestHelper.checkDisposed(Flowable.never()
+        TestCommonHelper.checkDisposed(Flowable.never()
                 .window(1, TimeUnit.DAYS, Schedulers.single(), 2, true).onBackpressureDrop());
     }
 

@@ -16,9 +16,8 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import io.reactivex.Flowable;
-import io.reactivex.internal.fuseable.FusedQueueSubscription;
-import io.reactivex.subscribers.*;
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
+import io.reactivex.flowable.subscribers.SubscriberFusion;
 
 public class FlowableFuseableTest {
 

@@ -46,7 +46,7 @@ public class FlowableDoOnLifecycleTest {
     public void doubleOnSubscribe() {
         final int[] calls = { 0, 0 };
 
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
             @Override
             public Publisher<Object> apply(Flowable<Object> o) throws Exception {
                 return o
@@ -72,7 +72,7 @@ public class FlowableDoOnLifecycleTest {
     public void dispose() {
         final int[] calls = { 0, 0 };
 
-        TestHelper.checkDisposed(Flowable.just(1)
+        TestCommonHelper.checkDisposed(Flowable.just(1)
                 .doOnLifecycle(new Consumer<Subscription>() {
                     @Override
                     public void accept(Subscription s) throws Exception {
@@ -92,7 +92,7 @@ public class FlowableDoOnLifecycleTest {
 
     @Test
     public void requestCrashed() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Flowable.just(1)
             .doOnLifecycle(Functions.emptyConsumer(),
@@ -106,15 +106,15 @@ public class FlowableDoOnLifecycleTest {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void cancelCrashed() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Flowable.just(1)
             .doOnLifecycle(Functions.emptyConsumer(),
@@ -129,15 +129,15 @@ public class FlowableDoOnLifecycleTest {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void onSubscribeCrash() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             final BooleanSubscription bs = new BooleanSubscription();
 
@@ -160,9 +160,9 @@ public class FlowableDoOnLifecycleTest {
 
             assertTrue(bs.isCancelled());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

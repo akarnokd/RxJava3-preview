@@ -120,7 +120,7 @@ public class FlowableDoAfterNextTest {
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
 
-        TestHelper.emit(up, 1, 2, 3, 4, 5);
+        TestCommonHelper.emit(up, 1, 2, 3, 4, 5);
 
         up
         .doAfterNext(afterNext)
@@ -217,7 +217,7 @@ public class FlowableDoAfterNextTest {
 
         UnicastProcessor<Integer> up = UnicastProcessor.create();
 
-        TestHelper.emit(up, 1, 2, 3, 4, 5);
+        TestCommonHelper.emit(up, 1, 2, 3, 4, 5);
 
         up
         .doAfterNext(afterNext)

@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 
 import org.junit.Test;
 
-import io.reactivex.common.TestHelper;
+import io.reactivex.common.TestCommonHelper;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions.*;
 import io.reactivex.common.internal.utils.ExceptionHelper;
@@ -27,7 +27,7 @@ import io.reactivex.common.internal.utils.ExceptionHelper;
 public class FunctionsTest {
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(Functions.class);
+        TestCommonHelper.checkUtilityClass(Functions.class);
     }
 
     @SuppressWarnings("unchecked")

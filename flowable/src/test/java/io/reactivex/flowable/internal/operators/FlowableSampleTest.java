@@ -281,9 +281,9 @@ public class FlowableSampleTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().sample(1, TimeUnit.SECONDS, new TestScheduler()));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().sample(1, TimeUnit.SECONDS, new TestScheduler()));
 
-        TestHelper.checkDisposed(PublishProcessor.create().sample(Flowable.never()));
+        TestCommonHelper.checkDisposed(PublishProcessor.create().sample(Flowable.never()));
     }
 
     @Test
@@ -362,7 +362,7 @@ public class FlowableSampleTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             ts.assertResult(1);
         }
@@ -409,7 +409,7 @@ public class FlowableSampleTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             ts.assertResult(1);
         }
@@ -439,7 +439,7 @@ public class FlowableSampleTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             ts.assertResult(1);
         }

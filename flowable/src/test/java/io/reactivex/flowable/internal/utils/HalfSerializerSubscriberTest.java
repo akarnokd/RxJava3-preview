@@ -10,7 +10,7 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-package io.reactivex.internal.util;
+package io.reactivex.flowable.internal.utils;
 
 import static org.junit.Assert.assertTrue;
 
@@ -20,17 +20,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 import org.reactivestreams.*;
 
-import io.reactivex.*;
-import io.reactivex.exceptions.TestException;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.TestSubscriber;
+import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
+import io.reactivex.common.internal.utils.AtomicThrowable;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 
 public class HalfSerializerSubscriberTest {
 
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(HalfSerializer.class);
+        TestCommonHelper.checkUtilityClass(HalfSerializer.class);
     }
 
     @Test
@@ -231,7 +232,7 @@ public class HalfSerializerSubscriberTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             ts.assertComplete().assertNoErrors();
 
@@ -266,7 +267,7 @@ public class HalfSerializerSubscriberTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             if (ts.completions() != 0) {
                 ts.assertResult();

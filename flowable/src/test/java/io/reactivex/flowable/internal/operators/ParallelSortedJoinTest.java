@@ -49,7 +49,7 @@ public class ParallelSortedJoinTest {
 
     @Test
     public void error() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.<Integer>error(new TestException())
@@ -60,13 +60,13 @@ public class ParallelSortedJoinTest {
 
             assertTrue(errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void error3() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             Flowable.<Integer>error(new TestException())
@@ -77,14 +77,14 @@ public class ParallelSortedJoinTest {
 
             assertTrue(errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void error2() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             ParallelFlowable.fromArray(Flowable.<Integer>error(new IOException()), Flowable.<Integer>error(new TestException()))
@@ -92,9 +92,9 @@ public class ParallelSortedJoinTest {
             .test()
             .assertFailure(IOException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -175,7 +175,7 @@ public class ParallelSortedJoinTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -204,7 +204,7 @@ public class ParallelSortedJoinTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 }

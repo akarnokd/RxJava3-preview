@@ -834,7 +834,7 @@ public class FlowableConcatMapEagerTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).hide().concatMapEager(new Function<Integer, Flowable<Integer>>() {
+        TestCommonHelper.checkDisposed(Flowable.just(1).hide().concatMapEager(new Function<Integer, Flowable<Integer>>() {
             @Override
             public Flowable<Integer> apply(Integer v) throws Exception {
                 return Flowable.range(1, 2);
@@ -857,7 +857,7 @@ public class FlowableConcatMapEagerTest {
     @Test
     public void innerOuterRace() {
         for (int i = 0; i < 500; i++) {
-            List<Throwable> errors = TestHelper.trackPluginErrors();
+            List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
                 final PublishProcessor<Integer> ps1 = PublishProcessor.create();
                 final PublishProcessor<Integer> ps2 = PublishProcessor.create();
@@ -887,24 +887,24 @@ public class FlowableConcatMapEagerTest {
                     }
                 };
 
-                TestHelper.race(r1, r2, Schedulers.single());
+                TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 to.assertSubscribed().assertNoValues().assertNotComplete();
 
                 Throwable ex = to.errors().get(0);
 
                 if (ex instanceof CompositeException) {
-                    List<Throwable> es = TestHelper.errorList(to);
-                    TestHelper.assertError(es, 0, TestException.class);
-                    TestHelper.assertError(es, 1, TestException.class);
+                    List<Throwable> es = TestCommonHelper.errorList(to);
+                    TestCommonHelper.assertError(es, 0, TestException.class);
+                    TestCommonHelper.assertError(es, 1, TestException.class);
                 } else {
                     to.assertError(TestException.class);
                     if (!errors.isEmpty()) {
-                        TestHelper.assertUndeliverable(errors, 0, TestException.class);
+                        TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                     }
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -989,7 +989,7 @@ public class FlowableConcatMapEagerTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             to.assertEmpty();
         }
@@ -1049,7 +1049,7 @@ public class FlowableConcatMapEagerTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> o) throws Exception {
                 return o.concatMapEager(new Function<Object, Flowable<Object>>() {
@@ -1064,7 +1064,7 @@ public class FlowableConcatMapEagerTest {
 
     @Test
     public void doubleOnError() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             @SuppressWarnings("rawtypes")
             final Subscriber[] sub = { null };
@@ -1084,15 +1084,15 @@ public class FlowableConcatMapEagerTest {
 
             sub[0].onError(new TestException("Second"));
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void innerOverflow() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             Flowable.just(1)
             .concatMapEager(new Function<Integer, Publisher<Integer>>() {
@@ -1112,9 +1112,9 @@ public class FlowableConcatMapEagerTest {
             .test(0L)
             .assertFailure(MissingBackpressureException.class);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -1159,7 +1159,7 @@ public class FlowableConcatMapEagerTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 

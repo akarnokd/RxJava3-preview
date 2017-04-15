@@ -24,7 +24,7 @@ public class ScheduledDirectPeriodicTaskTest {
 
     @Test
     public void runnableThrows() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             ScheduledDirectPeriodicTask task = new ScheduledDirectPeriodicTask(new Runnable() {
                 @Override
@@ -35,7 +35,7 @@ public class ScheduledDirectPeriodicTaskTest {
 
             task.run();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
             RxJavaCommonPlugins.reset();
         }

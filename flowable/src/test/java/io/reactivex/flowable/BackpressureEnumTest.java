@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.reactivex;
+package io.reactivex.flowable;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-
-import io.reactivex.annotations.BackpressureKind;
 
 public class BackpressureEnumTest {
 

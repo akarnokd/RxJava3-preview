@@ -213,7 +213,7 @@ public class UnicastProcessorTest extends DelayedFlowableProcessorTest<Object> {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
 
             assertEquals(1, calls[0]);
         }
@@ -228,13 +228,13 @@ public class UnicastProcessorTest extends DelayedFlowableProcessorTest<Object> {
         p.onSubscribe(bs);
 
         p.onNext(1);
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             p.onError(new TestException());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
         p.onComplete();
 
@@ -317,7 +317,7 @@ public class UnicastProcessorTest extends DelayedFlowableProcessorTest<Object> {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 }

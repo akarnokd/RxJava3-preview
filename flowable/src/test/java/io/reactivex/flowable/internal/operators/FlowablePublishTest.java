@@ -551,7 +551,7 @@ public class FlowablePublishTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -571,9 +571,9 @@ public class FlowablePublishTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.never().publish());
+        TestCommonHelper.checkDisposed(Flowable.never().publish());
 
-        TestHelper.checkDisposed(Flowable.never().publish(Functions.<Flowable<Object>>identity()));
+        TestCommonHelper.checkDisposed(Flowable.never().publish(Functions.<Flowable<Object>>identity()));
     }
 
     @Test
@@ -640,13 +640,13 @@ public class FlowablePublishTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
     @Test
     public void badSource() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             new Flowable<Integer>() {
                 @Override
@@ -664,23 +664,23 @@ public class FlowablePublishTest {
             .test()
             .assertResult(1);
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void noErrorLoss() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             ConnectableFlowable<Object> co = Flowable.error(new TestException()).publish();
 
             co.connect();
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -709,7 +709,7 @@ public class FlowablePublishTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 
@@ -781,7 +781,7 @@ public class FlowablePublishTest {
                 }
             };
 
-            TestHelper.race(r1, r1);
+            TestCommonHelper.race(r1, r1);
         }
     }
 
@@ -798,7 +798,7 @@ public class FlowablePublishTest {
                 }
             };
 
-            TestHelper.race(r1, r1);
+            TestCommonHelper.race(r1, r1);
         }
     }
 

@@ -47,13 +47,13 @@ public class SubscriptionArbiterTest {
     public void invalidDeferredRequest() {
         SubscriptionArbiter sa = new SubscriptionArbiter();
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             sa.request(-99);
 
-            TestHelper.assertError(errors, 0, IllegalArgumentException.class, "n > 0 required but it was -99");
+            TestCommonHelper.assertError(errors, 0, IllegalArgumentException.class, "n > 0 required but it was -99");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -145,7 +145,7 @@ public class SubscriptionArbiterTest {
 
     @Test
     public void drainMissedRequestedMoreProduced() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             SubscriptionArbiter sa = new SubscriptionArbiter();
 
@@ -161,9 +161,9 @@ public class SubscriptionArbiterTest {
 
             assertEquals(0, sa.requested);
 
-            TestHelper.assertError(errors, 0, IllegalStateException.class, "More produced than requested: -1");
+            TestCommonHelper.assertError(errors, 0, IllegalStateException.class, "More produced than requested: -1");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

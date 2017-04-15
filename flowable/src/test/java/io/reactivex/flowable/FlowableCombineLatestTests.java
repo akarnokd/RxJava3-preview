@@ -15,15 +15,14 @@
  */
 package io.reactivex.flowable;
 
-import static io.reactivex.Flowable.combineLatest;
+import static io.reactivex.flowable.Flowable.combineLatest;
 import static org.junit.Assert.assertNull;
 
 import org.junit.*;
 
-import io.reactivex.Flowable;
+import io.reactivex.common.functions.*;
 import io.reactivex.flowable.FlowableCovarianceTest.*;
-import io.reactivex.functions.*;
-import io.reactivex.processors.BehaviorProcessor;
+import io.reactivex.flowable.processors.BehaviorProcessor;
 
 public class FlowableCombineLatestTests {
     /**

@@ -25,7 +25,7 @@ public class BlockingHelperTest {
 
     @Test
     public void emptyEnum() {
-        TestHelper.checkUtilityClass(BlockingHelper.class);
+        TestCommonHelper.checkUtilityClass(BlockingHelper.class);
     }
 
     @Test

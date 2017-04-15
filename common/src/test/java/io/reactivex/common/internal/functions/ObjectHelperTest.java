@@ -17,13 +17,13 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import io.reactivex.common.TestHelper;
+import io.reactivex.common.TestCommonHelper;
 
 public class ObjectHelperTest {
 
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(ObjectHelper.class);
+        TestCommonHelper.checkUtilityClass(ObjectHelper.class);
     }
 
     @Test

@@ -140,12 +140,12 @@ public class FlowableTakeLastOneTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).takeLast(1));
+        TestCommonHelper.checkDisposed(Flowable.just(1).takeLast(1));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Flowable<Object>>() {
             @Override
             public Flowable<Object> apply(Flowable<Object> f) throws Exception {
                 return f.takeLast(1);

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package io.reactivex.common.internal.utils;
+package io.reactivex.flowable.internal.utils;
 
 import static org.junit.Assert.assertEquals;
 
@@ -28,7 +28,7 @@ public class BackpressureHelperTest {
     @Ignore("BackpressureHelper is an enum")
     @Test
     public void constructorShouldBePrivate() {
-        TestHelper.checkUtilityClass(BackpressureHelper.class);
+        TestCommonHelper.checkUtilityClass(BackpressureHelper.class);
     }
 
     @Test
@@ -51,31 +51,31 @@ public class BackpressureHelperTest {
 
     @Test
     public void producedMore() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             AtomicLong requested = new AtomicLong(1);
 
             assertEquals(0, BackpressureHelper.produced(requested, 2));
 
-            TestHelper.assertError(list, 0, IllegalStateException.class, "More produced than requested: -1");
+            TestCommonHelper.assertError(list, 0, IllegalStateException.class, "More produced than requested: -1");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void producedMoreCancel() {
-        List<Throwable> list = TestHelper.trackPluginErrors();
+        List<Throwable> list = TestCommonHelper.trackPluginErrors();
 
         try {
             AtomicLong requested = new AtomicLong(1);
 
             assertEquals(0, BackpressureHelper.producedCancel(requested, 2));
 
-            TestHelper.assertError(list, 0, IllegalStateException.class, "More produced than requested: -1");
+            TestCommonHelper.assertError(list, 0, IllegalStateException.class, "More produced than requested: -1");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -99,7 +99,7 @@ public class BackpressureHelperTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
@@ -123,13 +123,13 @@ public class BackpressureHelperTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(BackpressureHelper.class);
+        TestCommonHelper.checkUtilityClass(BackpressureHelper.class);
     }
 
     @Test

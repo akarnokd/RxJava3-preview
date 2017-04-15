@@ -20,11 +20,9 @@ import java.util.*;
 import org.junit.Test;
 import org.reactivestreams.Publisher;
 
-import io.reactivex.Flowable;
+import io.reactivex.common.functions.*;
 import io.reactivex.flowable.FlowableCovarianceTest.*;
 import io.reactivex.flowable.FlowableEventStream.Event;
-import io.reactivex.flowables.GroupedFlowable;
-import io.reactivex.functions.*;
 
 public class FlowableZipTests {
 

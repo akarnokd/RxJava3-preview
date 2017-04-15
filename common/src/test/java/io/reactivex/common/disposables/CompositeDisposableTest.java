@@ -452,7 +452,7 @@ public class CompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run, Schedulers.io());
+            TestCommonHelper.race(run, run, Schedulers.io());
         }
     }
 
@@ -468,7 +468,7 @@ public class CompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run, Schedulers.io());
+            TestCommonHelper.race(run, run, Schedulers.io());
         }
     }
 
@@ -484,7 +484,7 @@ public class CompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run, Schedulers.io());
+            TestCommonHelper.race(run, run, Schedulers.io());
         }
     }
 
@@ -504,7 +504,7 @@ public class CompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run, Schedulers.io());
+            TestCommonHelper.race(run, run, Schedulers.io());
         }
     }
 
@@ -524,7 +524,7 @@ public class CompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run, Schedulers.io());
+            TestCommonHelper.race(run, run, Schedulers.io());
         }
     }
 
@@ -544,7 +544,7 @@ public class CompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run, Schedulers.io());
+            TestCommonHelper.race(run, run, Schedulers.io());
         }
     }
 
@@ -567,7 +567,7 @@ public class CompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run2, Schedulers.io());
+            TestCommonHelper.race(run, run2, Schedulers.io());
         }
     }
 
@@ -590,7 +590,7 @@ public class CompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run2, Schedulers.io());
+            TestCommonHelper.race(run, run2, Schedulers.io());
         }
     }
 
@@ -617,7 +617,7 @@ public class CompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run2, Schedulers.io());
+            TestCommonHelper.race(run, run2, Schedulers.io());
         }
     }
 
@@ -644,7 +644,7 @@ public class CompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run2, Schedulers.io());
+            TestCommonHelper.race(run, run2, Schedulers.io());
         }
     }
 
@@ -671,7 +671,7 @@ public class CompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run2, Schedulers.io());
+            TestCommonHelper.race(run, run2, Schedulers.io());
         }
     }
 
@@ -698,7 +698,7 @@ public class CompositeDisposableTest {
                 }
             };
 
-            TestHelper.race(run, run2, Schedulers.io());
+            TestCommonHelper.race(run, run2, Schedulers.io());
         }
     }
 

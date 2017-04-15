@@ -92,7 +92,7 @@ public class FlowableTimeIntervalTest {
             .test()
             .assertResult(0L, 0L, 0L, 0L, 0L);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -119,13 +119,13 @@ public class FlowableTimeIntervalTest {
             .test()
             .assertResult(0L, 0L, 0L, 0L, 0L);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).timeInterval());
+        TestCommonHelper.checkDisposed(Flowable.just(1).timeInterval());
     }
 
     @SuppressWarnings("unchecked")

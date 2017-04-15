@@ -104,7 +104,7 @@ public class ArrayCompositeSubscriptionTest {
                 }
             };
 
-            TestHelper.race(r, r, Schedulers.single());
+            TestCommonHelper.race(r, r, Schedulers.single());
         }
     }
 
@@ -130,7 +130,7 @@ public class ArrayCompositeSubscriptionTest {
                 }
             };
 
-            TestHelper.race(r1, r2, Schedulers.single());
+            TestCommonHelper.race(r1, r2, Schedulers.single());
         }
     }
 

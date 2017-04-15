@@ -11,11 +11,11 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.subscribers;
+package io.reactivex.flowable.subscribers;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.*;
-import io.reactivex.internal.fuseable.*;
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
+import io.reactivex.common.functions.*;
+import io.reactivex.flowable.Flowable;
 
 /**
  * Utility methods that return functional interfaces to support assertions regarding fusion

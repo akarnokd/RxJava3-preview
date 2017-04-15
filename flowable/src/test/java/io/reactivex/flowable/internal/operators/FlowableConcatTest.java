@@ -624,7 +624,7 @@ public class FlowableConcatTest {
 
         Single<List<Integer>> result = Flowable.concat(source).toList();
 
-        SingleObserver<List<Integer>> o = TestHelper.mockSingleObserver();
+        SingleObserver<List<Integer>> o = TestCommonHelper.mockSingleObserver();
         InOrder inOrder = inOrder(o);
 
         result.subscribe(o);
@@ -648,7 +648,7 @@ public class FlowableConcatTest {
 
         Single<List<Integer>> result = Flowable.concat(source).take(n / 2).toList();
 
-        SingleObserver<List<Integer>> o = TestHelper.mockSingleObserver();
+        SingleObserver<List<Integer>> o = TestCommonHelper.mockSingleObserver();
         InOrder inOrder = inOrder(o);
 
         result.subscribe(o);
@@ -1305,13 +1305,13 @@ public class FlowableConcatTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Integer>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Integer>>() {
             @Override
             public Publisher<Integer> apply(Flowable<Object> f) throws Exception {
                 return f.concatMap(Functions.justFunction(Flowable.just(2)));
             }
         });
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Integer>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Integer>>() {
             @Override
             public Publisher<Integer> apply(Flowable<Object> f) throws Exception {
                 return f.concatMapDelayError(Functions.justFunction(Flowable.just(2)));
@@ -1385,7 +1385,7 @@ public class FlowableConcatTest {
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.concatMap(Functions.justFunction(Flowable.just(1).hide()));
@@ -1409,13 +1409,13 @@ public class FlowableConcatTest {
 
         ts.assertFailureAndMessage(TestException.class, "First");
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             ts0[0].onError(new TestException("Second"));
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -1435,19 +1435,19 @@ public class FlowableConcatTest {
 
         ts.assertFailureAndMessage(TestException.class, "First");
 
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             ts0[0].onError(new TestException("Second"));
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void badSourceDelayError() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.concatMap(Functions.justFunction(Flowable.just(1).hide()));
@@ -1507,10 +1507,10 @@ public class FlowableConcatTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.range(1, 2)
+        TestCommonHelper.checkDisposed(Flowable.range(1, 2)
         .concatMap(Functions.justFunction(Flowable.just(1))));
 
-        TestHelper.checkDisposed(Flowable.range(1, 2)
+        TestCommonHelper.checkDisposed(Flowable.range(1, 2)
         .concatMapDelayError(Functions.justFunction(Flowable.just(1))));
     }
 

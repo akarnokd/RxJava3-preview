@@ -182,7 +182,7 @@ public class FlowableOnBackpressureDropTest {
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.onBackpressureDrop();
@@ -192,7 +192,7 @@ public class FlowableOnBackpressureDropTest {
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
+        TestCommonHelper.checkDoubleOnSubscribeFlowable(new Function<Flowable<Object>, Publisher<Object>>() {
             @Override
             public Publisher<Object> apply(Flowable<Object> f) throws Exception {
                 return f.onBackpressureDrop();
@@ -202,6 +202,6 @@ public class FlowableOnBackpressureDropTest {
 
     @Test
     public void badRequest() {
-        TestHelper.assertBadRequestReported(Flowable.just(1).onBackpressureDrop());
+        TestCommonHelper.assertBadRequestReported(Flowable.just(1).onBackpressureDrop());
     }
 }

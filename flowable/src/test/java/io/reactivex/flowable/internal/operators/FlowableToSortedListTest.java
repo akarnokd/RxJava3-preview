@@ -171,7 +171,7 @@ public class FlowableToSortedListTest {
         Flowable<Integer> w = Flowable.just(1, 3, 2, 5, 4);
         Single<List<Integer>> observable = w.toSortedList();
 
-        SingleObserver<List<Integer>> observer = TestHelper.mockSingleObserver();
+        SingleObserver<List<Integer>> observer = TestCommonHelper.mockSingleObserver();
         observable.subscribe(observer);
         verify(observer, times(1)).onSuccess(Arrays.asList(1, 2, 3, 4, 5));
         verify(observer, Mockito.never()).onError(any(Throwable.class));
@@ -189,7 +189,7 @@ public class FlowableToSortedListTest {
 
         });
 
-        SingleObserver<List<Integer>> observer = TestHelper.mockSingleObserver();
+        SingleObserver<List<Integer>> observer = TestCommonHelper.mockSingleObserver();
         observable.subscribe(observer);
         verify(observer, times(1)).onSuccess(Arrays.asList(5, 4, 3, 2, 1));
         verify(observer, Mockito.never()).onError(any(Throwable.class));

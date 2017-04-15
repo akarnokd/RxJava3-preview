@@ -304,7 +304,7 @@ public class FlowableDistinctUntilChangedTest {
         })
         .subscribe(to);
 
-        TestHelper.emit(up, 1, 2, 2, 3, 3, 4, 5);
+        TestCommonHelper.emit(up, 1, 2, 2, 3, 3, 4, 5);
 
         to.assertOf(SubscriberFusion.<Integer>assertFuseable())
         .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
@@ -314,7 +314,7 @@ public class FlowableDistinctUntilChangedTest {
 
     @Test
     public void ignoreCancel() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
             new Flowable<Integer>() {
@@ -337,9 +337,9 @@ public class FlowableDistinctUntilChangedTest {
             .test()
             .assertFailure(TestException.class, 1);
 
-            TestHelper.assertUndeliverable(errors, 0, IOException.class);
+            TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -411,7 +411,7 @@ public class FlowableDistinctUntilChangedTest {
         })
         .test();
 
-        TestHelper.emit(up, 1, 2, 1, 3, 3, 4, 3, 5, 5);
+        TestCommonHelper.emit(up, 1, 2, 1, 3, 3, 4, 3, 5, 5);
 
         ts
         .assertResult(2, 4);
@@ -470,7 +470,7 @@ public class FlowableDistinctUntilChangedTest {
         .subscribe(ts);
 
 
-        TestHelper.emit(up, 1, 2, 1, 3, 3, 4, 3, 5, 5);
+        TestCommonHelper.emit(up, 1, 2, 1, 3, 3, 4, 3, 5, 5);
 
         SubscriberFusion.assertFusion(ts, FusedQueueSubscription.ASYNC)
         .assertResult(2, 4);
@@ -478,7 +478,7 @@ public class FlowableDistinctUntilChangedTest {
 
     @Test
     public void badSource() {
-        TestHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
+        TestCommonHelper.checkBadSourceFlowable(new Function<Flowable<Integer>, Object>() {
             @Override
             public Object apply(Flowable<Integer> f) throws Exception {
                 return f.distinctUntilChanged().filter(Functions.alwaysTrue());

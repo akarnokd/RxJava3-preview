@@ -78,7 +78,7 @@ public class ScheduledRunnableTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             assertEquals(0, set.size());
         }
@@ -107,7 +107,7 @@ public class ScheduledRunnableTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             assertEquals(0, set.size());
         }
@@ -127,7 +127,7 @@ public class ScheduledRunnableTest {
                 }
             };
 
-            TestHelper.race(r1, r1);
+            TestCommonHelper.race(r1, r1);
 
             assertEquals(0, set.size());
         }
@@ -154,7 +154,7 @@ public class ScheduledRunnableTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
 
             assertEquals(0, set.size());
         }
@@ -194,7 +194,7 @@ public class ScheduledRunnableTest {
 
     @Test
     public void crashReported() {
-        List<Throwable> errors = TestHelper.trackPluginErrors();
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             CompositeDisposable set = new CompositeDisposable();
             final ScheduledRunnable run = new ScheduledRunnable(new Runnable() {
@@ -211,7 +211,7 @@ public class ScheduledRunnableTest {
 
             assertEquals(0, set.size());
 
-            TestHelper.assertUndeliverable(errors, 0, TestException.class, "First");
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "First");
         } finally {
             RxJavaCommonPlugins.reset();
         }
@@ -279,7 +279,7 @@ public class ScheduledRunnableTest {
                 }
             };
 
-            TestHelper.race(r1, r2);
+            TestCommonHelper.race(r1, r2);
         }
     }
 }
