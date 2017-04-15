@@ -10,34 +10,34 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See
  * the License for the specific language governing permissions and limitations under the License.
  */
-
 package io.reactivex.observable.internal.operators;
 
-import static org.junit.Assert.assertSame;
+
+
+import java.util.concurrent.Callable;
 
 import org.junit.Test;
-import org.reactivestreams.Publisher;
 
-import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
-import io.reactivex.observable.extensions.HasUpstreamMaybeSource;
 
-public class MaybeToFlowableTest {
+public class MaybeConcatTest {
 
     @Test
-    public void source() {
-        Maybe<Integer> m = Maybe.just(1);
-
-        assertSame(m, (((HasUpstreamMaybeSource<?>)m.toFlowable()).source()));
+    public void scalar() {
+        Maybe.concat(Observable.just(Maybe.just(1)))
+        .test()
+        .assertResult(1);
     }
 
     @Test
-    public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeMaybeToFlowable(new Function<Maybe<Object>, Publisher<Object>>() {
+    public void callable() {
+        Maybe.concat(Observable.fromCallable(new Callable<Maybe<Integer>>() {
             @Override
-            public Publisher<Object> apply(Maybe<Object> m) throws Exception {
-                return m.toFlowable();
+            public Maybe<Integer> call() throws Exception {
+                return Maybe.just(1);
             }
-        });
+        }))
+        .test()
+        .assertResult(1);
     }
 }

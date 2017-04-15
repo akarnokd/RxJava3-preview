@@ -18,7 +18,7 @@ import org.junit.Test;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeDetachTest {
 
@@ -35,7 +35,7 @@ public class MaybeDetachTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().singleElement().onTerminateDetach());
+        TestHelper.checkDisposed(PublishSubject.create().singleElement().onTerminateDetach());
     }
 
     @Test

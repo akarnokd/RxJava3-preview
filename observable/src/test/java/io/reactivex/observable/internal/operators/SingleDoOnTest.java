@@ -26,7 +26,6 @@ import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class SingleDoOnTest {
 
@@ -149,7 +148,7 @@ public class SingleDoOnTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Outer");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
     }
@@ -183,10 +182,10 @@ public class SingleDoOnTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "Outer");
-        TestHelper.assertError(errors, 1, TestException.class, "Inner");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "Outer");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Inner");
     }
 
     @Test
@@ -214,10 +213,10 @@ public class SingleDoOnTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "Main");
-        TestHelper.assertError(errors, 1, TestException.class, "Inner");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "Main");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Inner");
     }
 
     @Test
@@ -294,7 +293,7 @@ public class SingleDoOnTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -355,7 +354,7 @@ public class SingleDoOnTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

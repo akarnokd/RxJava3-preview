@@ -17,14 +17,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.Callable;
 
 import org.junit.*;
 
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 
 public class ObservableToMultimapTest {
     Observer<Object> objectObserver;

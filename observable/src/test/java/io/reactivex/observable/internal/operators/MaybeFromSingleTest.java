@@ -20,7 +20,7 @@ import org.junit.Test;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
 import io.reactivex.observable.extensions.HasUpstreamSingleSource;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeFromSingleTest {
     @Test(expected = NullPointerException.class)
@@ -51,7 +51,7 @@ public class MaybeFromSingleTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Maybe.fromSingle(PublishProcessor.create().singleOrError()));
+        TestHelper.checkDisposed(Maybe.fromSingle(PublishSubject.create().singleOrError()));
     }
 
     @Test

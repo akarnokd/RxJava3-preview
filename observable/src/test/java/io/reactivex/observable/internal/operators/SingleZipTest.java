@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 
 import io.reactivex.common.functions.*;
+import io.reactivex.observable.Single;
 
 public class SingleZipTest {
 

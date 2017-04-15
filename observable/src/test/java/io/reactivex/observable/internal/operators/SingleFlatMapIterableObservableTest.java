@@ -13,8 +13,11 @@
 
 package io.reactivex.observable.internal.operators;
 
+import static org.junit.Assert.*;
+
+
+
 import java.util.*;
-import java.util.Observer;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
@@ -24,6 +27,7 @@ import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
 import io.reactivex.common.internal.utils.CrashingIterable;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.extensions.QueueDisposable;
 import io.reactivex.observable.observers.*;
 

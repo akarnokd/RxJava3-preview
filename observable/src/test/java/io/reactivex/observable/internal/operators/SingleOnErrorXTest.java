@@ -13,10 +13,13 @@
 
 package io.reactivex.observable.internal.operators;
 
+
+
 import java.util.List;
 
 import org.junit.Test;
 
+import io.reactivex.common.TestCommonHelper;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
@@ -44,10 +47,10 @@ public class SingleOnErrorXTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "Outer");
-        TestHelper.assertError(errors, 1, TestException.class, "Inner");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "Outer");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Inner");
     }
 
     @Test

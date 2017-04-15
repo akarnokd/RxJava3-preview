@@ -17,20 +17,19 @@ import static org.junit.Assert.*;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.Observable;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
 import org.junit.*;
 
-import io.reactivex.common.Schedulers;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.*;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableConcatMapEagerTest {
 
@@ -846,8 +845,8 @@ public class ObservableConcatMapEagerTest {
 
                 if (ex instanceof CompositeException) {
                     List<Throwable> es = TestHelper.errorList(to);
-                    TestHelper.assertError(es, 0, TestException.class);
-                    TestHelper.assertError(es, 1, TestException.class);
+                    TestCommonHelper.assertError(es, 0, TestException.class);
+                    TestCommonHelper.assertError(es, 1, TestException.class);
                 } else {
                     to.assertError(TestException.class);
                     if (!errors.isEmpty()) {
@@ -855,7 +854,7 @@ public class ObservableConcatMapEagerTest {
                     }
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }

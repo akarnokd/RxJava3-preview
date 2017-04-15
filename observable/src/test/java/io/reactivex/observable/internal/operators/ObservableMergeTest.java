@@ -18,8 +18,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
@@ -30,13 +28,10 @@ import io.reactivex.common.Scheduler.Worker;
 import io.reactivex.common.disposables.CompositeDisposable;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.*;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.observers.*;
-import io.reactivex.observers.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.*;
 
 public class ObservableMergeTest {
 
@@ -672,19 +667,19 @@ public class ObservableMergeTest {
             }
         };
 
-        Observable.merge(o1.take(Flowable.bufferSize() * 2), o2.take(Flowable.bufferSize() * 2)).subscribe(testObserver);
+        Observable.merge(o1.take(Observable.bufferSize() * 2), o2.take(Observable.bufferSize() * 2)).subscribe(testObserver);
         testObserver.awaitTerminalEvent();
         if (testObserver.errors().size() > 0) {
             testObserver.errors().get(0).printStackTrace();
         }
         testObserver.assertNoErrors();
         System.err.println(testObserver.values());
-        assertEquals(Flowable.bufferSize() * 4, testObserver.values().size());
+        assertEquals(Observable.bufferSize() * 4, testObserver.values().size());
         // it should be between the take num and requested batch size across the async boundary
         System.out.println("Generated 1: " + generated1.get());
         System.out.println("Generated 2: " + generated2.get());
-        assertTrue(generated1.get() >= Flowable.bufferSize() * 2
-                && generated1.get() <= Flowable.bufferSize() * 4);
+        assertTrue(generated1.get() >= Observable.bufferSize() * 2
+                && generated1.get() <= Observable.bufferSize() * 4);
     }
 
     @Test
@@ -709,7 +704,7 @@ public class ObservableMergeTest {
             }
         };
 
-        Observable.merge(o1.take(Flowable.bufferSize() * 2), Observable.just(-99)).subscribe(testObserver);
+        Observable.merge(o1.take(Observable.bufferSize() * 2), Observable.just(-99)).subscribe(testObserver);
         testObserver.awaitTerminalEvent();
 
         List<Integer> onNextEvents = testObserver.values();
@@ -721,9 +716,9 @@ public class ObservableMergeTest {
             testObserver.errors().get(0).printStackTrace();
         }
         testObserver.assertNoErrors();
-        assertEquals(Flowable.bufferSize() * 2 + 1, onNextEvents.size());
+        assertEquals(Observable.bufferSize() * 2 + 1, onNextEvents.size());
         // it should be between the take num and requested batch size across the async boundary
-        assertTrue(generated1.get() >= Flowable.bufferSize() * 2 && generated1.get() <= Flowable.bufferSize() * 3);
+        assertTrue(generated1.get() >= Observable.bufferSize() * 2 && generated1.get() <= Observable.bufferSize() * 3);
     }
 
     /**
@@ -755,18 +750,18 @@ public class ObservableMergeTest {
             }
         };
 
-        Observable.merge(o1.take(Flowable.bufferSize() * 2), o2.take(Flowable.bufferSize() * 2)).observeOn(Schedulers.computation()).subscribe(to);
+        Observable.merge(o1.take(Observable.bufferSize() * 2), o2.take(Observable.bufferSize() * 2)).observeOn(Schedulers.computation()).subscribe(to);
         to.awaitTerminalEvent();
         if (to.errors().size() > 0) {
             to.errors().get(0).printStackTrace();
         }
         to.assertNoErrors();
         System.err.println(to.values());
-        assertEquals(Flowable.bufferSize() * 4, to.values().size());
+        assertEquals(Observable.bufferSize() * 4, to.values().size());
         // it should be between the take num and requested batch size across the async boundary
         System.out.println("Generated 1: " + generated1.get());
         System.out.println("Generated 2: " + generated2.get());
-        assertTrue(generated1.get() >= Flowable.bufferSize() * 2 && generated1.get() <= Flowable.bufferSize() * 4);
+        assertTrue(generated1.get() >= Observable.bufferSize() * 2 && generated1.get() <= Observable.bufferSize() * 4);
     }
 
     /**
@@ -811,7 +806,7 @@ public class ObservableMergeTest {
             }
         };
 
-        Observable.merge(o1).observeOn(Schedulers.computation()).take(Flowable.bufferSize() * 2).subscribe(to);
+        Observable.merge(o1).observeOn(Schedulers.computation()).take(Observable.bufferSize() * 2).subscribe(to);
         to.awaitTerminalEvent();
         if (to.errors().size() > 0) {
             to.errors().get(0).printStackTrace();
@@ -820,7 +815,7 @@ public class ObservableMergeTest {
         System.out.println("Generated 1: " + generated1.get());
         System.err.println(to.values());
         System.out.println("done1 testBackpressureBothUpstreamAndDownstreamWithRegularObservables ");
-        assertEquals(Flowable.bufferSize() * 2, to.values().size());
+        assertEquals(Observable.bufferSize() * 2, to.values().size());
         System.out.println("done2 testBackpressureBothUpstreamAndDownstreamWithRegularObservables ");
         // we can't restrict this ... see comment above
         //        assertTrue(generated1.get() >= Observable.bufferSize() && generated1.get() <= Observable.bufferSize() * 4);
@@ -1146,7 +1141,7 @@ public class ObservableMergeTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

@@ -19,7 +19,7 @@ import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeOfTypeTest {
 
@@ -78,7 +78,7 @@ public class MaybeOfTypeTest {
 
     @Test
     public void isDisposed() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         TestHelper.checkDisposed(pp.singleElement().ofType(Object.class));
     }

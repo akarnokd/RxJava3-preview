@@ -45,7 +45,7 @@ public class RxJavaCommonPluginsTest {
     public void assemblyTrackingObservable() {
 //        RxJavaCommonPlugins.enableAssemblyTracking();
 //        try {
-//            TestSubscriber<Integer> ts = TestSubscriber.create();
+//            TestObserver<Integer> ts = TestObserver.create();
 //
 //            createObservable().subscribe(ts);
 //
@@ -61,7 +61,7 @@ public class RxJavaCommonPluginsTest {
 //
 //            RxJavaCommonPlugins.clearAssemblyTracking();
 //
-//            ts = TestSubscriber.create();
+//            ts = TestObserver.create();
 //
 //            createObservable().subscribe(ts);
 //
@@ -91,7 +91,7 @@ public class RxJavaCommonPluginsTest {
     public void assemblyTrackingSingle() {
 //        RxJavaCommonPlugins.enableAssemblyTracking();
 //        try {
-//            TestSubscriber<Integer> ts = TestSubscriber.create();
+//            TestObserver<Integer> ts = TestObserver.create();
 //
 //            createSingle().subscribe(ts);
 //
@@ -107,7 +107,7 @@ public class RxJavaCommonPluginsTest {
 //
 //            RxJavaCommonPlugins.clearAssemblyTracking();
 //
-//            ts = TestSubscriber.create();
+//            ts = TestObserver.create();
 //
 //            createSingle().subscribe(ts);
 //
@@ -137,7 +137,7 @@ public class RxJavaCommonPluginsTest {
     public void assemblyTrackingCompletable() {
 //        RxJavaCommonPlugins.enableAssemblyTracking();
 //        try {
-//            TestSubscriber<Integer> ts = TestSubscriber.create();
+//            TestObserver<Integer> ts = TestObserver.create();
 //
 //            createCompletable().subscribe(ts);
 //
@@ -153,7 +153,7 @@ public class RxJavaCommonPluginsTest {
 //
 //            RxJavaCommonPlugins.clearAssemblyTracking();
 //
-//            ts = TestSubscriber.create();
+//            ts = TestObserver.create();
 //
 //            createCompletable().subscribe(ts);
 //
@@ -577,7 +577,7 @@ public class RxJavaCommonPluginsTest {
 //                }
 //            });
 //
-//            TestSubscriber<Integer> ts = TestSubscriber.create();
+//            TestObserver<Integer> ts = TestObserver.create();
 //
 //            Subscription u = Observable.range(10, 3).subscribe(ts);
 //
@@ -604,7 +604,7 @@ public class RxJavaCommonPluginsTest {
 //                }
 //            });
 //
-//            TestSubscriber<Integer> ts = TestSubscriber.create();
+//            TestObserver<Integer> ts = TestObserver.create();
 //
 //            Subscription u = Single.just(1).subscribe(ts);
 //

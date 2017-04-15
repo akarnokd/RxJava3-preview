@@ -18,8 +18,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -30,12 +28,11 @@ import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
-import io.reactivex.functions.*;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.observers.*;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.observers.*;
-import io.reactivex.schedulers.*;
 
 public class ObservableDelayTest {
     private Observer<Long> observer;
@@ -644,7 +641,7 @@ public class ObservableDelayTest {
     @Test
     public void testBackpressureWithTimedDelay() {
         TestObserver<Integer> ts = new TestObserver<Integer>();
-        Observable.range(1, Flowable.bufferSize() * 2)
+        Observable.range(1, Observable.bufferSize() * 2)
                 .delay(100, TimeUnit.MILLISECONDS)
                 .observeOn(Schedulers.computation())
                 .map(new Function<Integer, Integer>() {
@@ -666,13 +663,13 @@ public class ObservableDelayTest {
 
         ts.awaitTerminalEvent();
         ts.assertNoErrors();
-        assertEquals(Flowable.bufferSize() * 2, ts.valueCount());
+        assertEquals(Observable.bufferSize() * 2, ts.valueCount());
     }
 
     @Test
     public void testBackpressureWithSubscriptionTimedDelay() {
         TestObserver<Integer> ts = new TestObserver<Integer>();
-        Observable.range(1, Flowable.bufferSize() * 2)
+        Observable.range(1, Observable.bufferSize() * 2)
                 .delaySubscription(100, TimeUnit.MILLISECONDS)
                 .delay(100, TimeUnit.MILLISECONDS)
                 .observeOn(Schedulers.computation())
@@ -695,13 +692,13 @@ public class ObservableDelayTest {
 
         ts.awaitTerminalEvent();
         ts.assertNoErrors();
-        assertEquals(Flowable.bufferSize() * 2, ts.valueCount());
+        assertEquals(Observable.bufferSize() * 2, ts.valueCount());
     }
 
     @Test
     public void testBackpressureWithSelectorDelay() {
         TestObserver<Integer> ts = new TestObserver<Integer>();
-        Observable.range(1, Flowable.bufferSize() * 2)
+        Observable.range(1, Observable.bufferSize() * 2)
                 .delay(new Function<Integer, Observable<Long>>() {
 
                     @Override
@@ -730,13 +727,13 @@ public class ObservableDelayTest {
 
         ts.awaitTerminalEvent();
         ts.assertNoErrors();
-        assertEquals(Flowable.bufferSize() * 2, ts.valueCount());
+        assertEquals(Observable.bufferSize() * 2, ts.valueCount());
     }
 
     @Test
     public void testBackpressureWithSelectorDelayAndSubscriptionDelay() {
         TestObserver<Integer> ts = new TestObserver<Integer>();
-        Observable.range(1, Flowable.bufferSize() * 2)
+        Observable.range(1, Observable.bufferSize() * 2)
                 .delay(Observable.timer(500, TimeUnit.MILLISECONDS)
                 , new Function<Integer, Observable<Long>>() {
 
@@ -766,7 +763,7 @@ public class ObservableDelayTest {
 
         ts.awaitTerminalEvent();
         ts.assertNoErrors();
-        assertEquals(Flowable.bufferSize() * 2, ts.valueCount());
+        assertEquals(Observable.bufferSize() * 2, ts.valueCount());
     }
 
     @Test

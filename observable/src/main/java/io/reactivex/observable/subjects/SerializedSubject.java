@@ -19,8 +19,8 @@ import io.reactivex.observable.Observer;
 import io.reactivex.observable.internal.utils.*;
 
 /**
- * Serializes calls to the Subscriber methods.
- * <p>All other Publisher and Subject methods are thread-safe by design.
+ * Serializes calls to the Observer methods.
+ * <p>All other Observable and Subject methods are thread-safe by design.
  *
  * @param <T> the item value type
  */

@@ -25,7 +25,6 @@ import io.reactivex.common.*;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableTimestampTest {
     Observer<Object> observer;
@@ -87,7 +86,7 @@ public class ObservableTimestampTest {
     public void timeIntervalDefault() {
         final TestScheduler scheduler = new TestScheduler();
 
-        RxJavaPlugins.setComputationSchedulerHandler(new Function<Scheduler, Scheduler>() {
+        RxJavaCommonPlugins.setComputationSchedulerHandler(new Function<Scheduler, Scheduler>() {
             @Override
             public Scheduler apply(Scheduler v) throws Exception {
                 return scheduler;
@@ -106,7 +105,7 @@ public class ObservableTimestampTest {
             .test()
             .assertResult(0L, 0L, 0L, 0L, 0L);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -114,7 +113,7 @@ public class ObservableTimestampTest {
     public void timeIntervalDefaultSchedulerCustomUnit() {
         final TestScheduler scheduler = new TestScheduler();
 
-        RxJavaPlugins.setComputationSchedulerHandler(new Function<Scheduler, Scheduler>() {
+        RxJavaCommonPlugins.setComputationSchedulerHandler(new Function<Scheduler, Scheduler>() {
             @Override
             public Scheduler apply(Scheduler v) throws Exception {
                 return scheduler;
@@ -133,7 +132,7 @@ public class ObservableTimestampTest {
             .test()
             .assertResult(0L, 0L, 0L, 0L, 0L);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

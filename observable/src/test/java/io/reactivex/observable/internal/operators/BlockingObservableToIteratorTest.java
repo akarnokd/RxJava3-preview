@@ -21,7 +21,9 @@ import org.junit.*;
 
 import io.reactivex.common.Disposables;
 import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.Observable;
 import io.reactivex.observable.ObservableSource;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.internal.operators.BlockingObservableIterable.BlockingObservableIterator;
 
 public class BlockingObservableToIteratorTest {

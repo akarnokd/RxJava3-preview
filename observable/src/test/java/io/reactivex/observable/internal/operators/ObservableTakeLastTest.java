@@ -25,10 +25,8 @@ import org.mockito.InOrder;
 import io.reactivex.common.Schedulers;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
-import io.reactivex.functions.*;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.*;
-import io.reactivex.observers.*;
 
 public class ObservableTakeLastTest {
 
@@ -117,11 +115,11 @@ public class ObservableTakeLastTest {
     @Test
     public void testBackpressure2() {
         TestObserver<Integer> ts = new TestObserver<Integer>();
-        Observable.range(1, 100000).takeLast(Flowable.bufferSize() * 4)
+        Observable.range(1, 100000).takeLast(Observable.bufferSize() * 4)
         .observeOn(Schedulers.newThread()).map(newSlowProcessor()).subscribe(ts);
         ts.awaitTerminalEvent();
         ts.assertNoErrors();
-        assertEquals(Flowable.bufferSize() * 4, ts.valueCount());
+        assertEquals(Observable.bufferSize() * 4, ts.valueCount());
     }
 
     private Function<Integer, Integer> newSlowProcessor() {

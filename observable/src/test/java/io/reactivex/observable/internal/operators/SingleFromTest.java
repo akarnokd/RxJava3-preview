@@ -13,17 +13,20 @@
 
 package io.reactivex.observable.internal.operators;
 
+
+
 import java.util.concurrent.*;
 
 import org.junit.Test;
 
 import io.reactivex.common.Schedulers;
+import io.reactivex.observable.*;
 
 public class SingleFromTest {
 
     @Test
     public void fromFuture() throws Exception {
-        Single.fromFuture(Flowable.just(1).toFuture(), Schedulers.io())
+        Single.fromFuture(Observable.just(1).toFuture(), Schedulers.io())
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(1);
@@ -31,16 +34,9 @@ public class SingleFromTest {
 
     @Test
     public void fromFutureTimeout() throws Exception {
-        Single.fromFuture(Flowable.never().toFuture(), 1, TimeUnit.SECONDS, Schedulers.io())
+        Single.fromFuture(Observable.never().toFuture(), 1, TimeUnit.SECONDS, Schedulers.io())
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(TimeoutException.class);
-    }
-
-    @Test
-    public void fromPublisher() {
-        Single.fromPublisher(Flowable.just(1))
-        .test()
-        .assertResult(1);
     }
 }

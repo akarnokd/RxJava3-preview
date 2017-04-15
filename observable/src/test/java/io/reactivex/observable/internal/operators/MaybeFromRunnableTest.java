@@ -21,10 +21,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
-import io.reactivex.common.Schedulers;
-import io.reactivex.observable.*;
+import io.reactivex.common.*;
+import io.reactivex.observable.Maybe;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class MaybeFromRunnableTest {
     @Test(expected = NullPointerException.class)
@@ -157,7 +156,7 @@ public class MaybeFromRunnableTest {
 
             assertTrue(errors.get(0).toString(), errors.get(0).getCause().getCause() instanceof InterruptedException);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

@@ -16,17 +16,15 @@ package io.reactivex.observable.internal.observers;
 import static org.junit.Assert.*;
 
 import java.util.*;
-import java.util.Observable;
 
 import org.junit.Test;
 
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
+import io.reactivex.observable.Observable;
 import io.reactivex.observable.Observer;
-import io.reactivex.observable.TestHelper;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class LambdaObserverTest {
 
@@ -140,12 +138,12 @@ public class LambdaObserverTest {
 
             assertTrue(o.isDisposed());
 
-            TestHelper.assertError(errors, 0, CompositeException.class);
-            List<Throwable> ce = TestHelper.compositeList(errors.get(0));
-            TestHelper.assertError(ce, 0, TestException.class, "Outer");
-            TestHelper.assertError(ce, 1, TestException.class, "Inner");
+            TestCommonHelper.assertError(errors, 0, CompositeException.class);
+            List<Throwable> ce = TestCommonHelper.compositeList(errors.get(0));
+            TestCommonHelper.assertError(ce, 0, TestException.class, "Outer");
+            TestCommonHelper.assertError(ce, 1, TestException.class, "Inner");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -188,7 +186,7 @@ public class LambdaObserverTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

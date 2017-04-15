@@ -29,7 +29,6 @@ import io.reactivex.common.exceptions.TestException;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableTimeoutTests {
     private PublishSubject<String> underlyingSubject;
@@ -451,7 +450,7 @@ public class ObservableTimeoutTests {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -477,7 +476,7 @@ public class ObservableTimeoutTests {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

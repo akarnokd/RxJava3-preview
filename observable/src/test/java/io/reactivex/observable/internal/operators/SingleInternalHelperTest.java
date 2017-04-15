@@ -17,25 +17,19 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.observable.TestHelper;
+import io.reactivex.common.TestCommonHelper;
 
 public class SingleInternalHelperTest {
 
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(SingleInternalHelper.class);
+        TestCommonHelper.checkUtilityClass(SingleInternalHelper.class);
     }
 
     @Test
     public void noSuchElementCallableEnum() {
         assertEquals(1, SingleInternalHelper.NoSuchElementCallable.values().length);
         assertNotNull(SingleInternalHelper.NoSuchElementCallable.valueOf("INSTANCE"));
-    }
-
-    @Test
-    public void toFlowableEnum() {
-        assertEquals(1, SingleInternalHelper.ToFlowable.values().length);
-        assertNotNull(SingleInternalHelper.ToFlowable.valueOf("INSTANCE"));
     }
 
     @Test

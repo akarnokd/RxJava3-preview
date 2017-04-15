@@ -25,7 +25,6 @@ import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableDematerializeTest {
 
@@ -172,7 +171,7 @@ public class ObservableDematerializeTest {
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "First");
             TestCommonHelper.assertUndeliverable(errors, 1, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

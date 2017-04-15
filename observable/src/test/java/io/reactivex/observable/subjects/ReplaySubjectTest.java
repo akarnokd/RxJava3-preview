@@ -852,7 +852,7 @@ public class ReplaySubjectTest {
     }
 
     @Test
-    public void hasSubscribers() {
+    public void hasObservers() {
         ReplaySubject<Integer> rp = ReplaySubject.create();
 
         assertFalse(rp.hasObservers());

@@ -17,8 +17,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -28,6 +26,8 @@ import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
 

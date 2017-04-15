@@ -18,20 +18,19 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.*;
 import org.mockito.InOrder;
 
-import io.reactivex.common.Disposables;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.utils.CrashingIterable;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableZipIterableTest {
     BiFunction<String, String, String> concat2Strings;
@@ -427,7 +426,7 @@ public class ObservableZipIterableTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

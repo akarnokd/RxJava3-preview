@@ -20,16 +20,12 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
 import org.junit.Test;
-import org.reactivestreams.Subscriber;
 
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.observable.*;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class SingleDelayTest {
     @Test
@@ -72,14 +68,6 @@ public class SingleDelayTest {
     @Test
     public void delaySubscriptionObservable() throws Exception {
         Single.just(1).delaySubscription(Observable.timer(100, TimeUnit.MILLISECONDS))
-        .test()
-        .awaitDone(5, TimeUnit.SECONDS)
-        .assertResult(1);
-    }
-
-    @Test
-    public void delaySubscriptionFlowable() throws Exception {
-        Single.just(1).delaySubscription(Flowable.timer(100, TimeUnit.MILLISECONDS))
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(1);
@@ -133,13 +121,13 @@ public class SingleDelayTest {
 
     @Test
     public void withPublisherDispose() {
-        TestHelper.checkDisposed(PublishSubject.create().singleOrError().delaySubscription(Flowable.just(1)));
+        TestHelper.checkDisposed(PublishSubject.create().singleOrError().delaySubscription(Observable.just(1)));
     }
 
     @Test
     public void withPublisherError() {
         Single.just(1)
-        .delaySubscription(Flowable.error(new TestException()))
+        .delaySubscription(Observable.error(new TestException()))
         .test()
         .assertFailure(TestException.class);
     }
@@ -150,10 +138,10 @@ public class SingleDelayTest {
 
         try {
             Single.just(1)
-            .delaySubscription(new Flowable<Integer>() {
+            .delaySubscription(new Observable<Integer>() {
                 @Override
-                protected void subscribeActual(Subscriber<? super Integer> s) {
-                    s.onSubscribe(new BooleanSubscription());
+                protected void subscribeActual(Observer<? super Integer> s) {
+                    s.onSubscribe(Disposables.empty());
                     s.onNext(1);
                     s.onError(new TestException());
                 }
@@ -163,7 +151,7 @@ public class SingleDelayTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -199,7 +187,7 @@ public class SingleDelayTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

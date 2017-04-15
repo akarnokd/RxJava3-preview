@@ -25,7 +25,6 @@ import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Cancellable;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableCreateTest {
 
@@ -423,7 +422,7 @@ public class ObservableCreateTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -558,7 +557,7 @@ public class ObservableCreateTest {
                 .assertFailure(Throwable.class);
             }
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
         assertFalse(errors.isEmpty());
     }

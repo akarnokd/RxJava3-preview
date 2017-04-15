@@ -155,7 +155,7 @@ public enum ObserverFusion {
      * Constructs a TestObserver with the given required fusion mode.
      * @param <T> the value type
      * @param mode the requested fusion mode, see {@link QueueDisposable} constants
-     * @return the new TestSubscriber
+     * @return the new TestObserver
      */
     public static <T> TestObserver<T> newTest(int mode) {
         TestObserver<T> ts = new TestObserver<T>();
@@ -164,12 +164,12 @@ public enum ObserverFusion {
     }
 
     /**
-     * Assert that the TestSubscriber received a fuseabe QueueDisposable and
+     * Assert that the TestObserver received a fuseabe QueueDisposable and
      * is in the given fusion mode.
      * @param <T> the value type
-     * @param ts the TestSubscriber instance
+     * @param ts the TestObserver instance
      * @param mode the expected mode
-     * @return the TestSubscriber
+     * @return the TestObserver
      */
     public static <T> TestObserver<T> assertFusion(TestObserver<T> ts, int mode) {
         return ts.assertOf(ObserverFusion.<T>assertFuseable())

@@ -16,13 +16,13 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.observable.TestHelper;
+import io.reactivex.common.TestCommonHelper;
 
 public class ObservableInternalHelperTest {
 
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(ObservableInternalHelper.class);
+        TestCommonHelper.checkUtilityClass(ObservableInternalHelper.class);
     }
 
     @Test

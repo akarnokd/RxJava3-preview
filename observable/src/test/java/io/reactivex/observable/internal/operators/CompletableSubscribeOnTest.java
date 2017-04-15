@@ -25,7 +25,6 @@ import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class CompletableSubscribeOnTest {
 
@@ -45,7 +44,7 @@ public class CompletableSubscribeOnTest {
 
             assertTrue(list.toString(), list.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

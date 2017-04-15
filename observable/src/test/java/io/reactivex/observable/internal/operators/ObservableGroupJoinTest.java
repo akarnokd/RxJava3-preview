@@ -19,8 +19,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
-import java.util.Observable;
-import java.util.Observer;
 
 import org.junit.*;
 import org.mockito.MockitoAnnotations;
@@ -29,13 +27,11 @@ import io.reactivex.common.*;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
 import io.reactivex.observable.*;
-import io.reactivex.observable.internal.operators.ObservableGroupJoinTest.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableGroupJoinTest {
 
@@ -563,9 +559,9 @@ public class ObservableGroupJoinTest {
                 Throwable exc = to.errors().get(0);
 
                 if (exc instanceof CompositeException) {
-                    List<Throwable> es = TestHelper.compositeList(exc);
-                    TestHelper.assertError(es, 0, TestException.class);
-                    TestHelper.assertError(es, 1, TestException.class);
+                    List<Throwable> es = TestCommonHelper.compositeList(exc);
+                    TestCommonHelper.assertError(es, 0, TestException.class);
+                    TestCommonHelper.assertError(es, 1, TestException.class);
                 } else {
                     to.assertError(TestException.class);
                 }
@@ -574,7 +570,7 @@ public class ObservableGroupJoinTest {
                     TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -636,9 +632,9 @@ public class ObservableGroupJoinTest {
                 Throwable exc = to.errors().get(0);
 
                 if (exc instanceof CompositeException) {
-                    List<Throwable> es = TestHelper.compositeList(exc);
-                    TestHelper.assertError(es, 0, TestException.class);
-                    TestHelper.assertError(es, 1, TestException.class);
+                    List<Throwable> es = TestCommonHelper.compositeList(exc);
+                    TestCommonHelper.assertError(es, 0, TestException.class);
+                    TestCommonHelper.assertError(es, 1, TestException.class);
                 } else {
                     to.assertError(TestException.class);
                 }
@@ -647,7 +643,7 @@ public class ObservableGroupJoinTest {
                     TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }

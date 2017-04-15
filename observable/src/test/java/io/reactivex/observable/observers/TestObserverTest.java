@@ -23,21 +23,18 @@ import java.util.concurrent.TimeUnit;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
-import org.reactivestreams.Subscriber;
 
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.EmptySubscription;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.TestHelper;
 import io.reactivex.observable.extensions.QueueDisposable;
+import io.reactivex.observable.internal.disposables.EmptyDisposable;
 import io.reactivex.observable.internal.operators.ObservableScalarXMap.ScalarDisposable;
-import io.reactivex.observable.subjects.UnicastSubject;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.observable.subjects.*;
 
 public class TestObserverTest {
 
@@ -46,8 +43,8 @@ public class TestObserverTest {
 
     @Test
     public void testAssert() {
-        Flowable<Integer> oi = Flowable.fromIterable(Arrays.asList(1, 2));
-        TestSubscriber<Integer> o = new TestSubscriber<Integer>();
+        Observable<Integer> oi = Observable.fromIterable(Arrays.asList(1, 2));
+        TestObserver<Integer> o = new TestObserver<Integer>();
         oi.subscribe(o);
 
         o.assertValues(1, 2);
@@ -57,8 +54,8 @@ public class TestObserverTest {
 
     @Test
     public void testAssertNotMatchCount() {
-        Flowable<Integer> oi = Flowable.fromIterable(Arrays.asList(1, 2));
-        TestSubscriber<Integer> o = new TestSubscriber<Integer>();
+        Observable<Integer> oi = Observable.fromIterable(Arrays.asList(1, 2));
+        TestObserver<Integer> o = new TestObserver<Integer>();
         oi.subscribe(o);
 
         thrown.expect(AssertionError.class);
@@ -72,8 +69,8 @@ public class TestObserverTest {
 
     @Test
     public void testAssertNotMatchValue() {
-        Flowable<Integer> oi = Flowable.fromIterable(Arrays.asList(1, 2));
-        TestSubscriber<Integer> o = new TestSubscriber<Integer>();
+        Observable<Integer> oi = Observable.fromIterable(Arrays.asList(1, 2));
+        TestObserver<Integer> o = new TestObserver<Integer>();
         oi.subscribe(o);
 
         thrown.expect(AssertionError.class);
@@ -87,8 +84,8 @@ public class TestObserverTest {
 
     @Test
     public void assertNeverAtNotMatchingValue() {
-        Flowable<Integer> oi = Flowable.fromIterable(Arrays.asList(1, 2));
-        TestSubscriber<Integer> o = new TestSubscriber<Integer>();
+        Observable<Integer> oi = Observable.fromIterable(Arrays.asList(1, 2));
+        TestObserver<Integer> o = new TestObserver<Integer>();
         oi.subscribe(o);
 
         o.assertNever(3);
@@ -98,8 +95,8 @@ public class TestObserverTest {
 
     @Test
     public void assertNeverAtMatchingValue() {
-        Flowable<Integer> oi = Flowable.fromIterable(Arrays.asList(1, 2));
-        TestSubscriber<Integer> o = new TestSubscriber<Integer>();
+        Observable<Integer> oi = Observable.fromIterable(Arrays.asList(1, 2));
+        TestObserver<Integer> o = new TestObserver<Integer>();
         oi.subscribe(o);
 
         o.assertValues(1, 2);
@@ -113,9 +110,9 @@ public class TestObserverTest {
 
     @Test
     public void assertNeverAtMatchingPredicate() {
-        TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
+        TestObserver<Integer> ts = new TestObserver<Integer>();
 
-        Flowable.just(1, 2).subscribe(ts);
+        Observable.just(1, 2).subscribe(ts);
 
         ts.assertValues(1, 2);
 
@@ -131,9 +128,9 @@ public class TestObserverTest {
 
     @Test
     public void assertNeverAtNotMatchingPredicate() {
-        TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
+        TestObserver<Integer> ts = new TestObserver<Integer>();
 
-        Flowable.just(2, 3).subscribe(ts);
+        Observable.just(2, 3).subscribe(ts);
 
         ts.assertNever(new Predicate<Integer>() {
             @Override
@@ -145,8 +142,8 @@ public class TestObserverTest {
 
     @Test
     public void testAssertTerminalEventNotReceived() {
-        PublishProcessor<Integer> p = PublishProcessor.create();
-        TestSubscriber<Integer> o = new TestSubscriber<Integer>();
+        PublishSubject<Integer> p = PublishSubject.create();
+        TestObserver<Integer> o = new TestObserver<Integer>();
         p.subscribe(o);
 
         p.onNext(1);
@@ -163,11 +160,11 @@ public class TestObserverTest {
 
     @Test
     public void testWrappingMock() {
-        Flowable<Integer> oi = Flowable.fromIterable(Arrays.asList(1, 2));
+        Observable<Integer> oi = Observable.fromIterable(Arrays.asList(1, 2));
 
-        Subscriber<Integer> mockObserver = TestHelper.mockSubscriber();
+        Observer<Integer> mockObserver = TestHelper.mockObserver();
 
-        oi.subscribe(new TestSubscriber<Integer>(mockObserver));
+        oi.subscribe(new TestObserver<Integer>(mockObserver));
 
         InOrder inOrder = inOrder(mockObserver);
         inOrder.verify(mockObserver, times(1)).onNext(1);
@@ -178,9 +175,9 @@ public class TestObserverTest {
 
     @Test
     public void testWrappingMockWhenUnsubscribeInvolved() {
-        Flowable<Integer> oi = Flowable.fromIterable(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9)).take(2);
-        Subscriber<Integer> mockObserver = TestHelper.mockSubscriber();
-        oi.subscribe(new TestSubscriber<Integer>(mockObserver));
+        Observable<Integer> oi = Observable.fromIterable(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9)).take(2);
+        Observer<Integer> mockObserver = TestHelper.mockObserver();
+        oi.subscribe(new TestObserver<Integer>(mockObserver));
 
         InOrder inOrder = inOrder(mockObserver);
         inOrder.verify(mockObserver, times(1)).onNext(1);
@@ -191,13 +188,13 @@ public class TestObserverTest {
 
     @Test
     public void testErrorSwallowed() {
-        Flowable.error(new RuntimeException()).subscribe(new TestSubscriber<Object>());
+        Observable.error(new RuntimeException()).subscribe(new TestObserver<Object>());
     }
 
     @Test
     public void testGetEvents() {
-        TestSubscriber<Integer> to = new TestSubscriber<Integer>();
-        to.onSubscribe(EmptySubscription.INSTANCE);
+        TestObserver<Integer> to = new TestObserver<Integer>();
+        to.onSubscribe(EmptyDisposable.INSTANCE);
         to.onNext(1);
         to.onNext(2);
 
@@ -211,8 +208,8 @@ public class TestObserverTest {
                 Collections.singletonList(Notification.createOnComplete())), to.getEvents());
 
         TestException ex = new TestException();
-        TestSubscriber<Integer> to2 = new TestSubscriber<Integer>();
-        to2.onSubscribe(EmptySubscription.INSTANCE);
+        TestObserver<Integer> to2 = new TestObserver<Integer>();
+        to2.onSubscribe(EmptyDisposable.INSTANCE);
         to2.onNext(1);
         to2.onNext(2);
 
@@ -231,7 +228,7 @@ public class TestObserverTest {
 
     @Test
     public void testNullExpected() {
-        TestSubscriber<Integer> to = new TestSubscriber<Integer>();
+        TestObserver<Integer> to = new TestObserver<Integer>();
         to.onNext(1);
 
         try {
@@ -245,7 +242,7 @@ public class TestObserverTest {
 
     @Test
     public void testNullActual() {
-        TestSubscriber<Integer> to = new TestSubscriber<Integer>();
+        TestObserver<Integer> to = new TestObserver<Integer>();
         to.onNext(null);
 
         try {
@@ -259,7 +256,7 @@ public class TestObserverTest {
 
     @Test
     public void testTerminalErrorOnce() {
-        TestSubscriber<Integer> to = new TestSubscriber<Integer>();
+        TestObserver<Integer> to = new TestObserver<Integer>();
         to.onError(new TestException());
         to.onError(new TestException());
 
@@ -273,7 +270,7 @@ public class TestObserverTest {
     }
     @Test
     public void testTerminalCompletedOnce() {
-        TestSubscriber<Integer> to = new TestSubscriber<Integer>();
+        TestObserver<Integer> to = new TestObserver<Integer>();
         to.onComplete();
         to.onComplete();
 
@@ -288,7 +285,7 @@ public class TestObserverTest {
 
     @Test
     public void testTerminalOneKind() {
-        TestSubscriber<Integer> to = new TestSubscriber<Integer>();
+        TestObserver<Integer> to = new TestObserver<Integer>();
         to.onError(new TestException());
         to.onComplete();
 
@@ -716,7 +713,7 @@ public class TestObserverTest {
 
         assertEquals(1, ts.errors().size());
 
-        TestHelper.assertError(ts.errors(), 0, TestException.class);
+        TestCommonHelper.assertError(ts.errors(), 0, TestException.class);
     }
 
     @SuppressWarnings("unchecked")

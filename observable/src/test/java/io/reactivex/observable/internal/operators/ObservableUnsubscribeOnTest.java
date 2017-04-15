@@ -22,13 +22,11 @@ import java.util.concurrent.atomic.*;
 import org.junit.Test;
 
 import io.reactivex.common.*;
-import io.reactivex.common.Scheduler.Worker;
 import io.reactivex.common.annotations.NonNull;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Action;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableUnsubscribeOnTest {
 
@@ -254,7 +252,7 @@ public class ObservableUnsubscribeOnTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

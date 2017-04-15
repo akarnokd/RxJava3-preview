@@ -20,7 +20,7 @@ import io.reactivex.common.internal.disposables.DisposableHelper;
 import io.reactivex.observable.*;
 
 /**
- * Relays the main source's event unless the other Publisher signals an item first or just completes
+ * Relays the main source's event unless the other Observable signals an item first or just completes
  * at which point the resulting Maybe is completed.
  *
  * @param <T> the value type

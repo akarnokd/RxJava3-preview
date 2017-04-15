@@ -23,10 +23,6 @@ import org.junit.*;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.internal.functions.Functions;
-import io.reactivex.internal.subscribers.FutureSubscriber;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.observable.TestHelper;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class FutureObserverTest {
     FutureObserver<Integer> fo;
@@ -67,7 +63,7 @@ public class FutureObserverTest {
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
             TestCommonHelper.assertUndeliverable(errors, 1, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -116,7 +112,7 @@ public class FutureObserverTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Two");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -145,16 +141,16 @@ public class FutureObserverTest {
             assertFalse(s.isDisposed());
             assertTrue(s2.isDisposed());
 
-            TestHelper.assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
+            TestCommonHelper.assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void cancelRace() {
         for (int i = 0; i < 500; i++) {
-            final FutureSubscriber<Integer> fo = new FutureSubscriber<Integer>();
+            final FutureObserver<Integer> fo = new FutureObserver<Integer>();
 
             Runnable r = new Runnable() {
                 @Override
@@ -182,10 +178,10 @@ public class FutureObserverTest {
 
     @Test
     public void onErrorCancelRace() {
-        RxJavaPlugins.setErrorHandler(Functions.emptyConsumer());
+        RxJavaCommonPlugins.setErrorHandler(Functions.emptyConsumer());
         try {
             for (int i = 0; i < 500; i++) {
-                final FutureSubscriber<Integer> fo = new FutureSubscriber<Integer>();
+                final FutureObserver<Integer> fo = new FutureObserver<Integer>();
 
                 final TestException ex = new TestException();
 
@@ -206,17 +202,17 @@ public class FutureObserverTest {
                 TestCommonHelper.race(r1, r2, Schedulers.single());
             }
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void onCompleteCancelRace() {
         for (int i = 0; i < 500; i++) {
-            final FutureSubscriber<Integer> fo = new FutureSubscriber<Integer>();
+            final FutureObserver<Integer> fo = new FutureObserver<Integer>();
 
             if (i % 3 == 0) {
-                fo.onSubscribe(new BooleanSubscription());
+                fo.onSubscribe(Disposables.empty());
             }
 
             if (i % 2 == 0) {

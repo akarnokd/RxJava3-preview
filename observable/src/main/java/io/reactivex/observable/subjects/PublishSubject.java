@@ -252,7 +252,7 @@ public final class PublishSubject<T> extends Subject<T> {
         /**
          * Constructs a PublishSubscriber, wraps the actual subscriber and the state.
          * @param actual the actual subscriber
-         * @param parent the parent PublishProcessor
+         * @param parent the parent PublishSubject
          */
         PublishDisposable(Observer<? super T> actual, PublishSubject<T> parent) {
             this.actual = actual;

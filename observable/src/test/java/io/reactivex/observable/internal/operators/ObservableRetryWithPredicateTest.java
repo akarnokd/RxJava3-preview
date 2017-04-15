@@ -19,8 +19,6 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
@@ -32,6 +30,8 @@ import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.observers.*;
 import io.reactivex.observable.subjects.PublishSubject;
 
@@ -373,10 +373,10 @@ public class ObservableRetryWithPredicateTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "Outer");
-        TestHelper.assertError(errors, 1, TestException.class, "Inner");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "Outer");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Inner");
     }
 
     @Test
@@ -429,10 +429,10 @@ public class ObservableRetryWithPredicateTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "Outer");
-        TestHelper.assertError(errors, 1, TestException.class, "Inner");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "Outer");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Inner");
     }
 
     @Test

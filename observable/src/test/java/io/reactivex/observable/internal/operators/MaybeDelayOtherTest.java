@@ -19,47 +19,47 @@ import java.util.List;
 
 import org.junit.Test;
 
+import io.reactivex.common.TestCommonHelper;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.Function;
-import io.reactivex.exceptions.*;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeDelayOtherTest {
 
     @Test
     public void justWithOnNext() {
-        PublishProcessor<Object> pp = PublishProcessor.create();
+        PublishSubject<Object> pp = PublishSubject.create();
 
         TestObserver<Integer> ts = Maybe.just(1)
         .delay(pp).test();
 
         ts.assertEmpty();
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         pp.onNext(1);
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         ts.assertResult(1);
     }
 
     @Test
     public void justWithOnComplete() {
-        PublishProcessor<Object> pp = PublishProcessor.create();
+        PublishSubject<Object> pp = PublishSubject.create();
 
         TestObserver<Integer> ts = Maybe.just(1)
         .delay(pp).test();
 
         ts.assertEmpty();
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         pp.onComplete();
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         ts.assertResult(1);
     }
@@ -67,36 +67,36 @@ public class MaybeDelayOtherTest {
 
     @Test
     public void justWithOnError() {
-        PublishProcessor<Object> pp = PublishProcessor.create();
+        PublishSubject<Object> pp = PublishSubject.create();
 
         TestObserver<Integer> ts = Maybe.just(1)
         .delay(pp).test();
 
         ts.assertEmpty();
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         pp.onError(new TestException("Other"));
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         ts.assertFailureAndMessage(TestException.class, "Other");
     }
 
     @Test
     public void emptyWithOnNext() {
-        PublishProcessor<Object> pp = PublishProcessor.create();
+        PublishSubject<Object> pp = PublishSubject.create();
 
         TestObserver<Integer> ts = Maybe.<Integer>empty()
         .delay(pp).test();
 
         ts.assertEmpty();
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         pp.onNext(1);
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         ts.assertResult();
     }
@@ -104,98 +104,98 @@ public class MaybeDelayOtherTest {
 
     @Test
     public void emptyWithOnComplete() {
-        PublishProcessor<Object> pp = PublishProcessor.create();
+        PublishSubject<Object> pp = PublishSubject.create();
 
         TestObserver<Integer> ts = Maybe.<Integer>empty()
         .delay(pp).test();
 
         ts.assertEmpty();
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         pp.onComplete();
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         ts.assertResult();
     }
 
     @Test
     public void emptyWithOnError() {
-        PublishProcessor<Object> pp = PublishProcessor.create();
+        PublishSubject<Object> pp = PublishSubject.create();
 
         TestObserver<Integer> ts = Maybe.<Integer>empty()
         .delay(pp).test();
 
         ts.assertEmpty();
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         pp.onError(new TestException("Other"));
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         ts.assertFailureAndMessage(TestException.class, "Other");
     }
 
     @Test
     public void errorWithOnNext() {
-        PublishProcessor<Object> pp = PublishProcessor.create();
+        PublishSubject<Object> pp = PublishSubject.create();
 
         TestObserver<Integer> ts = Maybe.<Integer>error(new TestException("Main"))
         .delay(pp).test();
 
         ts.assertEmpty();
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         pp.onNext(1);
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         ts.assertFailureAndMessage(TestException.class, "Main");
     }
 
     @Test
     public void errorWithOnComplete() {
-        PublishProcessor<Object> pp = PublishProcessor.create();
+        PublishSubject<Object> pp = PublishSubject.create();
 
         TestObserver<Integer> ts = Maybe.<Integer>error(new TestException("Main"))
         .delay(pp).test();
 
         ts.assertEmpty();
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         pp.onComplete();
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         ts.assertFailureAndMessage(TestException.class, "Main");
     }
 
     @Test
     public void errorWithOnError() {
-        PublishProcessor<Object> pp = PublishProcessor.create();
+        PublishSubject<Object> pp = PublishSubject.create();
 
         TestObserver<Integer> ts = Maybe.<Integer>error(new TestException("Main"))
         .delay(pp).test();
 
         ts.assertEmpty();
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         pp.onError(new TestException("Other"));
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         ts.assertFailure(CompositeException.class);
 
-        List<Throwable> list = TestHelper.compositeList(ts.errors().get(0));
+        List<Throwable> list = TestCommonHelper.compositeList(ts.errors().get(0));
         assertEquals(2, list.size());
 
-        TestHelper.assertError(list, 0, TestException.class, "Main");
-        TestHelper.assertError(list, 1, TestException.class, "Other");
+        TestCommonHelper.assertError(list, 0, TestException.class, "Main");
+        TestCommonHelper.assertError(list, 1, TestException.class, "Other");
     }
 
     @Test
@@ -214,7 +214,7 @@ public class MaybeDelayOtherTest {
     }
 
     @Test
-    public void withOtherPublisherDispose() {
-        TestHelper.checkDisposed(Maybe.just(1).delay(Flowable.just(1)));
+    public void withOtherObservableDispose() {
+        TestHelper.checkDisposed(Maybe.just(1).delay(Observable.just(1)));
     }
 }

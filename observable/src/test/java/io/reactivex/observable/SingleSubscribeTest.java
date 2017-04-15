@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.single;
+package io.reactivex.observable;
 
 import static org.junit.Assert.*;
 
@@ -20,12 +20,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.common.Disposable;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class SingleSubscribeTest {
 
@@ -142,7 +141,7 @@ public class SingleSubscribeTest {
 
             TestCommonHelper.assertUndeliverable(list, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -160,12 +159,12 @@ public class SingleSubscribeTest {
                 }
             });
 
-            TestHelper.assertError(list, 0, CompositeException.class);
-            List<Throwable> cel = TestHelper.compositeList(list.get(0));
-            TestHelper.assertError(cel, 0, TestException.class, "Outer failure");
-            TestHelper.assertError(cel, 1, TestException.class, "Inner failure");
+            TestCommonHelper.assertError(list, 0, CompositeException.class);
+            List<Throwable> cel = TestCommonHelper.compositeList(list.get(0));
+            TestCommonHelper.assertError(cel, 0, TestException.class, "Outer failure");
+            TestCommonHelper.assertError(cel, 1, TestException.class, "Inner failure");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -183,7 +182,7 @@ public class SingleSubscribeTest {
 
             TestCommonHelper.assertUndeliverable(list, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -200,12 +199,12 @@ public class SingleSubscribeTest {
                 }
             });
 
-            TestHelper.assertError(list, 0, CompositeException.class);
-            List<Throwable> cel = TestHelper.compositeList(list.get(0));
-            TestHelper.assertError(cel, 0, TestException.class, "Outer failure");
-            TestHelper.assertError(cel, 1, TestException.class, "Inner failure");
+            TestCommonHelper.assertError(list, 0, CompositeException.class);
+            List<Throwable> cel = TestCommonHelper.compositeList(list.get(0));
+            TestCommonHelper.assertError(cel, 0, TestException.class, "Outer failure");
+            TestCommonHelper.assertError(cel, 1, TestException.class, "Inner failure");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

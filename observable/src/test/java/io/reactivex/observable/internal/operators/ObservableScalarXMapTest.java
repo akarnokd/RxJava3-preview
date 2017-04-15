@@ -19,7 +19,7 @@ import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
-import io.reactivex.common.Schedulers;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
@@ -31,7 +31,7 @@ public class ObservableScalarXMapTest {
 
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(ObservableScalarXMap.class);
+        TestCommonHelper.checkUtilityClass(ObservableScalarXMap.class);
     }
 
     static final class CallablePublisher implements ObservableSource<Integer>, Callable<Integer> {

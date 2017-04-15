@@ -18,42 +18,41 @@ import static org.junit.Assert.*;
 import java.util.*;
 
 import org.junit.Test;
-import org.reactivestreams.*;
 
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.extensions.QueueDisposable;
 import io.reactivex.observable.internal.operators.MaybeMergeArray.MergeMaybeObserver;
+import io.reactivex.observable.observers.*;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subscribers.*;
 
 public class MaybeMergeArrayTest {
 
     @SuppressWarnings("unchecked")
     @Test
     public void normal() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueDisposable.SYNC);
+        TestObserver<Integer> ts = ObserverFusion.newTest(QueueDisposable.SYNC);
 
         Maybe.mergeArray(Maybe.just(1), Maybe.just(2))
         .subscribe(ts);
         ts
-        .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.NONE))
+        .assertOf(ObserverFusion.<Integer>assertFuseable())
+        .assertOf(ObserverFusion.<Integer>assertFusionMode(QueueDisposable.NONE))
         .assertResult(1, 2);
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void fusedPollMixed() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueDisposable.ANY);
+        TestObserver<Integer> ts = ObserverFusion.newTest(QueueDisposable.ANY);
 
         Maybe.mergeArray(Maybe.just(1), Maybe.<Integer>empty(), Maybe.just(2))
         .subscribe(ts);
         ts
-        .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
+        .assertOf(ObserverFusion.<Integer>assertFuseable())
+        .assertOf(ObserverFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
         .assertResult(1, 2);
     }
 
@@ -61,10 +60,10 @@ public class MaybeMergeArrayTest {
     @Test
     public void fusedEmptyCheck() {
         Maybe.mergeArray(Maybe.just(1), Maybe.<Integer>empty(), Maybe.just(2))
-        .subscribe(new FlowableSubscriber<Integer>() {
+        .subscribe(new Observer<Integer>() {
             QueueDisposable<Integer> qd;
             @Override
-            public void onSubscribe(Subscription d) {
+            public void onSubscribe(Disposable d) {
                 qd = (QueueDisposable<Integer>)d;
 
                 assertEquals(QueueDisposable.ASYNC, qd.requestFusion(QueueDisposable.ANY));
@@ -78,7 +77,7 @@ public class MaybeMergeArrayTest {
 
                 assertTrue(qd.isEmpty());
 
-                qd.cancel();
+                qd.dispose();
             }
 
             @Override
@@ -94,21 +93,20 @@ public class MaybeMergeArrayTest {
     @SuppressWarnings("unchecked")
     @Test
     public void cancel() {
-        TestSubscriber<Integer> ts = new TestSubscriber<Integer>(0L);
+        TestObserver<Integer> ts = new TestObserver<Integer>();
 
         Maybe.mergeArray(Maybe.just(1), Maybe.<Integer>empty(), Maybe.just(2))
         .subscribe(ts);
 
         ts.cancel();
-        ts.request(10);
 
-        ts.assertEmpty();
+        ts.assertResult(1, 2);
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void firstErrors() {
-        TestSubscriber<Integer> ts = new TestSubscriber<Integer>(0L);
+        TestObserver<Integer> ts = new TestObserver<Integer>();
 
         Maybe.mergeArray(Maybe.<Integer>error(new TestException()), Maybe.<Integer>empty(), Maybe.just(2))
         .subscribe(ts);
@@ -119,13 +117,13 @@ public class MaybeMergeArrayTest {
     @SuppressWarnings("unchecked")
     @Test
     public void errorFused() {
-        TestSubscriber<Integer> ts = SubscriberFusion.newTest(QueueDisposable.ANY);
+        TestObserver<Integer> ts = ObserverFusion.newTest(QueueDisposable.ANY);
 
         Maybe.mergeArray(Maybe.<Integer>error(new TestException()), Maybe.just(2))
         .subscribe(ts);
         ts
-        .assertOf(SubscriberFusion.<Integer>assertFuseable())
-        .assertOf(SubscriberFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
+        .assertOf(ObserverFusion.<Integer>assertFuseable())
+        .assertOf(ObserverFusion.<Integer>assertFusionMode(QueueDisposable.ASYNC))
         .assertFailure(TestException.class);
     }
 
@@ -139,7 +137,7 @@ public class MaybeMergeArrayTest {
                 final PublishSubject<Integer> ps1 = PublishSubject.create();
                 final PublishSubject<Integer> ps2 = PublishSubject.create();
 
-                TestSubscriber<Integer> ts = Maybe.mergeArray(ps1.singleElement(), ps2.singleElement())
+                TestObserver<Integer> ts = Maybe.mergeArray(ps1.singleElement(), ps2.singleElement())
                 .test();
 
                 final TestException ex = new TestException();
@@ -166,7 +164,7 @@ public class MaybeMergeArrayTest {
                     TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -189,48 +187,15 @@ public class MaybeMergeArrayTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    public void smallOffer2Throws() {
-        Maybe.mergeArray(Maybe.never(), Maybe.never())
-        .subscribe(new FlowableSubscriber<Object>() {
-
-            @SuppressWarnings("rawtypes")
-            @Override
-            public void onSubscribe(Subscription s) {
-                MergeMaybeObserver o = (MergeMaybeObserver)s;
-
-                try {
-                    o.queue.offer(1, 2);
-                    fail("Should have thrown");
-                } catch (UnsupportedOperationException ex) {
-                    // expected
-                }
-            }
-
-            @Override
-            public void onNext(Object t) {
-            }
-
-            @Override
-            public void onError(Throwable t) {
-            }
-
-            @Override
-            public void onComplete() {
-            }
-        });
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
     public void largeOffer2Throws() {
         Maybe<Integer>[] a = new Maybe[1024];
         Arrays.fill(a, Maybe.never());
         Maybe.mergeArray(a)
-        .subscribe(new FlowableSubscriber<Object>() {
+        .subscribe(new Observer<Object>() {
 
             @SuppressWarnings("rawtypes")
             @Override
-            public void onSubscribe(Subscription s) {
+            public void onSubscribe(Disposable s) {
                 MergeMaybeObserver o = (MergeMaybeObserver)s;
 
                 try {

@@ -16,7 +16,6 @@ package io.reactivex.observable.internal.operators;
 import static org.junit.Assert.*;
 
 import java.util.*;
-import java.util.Observable;
 import java.util.concurrent.*;
 
 import org.junit.Test;
@@ -26,10 +25,10 @@ import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.Function;
 import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
 import io.reactivex.observable.Observer;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableFlatMapMaybeTest {
 
@@ -145,10 +144,10 @@ public class ObservableFlatMapMaybeTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
         for (int i = 0; i < 11; i++) {
-            TestHelper.assertError(errors, i, TestException.class);
+            TestCommonHelper.assertError(errors, i, TestException.class);
         }
     }
 
@@ -333,7 +332,7 @@ public class ObservableFlatMapMaybeTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -355,7 +354,7 @@ public class ObservableFlatMapMaybeTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

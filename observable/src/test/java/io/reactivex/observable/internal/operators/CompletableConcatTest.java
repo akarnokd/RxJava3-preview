@@ -18,44 +18,21 @@ import static org.junit.Assert.*;
 import java.util.*;
 
 import org.junit.Test;
-import org.reactivestreams.*;
 
 import io.reactivex.common.*;
-import io.reactivex.common.exceptions.*;
+import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
-import io.reactivex.exceptions.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.observers.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.*;
+import io.reactivex.observable.subjects.*;
 
 public class CompletableConcatTest {
 
     @Test
-    public void overflowReported() {
-        Completable.concat(
-            Flowable.fromPublisher(new Publisher<Completable>() {
-                @Override
-                public void subscribe(Subscriber<? super Completable> s) {
-                    s.onSubscribe(new BooleanSubscription());
-                    s.onNext(Completable.never());
-                    s.onNext(Completable.never());
-                    s.onNext(Completable.never());
-                    s.onNext(Completable.never());
-                    s.onComplete();
-                }
-            }), 1
-        )
-        .test()
-        .assertFailure(MissingBackpressureException.class);
-    }
-
-    @Test
     public void invalidPrefetch() {
         try {
-            Completable.concat(Flowable.just(Completable.complete()), -99);
+            Completable.concat(Observable.just(Completable.complete()), -99);
             fail("Should have thrown IllegalArgumentExceptio");
         } catch (IllegalArgumentException ex) {
             assertEquals("prefetch > 0 required but it was -99", ex.getMessage());
@@ -64,7 +41,7 @@ public class CompletableConcatTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Completable.concat(Flowable.just(Completable.complete())));
+        TestHelper.checkDisposed(Completable.concat(Observable.just(Completable.complete())));
     }
 
     @Test
@@ -73,13 +50,13 @@ public class CompletableConcatTest {
             List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
             try {
-                final PublishProcessor<Integer> ps1 = PublishProcessor.create();
-                final PublishProcessor<Integer> ps2 = PublishProcessor.create();
+                final PublishSubject<Integer> ps1 = PublishSubject.create();
+                final CompletableSubject ps2 = CompletableSubject.create();
 
                 TestObserver<Void> to = Completable.concat(ps1.map(new Function<Integer, Completable>() {
                     @Override
                     public Completable apply(Integer v) throws Exception {
-                        return ps2.ignoreElements();
+                        return ps2;
                     }
                 })).test();
 
@@ -108,14 +85,14 @@ public class CompletableConcatTest {
                     TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
 
     @Test
     public void synchronousFusedCrash() {
-        Completable.concat(Flowable.range(1, 2).map(new Function<Integer, Completable>() {
+        Completable.concat(Observable.range(1, 2).map(new Function<Integer, Completable>() {
             @Override
             public Completable apply(Integer v) throws Exception {
                 throw new TestException();
@@ -127,21 +104,21 @@ public class CompletableConcatTest {
 
     @Test
     public void unboundedIn() {
-        Completable.concat(Flowable.just(Completable.complete()).hide(), Integer.MAX_VALUE)
+        Completable.concat(Observable.just(Completable.complete()).hide(), Integer.MAX_VALUE)
         .test()
         .assertResult();
     }
 
     @Test
     public void syncFusedUnboundedIn() {
-        Completable.concat(Flowable.just(Completable.complete()), Integer.MAX_VALUE)
+        Completable.concat(Observable.just(Completable.complete()), Integer.MAX_VALUE)
         .test()
         .assertResult();
     }
 
     @Test
     public void asyncFusedUnboundedIn() {
-        UnicastProcessor<Completable> up = UnicastProcessor.create();
+        UnicastSubject<Completable> up = UnicastSubject.create();
         up.onNext(Completable.complete());
         up.onComplete();
 

@@ -18,8 +18,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
@@ -29,14 +27,11 @@ import org.mockito.*;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.observable.*;
-import io.reactivex.observable.internal.operators.ObservableRetryTest.Tuple;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.observers.*;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.observers.*;
 
 public class ObservableRetryTest {
 
@@ -459,10 +454,10 @@ public class ObservableRetryTest {
         ObservableSource<String> onSubscribe = new ObservableSource<String>() {
             @Override
             public void subscribe(Observer<? super String> s) {
-                BooleanSubscription bs = new BooleanSubscription();
+                Disposable bs = Disposables.empty();
                 // if isUnsubscribed is true that means we have a bug such as
                 // https://github.com/ReactiveX/RxJava/issues/1024
-                if (!bs.isCancelled()) {
+                if (!bs.isDisposed()) {
                     subsCount.incrementAndGet();
                     s.onError(new RuntimeException("failed"));
                     // it unsubscribes the child directly
@@ -470,7 +465,7 @@ public class ObservableRetryTest {
                     // or just a source that proactively triggers cleanup
                     // FIXME can't unsubscribe child
 //                    s.unsubscribe();
-                    bs.cancel();
+                    bs.dispose();
                 } else {
                     s.onError(new RuntimeException());
                 }
@@ -662,7 +657,7 @@ public class ObservableRetryTest {
     public void testRetryWithBackpressure() throws InterruptedException {
         final int NUM_LOOPS = 1;
         for (int j = 0; j < NUM_LOOPS; j++) {
-            final int NUM_RETRIES = Flowable.bufferSize() * 2;
+            final int NUM_RETRIES = Observable.bufferSize() * 2;
             for (int i = 0; i < 400; i++) {
                 Observer<String> observer = TestHelper.mockObserver();
                 Observable<String> origin = Observable.unsafeCreate(new FuncWithErrors(NUM_RETRIES));
@@ -687,7 +682,7 @@ public class ObservableRetryTest {
     @Test//(timeout = 15000)
     public void testRetryWithBackpressureParallel() throws InterruptedException {
         final int NUM_LOOPS = 1;
-        final int NUM_RETRIES = Flowable.bufferSize() * 2;
+        final int NUM_RETRIES = Observable.bufferSize() * 2;
         int ncpu = Runtime.getRuntime().availableProcessors();
         ExecutorService exec = Executors.newFixedThreadPool(Math.max(ncpu / 2, 2));
         try {

@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.BiPredicate;
+import io.reactivex.observable.Single;
 
 public class SingleContainstTest {
 

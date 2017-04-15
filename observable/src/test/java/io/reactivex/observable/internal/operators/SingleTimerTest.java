@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import io.reactivex.common.*;
 import io.reactivex.common.functions.Function;
-import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
 
 public class SingleTimerTest {

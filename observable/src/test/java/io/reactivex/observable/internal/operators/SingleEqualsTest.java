@@ -13,13 +13,15 @@
 
 package io.reactivex.observable.internal.operators;
 
+
+
 import java.util.List;
 
 import org.junit.Test;
 
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
-import io.reactivex.observable.TestHelper;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.observable.Single;
 
 public class SingleEqualsTest {
 
@@ -33,7 +35,7 @@ public class SingleEqualsTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Two");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

@@ -21,8 +21,7 @@ import org.junit.Test;
 
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
-import io.reactivex.observable.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.observable.Single;
 
 public class ResourceSingleObserverTest {
     static final class TestResourceSingleObserver<T> extends ResourceSingleObserver<T> {
@@ -177,9 +176,9 @@ public class ResourceSingleObserverTest {
 
             assertEquals(1, rso.start);
 
-            TestHelper.assertError(error, 0, IllegalStateException.class, "Disposable already set!");
+            TestCommonHelper.assertError(error, 0, IllegalStateException.class, "Disposable already set!");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

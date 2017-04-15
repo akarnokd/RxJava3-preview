@@ -19,12 +19,11 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.common.Schedulers;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
-import io.reactivex.observable.*;
+import io.reactivex.observable.Maybe;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeAmbTest {
 
@@ -54,19 +53,19 @@ public class MaybeAmbTest {
     @SuppressWarnings("unchecked")
     @Test
     public void dispose() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestObserver<Integer> to = Maybe.amb(Arrays.asList(pp1.singleElement(), pp2.singleElement()))
         .test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         to.dispose();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
     }
 
     @SuppressWarnings("unchecked")
@@ -75,8 +74,8 @@ public class MaybeAmbTest {
         for (int i = 0; i < 500; i++) {
             List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
-                final PublishProcessor<Integer> pp0 = PublishProcessor.create();
-                final PublishProcessor<Integer> pp1 = PublishProcessor.create();
+                final PublishSubject<Integer> pp0 = PublishSubject.create();
+                final PublishSubject<Integer> pp1 = PublishSubject.create();
 
                 final TestObserver<Integer> to = Maybe.amb(Arrays.asList(pp0.singleElement(), pp1.singleElement()))
                 .test();
@@ -105,7 +104,7 @@ public class MaybeAmbTest {
                     TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }

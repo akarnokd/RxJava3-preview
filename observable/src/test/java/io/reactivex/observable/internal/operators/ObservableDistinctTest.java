@@ -15,6 +15,7 @@ package io.reactivex.observable.internal.operators;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -26,11 +27,12 @@ import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
 import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.TestHelper;
 import io.reactivex.observable.extensions.QueueDisposable;
 import io.reactivex.observable.observers.*;
 import io.reactivex.observable.subjects.UnicastSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableDistinctTest {
 
@@ -246,7 +248,7 @@ public class ObservableDistinctTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

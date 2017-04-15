@@ -21,7 +21,6 @@ import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
 import io.reactivex.observable.subjects.CompletableSubject;
-import io.reactivex.processors.PublishProcessor;
 
 public class CompletableHideTest {
 
@@ -67,9 +66,9 @@ public class CompletableHideTest {
 
     @Test
     public void isDisposed() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        CompletableSubject pp = CompletableSubject.create();
 
-        TestHelper.checkDisposed(pp.ignoreElements().hide());
+        TestHelper.checkDisposed(pp.hide());
     }
 
     @Test

@@ -16,11 +16,9 @@ package io.reactivex.observable.internal.operators;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.reactivestreams.Publisher;
 
 import io.reactivex.common.functions.*;
-import io.reactivex.functions.*;
-import io.reactivex.observable.Completable;
+import io.reactivex.observable.*;
 
 public class CompletableRepeatWhenTest {
     @Test
@@ -34,9 +32,9 @@ public class CompletableRepeatWhenTest {
                 counter[0]++;
             }
         })
-        .repeatWhen(new Function<Flowable<Object>, Publisher<Object>>() {
+        .repeatWhen(new Function<Observable<Object>, Observable<Object>>() {
             @Override
-            public Publisher<Object> apply(Flowable<Object> f) throws Exception {
+            public Observable<Object> apply(Observable<Object> f) throws Exception {
                 final int[] j = { 3 };
                 return f.takeWhile(new Predicate<Object>() {
                     @Override

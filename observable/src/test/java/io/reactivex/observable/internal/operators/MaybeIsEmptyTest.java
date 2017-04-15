@@ -20,7 +20,7 @@ import org.junit.Test;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeIsEmptyTest {
 
@@ -95,7 +95,7 @@ public class MaybeIsEmptyTest {
 
     @Test
     public void isDisposed() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         TestHelper.checkDisposed(pp.singleElement().isEmpty());
     }
@@ -122,7 +122,7 @@ public class MaybeIsEmptyTest {
 
     @Test
     public void isDisposedToMaybe() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         TestHelper.checkDisposed(pp.singleElement().isEmpty().toMaybe());
     }

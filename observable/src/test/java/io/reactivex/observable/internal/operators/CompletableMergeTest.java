@@ -18,24 +18,21 @@ import static org.junit.Assert.*;
 import java.util.*;
 
 import org.junit.Test;
-import org.reactivestreams.Subscriber;
 
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.Function;
-import io.reactivex.disposables.*;
-import io.reactivex.exceptions.*;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.*;
 
 public class CompletableMergeTest {
     @Test
     public void invalidPrefetch() {
         try {
-            Completable.merge(Flowable.just(Completable.complete()), -99);
+            Completable.merge(Observable.just(Completable.complete()), -99);
             fail("Should have thrown IllegalArgumentExceptio");
         } catch (IllegalArgumentException ex) {
             assertEquals("maxConcurrency > 0 required but it was -99", ex.getMessage());
@@ -97,15 +94,15 @@ public class CompletableMergeTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void completeAfterMain() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        CompletableSubject pp = CompletableSubject.create();
 
-        TestObserver<Void> to = Completable.mergeArray(Completable.complete(), pp.ignoreElements())
+        TestObserver<Void> to = Completable.mergeArray(Completable.complete(), pp)
         .test();
 
         pp.onComplete();
@@ -115,9 +112,9 @@ public class CompletableMergeTest {
 
     @Test
     public void completeAfterMainDelayError() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        CompletableSubject pp = CompletableSubject.create();
 
-        TestObserver<Void> to = Completable.mergeArrayDelayError(Completable.complete(), pp.ignoreElements())
+        TestObserver<Void> to = Completable.mergeArrayDelayError(Completable.complete(), pp)
         .test();
 
         pp.onComplete();
@@ -127,9 +124,9 @@ public class CompletableMergeTest {
 
     @Test
     public void errorAfterMainDelayError() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        CompletableSubject pp = CompletableSubject.create();
 
-        TestObserver<Void> to = Completable.mergeArrayDelayError(Completable.complete(), pp.ignoreElements())
+        TestObserver<Void> to = Completable.mergeArrayDelayError(Completable.complete(), pp)
         .test();
 
         pp.onError(new TestException());
@@ -139,30 +136,30 @@ public class CompletableMergeTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Completable.merge(Flowable.just(Completable.complete())));
+        TestHelper.checkDisposed(Completable.merge(Observable.just(Completable.complete())));
     }
 
     @Test
     public void disposePropagates() {
 
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        CompletableSubject pp = CompletableSubject.create();
 
-        TestObserver<Void> to = Completable.merge(Flowable.just(pp.ignoreElements())).test();
+        TestObserver<Void> to = Completable.merge(Observable.just(pp)).test();
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         to.cancel();
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         to.assertEmpty();
     }
 
     @Test
     public void innerComplete() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        CompletableSubject pp = CompletableSubject.create();
 
-        TestObserver<Void> to = Completable.merge(Flowable.just(pp.ignoreElements())).test();
+        TestObserver<Void> to = Completable.merge(Observable.just(pp)).test();
 
         pp.onComplete();
 
@@ -171,9 +168,9 @@ public class CompletableMergeTest {
 
     @Test
     public void innerError() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        CompletableSubject pp = CompletableSubject.create();
 
-        TestObserver<Void> to = Completable.merge(Flowable.just(pp.ignoreElements())).test();
+        TestObserver<Void> to = Completable.merge(Observable.just(pp)).test();
 
         pp.onError(new TestException());
 
@@ -182,9 +179,9 @@ public class CompletableMergeTest {
 
     @Test
     public void innerErrorDelayError() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        CompletableSubject pp = CompletableSubject.create();
 
-        TestObserver<Void> to = Completable.mergeDelayError(Flowable.just(pp.ignoreElements())).test();
+        TestObserver<Void> to = Completable.mergeDelayError(Observable.just(pp)).test();
 
         pp.onError(new TestException());
 
@@ -196,13 +193,13 @@ public class CompletableMergeTest {
         for (int i = 0; i < 500; i++) {
             List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
-                final PublishProcessor<Integer> pp1 = PublishProcessor.create();
-                final PublishProcessor<Integer> pp2 = PublishProcessor.create();
+                final PublishSubject<Integer> pp1 = PublishSubject.create();
+                final CompletableSubject pp2 = CompletableSubject.create();
 
                 TestObserver<Void> to = Completable.merge(pp1.map(new Function<Integer, Completable>() {
                     @Override
                     public Completable apply(Integer v) throws Exception {
-                        return pp2.ignoreElements();
+                        return pp2;
                     }
                 })).test();
 
@@ -230,9 +227,9 @@ public class CompletableMergeTest {
                 if (ex instanceof CompositeException) {
                     to.assertSubscribed().assertNoValues().assertNotComplete();
 
-                    errors = TestHelper.compositeList(ex);
-                    TestHelper.assertError(errors, 0, TestException.class);
-                    TestHelper.assertError(errors, 1, TestException.class);
+                    errors = TestCommonHelper.compositeList(ex);
+                    TestCommonHelper.assertError(errors, 0, TestException.class);
+                    TestCommonHelper.assertError(errors, 1, TestException.class);
                 } else {
                     to.assertFailure(TestException.class);
 
@@ -241,7 +238,7 @@ public class CompletableMergeTest {
                     }
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -249,13 +246,13 @@ public class CompletableMergeTest {
     @Test
     public void mainErrorInnerErrorDelayedRace() {
         for (int i = 0; i < 500; i++) {
-            final PublishProcessor<Integer> pp1 = PublishProcessor.create();
-            final PublishProcessor<Integer> pp2 = PublishProcessor.create();
+            final PublishSubject<Integer> pp1 = PublishSubject.create();
+            final CompletableSubject pp2 = CompletableSubject.create();
 
             TestObserver<Void> to = Completable.mergeDelayError(pp1.map(new Function<Integer, Completable>() {
                 @Override
                 public Completable apply(Integer v) throws Exception {
-                    return pp2.ignoreElements();
+                    return pp2;
                 }
             })).test();
 
@@ -282,27 +279,27 @@ public class CompletableMergeTest {
 
             to.assertFailure(CompositeException.class);
 
-            List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+            List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
-            TestHelper.assertError(errors, 0, TestException.class);
-            TestHelper.assertError(errors, 1, TestException.class);
+            TestCommonHelper.assertError(errors, 0, TestException.class);
+            TestCommonHelper.assertError(errors, 1, TestException.class);
         }
     }
 
     @Test
     public void maxConcurrencyOne() {
-        final PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        final PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        final CompletableSubject pp1 = CompletableSubject.create();
+        final CompletableSubject pp2 = CompletableSubject.create();
 
-        TestObserver<Void> to = Completable.merge(Flowable.just(pp1.ignoreElements(), pp2.ignoreElements()), 1)
+        TestObserver<Void> to = Completable.merge(Observable.just(pp1, pp2), 1)
         .test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         pp1.onComplete();
 
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onComplete();
 
@@ -311,18 +308,18 @@ public class CompletableMergeTest {
 
     @Test
     public void maxConcurrencyOneDelayError() {
-        final PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        final PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        final CompletableSubject pp1 = CompletableSubject.create();
+        final CompletableSubject pp2 = CompletableSubject.create();
 
-        TestObserver<Void> to = Completable.mergeDelayError(Flowable.just(pp1.ignoreElements(), pp2.ignoreElements()), 1)
+        TestObserver<Void> to = Completable.mergeDelayError(Observable.just(pp1, pp2), 1)
         .test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         pp1.onComplete();
 
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onComplete();
 
@@ -331,18 +328,18 @@ public class CompletableMergeTest {
 
     @Test
     public void maxConcurrencyOneDelayErrorFirst() {
-        final PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        final PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        final CompletableSubject pp1 = CompletableSubject.create();
+        final CompletableSubject pp2 = CompletableSubject.create();
 
-        TestObserver<Void> to = Completable.mergeDelayError(Flowable.just(pp1.ignoreElements(), pp2.ignoreElements()), 1)
+        TestObserver<Void> to = Completable.mergeDelayError(Observable.just(pp1, pp2), 1)
         .test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         pp1.onError(new TestException());
 
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onComplete();
 
@@ -351,30 +348,30 @@ public class CompletableMergeTest {
 
     @Test
     public void maxConcurrencyOneDelayMainErrors() {
-        final PublishProcessor<PublishProcessor<Integer>> pp0 = PublishProcessor.create();
-        final PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        final PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        final PublishSubject<CompletableSubject> pp0 = PublishSubject.create();
+        final CompletableSubject pp1 = CompletableSubject.create();
+        final CompletableSubject pp2 = CompletableSubject.create();
 
         TestObserver<Void> to = Completable.mergeDelayError(
-        pp0.map(new Function<PublishProcessor<Integer>, Completable>() {
+        pp0.map(new Function<Completable, Completable>() {
             @Override
-            public Completable apply(PublishProcessor<Integer> v) throws Exception {
-                return v.ignoreElements();
+            public Completable apply(Completable v) throws Exception {
+                return v;
             }
         }), 1)
         .test();
 
         pp0.onNext(pp1);
 
-        assertTrue(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         pp1.onComplete();
 
         pp0.onNext(pp2);
         pp0.onError(new TestException());
 
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onComplete();
 
@@ -385,10 +382,10 @@ public class CompletableMergeTest {
     public void mainDoubleOnError() {
         List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
-            Completable.mergeDelayError(new Flowable<Completable>() {
+            Completable.mergeDelayError(new Observable<Completable>() {
                 @Override
-                protected void subscribeActual(Subscriber<? super Completable> s) {
-                    s.onSubscribe(new BooleanSubscription());
+                protected void subscribeActual(Observer<? super Completable> s) {
+                    s.onSubscribe(Disposables.empty());
                     s.onNext(Completable.complete());
                     s.onError(new TestException("First"));
                     s.onError(new TestException("Second"));
@@ -399,7 +396,7 @@ public class CompletableMergeTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -408,7 +405,7 @@ public class CompletableMergeTest {
         List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
             final CompletableObserver[] o = { null };
-            Completable.mergeDelayError(Flowable.just(new Completable() {
+            Completable.mergeDelayError(Observable.just(new Completable() {
                 @Override
                 protected void subscribeActual(CompletableObserver s) {
                     s.onSubscribe(Disposables.empty());
@@ -423,7 +420,7 @@ public class CompletableMergeTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -431,7 +428,7 @@ public class CompletableMergeTest {
     public void innerIsDisposed() {
         final TestObserver<Void> to = new TestObserver<Void>();
 
-        Completable.mergeDelayError(Flowable.just(new Completable() {
+        Completable.mergeDelayError(Observable.just(new Completable() {
             @Override
             protected void subscribeActual(CompletableObserver s) {
                 s.onSubscribe(Disposables.empty());
@@ -450,12 +447,10 @@ public class CompletableMergeTest {
         for (int i = 0; i < 500; i++) {
             List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
-                final PublishProcessor<Integer> pp1 = PublishProcessor.create();
-                final PublishProcessor<Integer> pp2 = PublishProcessor.create();
+                final CompletableSubject pp1 = CompletableSubject.create();
+                final CompletableSubject pp2 = CompletableSubject.create();
 
-                TestObserver<Void> to = Completable.mergeArray(pp1.ignoreElements(), pp2.ignoreElements()).test();
-
-                pp1.onNext(1);
+                TestObserver<Void> to = Completable.mergeArray(pp1, pp2).test();
 
                 final Throwable ex1 = new TestException();
                 final Throwable ex2 = new TestException();
@@ -481,7 +476,7 @@ public class CompletableMergeTest {
                     TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }

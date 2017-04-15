@@ -94,12 +94,12 @@ public class ObservableSkipLastTest {
 
     @Test
     public void testSkipLastWithBackpressure() {
-        Observable<Integer> o = Observable.range(0, Flowable.bufferSize() * 2).skipLast(Flowable.bufferSize() + 10);
+        Observable<Integer> o = Observable.range(0, Observable.bufferSize() * 2).skipLast(Observable.bufferSize() + 10);
         TestObserver<Integer> ts = new TestObserver<Integer>();
         o.observeOn(Schedulers.computation()).subscribe(ts);
         ts.awaitTerminalEvent();
         ts.assertNoErrors();
-        assertEquals((Flowable.bufferSize()) - 10, ts.valueCount());
+        assertEquals((Observable.bufferSize()) - 10, ts.valueCount());
 
     }
 

@@ -26,8 +26,7 @@ import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class SingleUsingTest {
 
@@ -105,9 +104,9 @@ public class SingleUsingTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> ce = TestHelper.compositeList(ts.errors().get(0));
-        TestHelper.assertError(ce, 0, TestException.class, "Mapper");
-        TestHelper.assertError(ce, 1, TestException.class, "Disposer");
+        List<Throwable> ce = TestCommonHelper.compositeList(ts.errors().get(0));
+        TestCommonHelper.assertError(ce, 0, TestException.class, "Mapper");
+        TestCommonHelper.assertError(ce, 1, TestException.class, "Disposer");
     }
 
     @Test
@@ -122,7 +121,7 @@ public class SingleUsingTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Disposer");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -176,7 +175,7 @@ public class SingleUsingTest {
             .assertResult(1);
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Disposer");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -192,9 +191,9 @@ public class SingleUsingTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> ce = TestHelper.compositeList(ts.errors().get(0));
-        TestHelper.assertError(ce, 0, TestException.class, "Mapper-run");
-        TestHelper.assertError(ce, 1, TestException.class, "Disposer");
+        List<Throwable> ce = TestCommonHelper.compositeList(ts.errors().get(0));
+        TestCommonHelper.assertError(ce, 0, TestException.class, "Mapper-run");
+        TestCommonHelper.assertError(ce, 1, TestException.class, "Disposer");
     }
 
     @Test
@@ -213,14 +212,14 @@ public class SingleUsingTest {
             .assertFailure(TestException.class);
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Disposer");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void successDisposeRace() {
         for (int i = 0; i < 500; i++) {
-            final PublishProcessor<Integer> pp = PublishProcessor.create();
+            final PublishSubject<Integer> pp = PublishSubject.create();
 
             Disposable d = Disposables.empty();
 
@@ -286,16 +285,16 @@ public class SingleUsingTest {
             .assertResult(1)
             ;
 
-            TestHelper.assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
+            TestCommonHelper.assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
     @Test
     public void errorDisposeRace() {
         for (int i = 0; i < 500; i++) {
-            final PublishProcessor<Integer> pp = PublishProcessor.create();
+            final PublishSubject<Integer> pp = PublishSubject.create();
 
             Disposable d = Disposables.empty();
 

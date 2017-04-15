@@ -21,7 +21,7 @@ import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.observable.*;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeOnErrorXTest {
 
@@ -146,7 +146,7 @@ public class MaybeOnErrorXTest {
 
     @Test
     public void onErrorReturnDispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().singleElement().onErrorReturnItem(1));
+        TestHelper.checkDisposed(PublishSubject.create().singleElement().onErrorReturnItem(1));
     }
 
     @Test
@@ -177,7 +177,7 @@ public class MaybeOnErrorXTest {
 
     @Test
     public void onErrorCompleteDispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().singleElement().onErrorComplete());
+        TestHelper.checkDisposed(PublishSubject.create().singleElement().onErrorComplete());
     }
 
     @Test
@@ -192,7 +192,7 @@ public class MaybeOnErrorXTest {
 
     @Test
     public void onErrorNextDispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().singleElement().onErrorResumeNext(Maybe.just(1)));
+        TestHelper.checkDisposed(PublishSubject.create().singleElement().onErrorResumeNext(Maybe.just(1)));
     }
 
     @Test

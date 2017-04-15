@@ -16,8 +16,6 @@ package io.reactivex.observable.internal.operators;
 import static org.junit.Assert.*;
 
 import java.util.*;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
@@ -27,14 +25,12 @@ import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.*;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.extensions.HasUpstreamObservableSource;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.*;
 
 public class ObservablePublishTest {
 
@@ -93,7 +89,7 @@ public class ObservablePublishTest {
 
     @Test
     public void testBackpressureFastSlow() {
-        ConnectableObservable<Integer> is = Observable.range(1, Flowable.bufferSize() * 2).publish();
+        ConnectableObservable<Integer> is = Observable.range(1, Observable.bufferSize() * 2).publish();
         Observable<Integer> fast = is.observeOn(Schedulers.computation())
         .doOnComplete(new Action() {
             @Override
@@ -131,14 +127,14 @@ public class ObservablePublishTest {
         is.connect();
         ts.awaitTerminalEvent();
         ts.assertNoErrors();
-        assertEquals(Flowable.bufferSize() * 4, ts.valueCount());
+        assertEquals(Observable.bufferSize() * 4, ts.valueCount());
     }
 
     // use case from https://github.com/ReactiveX/RxJava/issues/1732
     @Test
     public void testTakeUntilWithPublishedStreamUsingSelector() {
         final AtomicInteger emitted = new AtomicInteger();
-        Observable<Integer> xs = Observable.range(0, Flowable.bufferSize() * 2).doOnNext(new Consumer<Integer>() {
+        Observable<Integer> xs = Observable.range(0, Observable.bufferSize() * 2).doOnNext(new Consumer<Integer>() {
 
             @Override
             public void accept(Integer t1) {
@@ -172,7 +168,7 @@ public class ObservablePublishTest {
     // use case from https://github.com/ReactiveX/RxJava/issues/1732
     @Test
     public void testTakeUntilWithPublishedStream() {
-        Observable<Integer> xs = Observable.range(0, Flowable.bufferSize() * 2);
+        Observable<Integer> xs = Observable.range(0, Observable.bufferSize() * 2);
         TestObserver<Integer> ts = new TestObserver<Integer>();
         ConnectableObservable<Integer> xsp = xs.publish();
         xsp.takeUntil(xsp.skipWhile(new Predicate<Integer>() {
@@ -601,7 +597,7 @@ public class ObservablePublishTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -615,7 +611,7 @@ public class ObservablePublishTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

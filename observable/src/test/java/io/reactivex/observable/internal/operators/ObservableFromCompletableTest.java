@@ -20,10 +20,10 @@ import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
-import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableFromCompletableTest {
 
@@ -78,7 +78,7 @@ public class ObservableFromCompletableTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

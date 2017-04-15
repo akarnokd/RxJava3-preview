@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.*;
 
-import io.reactivex.common.Disposables;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
@@ -31,7 +31,6 @@ import io.reactivex.observable.*;
 import io.reactivex.observable.extensions.QueueDisposable;
 import io.reactivex.observable.observers.*;
 import io.reactivex.observable.subjects.UnicastSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableDoOnEachTest {
 
@@ -249,7 +248,7 @@ public class ObservableDoOnEachTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -276,7 +275,7 @@ public class ObservableDoOnEachTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -303,7 +302,7 @@ public class ObservableDoOnEachTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -353,7 +352,7 @@ public class ObservableDoOnEachTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -381,7 +380,7 @@ public class ObservableDoOnEachTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -425,7 +424,7 @@ public class ObservableDoOnEachTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -462,10 +461,10 @@ public class ObservableDoOnEachTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(ts.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(ts.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "Outer");
-        TestHelper.assertError(errors, 1, TestException.class, "Inner");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "Outer");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Inner");
     }
 
     @Test

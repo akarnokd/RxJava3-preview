@@ -19,30 +19,28 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.common.Schedulers;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
-import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
 
 public class SingleAmbTest {
     @Test
     public void ambWithFirstFires() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestObserver<Integer> ts = pp1.single(-99).ambWith(pp2.single(-99)).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp1.onNext(1);
         pp1.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult(1);
 
@@ -50,19 +48,19 @@ public class SingleAmbTest {
 
     @Test
     public void ambWithSecondFires() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestObserver<Integer> ts = pp1.single(-99).ambWith(pp2.single(-99)).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onNext(2);
         pp2.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult(2);
     }
@@ -70,20 +68,20 @@ public class SingleAmbTest {
     @SuppressWarnings("unchecked")
     @Test(timeout = 1000)
     public void ambIterableWithFirstFires() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         List<Single<Integer>> singles = Arrays.asList(pp1.single(-99), pp2.single(-99));
         TestObserver<Integer> ts = Single.amb(singles).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp1.onNext(1);
         pp1.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult(1);
 
@@ -92,20 +90,20 @@ public class SingleAmbTest {
     @SuppressWarnings("unchecked")
     @Test(timeout = 1000)
     public void ambIterableWithSecondFires() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         List<Single<Integer>> singles = Arrays.asList(pp1.single(-99), pp2.single(-99));
         TestObserver<Integer> ts = Single.amb(singles).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onNext(2);
         pp2.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         ts.assertResult(2);
     }
@@ -162,10 +160,10 @@ public class SingleAmbTest {
                 TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 if (!errors.isEmpty()) {
-                    TestHelper.assertError(errors, 0, NullPointerException.class);
+                    TestCommonHelper.assertError(errors, 0, NullPointerException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -205,7 +203,7 @@ public class SingleAmbTest {
                     TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -246,7 +244,7 @@ public class SingleAmbTest {
                     TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }

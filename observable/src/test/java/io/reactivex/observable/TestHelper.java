@@ -1293,9 +1293,9 @@ public enum TestHelper {
     }
 
     /**
-     * Check if the TestSubscriber has a CompositeException with the specified class
+     * Check if the TestObserver has a CompositeException with the specified class
      * of Throwables in the given order.
-     * @param ts the TestSubscriber instance
+     * @param ts the TestObserver instance
      * @param classes the array of expected Throwables inside the Composite
      */
     public static void assertCompositeExceptions(TestObserver<?> ts, Class<? extends Throwable>... classes) {
@@ -1314,9 +1314,9 @@ public enum TestHelper {
     }
 
     /**
-     * Check if the TestSubscriber has a CompositeException with the specified class
+     * Check if the TestObserver has a CompositeException with the specified class
      * of Throwables in the given order.
-     * @param ts the TestSubscriber instance
+     * @param ts the TestObserver instance
      * @param classes the array of subsequent Class and String instances representing the
      * expected Throwable class and the expected error message
      */

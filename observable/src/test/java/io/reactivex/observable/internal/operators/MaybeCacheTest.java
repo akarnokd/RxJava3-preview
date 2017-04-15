@@ -23,8 +23,7 @@ import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeCacheTest {
 
@@ -65,11 +64,11 @@ public class MaybeCacheTest {
 
     @Test
     public void onlineSuccess() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         Maybe<Integer> source = pp.singleElement().cache();
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         assertNotNull(((MaybeCache<Integer>)source).source.get());
 
@@ -77,7 +76,7 @@ public class MaybeCacheTest {
 
         assertNull(((MaybeCache<Integer>)source).source.get());
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         source.test(true).assertEmpty();
 
@@ -95,11 +94,11 @@ public class MaybeCacheTest {
 
     @Test
     public void onlineError() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         Maybe<Integer> source = pp.singleElement().cache();
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         assertNotNull(((MaybeCache<Integer>)source).source.get());
 
@@ -107,7 +106,7 @@ public class MaybeCacheTest {
 
         assertNull(((MaybeCache<Integer>)source).source.get());
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         source.test(true).assertEmpty();
 
@@ -124,11 +123,11 @@ public class MaybeCacheTest {
 
     @Test
     public void onlineComplete() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         Maybe<Integer> source = pp.singleElement().cache();
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         assertNotNull(((MaybeCache<Integer>)source).source.get());
 
@@ -136,7 +135,7 @@ public class MaybeCacheTest {
 
         assertNull(((MaybeCache<Integer>)source).source.get());
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         source.test(true).assertEmpty();
 
@@ -154,9 +153,9 @@ public class MaybeCacheTest {
     @Test
     public void crossCancelOnSuccess() {
 
-        final TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
+        final TestObserver<Integer> ts = new TestObserver<Integer>();
 
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         Maybe<Integer> source = pp.singleElement().cache();
 
@@ -167,7 +166,7 @@ public class MaybeCacheTest {
             }
         });
 
-        source.toFlowable().subscribe(ts);
+        source.subscribe(ts);
 
         pp.onNext(1);
         pp.onComplete();
@@ -178,9 +177,9 @@ public class MaybeCacheTest {
     @Test
     public void crossCancelOnError() {
 
-        final TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
+        final TestObserver<Integer> ts = new TestObserver<Integer>();
 
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         Maybe<Integer> source = pp.singleElement().cache();
 
@@ -191,7 +190,7 @@ public class MaybeCacheTest {
             }
         });
 
-        source.toFlowable().subscribe(ts);
+        source.subscribe(ts);
 
         pp.onError(new TestException());
 
@@ -201,9 +200,9 @@ public class MaybeCacheTest {
     @Test
     public void crossCancelOnComplete() {
 
-        final TestSubscriber<Integer> ts = new TestSubscriber<Integer>();
+        final TestObserver<Integer> ts = new TestObserver<Integer>();
 
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         Maybe<Integer> source = pp.singleElement().cache();
 
@@ -214,7 +213,7 @@ public class MaybeCacheTest {
             }
         });
 
-        source.toFlowable().subscribe(ts);
+        source.subscribe(ts);
 
         pp.onComplete();
 
@@ -224,7 +223,7 @@ public class MaybeCacheTest {
     @Test
     public void addAddRace() {
         for (int i = 0; i < 500; i++) {
-            PublishProcessor<Integer> pp = PublishProcessor.create();
+            PublishSubject<Integer> pp = PublishSubject.create();
 
             final Maybe<Integer> source = pp.singleElement().cache();
 
@@ -242,7 +241,7 @@ public class MaybeCacheTest {
     @Test
     public void removeRemoveRace() {
         for (int i = 0; i < 500; i++) {
-            PublishProcessor<Integer> pp = PublishProcessor.create();
+            PublishSubject<Integer> pp = PublishSubject.create();
 
             final Maybe<Integer> source = pp.singleElement().cache();
 
@@ -269,7 +268,7 @@ public class MaybeCacheTest {
 
     @Test
     public void doubleDispose() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         final Maybe<Integer> source = pp.singleElement().cache();
 

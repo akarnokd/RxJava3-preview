@@ -21,7 +21,7 @@ import org.junit.Test;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
 import io.reactivex.observable.extensions.HasUpstreamCompletableSource;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeFromCompletableTest {
     @Test(expected = NullPointerException.class)
@@ -52,7 +52,7 @@ public class MaybeFromCompletableTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Maybe.fromCompletable(PublishProcessor.create().ignoreElements()));
+        TestHelper.checkDisposed(Maybe.fromCompletable(PublishSubject.create().ignoreElements()));
     }
 
     @Test

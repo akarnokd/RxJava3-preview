@@ -19,13 +19,13 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.common.Schedulers;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
 import io.reactivex.common.internal.utils.CrashingMappedIterable;
 import io.reactivex.observable.*;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.observable.observers.TestObserver;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeConcatIterableTest {
 
@@ -63,9 +63,9 @@ public class MaybeConcatIterableTest {
     public void successCancelRace() {
         for (int i = 0; i < 500; i++) {
 
-            final PublishProcessor<Integer> pp = PublishProcessor.create();
+            final PublishSubject<Integer> pp = PublishSubject.create();
 
-            final TestSubscriber<Integer> to = Maybe.concat(Arrays.asList(pp.singleElement()))
+            final TestObserver<Integer> to = Maybe.concat(Arrays.asList(pp.singleElement()))
             .test();
 
             pp.onNext(1);

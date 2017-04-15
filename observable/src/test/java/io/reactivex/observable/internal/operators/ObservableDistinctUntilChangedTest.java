@@ -22,14 +22,13 @@ import java.util.List;
 import org.junit.*;
 import org.mockito.InOrder;
 
-import io.reactivex.common.Disposables;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
 import io.reactivex.observable.*;
 import io.reactivex.observable.extensions.QueueDisposable;
 import io.reactivex.observable.observers.*;
 import io.reactivex.observable.subjects.*;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableDistinctUntilChangedTest {
 
@@ -245,7 +244,7 @@ public class ObservableDistinctUntilChangedTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, IOException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
    }
 

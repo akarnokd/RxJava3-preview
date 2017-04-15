@@ -26,7 +26,6 @@ import io.reactivex.common.functions.Consumer;
 import io.reactivex.observable.*;
 import io.reactivex.observable.extensions.QueueDisposable;
 import io.reactivex.observable.observers.*;
-import io.reactivex.observers.*;
 
 public class ObservableRangeLongTest {
     @Test
@@ -93,8 +92,8 @@ public class ObservableRangeLongTest {
 
     @Test
     public void testNoBackpressure() {
-        ArrayList<Long> list = new ArrayList<Long>(Flowable.bufferSize() * 2);
-        for (long i = 1; i <= Flowable.bufferSize() * 2 + 1; i++) {
+        ArrayList<Long> list = new ArrayList<Long>(Observable.bufferSize() * 2);
+        for (long i = 1; i <= Observable.bufferSize() * 2 + 1; i++) {
             list.add(i);
         }
 

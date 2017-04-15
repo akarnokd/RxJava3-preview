@@ -13,19 +13,19 @@
 
 package io.reactivex.observable.internal.operators;
 
-import static io.reactivex.internal.util.TestingHelper.*;
+import static io.reactivex.common.internal.utils.TestingHelper.*;
 import static org.junit.Assert.*;
 
 import java.util.*;
-import java.util.Observable;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
+import io.reactivex.common.RxJavaCommonPlugins;
 import io.reactivex.common.functions.*;
 import io.reactivex.observable.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.observable.Observable;
 
 public final class ObservableCollectTest {
 
@@ -85,7 +85,7 @@ public final class ObservableCollectTest {
     public void testCollectorFailureDoesNotResultInTwoErrorEmissionsObservable() {
         try {
             final List<Throwable> list = new CopyOnWriteArrayList<Throwable>();
-            RxJavaPlugins.setErrorHandler(addToList(list));
+            RxJavaCommonPlugins.setErrorHandler(addToList(list));
             final RuntimeException e1 = new RuntimeException();
             final RuntimeException e2 = new RuntimeException();
 
@@ -99,7 +99,7 @@ public final class ObservableCollectTest {
             assertEquals(1, list.size());
             assertEquals(e2, list.get(0).getCause());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -211,7 +211,7 @@ public final class ObservableCollectTest {
     public void testCollectorFailureDoesNotResultInTwoErrorEmissions() {
         try {
             final List<Throwable> list = new CopyOnWriteArrayList<Throwable>();
-            RxJavaPlugins.setErrorHandler(addToList(list));
+            RxJavaCommonPlugins.setErrorHandler(addToList(list));
             final RuntimeException e1 = new RuntimeException();
             final RuntimeException e2 = new RuntimeException();
 
@@ -224,7 +224,7 @@ public final class ObservableCollectTest {
             assertEquals(1, list.size());
             assertEquals(e2, list.get(0).getCause());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

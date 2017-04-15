@@ -23,9 +23,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.junit.Test;
 import org.mockito.InOrder;
 
+import io.reactivex.common.RxJavaCommonPlugins;
 import io.reactivex.common.functions.*;
 import io.reactivex.observable.*;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableSingleTest {
 
@@ -466,7 +466,7 @@ public class ObservableSingleTest {
         final AtomicReference<Throwable> error = new AtomicReference<Throwable>();
 
         try {
-            RxJavaPlugins.setErrorHandler(new Consumer<Throwable>() {
+            RxJavaCommonPlugins.setErrorHandler(new Consumer<Throwable>() {
                 @Override public void accept(final Throwable throwable) throws Exception {
                     error.set(throwable);
                 }
@@ -481,7 +481,7 @@ public class ObservableSingleTest {
 
             assertSame(exception, error.get().getCause());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

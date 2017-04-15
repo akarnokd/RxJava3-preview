@@ -20,12 +20,9 @@ import java.util.concurrent.*;
 import org.junit.Test;
 
 import io.reactivex.common.Schedulers;
-import io.reactivex.common.functions.Function;
-import io.reactivex.internal.fuseable.*;
-import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
 import io.reactivex.observable.extensions.*;
 import io.reactivex.observable.observers.*;
-import io.reactivex.observers.*;
 
 public class ObservableFromTest {
 
@@ -36,13 +33,6 @@ public class ObservableFromTest {
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(TimeoutException.class);
-    }
-
-    @Test
-    public void fromPublisher() {
-        Observable.fromPublisher(Flowable.just(1))
-        .test()
-        .assertResult(1);
     }
 
     @Test
@@ -60,21 +50,6 @@ public class ObservableFromTest {
     @Test
     public void fromArraySingle() {
         assertTrue(Observable.fromArray(1) instanceof ScalarCallable);
-    }
-
-    @Test
-    public void fromPublisherDispose() {
-        TestHelper.checkDisposed(Flowable.just(1).toObservable());
-    }
-
-    @Test
-    public void fromPublisherDoubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeFlowableToObservable(new Function<Flowable<Object>, ObservableSource<Object>>() {
-            @Override
-            public ObservableSource<Object> apply(Flowable<Object> f) throws Exception {
-                return f.toObservable();
-            }
-        });
     }
 
     @Test

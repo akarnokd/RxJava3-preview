@@ -13,11 +13,12 @@
 
 package io.reactivex.observable.internal.operators;
 
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 import io.reactivex.common.functions.Function;
-import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.SingleSource;
 
 /**
  * Helper utility class to support Single with inner classes.
@@ -55,4 +56,46 @@ public final class SingleInternalHelper {
     public static <T> Function<SingleSource<? extends T>, Observable<? extends T>> toObservable() {
         return (Function)ToObservable.INSTANCE;
     }
+    
+    static final class ToObservableIterator<T> implements Iterator<Observable<T>> {
+        private final Iterator<? extends SingleSource<? extends T>> sit;
+
+        ToObservableIterator(Iterator<? extends SingleSource<? extends T>> sit) {
+            this.sit = sit;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return sit.hasNext();
+        }
+
+        @Override
+        public Observable<T> next() {
+            return new SingleToObservable<T>(sit.next());
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    static final class ToObservableIterable<T> implements Iterable<Observable<T>> {
+
+        private final Iterable<? extends SingleSource<? extends T>> sources;
+
+        ToObservableIterable(Iterable<? extends SingleSource<? extends T>> sources) {
+            this.sources = sources;
+        }
+
+        @Override
+        public Iterator<Observable<T>> iterator() {
+            return new ToObservableIterator<T>(sources.iterator());
+        }
+    }
+
+    public static <T> Iterable<? extends Observable<T>> iterableToObservable(final Iterable<? extends SingleSource<? extends T>> sources) {
+        return new ToObservableIterable<T>(sources);
+    }
+
 }

@@ -21,7 +21,7 @@ import io.reactivex.common.internal.disposables.DisposableHelper;
 import io.reactivex.observable.*;
 
 /**
- * Switches to the fallback Maybe if the other Publisher signals a success or completes, or
+ * Switches to the fallback Maybe if the other Observable signals a success or completes, or
  * signals TimeoutException if fallback is null.
  * 
  * @param <T> the main value type

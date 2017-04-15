@@ -16,8 +16,6 @@ package io.reactivex.observable.internal.operators;
 import static org.junit.Assert.*;
 
 import java.util.*;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 
@@ -26,11 +24,11 @@ import org.junit.*;
 import io.reactivex.common.*;
 import io.reactivex.common.disposables.SerialDisposable;
 import io.reactivex.common.exceptions.TestException;
-import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.ObservableSource;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.internal.operators.BlockingObservableNext.NextObserver;
 import io.reactivex.observable.subjects.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.BehaviorProcessor;
 
 public class BlockingObservableNextTest {
 
@@ -332,9 +330,9 @@ public class BlockingObservableNextTest {
 
     @Test
     public void testSynchronousNext() {
-        assertEquals(1, BehaviorProcessor.createDefault(1).take(1).blockingSingle().intValue());
-        assertEquals(2, BehaviorProcessor.createDefault(2).blockingIterable().iterator().next().intValue());
-        assertEquals(3, BehaviorProcessor.createDefault(3).blockingNext().iterator().next().intValue());
+        assertEquals(1, BehaviorSubject.createDefault(1).take(1).blockingSingle().intValue());
+        assertEquals(2, BehaviorSubject.createDefault(2).blockingIterable().iterator().next().intValue());
+        assertEquals(3, BehaviorSubject.createDefault(3).blockingNext().iterator().next().intValue());
     }
 
     @Test
@@ -364,7 +362,7 @@ public class BlockingObservableNextTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

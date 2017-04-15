@@ -23,7 +23,7 @@ import io.reactivex.common.internal.functions.*;
 import io.reactivex.common.internal.utils.*;
 
 /**
- * Base class with shared infrastructure to support TestSubscriber and TestObserver.
+ * Base class with shared infrastructure to support TestObserver and TestObserver.
  * @param <T> the value type consumed
  * @param <U> the subclass of this BaseTestConsumer
  */
@@ -64,7 +64,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Returns the last thread which called the onXXX methods of this TestObserver/TestSubscriber.
+     * Returns the last thread which called the onXXX methods of this TestObserver/TestObserver.
      * @return the last thread which called the onXXX methods
      */
     public final Thread lastThread() {
@@ -96,8 +96,8 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Returns true if TestObserver/TestSubscriber received any onError or onComplete events.
-     * @return true if TestObserver/TestSubscriber received any onError or onComplete events
+     * Returns true if TestObserver/TestObserver received any onError or onComplete events.
+     * @return true if TestObserver/TestObserver received any onError or onComplete events
      */
     public final boolean isTerminated() {
         return done.getCount() == 0;
@@ -171,7 +171,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Awaits until this TestObserver/TestSubscriber receives an onError or onComplete events.
+     * Awaits until this TestObserver/TestObserver receives an onError or onComplete events.
      * @return this
      * @throws InterruptedException if the current thread is interrupted while waiting
      * @see #awaitTerminalEvent()
@@ -187,11 +187,11 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Awaits the specified amount of time or until this TestObserver/TestSubscriber
+     * Awaits the specified amount of time or until this TestObserver/TestObserver
      * receives an onError or onComplete events, whichever happens first.
      * @param time the waiting time
      * @param unit the time unit of the waiting time
-     * @return true if the TestObserver/TestSubscriber terminated, false if timeout happened
+     * @return true if the TestObserver/TestObserver terminated, false if timeout happened
      * @throws InterruptedException if the current thread is interrupted while waiting
      * @see #awaitTerminalEvent(long, TimeUnit)
      */
@@ -204,7 +204,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     // assertion methods
 
     /**
-     * Assert that this TestObserver/TestSubscriber received exactly one onComplete event.
+     * Assert that this TestObserver/TestObserver received exactly one onComplete event.
      * @return this;
      */
     @SuppressWarnings("unchecked")
@@ -220,7 +220,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Assert that this TestObserver/TestSubscriber has not received any onComplete event.
+     * Assert that this TestObserver/TestObserver has not received any onComplete event.
      * @return this;
      */
     @SuppressWarnings("unchecked")
@@ -236,7 +236,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Assert that this TestObserver/TestSubscriber has not received any onError event.
+     * Assert that this TestObserver/TestObserver has not received any onError event.
      * @return this;
      */
     @SuppressWarnings("unchecked")
@@ -249,7 +249,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Assert that this TestObserver/TestSubscriber received exactly the specified onError event value.
+     * Assert that this TestObserver/TestObserver received exactly the specified onError event value.
      *
      * <p>The comparison is performed via Objects.equals(); since most exceptions don't
      * implement equals(), this assertion may fail. Use the {@link #assertError(Class)}
@@ -265,7 +265,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Asserts that this TestObserver/TestSubscriber received exactly one onError event which is an
+     * Asserts that this TestObserver/TestObserver received exactly one onError event which is an
      * instance of the specified errorClass class.
      * @param errorClass the error class to expect
      * @return this;
@@ -276,7 +276,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Asserts that this TestObserver/TestSubscriber received exactly one onError event for which
+     * Asserts that this TestObserver/TestObserver received exactly one onError event for which
      * the provided predicate returns true.
      * @param errorPredicate
      *            the predicate that receives the error Throwable
@@ -314,7 +314,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Assert that this TestObserver/TestSubscriber received exactly one onNext value which is equal to
+     * Assert that this TestObserver/TestObserver received exactly one onNext value which is equal to
      * the given value with respect to Objects.equals.
      * @param value the value to expect
      * @return this;
@@ -333,7 +333,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Assert that this TestObserver/TestSubscriber did not receive an onNext value which is equal to
+     * Assert that this TestObserver/TestObserver did not receive an onNext value which is equal to
      * the given value with respect to Objects.equals.
      *
      * @since 2.0.5 - experimental
@@ -355,7 +355,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Asserts that this TestObserver/TestSubscriber received exactly one onNext value for which
+     * Asserts that this TestObserver/TestObserver received exactly one onNext value for which
      * the provided predicate returns true.
      * @param valuePredicate
      *            the predicate that receives the onNext value
@@ -374,7 +374,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Asserts that this TestObserver/TestSubscriber did not receive any onNext value for which
+     * Asserts that this TestObserver/TestObserver did not receive any onNext value for which
      * the provided predicate returns true.
      *
      * @since 2.0.5 - experimental
@@ -401,7 +401,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Asserts that this TestObserver/TestSubscriber received an onNext value at the given index
+     * Asserts that this TestObserver/TestObserver received an onNext value at the given index
      * for the provided predicate returns true.
      * @param index the position to assert on
      * @param valuePredicate
@@ -449,7 +449,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Assert that this TestObserver/TestSubscriber received the specified number onNext events.
+     * Assert that this TestObserver/TestObserver received the specified number onNext events.
      * @param count the expected number of onNext events
      * @return this;
      */
@@ -463,7 +463,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Assert that this TestObserver/TestSubscriber has not received any onNext events.
+     * Assert that this TestObserver/TestObserver has not received any onNext events.
      * @return this;
      */
     public final U assertNoValues() {
@@ -471,7 +471,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Assert that the TestObserver/TestSubscriber received only the specified values in the specified order.
+     * Assert that the TestObserver/TestObserver received only the specified values in the specified order.
      * @param values the values expected
      * @return this;
      * @see #assertValueSet(Collection)
@@ -494,7 +494,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Assert that the TestObserver/TestSubscriber received only the specified values in any order.
+     * Assert that the TestObserver/TestObserver received only the specified values in any order.
      * <p>This helps asserting when the order of the values is not guaranteed, i.e., when merging
      * asynchronous streams.
      *
@@ -516,7 +516,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Assert that the TestObserver/TestSubscriber received only the specified sequence of values in the same order.
+     * Assert that the TestObserver/TestObserver received only the specified sequence of values in the same order.
      * @param sequence the sequence of expected values in order
      * @return this;
      */
@@ -554,7 +554,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Assert that the TestObserver/TestSubscriber terminated (i.e., the terminal latch reached zero).
+     * Assert that the TestObserver/TestObserver terminated (i.e., the terminal latch reached zero).
      * @return this;
      */
     @SuppressWarnings("unchecked")
@@ -578,7 +578,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Assert that the TestObserver/TestSubscriber has not terminated (i.e., the terminal latch is still non-zero).
+     * Assert that the TestObserver/TestObserver has not terminated (i.e., the terminal latch is still non-zero).
      * @return this;
      */
     @SuppressWarnings("unchecked")
@@ -590,9 +590,9 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Waits until the any terminal event has been received by this TestObserver/TestSubscriber
+     * Waits until the any terminal event has been received by this TestObserver/TestObserver
      * or returns false if the wait has been interrupted.
-     * @return true if the TestObserver/TestSubscriber terminated, false if the wait has been interrupted
+     * @return true if the TestObserver/TestObserver terminated, false if the wait has been interrupted
      */
     public final boolean awaitTerminalEvent() {
         try {
@@ -605,11 +605,11 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Awaits the specified amount of time or until this TestObserver/TestSubscriber
+     * Awaits the specified amount of time or until this TestObserver/TestObserver
      * receives an onError or onComplete events, whichever happens first.
      * @param duration the waiting time
      * @param unit the time unit of the waiting time
-     * @return true if the TestObserver/TestSubscriber terminated, false if timeout or interrupt happened
+     * @return true if the TestObserver/TestObserver terminated, false if timeout or interrupt happened
      */
     public final boolean awaitTerminalEvent(long duration, TimeUnit unit) {
         try {
@@ -745,7 +745,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
 
     /**
      * Awaits until the internal latch is counted down.
-     * <p>If the wait times out or gets interrupted, the TestObserver/TestSubscriber is cancelled.
+     * <p>If the wait times out or gets interrupted, the TestObserver/TestObserver is cancelled.
      * @param time the waiting time
      * @param unit the time unit of the waiting time
      * @return this
@@ -767,7 +767,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
 
 
     /**
-     * Assert that the TestObserver/TestSubscriber has received a Disposable but no other events.
+     * Assert that the TestObserver/TestObserver has received a Disposable but no other events.
      * @return this
      */
     public final U assertEmpty() {
@@ -856,7 +856,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
 
 
     /**
-     * Await until the TestObserver/TestSubscriber receives the given
+     * Await until the TestObserver/TestObserver receives the given
      * number of items or terminates by sleeping 10 milliseconds at a time
      * up to 5000 milliseconds of timeout.
      * @param atLeast the number of items expected at least
@@ -870,7 +870,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Await until the TestObserver/TestSubscriber receives the given
+     * Await until the TestObserver/TestObserver receives the given
      * number of items or terminates by waiting according to the wait
      * strategy and up to 5000 milliseconds of timeout.
      * @param atLeast the number of items expected at least
@@ -888,7 +888,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
-     * Await until the TestObserver/TestSubscriber receives the given
+     * Await until the TestObserver/TestObserver receives the given
      * number of items or terminates.
      * @param atLeast the number of items expected at least
      * @param waitStrategy a Runnable called when the current received count

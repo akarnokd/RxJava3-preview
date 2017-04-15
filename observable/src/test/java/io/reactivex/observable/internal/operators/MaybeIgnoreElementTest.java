@@ -17,20 +17,20 @@ import org.junit.Test;
 
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeIgnoreElementTest {
 
     @Test
     public void dispose() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         TestHelper.checkDisposed(pp.singleElement().ignoreElement().toMaybe());
     }
 
     @Test
     public void dispose2() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         TestHelper.checkDisposed(pp.singleElement().ignoreElement());
     }

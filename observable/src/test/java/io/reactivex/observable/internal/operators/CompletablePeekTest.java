@@ -13,14 +13,16 @@
 
 package io.reactivex.observable.internal.operators;
 
+
+
 import java.util.List;
 
 import org.junit.Test;
 
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Action;
-import io.reactivex.observable.*;
-import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.observable.Completable;
 
 public class CompletablePeekTest {
 
@@ -40,7 +42,7 @@ public class CompletablePeekTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

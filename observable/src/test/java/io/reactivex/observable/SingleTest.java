@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.single;
+package io.reactivex.observable;
 
 import static org.junit.Assert.*;
 
@@ -25,17 +25,15 @@ import io.reactivex.common.*;
 import io.reactivex.common.disposables.SerialDisposable;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.*;
 import io.reactivex.observable.internal.operators.SingleInternalHelper;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.observable.observers.TestObserver;
 
 public class SingleTest {
 
     @Test
     public void testHelloWorld() {
-        TestSubscriber<String> ts = new TestSubscriber<String>();
-        Single.just("Hello World!").toFlowable().subscribe(ts);
+        TestObserver<String> ts = new TestObserver<String>();
+        Single.just("Hello World!").toObservable().subscribe(ts);
         ts.assertValueSequence(Arrays.asList("Hello World!"));
     }
 
@@ -65,7 +63,7 @@ public class SingleTest {
 
     @Test
     public void testMap() {
-        TestSubscriber<String> ts = new TestSubscriber<String>();
+        TestObserver<String> ts = new TestObserver<String>();
         Single.just("A")
                 .map(new Function<String, String>() {
                     @Override
@@ -73,13 +71,13 @@ public class SingleTest {
                         return s + "B";
                     }
                 })
-                .toFlowable().subscribe(ts);
+                .toObservable().subscribe(ts);
         ts.assertValueSequence(Arrays.asList("AB"));
     }
 
     @Test
     public void testZip() {
-        TestSubscriber<String> ts = new TestSubscriber<String>();
+        TestObserver<String> ts = new TestObserver<String>();
         Single<String> a = Single.just("A");
         Single<String> b = Single.just("B");
 
@@ -89,13 +87,13 @@ public class SingleTest {
                 return a1 + b1;
             }
         })
-        .toFlowable().subscribe(ts);
+        .toObservable().subscribe(ts);
         ts.assertValueSequence(Arrays.asList("AB"));
     }
 
     @Test
     public void testZipWith() {
-        TestSubscriber<String> ts = new TestSubscriber<String>();
+        TestObserver<String> ts = new TestObserver<String>();
 
         Single.just("A").zipWith(Single.just("B"), new BiFunction<String, String, String>() {
             @Override
@@ -103,13 +101,13 @@ public class SingleTest {
                 return a1 + b1;
             }
         })
-        .toFlowable().subscribe(ts);
+        .toObservable().subscribe(ts);
         ts.assertValueSequence(Arrays.asList("AB"));
     }
 
     @Test
     public void testMerge() {
-        TestSubscriber<String> ts = new TestSubscriber<String>();
+        TestObserver<String> ts = new TestObserver<String>();
         Single<String> a = Single.just("A");
         Single<String> b = Single.just("B");
 
@@ -119,7 +117,7 @@ public class SingleTest {
 
     @Test
     public void testMergeWith() {
-        TestSubscriber<String> ts = new TestSubscriber<String>();
+        TestObserver<String> ts = new TestObserver<String>();
 
         Single.just("A").mergeWith(Single.just("B")).subscribe(ts);
         ts.assertValueSequence(Arrays.asList("A", "B"));
@@ -127,7 +125,7 @@ public class SingleTest {
 
     @Test
     public void testCreateSuccess() {
-        TestSubscriber<Object> ts = new TestSubscriber<Object>();
+        TestObserver<Object> ts = new TestObserver<Object>();
 
         Single.unsafeCreate(new SingleSource<Object>() {
             @Override
@@ -135,21 +133,21 @@ public class SingleTest {
                 s.onSubscribe(Disposables.empty());
                 s.onSuccess("Hello");
             }
-        }).toFlowable().subscribe(ts);
+        }).toObservable().subscribe(ts);
 
         ts.assertValueSequence(Arrays.asList("Hello"));
     }
 
     @Test
     public void testCreateError() {
-        TestSubscriber<Object> ts = new TestSubscriber<Object>();
+        TestObserver<Object> ts = new TestObserver<Object>();
         Single.unsafeCreate(new SingleSource<Object>() {
             @Override
             public void subscribe(SingleObserver<? super Object> s) {
                 s.onSubscribe(Disposables.empty());
                 s.onError(new RuntimeException("fail"));
             }
-        }).toFlowable().subscribe(ts);
+        }).toObservable().subscribe(ts);
 
         ts.assertError(RuntimeException.class);
         ts.assertErrorMessage("fail");
@@ -157,7 +155,7 @@ public class SingleTest {
 
     @Test
     public void testAsync() {
-        TestSubscriber<String> ts = new TestSubscriber<String>();
+        TestObserver<String> ts = new TestObserver<String>();
         Single.just("Hello")
                 .subscribeOn(Schedulers.io())
                 .map(new Function<String, String>() {
@@ -175,31 +173,31 @@ public class SingleTest {
                         return v;
                     }
                 })
-                .toFlowable().subscribe(ts);
+                .toObservable().subscribe(ts);
         ts.awaitTerminalEvent();
         ts.assertValueSequence(Arrays.asList("Hello"));
     }
 
     @Test
     public void testFlatMap() {
-        TestSubscriber<String> ts = new TestSubscriber<String>();
+        TestObserver<String> ts = new TestObserver<String>();
         Single.just("Hello").flatMap(new Function<String, Single<String>>() {
             @Override
             public Single<String> apply(String s) {
                 return Single.just(s + " World!").subscribeOn(Schedulers.computation());
             }
         }
-        ).toFlowable().subscribe(ts);
+        ).toObservable().subscribe(ts);
         if (!ts.awaitTerminalEvent(5, TimeUnit.SECONDS)) {
             ts.cancel();
-            Assert.fail("TestSubscriber timed out.");
+            Assert.fail("TestObserver timed out.");
         }
         ts.assertValueSequence(Arrays.asList("Hello World!"));
     }
 
     @Test
     public void testTimeout() {
-        TestSubscriber<String> ts = new TestSubscriber<String>();
+        TestObserver<String> ts = new TestObserver<String>();
         Single<String> s1 = Single.<String>unsafeCreate(new SingleSource<String>() {
             @Override
             public void subscribe(SingleObserver<? super String> s) {
@@ -213,7 +211,7 @@ public class SingleTest {
             }
         }).subscribeOn(Schedulers.io());
 
-        s1.timeout(100, TimeUnit.MILLISECONDS).toFlowable().subscribe(ts);
+        s1.timeout(100, TimeUnit.MILLISECONDS).toObservable().subscribe(ts);
 
         ts.awaitTerminalEvent();
         ts.assertError(TimeoutException.class);
@@ -221,7 +219,7 @@ public class SingleTest {
 
     @Test
     public void testTimeoutWithFallback() {
-        TestSubscriber<String> ts = new TestSubscriber<String>();
+        TestObserver<String> ts = new TestObserver<String>();
         Single<String> s1 = Single.<String>unsafeCreate(new SingleSource<String>() {
             @Override
             public void subscribe(SingleObserver<? super String> s) {
@@ -235,7 +233,7 @@ public class SingleTest {
             }
         }).subscribeOn(Schedulers.io());
 
-        s1.timeout(100, TimeUnit.MILLISECONDS, Single.just("hello")).toFlowable().subscribe(ts);
+        s1.timeout(100, TimeUnit.MILLISECONDS, Single.just("hello")).toObservable().subscribe(ts);
 
         ts.awaitTerminalEvent();
         ts.assertNoErrors();
@@ -244,7 +242,7 @@ public class SingleTest {
 
     @Test
     public void testUnsubscribe() throws InterruptedException {
-        TestSubscriber<String> ts = new TestSubscriber<String>();
+        TestObserver<String> ts = new TestObserver<String>();
         final AtomicBoolean unsubscribed = new AtomicBoolean();
         final AtomicBoolean interrupted = new AtomicBoolean();
         final CountDownLatch latch = new CountDownLatch(2);
@@ -280,7 +278,7 @@ public class SingleTest {
             }
         });
 
-        s1.toFlowable().subscribe(ts);
+        s1.toObservable().subscribe(ts);
 
         Thread.sleep(100);
 
@@ -435,21 +433,17 @@ public class SingleTest {
             }
         });
 
-        TestSubscriber<String> ts = new TestSubscriber<String>(0L);
+        TestObserver<String> ts = new TestObserver<String>();
 
-        s.toFlowable().subscribe(ts);
-
-        ts.assertNoValues();
-
-        ts.request(1);
+        s.toObservable().subscribe(ts);
 
         ts.assertValue("hello");
     }
 
     @Test
     public void toObservable() {
-        Flowable<String> a = Single.just("a").toFlowable();
-        TestSubscriber<String> ts = new TestSubscriber<String>();
+        Observable<String> a = Single.just("a").toObservable();
+        TestObserver<String> ts = new TestObserver<String>();
         a.subscribe(ts);
         ts.assertValue("a");
         ts.assertNoErrors();
@@ -508,11 +502,11 @@ public class SingleTest {
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void toFlowableIterableRemove() {
+    public void toObservableIterableRemove() {
         @SuppressWarnings("unchecked")
-        Iterable<? extends Flowable<Integer>> f = SingleInternalHelper.iterableToFlowable(Arrays.asList(Single.just(1)));
+        Iterable<? extends Observable<Integer>> f = SingleInternalHelper.iterableToObservable(Arrays.asList(Single.just(1)));
 
-        Iterator<? extends Flowable<Integer>> iterator = f.iterator();
+        Iterator<? extends Observable<Integer>> iterator = f.iterator();
         iterator.next();
         iterator.remove();
     }

@@ -21,11 +21,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
-import io.reactivex.common.Schedulers;
+import io.reactivex.common.*;
 import io.reactivex.common.functions.Action;
-import io.reactivex.observable.*;
+import io.reactivex.observable.Maybe;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class MaybeFromActionTest {
     @Test(expected = NullPointerException.class)
@@ -153,7 +152,7 @@ public class MaybeFromActionTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, InterruptedException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

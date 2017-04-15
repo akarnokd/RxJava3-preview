@@ -23,8 +23,7 @@ import org.junit.Test;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.observable.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.observable.observers.TestObserver;
 
 public class MaybeConcatArrayTest {
 
@@ -49,16 +48,8 @@ public class MaybeConcatArrayTest {
     @SuppressWarnings("unchecked")
     @Test
     public void backpressure() {
-        TestSubscriber<Integer> ts = Maybe.concatArray(Maybe.just(1), Maybe.just(2))
-        .test(0L);
-
-        ts.assertEmpty();
-
-        ts.request(1);
-
-        ts.assertValue(1);
-
-        ts.request(2);
+        TestObserver<Integer> ts = Maybe.concatArray(Maybe.just(1), Maybe.just(2))
+        .test();
 
         ts.assertResult(1, 2);
     }
@@ -66,68 +57,10 @@ public class MaybeConcatArrayTest {
     @SuppressWarnings("unchecked")
     @Test
     public void backpressureDelayError() {
-        TestSubscriber<Integer> ts = Maybe.concatArrayDelayError(Maybe.just(1), Maybe.just(2))
-        .test(0L);
-
-        ts.assertEmpty();
-
-        ts.request(1);
-
-        ts.assertValue(1);
-
-        ts.request(2);
+        TestObserver<Integer> ts = Maybe.concatArrayDelayError(Maybe.just(1), Maybe.just(2))
+        .test();
 
         ts.assertResult(1, 2);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void requestCancelRace() {
-        for (int i = 0; i < 500; i++) {
-            final TestSubscriber<Integer> ts = Maybe.concatArray(Maybe.just(1), Maybe.just(2))
-                    .test(0L);
-
-            Runnable r1 = new Runnable() {
-                @Override
-                public void run() {
-                    ts.cancel();
-                }
-            };
-
-            Runnable r2 = new Runnable() {
-                @Override
-                public void run() {
-                    ts.request(1);
-                }
-            };
-
-            TestCommonHelper.race(r1, r2, Schedulers.single());
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void requestCancelRaceDelayError() {
-        for (int i = 0; i < 500; i++) {
-            final TestSubscriber<Integer> ts = Maybe.concatArrayDelayError(Maybe.just(1), Maybe.just(2))
-                    .test(0L);
-
-            Runnable r1 = new Runnable() {
-                @Override
-                public void run() {
-                    ts.cancel();
-                }
-            };
-
-            Runnable r2 = new Runnable() {
-                @Override
-                public void run() {
-                    ts.request(1);
-                }
-            };
-
-            TestCommonHelper.race(r1, r2, Schedulers.single());
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -154,7 +87,7 @@ public class MaybeConcatArrayTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

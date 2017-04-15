@@ -18,17 +18,16 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.processors.PublishProcessor;
 
 public class CompletableSubscribeTest {
     @Test
     public void subscribeAlreadyCancelled() {
 
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         pp.ignoreElements().test(true);
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
     }
 
 

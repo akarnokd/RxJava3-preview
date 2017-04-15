@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.*;
 import org.mockito.Mockito;
-import org.reactivestreams.Subscription;
 
 import io.reactivex.common.*;
 import io.reactivex.common.functions.Function;
@@ -75,7 +74,7 @@ public class ObservableOnErrorResumeNextViaFunctionTest {
     @Test
     public void testResumeNextWithAsyncExecution() {
         final AtomicReference<Throwable> receivedException = new AtomicReference<Throwable>();
-        Subscription s = mock(Subscription.class);
+        Disposable s = mock(Disposable.class);
         TestObservable w = new TestObservable(s, "one");
         Function<Throwable, Observable<String>> resume = new Function<Throwable, Observable<String>>() {
 
@@ -113,7 +112,7 @@ public class ObservableOnErrorResumeNextViaFunctionTest {
      */
     @Test
     public void testFunctionThrowsError() {
-        Subscription s = mock(Subscription.class);
+        Disposable s = mock(Disposable.class);
         TestObservable w = new TestObservable(s, "one");
         Function<Throwable, Observable<String>> resume = new Function<Throwable, Observable<String>>() {
 
@@ -279,7 +278,7 @@ public class ObservableOnErrorResumeNextViaFunctionTest {
         final String[] values;
         Thread t;
 
-        TestObservable(Subscription s, String... values) {
+        TestObservable(Disposable s, String... values) {
             this.values = values;
         }
 

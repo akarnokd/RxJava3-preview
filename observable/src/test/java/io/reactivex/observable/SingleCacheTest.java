@@ -11,14 +11,13 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.single;
+package io.reactivex.observable;
 
 import org.junit.Test;
 
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.subscribers.TestSubscriber;
 
 public class SingleCacheTest {
 
@@ -88,9 +87,9 @@ public class SingleCacheTest {
         PublishSubject<Integer> ps = PublishSubject.create();
         Single<Integer> cache = ps.single(-99).cache();
 
-        final TestSubscriber<Integer> ts1 = new TestSubscriber<Integer>();
+        final TestObserver<Integer> ts1 = new TestObserver<Integer>();
 
-        TestSubscriber<Integer> ts2 = new TestSubscriber<Integer>() {
+        TestObserver<Integer> ts2 = new TestObserver<Integer>() {
             @Override
             public void onNext(Integer t) {
                 super.onNext(t);
@@ -98,8 +97,8 @@ public class SingleCacheTest {
             }
         };
 
-        cache.toFlowable().subscribe(ts2);
-        cache.toFlowable().subscribe(ts1);
+        cache.subscribe(ts2);
+        cache.subscribe(ts1);
 
         ps.onNext(1);
         ps.onComplete();
@@ -113,9 +112,9 @@ public class SingleCacheTest {
         PublishSubject<Integer> ps = PublishSubject.create();
         Single<Integer> cache = ps.single(-99).cache();
 
-        final TestSubscriber<Integer> ts1 = new TestSubscriber<Integer>();
+        final TestObserver<Integer> ts1 = new TestObserver<Integer>();
 
-        TestSubscriber<Integer> ts2 = new TestSubscriber<Integer>() {
+        TestObserver<Integer> ts2 = new TestObserver<Integer>() {
             @Override
             public void onError(Throwable t) {
                 super.onError(t);
@@ -123,8 +122,8 @@ public class SingleCacheTest {
             }
         };
 
-        cache.toFlowable().subscribe(ts2);
-        cache.toFlowable().subscribe(ts1);
+        cache.subscribe(ts2);
+        cache.subscribe(ts1);
 
         ps.onError(new TestException());
 

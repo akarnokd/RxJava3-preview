@@ -20,19 +20,18 @@ import java.util.concurrent.CancellationException;
 
 import org.junit.Test;
 
-import io.reactivex.common.Schedulers;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
-import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class SingleTakeUntilTest {
 
     @Test
     public void mainSuccessPublisher() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        PublishProcessor<Integer> source = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishSubject<Integer> source = PublishSubject.create();
 
         TestObserver<Integer> ts = source.single(-99).takeUntil(pp)
         .test();
@@ -45,8 +44,8 @@ public class SingleTakeUntilTest {
 
     @Test
     public void mainSuccessSingle() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        PublishProcessor<Integer> source = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishSubject<Integer> source = PublishSubject.create();
 
         TestObserver<Integer> ts = source.single(-99).takeUntil(pp.single(-99))
         .test();
@@ -60,8 +59,8 @@ public class SingleTakeUntilTest {
 
     @Test
     public void mainSuccessCompletable() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        PublishProcessor<Integer> source = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishSubject<Integer> source = PublishSubject.create();
 
         TestObserver<Integer> ts = source.single(-99).takeUntil(pp.ignoreElements())
         .test();
@@ -74,8 +73,8 @@ public class SingleTakeUntilTest {
 
     @Test
     public void mainErrorPublisher() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        PublishProcessor<Integer> source = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishSubject<Integer> source = PublishSubject.create();
 
         TestObserver<Integer> ts = source.single(-99).takeUntil(pp)
         .test();
@@ -87,8 +86,8 @@ public class SingleTakeUntilTest {
 
     @Test
     public void mainErrorSingle() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        PublishProcessor<Integer> source = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishSubject<Integer> source = PublishSubject.create();
 
         TestObserver<Integer> ts = source.single(-99).takeUntil(pp.single(-99))
         .test();
@@ -100,8 +99,8 @@ public class SingleTakeUntilTest {
 
     @Test
     public void mainErrorCompletable() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        PublishProcessor<Integer> source = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishSubject<Integer> source = PublishSubject.create();
 
         TestObserver<Integer> ts = source.single(-99).takeUntil(pp.ignoreElements())
         .test();
@@ -113,8 +112,8 @@ public class SingleTakeUntilTest {
 
     @Test
     public void otherOnNextPublisher() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        PublishProcessor<Integer> source = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishSubject<Integer> source = PublishSubject.create();
 
         TestObserver<Integer> ts = source.single(-99).takeUntil(pp)
         .test();
@@ -126,8 +125,8 @@ public class SingleTakeUntilTest {
 
     @Test
     public void otherOnNextSingle() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        PublishProcessor<Integer> source = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishSubject<Integer> source = PublishSubject.create();
 
         TestObserver<Integer> ts = source.single(-99).takeUntil(pp.single(-99))
         .test();
@@ -140,8 +139,8 @@ public class SingleTakeUntilTest {
 
     @Test
     public void otherOnNextCompletable() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        PublishProcessor<Integer> source = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishSubject<Integer> source = PublishSubject.create();
 
         TestObserver<Integer> ts = source.single(-99).takeUntil(pp.ignoreElements())
         .test();
@@ -154,8 +153,8 @@ public class SingleTakeUntilTest {
 
     @Test
     public void otherOnCompletePublisher() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        PublishProcessor<Integer> source = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishSubject<Integer> source = PublishSubject.create();
 
         TestObserver<Integer> ts = source.single(-99).takeUntil(pp)
         .test();
@@ -167,8 +166,8 @@ public class SingleTakeUntilTest {
 
     @Test
     public void otherOnCompleteCompletable() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        PublishProcessor<Integer> source = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishSubject<Integer> source = PublishSubject.create();
 
         TestObserver<Integer> ts = source.single(-99).takeUntil(pp.ignoreElements())
         .test();
@@ -180,8 +179,8 @@ public class SingleTakeUntilTest {
 
     @Test
     public void otherErrorPublisher() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        PublishProcessor<Integer> source = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishSubject<Integer> source = PublishSubject.create();
 
         TestObserver<Integer> ts = source.single(-99).takeUntil(pp)
         .test();
@@ -193,8 +192,8 @@ public class SingleTakeUntilTest {
 
     @Test
     public void otherErrorSingle() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        PublishProcessor<Integer> source = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishSubject<Integer> source = PublishSubject.create();
 
         TestObserver<Integer> ts = source.single(-99).takeUntil(pp.single(-99))
         .test();
@@ -206,8 +205,8 @@ public class SingleTakeUntilTest {
 
     @Test
     public void otherErrorCompletable() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
-        PublishProcessor<Integer> source = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishSubject<Integer> source = PublishSubject.create();
 
         TestObserver<Integer> ts = source.single(-99).takeUntil(pp.ignoreElements())
         .test();
@@ -219,7 +218,7 @@ public class SingleTakeUntilTest {
 
     @Test
     public void withPublisherDispose() {
-        TestHelper.checkDisposed(Single.never().takeUntil(Flowable.never()));
+        TestHelper.checkDisposed(Single.never().takeUntil(Observable.never()));
     }
 
     @Test
@@ -228,8 +227,8 @@ public class SingleTakeUntilTest {
             List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
             try {
-                final PublishProcessor<Integer> ps1 = PublishProcessor.create();
-                final PublishProcessor<Integer> ps2 = PublishProcessor.create();
+                final PublishSubject<Integer> ps1 = PublishSubject.create();
+                final PublishSubject<Integer> ps2 = PublishSubject.create();
 
                 TestObserver<Integer> to = ps1.singleOrError().takeUntil(ps2).test();
 
@@ -257,7 +256,7 @@ public class SingleTakeUntilTest {
                     TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -266,13 +265,13 @@ public class SingleTakeUntilTest {
     public void otherSignalsAndCompletes() {
         List<Throwable> errors = TestCommonHelper.trackPluginErrors();
         try {
-            Single.just(1).takeUntil(Flowable.just(1).take(1))
+            Single.just(1).takeUntil(Observable.just(1).take(1))
             .test()
             .assertFailure(CancellationException.class);
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

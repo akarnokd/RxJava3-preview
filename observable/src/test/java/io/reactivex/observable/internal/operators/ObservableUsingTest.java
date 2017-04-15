@@ -17,8 +17,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.Callable;
 
 import org.junit.*;
@@ -29,8 +27,9 @@ import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableUsingTest {
 
@@ -474,10 +473,10 @@ public class ObservableUsingTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "First");
-        TestHelper.assertError(errors, 1, TestException.class, "Second");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "First");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Second");
     }
 
     @Test
@@ -501,10 +500,10 @@ public class ObservableUsingTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "First");
-        TestHelper.assertError(errors, 1, TestException.class, "Second");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "First");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Second");
     }
 
     @Test
@@ -554,7 +553,7 @@ public class ObservableUsingTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Second");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

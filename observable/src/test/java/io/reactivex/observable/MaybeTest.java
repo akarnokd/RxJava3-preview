@@ -2334,12 +2334,11 @@ public class MaybeTest {
         assertTrue(pp1.hasObservers());
         assertTrue(pp2.hasObservers());
 
-        pp2.onNext(2);
-        pp2.onComplete();
+        pp2.onSuccess(2);
 
         ts.assertEmpty();
 
-        pp1.onNext(1);
+        pp1.onSuccess(1);
         pp1.onComplete();
 
         ts.assertResult(1, 2);
@@ -2357,13 +2356,11 @@ public class MaybeTest {
         assertTrue(pp1.hasObservers());
         assertTrue(pp2.hasObservers());
 
-        pp2.onNext(2);
-        pp2.onComplete();
+        pp2.onSuccess(2);
 
         ts.assertEmpty();
 
-        pp1.onNext(1);
-        pp1.onComplete();
+        pp1.onSuccess(1);
 
         ts.assertResult(1, 2);
 
@@ -2379,13 +2376,11 @@ public class MaybeTest {
         assertTrue(pp1.hasObservers());
         assertTrue(pp2.hasObservers());
 
-        pp2.onNext(2);
-        pp2.onComplete();
+        pp2.onSuccess(2);
 
         ts.assertEmpty();
 
-        pp1.onNext(1);
-        pp1.onComplete();
+        pp1.onSuccess(1);
 
         ts.assertResult(1, 2);
 
@@ -2532,7 +2527,7 @@ public class MaybeTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Two");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
 
         Maybe.sequenceEqual(Maybe.just(1), Maybe.error(new TestException()), new BiPredicate<Object, Object>() {
@@ -2714,6 +2709,62 @@ public class MaybeTest {
         .assertResult("[1]");
     }
 
+    /**
+     * Implements all Function types which return a String concatenating their inputs.
+     */
+    @SuppressWarnings("rawtypes")
+    public enum ArgsToString implements Function, BiFunction, Function3, Function4, Function5, Function6, Function7, Function8, Function9 {
+        INSTANCE;
+
+        @Override
+        public Object apply(Object t1, Object t2, Object t3, Object t4, Object t5, Object t6, Object t7, Object t8,
+                Object t9) throws Exception {
+            return "" + t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8 + t9;
+        }
+
+        @Override
+        public Object apply(Object t1, Object t2, Object t3, Object t4, Object t5, Object t6, Object t7, Object t8)
+                throws Exception {
+            return "" + t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8;
+        }
+
+        @Override
+        public Object apply(Object t1, Object t2, Object t3, Object t4, Object t5, Object t6, Object t7)
+                throws Exception {
+            return "" + t1 + t2 + t3 + t4 + t5 + t6 + t7;
+        }
+
+        @Override
+        public Object apply(Object t1, Object t2, Object t3, Object t4, Object t5, Object t6) throws Exception {
+            return "" + t1 + t2 + t3 + t4 + t5 + t6;
+        }
+
+        @Override
+        public Object apply(Object t1, Object t2, Object t3, Object t4, Object t5) throws Exception {
+            return "" + t1 + t2 + t3 + t4 + t5;
+        }
+
+        @Override
+        public Object apply(Object t1, Object t2, Object t3, Object t4) throws Exception {
+            return "" + t1 + t2 + t3 + t4;
+        }
+
+        @Override
+        public Object apply(Object t1, Object t2, Object t3) throws Exception {
+            return "" + t1 + t2 + t3;
+        }
+
+        @Override
+        public Object apply(Object t1, Object t2) throws Exception {
+            return "" + t1 + t2;
+        }
+
+        @Override
+        public Object apply(Object t1) throws Exception {
+            return "" + t1;
+        }
+    }
+
 
     @SuppressWarnings("unchecked")
     @Test
@@ -2831,8 +2882,7 @@ public class MaybeTest {
         assertTrue(pp1.hasObservers());
         assertTrue(pp2.hasObservers());
 
-        pp1.onNext(1);
-        pp1.onComplete();
+        pp1.onSuccess(1);
 
         assertFalse(pp1.hasObservers());
         assertFalse(pp2.hasObservers());
@@ -2853,8 +2903,7 @@ public class MaybeTest {
         assertTrue(pp1.hasObservers());
         assertTrue(pp2.hasObservers());
 
-        pp2.onNext(2);
-        pp2.onComplete();
+        pp2.onSuccess(2);
 
         assertFalse(pp1.hasObservers());
         assertFalse(pp2.hasObservers());

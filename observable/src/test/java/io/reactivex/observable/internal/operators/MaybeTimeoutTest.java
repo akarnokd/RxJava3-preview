@@ -19,12 +19,11 @@ import java.util.concurrent.*;
 
 import org.junit.Test;
 
-import io.reactivex.common.Schedulers;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeTimeoutTest {
 
@@ -115,34 +114,34 @@ public class MaybeTimeoutTest {
     }
 
     @Test
-    public void normalFlowableFallback() {
+    public void normalObservableFallback() {
         Maybe.just(1)
-        .timeout(Flowable.timer(1, TimeUnit.DAYS), Maybe.just(2))
+        .timeout(Observable.timer(1, TimeUnit.DAYS), Maybe.just(2))
         .test()
         .assertResult(1);
     }
 
     @Test
-    public void neverFlowableFallback() {
+    public void neverObservableFallback() {
         Maybe.never()
-        .timeout(Flowable.timer(1, TimeUnit.MILLISECONDS), Maybe.just(2))
+        .timeout(Observable.timer(1, TimeUnit.MILLISECONDS), Maybe.just(2))
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(2);
     }
 
     @Test
-    public void normalFlowable() {
+    public void normalObservable() {
         Maybe.just(1)
-        .timeout(Flowable.timer(1, TimeUnit.DAYS))
+        .timeout(Observable.timer(1, TimeUnit.DAYS))
         .test()
         .assertResult(1);
     }
 
     @Test
-    public void neverFlowable() {
+    public void neverObservable() {
         Maybe.never()
-        .timeout(Flowable.timer(1, TimeUnit.MILLISECONDS))
+        .timeout(Observable.timer(1, TimeUnit.MILLISECONDS))
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertFailure(TimeoutException.class);
@@ -150,126 +149,126 @@ public class MaybeTimeoutTest {
 
     @Test
     public void mainError() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestObserver<Integer> to = pp1.singleElement().timeout(pp2.singleElement()).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp1.onError(new TestException());
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         to.assertFailure(TestException.class);
     }
 
     @Test
     public void otherError() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestObserver<Integer> to = pp1.singleElement().timeout(pp2.singleElement()).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onError(new TestException());
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         to.assertFailure(TestException.class);
     }
 
     @Test
     public void fallbackError() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestObserver<Integer> to = pp1.singleElement().timeout(pp2.singleElement(), Maybe.<Integer>error(new TestException())).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onNext(1);
         pp2.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         to.assertFailure(TestException.class);
     }
 
     @Test
     public void fallbackComplete() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestObserver<Integer> to = pp1.singleElement().timeout(pp2.singleElement(), Maybe.<Integer>empty()).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onNext(1);
         pp2.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         to.assertResult();
     }
 
     @Test
     public void mainComplete() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestObserver<Integer> to = pp1.singleElement().timeout(pp2.singleElement()).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp1.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         to.assertResult();
     }
 
     @Test
     public void otherComplete() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestObserver<Integer> to = pp1.singleElement().timeout(pp2.singleElement()).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         to.assertFailure(TimeoutException.class);
     }
 
     @Test
     public void dispose() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestHelper.checkDisposed(pp1.singleElement().timeout(pp2.singleElement()));
     }
 
     @Test
     public void dispose2() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestHelper.checkDisposed(pp1.singleElement().timeout(pp2.singleElement(), Maybe.just(1)));
     }
@@ -279,8 +278,8 @@ public class MaybeTimeoutTest {
         for (int i = 0; i < 500; i++) {
             TestCommonHelper.trackPluginErrors();
             try {
-                final PublishProcessor<Integer> pp1 = PublishProcessor.create();
-                final PublishProcessor<Integer> pp2 = PublishProcessor.create();
+                final PublishSubject<Integer> pp1 = PublishSubject.create();
+                final PublishSubject<Integer> pp2 = PublishSubject.create();
 
                 TestObserver<Integer> to = pp1.singleElement().timeout(pp2.singleElement()).test();
 
@@ -303,7 +302,7 @@ public class MaybeTimeoutTest {
 
                 to.assertFailure(TestException.class);
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -311,8 +310,8 @@ public class MaybeTimeoutTest {
     @Test
     public void onCompleteRace() {
         for (int i = 0; i < 500; i++) {
-            final PublishProcessor<Integer> pp1 = PublishProcessor.create();
-            final PublishProcessor<Integer> pp2 = PublishProcessor.create();
+            final PublishSubject<Integer> pp1 = PublishSubject.create();
+            final PublishSubject<Integer> pp2 = PublishSubject.create();
 
             TestObserver<Integer> to = pp1.singleElement().timeout(pp2.singleElement()).test();
 

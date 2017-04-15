@@ -19,14 +19,13 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.common.Schedulers;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
 import io.reactivex.common.internal.utils.CrashingMappedIterable;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class SingleZipIterableTest {
 
@@ -56,16 +55,16 @@ public class SingleZipIterableTest {
     @SuppressWarnings("unchecked")
     @Test
     public void dispose() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         TestObserver<Object> to = Single.zip(Arrays.asList(pp.single(0), pp.single(0)), addString)
         .test();
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         to.cancel();
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
     }
 
     @SuppressWarnings("unchecked")
@@ -97,8 +96,8 @@ public class SingleZipIterableTest {
     @SuppressWarnings("unchecked")
     @Test
     public void middleError() {
-        PublishProcessor<Integer> pp0 = PublishProcessor.create();
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
+        PublishSubject<Integer> pp0 = PublishSubject.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
 
         TestObserver<Object> to = Single.zip(
                 Arrays.asList(pp0.single(0), pp1.single(0), pp0.single(0)), addString)
@@ -106,7 +105,7 @@ public class SingleZipIterableTest {
 
         pp1.onError(new TestException());
 
-        assertFalse(pp0.hasSubscribers());
+        assertFalse(pp0.hasObservers());
 
         to.assertFailure(TestException.class);
     }
@@ -117,8 +116,8 @@ public class SingleZipIterableTest {
         for (int i = 0; i < 500; i++) {
             List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
-                final PublishProcessor<Integer> pp0 = PublishProcessor.create();
-                final PublishProcessor<Integer> pp1 = PublishProcessor.create();
+                final PublishSubject<Integer> pp0 = PublishSubject.create();
+                final PublishSubject<Integer> pp1 = PublishSubject.create();
 
                 final TestObserver<Object> to = Single.zip(
                         Arrays.asList(pp0.single(0), pp1.single(0)), addString)
@@ -148,7 +147,7 @@ public class SingleZipIterableTest {
                     TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }

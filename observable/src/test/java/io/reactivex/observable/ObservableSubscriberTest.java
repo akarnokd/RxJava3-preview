@@ -20,11 +20,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
 import io.reactivex.observable.observers.*;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableSubscriberTest {
     @Test
@@ -190,7 +190,7 @@ public class ObservableSubscriberTest {
     @SuppressWarnings("rawtypes")
     @Test
     public void pluginNull() {
-        RxJavaPlugins.setOnObservableSubscribe(new BiFunction<Observable, Observer, Observer>() {
+        RxJavaObservablePlugins.setOnObservableSubscribe(new BiFunction<Observable, Observer, Observer>() {
             @Override
             public Observer apply(Observable a, Observer b) throws Exception {
                 return null;
@@ -206,7 +206,7 @@ public class ObservableSubscriberTest {
                 assertEquals("Plugin returned null Observer", ex.getMessage());
             }
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaObservablePlugins.reset();
         }
     }
 
@@ -230,9 +230,9 @@ public class ObservableSubscriberTest {
                 }
             }
 
-            TestHelper.assertError(list, 0, IllegalArgumentException.class);
+            TestCommonHelper.assertError(list, 0, IllegalArgumentException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

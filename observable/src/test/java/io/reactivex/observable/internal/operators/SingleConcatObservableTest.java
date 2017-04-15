@@ -12,27 +12,29 @@
  */
 package io.reactivex.observable.internal.operators;
 
+
+
 import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
-import io.reactivex.observable.Maybe;
+import io.reactivex.observable.*;
 
-public class MaybeConcatPublisherTest {
+public class SingleConcatObservableTest {
 
     @Test
     public void scalar() {
-        Maybe.concat(Flowable.just(Maybe.just(1)))
+        Single.concat(Observable.just(Single.just(1)))
         .test()
         .assertResult(1);
     }
 
     @Test
     public void callable() {
-        Maybe.concat(Flowable.fromCallable(new Callable<Maybe<Integer>>() {
+        Single.concat(Observable.fromCallable(new Callable<Single<Integer>>() {
             @Override
-            public Maybe<Integer> call() throws Exception {
-                return Maybe.just(1);
+            public Single<Integer> call() throws Exception {
+                return Single.just(1);
             }
         }))
         .test()

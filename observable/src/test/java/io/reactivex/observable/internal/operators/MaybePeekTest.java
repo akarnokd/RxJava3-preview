@@ -19,20 +19,19 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.common.Disposables;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybePeekTest {
 
     @Test
     public void disposed() {
-        TestHelper.checkDisposed(PublishProcessor.create().singleElement().doOnSuccess(Functions.emptyConsumer()));
+        TestHelper.checkDisposed(PublishSubject.create().singleElement().doOnSuccess(Functions.emptyConsumer()));
     }
 
     @Test
@@ -75,7 +74,7 @@ public class MaybePeekTest {
 
             to.assertFailureAndMessage(TestException.class, "First");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -117,10 +116,10 @@ public class MaybePeekTest {
 
         to.assertFailure(CompositeException.class);
 
-        List<Throwable> errors = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> errors = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "Main");
-        TestHelper.assertError(errors, 1, TestException.class, "Inner");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "Main");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Inner");
     }
 
     @Test
@@ -141,7 +140,7 @@ public class MaybePeekTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

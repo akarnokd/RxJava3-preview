@@ -19,13 +19,13 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.common.Disposable;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.observable.Observable;
 import io.reactivex.observable.TestHelper;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableForEachTest {
 
@@ -110,11 +110,11 @@ public class ObservableForEachTest {
                 }
             });
 
-            TestHelper.assertError(errors, 0, OnErrorNotImplementedException.class);
+            TestCommonHelper.assertError(errors, 0, OnErrorNotImplementedException.class);
             Throwable c = errors.get(0).getCause();
             assertTrue("" + c, c instanceof TestException);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -130,14 +130,14 @@ public class ObservableForEachTest {
                 }
             });
 
-            TestHelper.assertError(errors, 0, CompositeException.class);
+            TestCommonHelper.assertError(errors, 0, CompositeException.class);
 
-            List<Throwable> ce = TestHelper.compositeList(errors.get(0));
+            List<Throwable> ce = TestCommonHelper.compositeList(errors.get(0));
 
-            TestHelper.assertError(ce, 0, TestException.class, "Outer");
-            TestHelper.assertError(ce, 1, TestException.class, "Inner");
+            TestCommonHelper.assertError(ce, 0, TestException.class, "Outer");
+            TestCommonHelper.assertError(ce, 1, TestException.class, "Inner");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -155,7 +155,7 @@ public class ObservableForEachTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

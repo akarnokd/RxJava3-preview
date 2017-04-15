@@ -20,7 +20,7 @@ import org.junit.Test;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
 import io.reactivex.observable.*;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeFlatMapBiSelectorTest {
 
@@ -115,7 +115,7 @@ public class MaybeFlatMapBiSelectorTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().singleElement()
+        TestHelper.checkDisposed(PublishSubject.create().singleElement()
                 .flatMap(new Function<Object, MaybeSource<Integer>>() {
             @Override
             public MaybeSource<Integer> apply(Object v) throws Exception {

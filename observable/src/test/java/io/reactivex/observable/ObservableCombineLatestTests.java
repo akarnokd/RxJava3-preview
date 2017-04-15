@@ -15,7 +15,7 @@
  */
 package io.reactivex.observable;
 
-import static io.reactivex.Observable.combineLatest;
+import static io.reactivex.observable.Observable.combineLatest;
 
 import org.junit.*;
 

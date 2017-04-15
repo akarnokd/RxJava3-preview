@@ -35,14 +35,14 @@ public final class SingleContains<T> extends Single<Boolean> {
     @Override
     protected void subscribeActual(final SingleObserver<? super Boolean> s) {
 
-        source.subscribe(new Single(s));
+        source.subscribe(new SingleContainsObserver(s));
     }
 
-    final class Single implements SingleObserver<T> {
+    final class SingleContainsObserver implements SingleObserver<T> {
 
         private final SingleObserver<? super Boolean> s;
 
-        Single(SingleObserver<? super Boolean> s) {
+        SingleContainsObserver(SingleObserver<? super Boolean> s) {
             this.s = s;
         }
 

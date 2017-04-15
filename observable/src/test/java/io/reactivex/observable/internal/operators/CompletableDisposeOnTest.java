@@ -20,13 +20,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import io.reactivex.common.TestScheduler;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Action;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class CompletableDisposeOnTest {
 
@@ -90,7 +89,7 @@ public class CompletableDisposeOnTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

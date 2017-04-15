@@ -13,10 +13,13 @@
 
 package io.reactivex.observable.internal.operators;
 
+
+
 import java.util.List;
 
 import org.junit.Test;
 
+import io.reactivex.common.TestCommonHelper;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.Function;
 import io.reactivex.common.internal.functions.Functions;
@@ -63,10 +66,10 @@ public class MaybeFlatMapNotificationTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> ce = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> ce = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(ce, 0, TestException.class);
-        TestHelper.assertError(ce, 1, NullPointerException.class);
+        TestCommonHelper.assertError(ce, 0, TestException.class);
+        TestCommonHelper.assertError(ce, 1, NullPointerException.class);
     }
 
     @Test

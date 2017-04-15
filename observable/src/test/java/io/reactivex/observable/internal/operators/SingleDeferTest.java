@@ -13,9 +13,13 @@
 
 package io.reactivex.observable.internal.operators;
 
+
+
 import java.util.concurrent.Callable;
 
 import org.junit.Test;
+
+import io.reactivex.observable.Single;
 
 public class SingleDeferTest {
 

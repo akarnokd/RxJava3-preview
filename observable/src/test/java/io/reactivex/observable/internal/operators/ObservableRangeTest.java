@@ -26,7 +26,6 @@ import io.reactivex.common.functions.Consumer;
 import io.reactivex.observable.*;
 import io.reactivex.observable.extensions.QueueDisposable;
 import io.reactivex.observable.observers.*;
-import io.reactivex.observers.*;
 
 public class ObservableRangeTest {
 
@@ -94,8 +93,8 @@ public class ObservableRangeTest {
 
     @Test
     public void testNoBackpressure() {
-        ArrayList<Integer> list = new ArrayList<Integer>(Flowable.bufferSize() * 2);
-        for (int i = 1; i <= Flowable.bufferSize() * 2 + 1; i++) {
+        ArrayList<Integer> list = new ArrayList<Integer>(Observable.bufferSize() * 2);
+        for (int i = 1; i <= Observable.bufferSize() * 2 + 1; i++) {
             list.add(i);
         }
 

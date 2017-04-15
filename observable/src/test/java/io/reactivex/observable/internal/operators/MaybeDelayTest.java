@@ -24,7 +24,7 @@ import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeDelayTest {
 
@@ -78,20 +78,20 @@ public class MaybeDelayTest {
 
     @Test
     public void dispose() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         TestObserver<Integer> ts = pp.singleElement().delay(100, TimeUnit.MILLISECONDS).test();
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         ts.cancel();
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
     }
 
     @Test
     public void isDisposed() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         TestHelper.checkDisposed(pp.singleElement().delay(100, TimeUnit.MILLISECONDS));
     }

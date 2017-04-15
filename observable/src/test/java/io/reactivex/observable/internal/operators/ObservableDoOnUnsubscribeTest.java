@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import io.reactivex.common.Disposable;
 import io.reactivex.common.functions.*;
+import io.reactivex.observable.Observable;
 import io.reactivex.observable.observers.TestObserver;
 
 public class ObservableDoOnUnsubscribeTest {

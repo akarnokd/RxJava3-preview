@@ -19,11 +19,11 @@ import java.util.List;
 
 import org.junit.Test;
 
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
-import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.*;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class SingleDoFinallyTest implements Action {
 
@@ -86,7 +86,7 @@ public class SingleDoFinallyTest implements Action {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

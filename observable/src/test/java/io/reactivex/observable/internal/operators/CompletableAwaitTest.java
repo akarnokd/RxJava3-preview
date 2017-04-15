@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.observable.Completable;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.CompletableSubject;
 
 public class CompletableAwaitTest {
 
@@ -31,7 +31,7 @@ public class CompletableAwaitTest {
         Thread.currentThread().interrupt();
 
         try {
-            PublishProcessor.create().ignoreElements().blockingAwait();
+            CompletableSubject.create().blockingAwait();
             fail("Should have thrown RuntimeException");
         } catch (RuntimeException ex) {
             if (!(ex.getCause() instanceof InterruptedException)) {
@@ -47,7 +47,7 @@ public class CompletableAwaitTest {
         Thread.currentThread().interrupt();
 
         try {
-            PublishProcessor.create().ignoreElements().blockingAwait(1, TimeUnit.SECONDS);
+            CompletableSubject.create().blockingAwait(1, TimeUnit.SECONDS);
             fail("Should have thrown RuntimeException");
         } catch (RuntimeException ex) {
             if (!(ex.getCause() instanceof InterruptedException)) {
@@ -59,7 +59,7 @@ public class CompletableAwaitTest {
 
     @Test
     public void awaitTimeout() {
-        assertFalse(PublishProcessor.create().ignoreElements().blockingAwait(100, TimeUnit.MILLISECONDS));
+        assertFalse(CompletableSubject.create().blockingAwait(100, TimeUnit.MILLISECONDS));
     }
 
     @Test

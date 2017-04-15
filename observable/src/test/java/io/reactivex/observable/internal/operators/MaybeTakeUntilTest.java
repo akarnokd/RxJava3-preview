@@ -19,19 +19,18 @@ import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.common.Schedulers;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeTakeUntilTest {
 
     @Test
     public void normalPublisher() {
-        Maybe.just(1).takeUntil(Flowable.never())
+        Maybe.just(1).takeUntil(Observable.never())
         .test()
         .assertResult(1);
     }
@@ -45,7 +44,7 @@ public class MaybeTakeUntilTest {
 
     @Test
     public void untilFirstPublisher() {
-        Maybe.just(1).takeUntil(Flowable.just("one"))
+        Maybe.just(1).takeUntil(Observable.just("one"))
         .test()
         .assertResult();
     }
@@ -59,7 +58,7 @@ public class MaybeTakeUntilTest {
 
     @Test
     public void disposed() {
-        TestHelper.checkDisposed(PublishProcessor.create().singleElement().takeUntil(Maybe.never()));
+        TestHelper.checkDisposed(PublishSubject.create().singleElement().takeUntil(Maybe.never()));
     }
 
     @Test
@@ -74,72 +73,72 @@ public class MaybeTakeUntilTest {
 
     @Test
     public void mainErrors() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestObserver<Integer> to = pp1.singleElement().takeUntil(pp2.singleElement()).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp1.onError(new TestException());
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         to.assertFailure(TestException.class);
     }
 
     @Test
     public void otherErrors() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestObserver<Integer> to = pp1.singleElement().takeUntil(pp2.singleElement()).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onError(new TestException());
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         to.assertFailure(TestException.class);
     }
 
     @Test
     public void mainCompletes() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestObserver<Integer> to = pp1.singleElement().takeUntil(pp2.singleElement()).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp1.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         to.assertResult();
     }
 
     @Test
     public void otherCompletes() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        PublishSubject<Integer> pp1 = PublishSubject.create();
+        PublishSubject<Integer> pp2 = PublishSubject.create();
 
         TestObserver<Integer> to = pp1.singleElement().takeUntil(pp2.singleElement()).test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         pp2.onComplete();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
 
         to.assertResult();
     }
@@ -147,8 +146,8 @@ public class MaybeTakeUntilTest {
     @Test
     public void onErrorRace() {
         for (int i = 0; i < 500; i++) {
-            final PublishProcessor<Integer> pp1 = PublishProcessor.create();
-            final PublishProcessor<Integer> pp2 = PublishProcessor.create();
+            final PublishSubject<Integer> pp1 = PublishSubject.create();
+            final PublishSubject<Integer> pp2 = PublishSubject.create();
 
             TestObserver<Integer> to = pp1.singleElement().takeUntil(pp2.singleElement()).test();
 
@@ -180,7 +179,7 @@ public class MaybeTakeUntilTest {
                 }
 
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
 
         }
@@ -189,8 +188,8 @@ public class MaybeTakeUntilTest {
     @Test
     public void onCompleteRace() {
         for (int i = 0; i < 500; i++) {
-            final PublishProcessor<Integer> pp1 = PublishProcessor.create();
-            final PublishProcessor<Integer> pp2 = PublishProcessor.create();
+            final PublishSubject<Integer> pp1 = PublishSubject.create();
+            final PublishSubject<Integer> pp2 = PublishSubject.create();
 
             TestObserver<Integer> to = pp1.singleElement().takeUntil(pp2.singleElement()).test();
 

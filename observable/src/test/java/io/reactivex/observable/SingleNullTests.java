@@ -11,7 +11,7 @@
  * the License for the specific language governing permissions and limitations under the License.
  */
 
-package io.reactivex.single;
+package io.reactivex.observable;
 
 
 import static org.junit.Assert.assertTrue;
@@ -21,14 +21,11 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import org.junit.*;
-import org.reactivestreams.*;
 
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
-import io.reactivex.exceptions.*;
-import io.reactivex.functions.*;
 
 public class SingleNullTests {
 
@@ -95,7 +92,7 @@ public class SingleNullTests {
 
     @Test(expected = NullPointerException.class)
     public void concatObservableNull() {
-        Single.concat((Flowable<Single<Integer>>)null);
+        Single.concat((Observable<Single<Integer>>)null);
     }
 
     @Test
@@ -224,11 +221,6 @@ public class SingleNullTests {
                 return null;
             }
         }), null);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void fromPublisherNull() {
-        Single.fromPublisher(null);
     }
 
     @Test(expected = NullPointerException.class)
@@ -642,21 +634,6 @@ public class SingleNullTests {
     }
 
     @Test(expected = NullPointerException.class)
-    public void flatMapPublisherNull() {
-        just1.flatMapPublisher(null);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void flatMapPublisherFunctionReturnsNull() {
-        just1.flatMapPublisher(new Function<Integer, Publisher<Object>>() {
-            @Override
-            public Publisher<Object> apply(Integer v) {
-                return null;
-            }
-        }).blockingSubscribe();
-    }
-
-    @Test(expected = NullPointerException.class)
     public void liftNull() {
         just1.lift(null);
     }
@@ -742,9 +719,9 @@ public class SingleNullTests {
 
     @Test(expected = NullPointerException.class)
     public void repeatWhenFunctionReturnsNull() {
-        error.repeatWhen(new Function<Flowable<Object>, Publisher<Object>>() {
+        error.repeatWhen(new Function<Observable<Object>, Observable<Object>>() {
             @Override
-            public Publisher<Object> apply(Flowable<Object> v) {
+            public Observable<Object> apply(Observable<Object> v) {
                 return null;
             }
         }).blockingSubscribe();
@@ -772,9 +749,9 @@ public class SingleNullTests {
 
     @Test(expected = NullPointerException.class)
     public void retryWhenFunctionReturnsNull() {
-        error.retryWhen(new Function<Flowable<? extends Throwable>, Publisher<Object>>() {
+        error.retryWhen(new Function<Observable<? extends Throwable>, Observable<Object>>() {
             @Override
-            public Publisher<Object> apply(Flowable<? extends Throwable> e) {
+            public Observable<Object> apply(Observable<? extends Throwable> e) {
                 return null;
             }
         }).blockingGet();
@@ -809,10 +786,6 @@ public class SingleNullTests {
             @Override
             public void accept(Integer v) { }
         }, null);
-    }
-    @Test(expected = NullPointerException.class)
-    public void subscribeSubscriberNull() {
-        just1.toFlowable().subscribe((Subscriber<Integer>)null);
     }
 
     @Test(expected = NullPointerException.class)

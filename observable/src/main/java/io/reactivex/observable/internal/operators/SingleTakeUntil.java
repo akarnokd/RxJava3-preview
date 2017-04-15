@@ -22,7 +22,7 @@ import io.reactivex.observable.*;
 
 /**
  * Signals the events of the source Single or signals a CancellationException if the
- * other Publisher signalled first.
+ * other Observable signalled first.
  * @param <T> the main value type
  * @param <U> the other value type
  */

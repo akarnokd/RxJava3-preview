@@ -32,7 +32,6 @@ import io.reactivex.common.internal.utils.ExceptionHelper;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableSwitchTest {
 
@@ -512,9 +511,9 @@ public class ObservableSwitchTest {
 
         List<Throwable> errors = ExceptionHelper.flatten(ts.errors().get(0));
 
-        TestHelper.assertError(errors, 0, TestException.class, "Forced failure 1");
-        TestHelper.assertError(errors, 1, TestException.class, "Forced failure 2");
-        TestHelper.assertError(errors, 2, TestException.class, "Forced failure 3");
+        TestCommonHelper.assertError(errors, 0, TestException.class, "Forced failure 1");
+        TestCommonHelper.assertError(errors, 1, TestException.class, "Forced failure 2");
+        TestCommonHelper.assertError(errors, 2, TestException.class, "Forced failure 3");
     }
 
     @Test
@@ -760,7 +759,7 @@ public class ObservableSwitchTest {
                     assertTrue(e.toString(), e instanceof TestException);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -809,7 +808,7 @@ public class ObservableSwitchTest {
                     assertTrue(e.toString(), e instanceof TestException);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -877,7 +876,7 @@ public class ObservableSwitchTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -917,7 +916,7 @@ public class ObservableSwitchTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

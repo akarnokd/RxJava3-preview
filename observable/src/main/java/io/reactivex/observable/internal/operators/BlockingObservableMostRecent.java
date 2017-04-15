@@ -80,11 +80,11 @@ public final class BlockingObservableMostRecent<T> implements Iterable<T> {
          * thread expect {@link Iterator#next()} called from a different thread to work.
          * @return the Iterator
          */
-        public Iterator getIterable() {
-            return new Iterator();
+        public MostRecentIterator getIterable() {
+            return new MostRecentIterator();
         }
 
-        final class Iterator implements java.util.Iterator<T> {
+        final class MostRecentIterator implements java.util.Iterator<T> {
             /**
              * buffer to make sure that the state of the iterator doesn't change between calling hasNext() and next().
              */

@@ -26,7 +26,6 @@ import org.junit.*;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.observable.*;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class SerializedObserverTest {
 
@@ -1172,9 +1171,9 @@ public class SerializedObserverTest {
 
             assertTrue(d.isDisposed());
 
-            TestHelper.assertError(error, 0, IllegalStateException.class, "Disposable already set!");
+            TestCommonHelper.assertError(error, 0, IllegalStateException.class, "Disposable already set!");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -1222,7 +1221,7 @@ public class SerializedObserverTest {
                     assertTrue(e.toString(), e.getCause() instanceof TestException);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
 

@@ -18,8 +18,6 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -31,9 +29,10 @@ import io.reactivex.common.disposables.CompositeDisposable;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Consumer;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableAmbTest {
 
@@ -354,7 +353,7 @@ public class ObservableAmbTest {
             try {
                 TestCommonHelper.race(r1, r2, Schedulers.single());
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
 
             to.assertFailure(TestException.class);

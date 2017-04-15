@@ -24,7 +24,8 @@ import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
-import io.reactivex.observable.TestHelper;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.internal.observers.BlockingFirstObserver;
 import io.reactivex.observable.observers.TestObserver;
 
@@ -223,7 +224,7 @@ public class ObservableBlockingTest {
 
     @Test
     public void utilityClass() {
-        TestHelper.checkUtilityClass(ObservableBlockingSubscribe.class);
+        TestCommonHelper.checkUtilityClass(ObservableBlockingSubscribe.class);
     }
 
     @Test

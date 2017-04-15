@@ -23,19 +23,19 @@ import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
 import io.reactivex.observable.*;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeUnsubscribeOnTest {
 
     @Test
     public void normal() throws Exception {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         final String[] name = { null };
 
         final CountDownLatch cdl = new CountDownLatch(1);
 
-        pp.doOnCancel(new Action() {
+        pp.doOnDispose(new Action() {
             @Override
             public void run() throws Exception {
                 name[0] = Thread.currentThread().getName();
@@ -51,11 +51,11 @@ public class MaybeUnsubscribeOnTest {
 
         int times = 10;
 
-        while (times-- > 0 && pp.hasSubscribers()) {
+        while (times-- > 0 && pp.hasObservers()) {
             Thread.sleep(100);
         }
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         assertNotEquals(Thread.currentThread().getName(), name[0]);
     }
@@ -103,7 +103,7 @@ public class MaybeUnsubscribeOnTest {
     @Test
     public void disposeRace() {
         for (int i = 0; i < 500; i++) {
-            PublishProcessor<Integer> pp = PublishProcessor.create();
+            PublishSubject<Integer> pp = PublishSubject.create();
 
             final Disposable[] ds = { null };
             pp.singleElement().unsubscribeOn(Schedulers.computation())

@@ -26,7 +26,6 @@ import io.reactivex.common.functions.*;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class CompletableUsingTest {
 
@@ -212,10 +211,10 @@ public class CompletableUsingTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> list = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> list = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(list, 0, TestException.class, "Main");
-        TestHelper.assertError(list, 1, TestException.class, "Disposer");
+        TestCommonHelper.assertError(list, 0, TestException.class, "Main");
+        TestCommonHelper.assertError(list, 1, TestException.class, "Disposer");
     }
 
     @Test
@@ -243,7 +242,7 @@ public class CompletableUsingTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class, "Disposer");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -300,7 +299,7 @@ public class CompletableUsingTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -390,10 +389,10 @@ public class CompletableUsingTest {
         .test()
         .assertFailure(CompositeException.class);
 
-        List<Throwable> list = TestHelper.compositeList(to.errors().get(0));
+        List<Throwable> list = TestCommonHelper.compositeList(to.errors().get(0));
 
-        TestHelper.assertError(list, 0, TestException.class, "Main");
-        TestHelper.assertError(list, 1, TestException.class, "Disposer");
+        TestCommonHelper.assertError(list, 0, TestException.class, "Main");
+        TestCommonHelper.assertError(list, 1, TestException.class, "Disposer");
     }
 
     @Test
@@ -431,9 +430,9 @@ public class CompletableUsingTest {
 
                 }
             }, false).test();
-            TestHelper.assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
+            TestCommonHelper.assertError(errors, 0, IllegalStateException.class, "Disposable already set!");
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

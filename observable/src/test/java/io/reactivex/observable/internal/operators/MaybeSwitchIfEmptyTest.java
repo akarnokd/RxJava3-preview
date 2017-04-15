@@ -17,12 +17,12 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import io.reactivex.common.Schedulers;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeSwitchIfEmptyTest {
 
@@ -66,21 +66,21 @@ public class MaybeSwitchIfEmptyTest {
 
     @Test
     public void dispose() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         TestObserver<Integer> ts = pp.singleElement().switchIfEmpty(Maybe.just(2)).test();
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         ts.cancel();
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
     }
 
 
     @Test
     public void isDisposed() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         TestHelper.checkDisposed(pp.singleElement().switchIfEmpty(Maybe.just(2)));
     }
@@ -98,7 +98,7 @@ public class MaybeSwitchIfEmptyTest {
     @Test
     public void emptyCancelRace() {
         for (int i = 0; i < 500; i++) {
-            final PublishProcessor<Integer> pp = PublishProcessor.create();
+            final PublishSubject<Integer> pp = PublishSubject.create();
 
             final TestObserver<Integer> ts = pp.singleElement().switchIfEmpty(Maybe.just(2)).test();
 

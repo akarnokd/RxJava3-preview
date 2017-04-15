@@ -13,6 +13,9 @@
 
 package io.reactivex.observable.internal.operators;
 
+
+
+
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -24,7 +27,6 @@ import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.*;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableConcatMapTest {
 
@@ -165,7 +167,7 @@ public class ObservableConcatMapTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -196,7 +198,7 @@ public class ObservableConcatMapTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 
@@ -262,10 +264,10 @@ public class ObservableConcatMapTest {
                 to.assertFailure(TestException.class);
 
                 if (!errors.isEmpty()) {
-                    TestHelper.assertError(errors, 0, TestException.class);
+                    TestCommonHelper.assertError(errors, 0, TestException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -363,7 +365,7 @@ public class ObservableConcatMapTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

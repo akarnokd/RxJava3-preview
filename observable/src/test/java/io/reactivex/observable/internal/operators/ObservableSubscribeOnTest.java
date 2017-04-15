@@ -21,7 +21,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.*;
 
 import io.reactivex.common.*;
-import io.reactivex.common.Scheduler.Worker;
 import io.reactivex.common.annotations.NonNull;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;

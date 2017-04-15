@@ -16,11 +16,9 @@ package io.reactivex.observable.internal.operators;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.reactivestreams.Publisher;
 
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
-import io.reactivex.functions.*;
 import io.reactivex.observable.*;
 
 public class SingleFlatMapTest {
@@ -110,18 +108,6 @@ public class SingleFlatMapTest {
             @Override
             public Observable<Integer> apply(Integer v) throws Exception {
                 return Observable.range(v, 5);
-            }
-        })
-        .test()
-        .assertResult(1, 2, 3, 4, 5);
-    }
-
-    @Test
-    public void flatMapPublisher() {
-        Single.just(1).flatMapPublisher(new Function<Integer, Publisher<Integer>>() {
-            @Override
-            public Publisher<Integer> apply(Integer v) throws Exception {
-                return Flowable.range(v, 5);
             }
         })
         .test()

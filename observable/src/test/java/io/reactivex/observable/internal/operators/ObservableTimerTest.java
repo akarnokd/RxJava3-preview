@@ -29,7 +29,6 @@ import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.*;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableTimerTest {
     @Mock
@@ -302,7 +301,7 @@ public class ObservableTimerTest {
 
             assertTrue(errors.toString(), errors.isEmpty());
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 

@@ -22,6 +22,7 @@ import org.junit.*;
 
 import io.reactivex.common.TestScheduler;
 import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.Observable;
 import io.reactivex.observable.subjects.*;
 
 public class BlockingObservableMostRecentTest {

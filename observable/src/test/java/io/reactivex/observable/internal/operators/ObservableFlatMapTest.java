@@ -18,8 +18,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -30,9 +28,10 @@ import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.observable.*;
+import io.reactivex.observable.Observable;
+import io.reactivex.observable.Observer;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
-import io.reactivex.plugins.RxJavaPlugins;
 
 public class ObservableFlatMapTest {
     @Test
@@ -753,9 +752,9 @@ public class ObservableFlatMapTest {
 
         List<Throwable> errors = TestHelper.errorList(to);
 
-        TestHelper.assertError(errors, 0, TestException.class);
+        TestCommonHelper.assertError(errors, 0, TestException.class);
 
-        TestHelper.assertError(errors, 1, TestException.class);
+        TestCommonHelper.assertError(errors, 1, TestException.class);
     }
 
     @Test
@@ -813,7 +812,7 @@ public class ObservableFlatMapTest {
 
                 assertTrue(errors.toString(), errors.isEmpty());
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -852,7 +851,7 @@ public class ObservableFlatMapTest {
 
                     assertTrue(errors.toString(), errors.isEmpty());
                 } finally {
-                    RxJavaPlugins.reset();
+                    RxJavaCommonPlugins.reset();
                 }
             }
         }

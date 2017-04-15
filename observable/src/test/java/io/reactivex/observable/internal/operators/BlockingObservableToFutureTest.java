@@ -24,13 +24,15 @@ import org.junit.*;
 
 import io.reactivex.common.Disposables;
 import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.Observable;
 import io.reactivex.observable.ObservableSource;
+import io.reactivex.observable.Observer;
 
 public class BlockingObservableToFutureTest {
     @Ignore("No separate file")
     @Test
     public void constructorShouldBePrivate() {
-//        TestHelper.checkUtilityClass(FlowableToFuture.class);
+//        TestCommonHelper.checkUtilityClass(FlowableToFuture.class);
     }
 
     @Test

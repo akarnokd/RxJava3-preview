@@ -18,13 +18,13 @@ import org.junit.Test;
 import io.reactivex.common.*;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class SingleCacheTest {
 
     @Test
     public void cancelImmediately() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         Single<Integer> cached = pp.single(-99).cache();
 
@@ -41,7 +41,7 @@ public class SingleCacheTest {
     @Test
     public void addRemoveRace() {
         for (int i = 0; i < 500; i++) {
-            PublishProcessor<Integer> pp = PublishProcessor.create();
+            PublishSubject<Integer> pp = PublishSubject.create();
 
             final Single<Integer> cached = pp.single(-99).cache();
 
@@ -67,7 +67,7 @@ public class SingleCacheTest {
 
     @Test
     public void doubleDispose() {
-        PublishProcessor<Integer> pp = PublishProcessor.create();
+        PublishSubject<Integer> pp = PublishSubject.create();
 
         final Single<Integer> cached = pp.single(-99).cache();
 

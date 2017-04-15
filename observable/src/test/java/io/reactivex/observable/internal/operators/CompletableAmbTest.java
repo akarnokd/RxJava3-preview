@@ -19,13 +19,11 @@ import java.util.*;
 
 import org.junit.Test;
 
-import io.reactivex.common.Schedulers;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
-import io.reactivex.observable.*;
+import io.reactivex.observable.Completable;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.*;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
 
 public class CompletableAmbTest {
 
@@ -53,19 +51,19 @@ public class CompletableAmbTest {
 
     @Test
     public void dispose() {
-        PublishProcessor<Integer> pp1 = PublishProcessor.create();
-        PublishProcessor<Integer> pp2 = PublishProcessor.create();
+        CompletableSubject pp1 = CompletableSubject.create();
+        CompletableSubject pp2 = CompletableSubject.create();
 
-        TestObserver<Void> to = Completable.amb(Arrays.asList(pp1.ignoreElements(), pp2.ignoreElements()))
+        TestObserver<Void> to = Completable.amb(Arrays.asList(pp1, pp2))
         .test();
 
-        assertTrue(pp1.hasSubscribers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp1.hasObservers());
+        assertTrue(pp2.hasObservers());
 
         to.dispose();
 
-        assertFalse(pp1.hasSubscribers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp1.hasObservers());
+        assertFalse(pp2.hasObservers());
     }
 
     @Test
@@ -73,10 +71,10 @@ public class CompletableAmbTest {
         for (int i = 0; i < 500; i++) {
             List<Throwable> errors = TestCommonHelper.trackPluginErrors();
             try {
-                final PublishProcessor<Integer> pp0 = PublishProcessor.create();
-                final PublishProcessor<Integer> pp1 = PublishProcessor.create();
+                final CompletableSubject pp0 = CompletableSubject.create();
+                final CompletableSubject pp1 = CompletableSubject.create();
 
-                final TestObserver<Void> to = Completable.amb(Arrays.asList(pp0.ignoreElements(), pp1.ignoreElements()))
+                final TestObserver<Void> to = Completable.amb(Arrays.asList(pp0, pp1))
                 .test();
 
                 final TestException ex = new TestException();
@@ -103,7 +101,7 @@ public class CompletableAmbTest {
                     TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }
@@ -137,10 +135,10 @@ public class CompletableAmbTest {
                 TestCommonHelper.race(r1, r2, Schedulers.single());
 
                 if (!errors.isEmpty()) {
-                    TestHelper.assertError(errors, 0, NullPointerException.class);
+                    TestCommonHelper.assertError(errors, 0, NullPointerException.class);
                 }
             } finally {
-                RxJavaPlugins.reset();
+                RxJavaCommonPlugins.reset();
             }
         }
     }

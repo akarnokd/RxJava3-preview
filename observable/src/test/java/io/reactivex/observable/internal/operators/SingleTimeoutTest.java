@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import io.reactivex.common.TestScheduler;
 import io.reactivex.common.exceptions.TestException;
+import io.reactivex.observable.Single;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
 

@@ -20,7 +20,7 @@ import org.junit.Test;
 import io.reactivex.common.functions.Function;
 import io.reactivex.observable.*;
 import io.reactivex.observable.extensions.HasUpstreamMaybeSource;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeToSingleTest {
 
@@ -36,7 +36,7 @@ public class MaybeToSingleTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(PublishProcessor.create().singleElement().toSingle());
+        TestHelper.checkDisposed(PublishSubject.create().singleElement().toSingle());
     }
 
     @Test

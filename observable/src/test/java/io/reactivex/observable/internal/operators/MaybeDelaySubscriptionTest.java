@@ -19,33 +19,30 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
-import org.reactivestreams.Subscriber;
 
-import io.reactivex.common.TestScheduler;
+import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.processors.PublishProcessor;
+import io.reactivex.observable.subjects.PublishSubject;
 
 public class MaybeDelaySubscriptionTest {
 
     @Test
     public void normal() {
-        PublishProcessor<Object> pp = PublishProcessor.create();
+        PublishSubject<Object> pp = PublishSubject.create();
 
         TestObserver<Integer> ts = Maybe.just(1).delaySubscription(pp)
         .test();
 
-        assertTrue(pp.hasSubscribers());
+        assertTrue(pp.hasObservers());
 
         ts.assertEmpty();
 
         pp.onNext("one");
 
-        assertFalse(pp.hasSubscribers());
+        assertFalse(pp.hasObservers());
 
         ts.assertResult(1);
     }
@@ -87,7 +84,7 @@ public class MaybeDelaySubscriptionTest {
 
     @Test
     public void otherError() {
-        Maybe.just(1).delaySubscription(Flowable.error(new TestException()))
+        Maybe.just(1).delaySubscription(Observable.error(new TestException()))
         .test()
         .assertFailure(TestException.class);
     }
@@ -95,35 +92,35 @@ public class MaybeDelaySubscriptionTest {
     @Test
     public void mainError() {
         Maybe.error(new TestException())
-        .delaySubscription(Flowable.empty())
+        .delaySubscription(Observable.empty())
         .test()
         .assertFailure(TestException.class);
     }
 
     @Test
-    public void withPublisherDispose() {
-        TestHelper.checkDisposed(Maybe.just(1).delaySubscription(Flowable.never()));
+    public void withObservableDispose() {
+        TestHelper.checkDisposed(Maybe.just(1).delaySubscription(Observable.never()));
     }
 
     @Test
-    public void withPublisherDoubleOnSubscribe() {
+    public void withObservableDoubleOnSubscribe() {
         TestHelper.checkDoubleOnSubscribeMaybe(new Function<Maybe<Object>, MaybeSource<Object>>() {
             @Override
             public MaybeSource<Object> apply(Maybe<Object> m) throws Exception {
-                return m.delaySubscription(Flowable.just(1));
+                return m.delaySubscription(Observable.just(1));
             }
         });
     }
 
     @Test
-    public void withPublisherCallAfterTerminalEvent() {
+    public void withObservableCallAfterTerminalEvent() {
         List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
-            Flowable<Integer> f = new Flowable<Integer>() {
+            Observable<Integer> f = new Observable<Integer>() {
                 @Override
-                protected void subscribeActual(Subscriber<? super Integer> observer) {
-                    observer.onSubscribe(new BooleanSubscription());
+                protected void subscribeActual(Observer<? super Integer> observer) {
+                    observer.onSubscribe(Disposables.empty());
                     observer.onNext(1);
                     observer.onError(new TestException());
                     observer.onComplete();
@@ -137,7 +134,7 @@ public class MaybeDelaySubscriptionTest {
 
             TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
         } finally {
-            RxJavaPlugins.reset();
+            RxJavaCommonPlugins.reset();
         }
     }
 }

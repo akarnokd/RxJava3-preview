@@ -19,6 +19,7 @@ import static org.mockito.Mockito.*;
 import org.junit.*;
 import org.mockito.InOrder;
 
+import io.reactivex.common.TestCommonHelper;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.BiPredicate;
 import io.reactivex.observable.*;
