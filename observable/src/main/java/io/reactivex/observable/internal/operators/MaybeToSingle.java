@@ -43,16 +43,16 @@ public final class MaybeToSingle<T> extends Single<T> implements HasUpstreamMayb
 
     @Override
     protected void subscribeActual(SingleObserver<? super T> observer) {
-        source.subscribe(new ToSingleMaybeSubscriber<T>(observer, defaultValue));
+        source.subscribe(new ToSingleMaybeObserver<T>(observer, defaultValue));
     }
 
-    static final class ToSingleMaybeSubscriber<T> implements MaybeObserver<T>, Disposable {
+    static final class ToSingleMaybeObserver<T> implements MaybeObserver<T>, Disposable {
         final SingleObserver<? super T> actual;
         final T defaultValue;
 
         Disposable d;
 
-        ToSingleMaybeSubscriber(SingleObserver<? super T> actual, T defaultValue) {
+        ToSingleMaybeObserver(SingleObserver<? super T> actual, T defaultValue) {
             this.actual = actual;
             this.defaultValue = defaultValue;
         }

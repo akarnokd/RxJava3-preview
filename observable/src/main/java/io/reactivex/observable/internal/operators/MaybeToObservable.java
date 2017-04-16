@@ -42,17 +42,17 @@ implements HasUpstreamMaybeSource<T> {
 
     @Override
     protected void subscribeActual(Observer<? super T> s) {
-        source.subscribe(new MaybeToRelaxedSubscriber<T>(s));
+        source.subscribe(new MaybeToObserver<T>(s));
     }
 
-    static final class MaybeToRelaxedSubscriber<T> extends DeferredScalarDisposable<T>
+    static final class MaybeToObserver<T> extends DeferredScalarDisposable<T>
     implements MaybeObserver<T> {
 
         private static final long serialVersionUID = 7603343402964826922L;
 
         Disposable d;
 
-        MaybeToRelaxedSubscriber(Observer<? super T> actual) {
+        MaybeToObserver(Observer<? super T> actual) {
             super(actual);
         }
 

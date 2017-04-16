@@ -52,6 +52,7 @@ public final class RxJava3Interop {
     // --------------------------------------------------------------------------------------------------
 
     public static <T> Flowable<T> toFlowable(ObservableSource<T> source, BackpressureStrategy strategy) {
+        ObjectHelper.requireNonNull(source, "source is null");
         Flowable<T> flowable = new FlowableFromObservable<T>(source);
         switch (strategy) {
         case BUFFER:
@@ -72,18 +73,22 @@ public final class RxJava3Interop {
     }
 
     public static <T> Flowable<T> toFlowable(SingleSource<T> source) {
+        ObjectHelper.requireNonNull(source, "source is null");
         return RxJavaFlowablePlugins.onAssembly(new SingleToFlowable<T>(source));
     }
 
     public static <T> Flowable<T> toFlowable(MaybeSource<T> source) {
+        ObjectHelper.requireNonNull(source, "source is null");
         return RxJavaFlowablePlugins.onAssembly(new MaybeToFlowable<T>(source));
     }
 
     public static <T> Flowable<T> toFlowable(CompletableSource source) {
+        ObjectHelper.requireNonNull(source, "source is null");
         return RxJavaFlowablePlugins.onAssembly(new CompletableToFlowable<T>(source));
     }
 
     public static <T> Observable<T> toObservable(Flowable<T> source) {
+        ObjectHelper.requireNonNull(source, "source is null");
         return RxJavaObservablePlugins.onAssembly(new ObservableFromPublisher<T>(source));
     }
 
@@ -92,30 +97,44 @@ public final class RxJava3Interop {
     // --------------------------------------------------------------------------------------------------
 
     public static <T> Single<List<T>> toList(Flowable<T> source) {
+        ObjectHelper.requireNonNull(source, "source is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableToListSingle<T, List<T>>(source));
     }
 
     public static <T> Single<List<T>> toList(Flowable<T> source, int capacityHint) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.verifyPositive(capacityHint, "capacityHint");
         return RxJavaObservablePlugins.onAssembly(new FlowableToListSingle<T, List<T>>(source, Functions.<T>createArrayList(capacityHint)));
     }
 
     public static <T, C extends Collection<? super T>> Single<C> toList(Flowable<T> source, Callable<C> collectionSupplier) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(collectionSupplier, "collectionSupplier is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableToListSingle<T, C>(source, collectionSupplier));
     }
 
     public static <T> Completable ignoreElements(Flowable<T> source) {
+        ObjectHelper.requireNonNull(source, "source is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableIgnoreElementsCompletable<T>(source));
     }
 
     public static <T> Maybe<T> reduce(Flowable<T> source, BiFunction<T, T, T> reducer) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(reducer, "reducer is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableReduceMaybe<T>(source, reducer));
     }
 
     public static <T, R> Single<R> reduceWith(Flowable<T> source, Callable<R> seed, BiFunction<R, ? super T, R> reducer) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(seed, "seed is null");
+        ObjectHelper.requireNonNull(reducer, "reducer is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableReduceWithSingle<T, R>(source, seed, reducer));
     }
 
     public static <T, R> Single<R> reduce(Flowable<T> source, R seed, BiFunction<R, ? super T, R> reducer) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(seed, "seed is null");
+        ObjectHelper.requireNonNull(reducer, "reducer is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableReduceSeedSingle<T, R>(source, seed, reducer));
     }
 
@@ -123,23 +142,39 @@ public final class RxJava3Interop {
         return flatMapSingle(source, mapper, false, Flowable.bufferSize());
     }
 
-    public static <T, R> Flowable<R> flatMapSingle(Flowable<T> source, Function<? super T, ? extends SingleSource<? extends R>> mapper, boolean delayError, int maxConcurrency) {
+    public static <T, R> Flowable<R> flatMapSingle(Flowable<T> source,
+            Function<? super T, ? extends SingleSource<? extends R>> mapper, boolean delayError, int maxConcurrency) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
         return RxJavaFlowablePlugins.onAssembly(new FlowableFlatMapSingle<T, R>(source, mapper, delayError, maxConcurrency));
     }
 
-    public static <T, R> Flowable<R> flatMapMaybe(Flowable<T> source, Function<? super T, ? extends MaybeSource<? extends R>> mapper) {
+    public static <T, R> Flowable<R> flatMapMaybe(Flowable<T> source,
+            Function<? super T, ? extends MaybeSource<? extends R>> mapper) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
         return flatMapMaybe(source, mapper, false, Flowable.bufferSize());
     }
 
-    public static <T, R> Flowable<R> flatMapMaybe(Flowable<T> source, Function<? super T, ? extends MaybeSource<? extends R>> mapper, boolean delayError, int maxConcurrency) {
+    public static <T, R> Flowable<R> flatMapMaybe(Flowable<T> source,
+            Function<? super T, ? extends MaybeSource<? extends R>> mapper, boolean delayError, int maxConcurrency) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        ObjectHelper.verifyPositive(maxConcurrency, "maxConcurrency");
         return RxJavaFlowablePlugins.onAssembly(new FlowableFlatMapMaybe<T, R>(source, mapper, delayError, maxConcurrency));
     }
 
-    public static <T> Completable flatMapCompletable(Flowable<T> source, Function<? super T, ? extends CompletableSource> mapper) {
+    public static <T> Completable flatMapCompletable(Flowable<T> source,
+            Function<? super T, ? extends CompletableSource> mapper) {
         return flatMapCompletable(source, mapper, false, Flowable.bufferSize());
     }
 
-    public static <T> Completable flatMapCompletable(Flowable<T> source, Function<? super T, ? extends CompletableSource> mapper, boolean delayError, int prefetch) {
+    public static <T> Completable flatMapCompletable(Flowable<T> source,
+            Function<? super T, ? extends CompletableSource> mapper, boolean delayError, int prefetch) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
+        ObjectHelper.verifyPositive(prefetch, "prefetch");
         return RxJavaObservablePlugins.onAssembly(new FlowableFlatMapCompletableCompletable<T>(source, mapper, delayError, prefetch));
     }
 
@@ -151,15 +186,22 @@ public final class RxJava3Interop {
         return toFlowable(source).flatMap(mapper);
     }
 
-    public static <T, R> Flowable<R> flattenAsFlowable(Single<T> source, Function<? super T, ? extends Iterable<? extends R>> mapper) {
+    public static <T, R> Flowable<R> flattenAsFlowable(Single<T> source,
+            Function<? super T, ? extends Iterable<? extends R>> mapper) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
         return RxJavaFlowablePlugins.onAssembly(new SingleFlatMapIterableFlowable<T, R>(source, mapper));
     }
 
-    public static <T, R> Flowable<R> flattenAsFlowable(Maybe<T> source, Function<? super T, ? extends Iterable<? extends R>> mapper) {
+    public static <T, R> Flowable<R> flattenAsFlowable(Maybe<T> source,
+            Function<? super T, ? extends Iterable<? extends R>> mapper) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(mapper, "mapper is null");
         return RxJavaFlowablePlugins.onAssembly(new MaybeFlatMapIterableFlowable<T, R>(source, mapper));
     }
 
     public static <T> Completable concatCompletable(Flowable<? extends CompletableSource> sources) {
+        ObjectHelper.requireNonNull(sources, "sources is null");
         return concatCompletable(sources, 2);
     }
 
@@ -241,50 +283,78 @@ public final class RxJava3Interop {
     }
 
     public static <T> Single<T> last(Flowable<T> source, T defaultItem) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(defaultItem, "defaultItem is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableLastSingle<T>(source, defaultItem));
     }
 
     public static <T> Single<T> lastOrError(Flowable<T> source) {
+        ObjectHelper.requireNonNull(source, "source is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableLastSingle<T>(source, null));
     }
 
     public static <T> Maybe<T> lastElement(Flowable<T> source) {
+        ObjectHelper.requireNonNull(source, "source is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableLastMaybe<T>(source));
     }
 
     public static <T> Single<T> single(Flowable<T> source, T defaultItem) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(defaultItem, "defaultItem is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableSingleSingle<T>(source, defaultItem));
     }
 
     public static <T> Single<T> singleOrError(Flowable<T> source) {
+        ObjectHelper.requireNonNull(source, "source is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableSingleSingle<T>(source, null));
     }
 
     public static <T> Maybe<T> singleElement(Flowable<T> source) {
+        ObjectHelper.requireNonNull(source, "source is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableSingleMaybe<T>(source));
     }
 
     public static <T> Maybe<T> elementAt(Flowable<T> source, long index) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        if (index < 0L) {
+            throw new IndexOutOfBoundsException("index >= 0 required but it was " + index);
+        }
         return RxJavaObservablePlugins.onAssembly(new FlowableElementAtMaybe<T>(source, index));
     }
 
     public static <T> Single<T> elementAt(Flowable<T> source, long index, T defaultItem) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(defaultItem, "defaultItem is null");
+        if (index < 0L) {
+            throw new IndexOutOfBoundsException("index >= 0 required but it was " + index);
+        }
         return RxJavaObservablePlugins.onAssembly(new FlowableElementAtSingle<T>(source, index, defaultItem));
     }
 
     public static <T> Single<T> elementAtOrError(Flowable<T> source, long index) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("index >= 0 required but it was " + index);
+        }
         return RxJavaObservablePlugins.onAssembly(new FlowableElementAtSingle<T>(source, index, null));
     }
 
     public static <T, C> Single<C> collect(Flowable<T> source, Callable<C> collectionSupplier, BiConsumer<? super C, ? super T> collector) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(collectionSupplier, "collectionSupplier is null");
+        ObjectHelper.requireNonNull(collector, "collector is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableCollectSingle<T, C>(source, collectionSupplier, collector));
     }
 
     public static <T> Single<Boolean> any(Flowable<T> source, Predicate<? super T> predicate) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(predicate, "predicate is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableAnySingle<T>(source, predicate));
     }
 
     public static <T> Single<Boolean> all(Flowable<T> source, Predicate<? super T> predicate) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(predicate, "predicate is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableAllSingle<T>(source, predicate));
     }
 
@@ -293,6 +363,7 @@ public final class RxJava3Interop {
     }
 
     public static <T> Single<Long> count(Flowable<T> source) {
+        ObjectHelper.requireNonNull(source, "source is null");
         return RxJavaObservablePlugins.onAssembly(new FlowableCountSingle<T>(source));
     }
 
@@ -762,22 +833,33 @@ public final class RxJava3Interop {
     @Experimental
     @NonNull
     public static <S extends Scheduler & Disposable> S when(Scheduler scheduler, @NonNull Function<Flowable<Flowable<Completable>>, Completable> combine) {
+        ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        ObjectHelper.requireNonNull(combine, "combine is null");
         return (S) new SchedulerWhen(combine, scheduler);
     }
 
     public static <T, U> Single<T> takeUntil(Single<T> source, Publisher<U> other) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(other, "other is null");
         return RxJavaObservablePlugins.onAssembly(new SingleTakeUntilPublisher<T, U>(source, other));
     }
 
     public static <T, U> Maybe<T> takeUntil(Maybe<T> source, Publisher<U> other) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(other, "other is null");
         return RxJavaObservablePlugins.onAssembly(new MaybeTakeUntilPublisher<T, U>(source, other));
     }
 
     public static <T, U> Maybe<T> timeout(Maybe<T> source, Publisher<U> other) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(other, "other is null");
         return RxJavaObservablePlugins.onAssembly(new MaybeTimeoutPublisher<T, U>(source, other, null));
     }
 
     public static <T, U> Maybe<T> timeout(Maybe<T> source, Publisher<U> other, Maybe<T> fallback) {
+        ObjectHelper.requireNonNull(source, "source is null");
+        ObjectHelper.requireNonNull(other, "other is null");
+        ObjectHelper.requireNonNull(fallback, "fallback is null");
         return RxJavaObservablePlugins.onAssembly(new MaybeTimeoutPublisher<T, U>(source, other, fallback));
     }
 }

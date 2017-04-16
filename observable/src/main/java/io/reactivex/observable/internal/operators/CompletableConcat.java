@@ -33,10 +33,10 @@ public final class CompletableConcat extends Completable {
 
     @Override
     public void subscribeActual(CompletableObserver s) {
-        sources.subscribe(new CompletableConcatSubscriber(s, prefetch));
+        sources.subscribe(new CompletableConcatObserver(s, prefetch));
     }
 
-    static final class CompletableConcatSubscriber
+    static final class CompletableConcatObserver
     extends AtomicInteger
     implements Observer<CompletableSource>, Disposable {
         private static final long serialVersionUID = 9032184911934499404L;
@@ -61,7 +61,7 @@ public final class CompletableConcat extends Completable {
 
         volatile boolean active;
 
-        CompletableConcatSubscriber(CompletableObserver actual, int prefetch) {
+        CompletableConcatObserver(CompletableObserver actual, int prefetch) {
             this.actual = actual;
             this.prefetch = prefetch;
             this.inner = new ConcatInnerObserver(this);
@@ -205,9 +205,9 @@ public final class CompletableConcat extends Completable {
         static final class ConcatInnerObserver extends AtomicReference<Disposable> implements CompletableObserver {
             private static final long serialVersionUID = -5454794857847146511L;
 
-            final CompletableConcatSubscriber parent;
+            final CompletableConcatObserver parent;
 
-            ConcatInnerObserver(CompletableConcatSubscriber parent) {
+            ConcatInnerObserver(CompletableConcatObserver parent) {
                 this.parent = parent;
             }
 

@@ -104,7 +104,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Returns a Observable that emits the items emitted by two MaybeSources, one after the other.
+     * Returns an Observable that emits the items emitted by two MaybeSources, one after the other.
      * <p>
      * <img width="640" height="422" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Maybe.concat.png" alt="">
      * <dl>
@@ -117,7 +117,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *            a MaybeSource to be concatenated
      * @param source2
      *            a MaybeSource to be concatenated
-     * @return a Observable that emits items emitted by the two source MaybeSources, one after the other.
+     * @return an Observable that emits items emitted by the two source MaybeSources, one after the other.
      * @see <a href="http://reactivex.io/documentation/operators/concat.html">ReactiveX operators documentation: Concat</a>
      */
     @CheckReturnValue
@@ -130,7 +130,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Returns a Observable that emits the items emitted by three MaybeSources, one after the other.
+     * Returns an Observable that emits the items emitted by three MaybeSources, one after the other.
      * <p>
      * <img width="640" height="422" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Maybe.concat.png" alt="">
      * <dl>
@@ -145,7 +145,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *            a MaybeSource to be concatenated
      * @param source3
      *            a MaybeSource to be concatenated
-     * @return a Observable that emits items emitted by the three source MaybeSources, one after the other.
+     * @return an Observable that emits items emitted by the three source MaybeSources, one after the other.
      * @see <a href="http://reactivex.io/documentation/operators/concat.html">ReactiveX operators documentation: Concat</a>
      */
     @CheckReturnValue
@@ -160,7 +160,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Returns a Observable that emits the items emitted by four MaybeSources, one after the other.
+     * Returns an Observable that emits the items emitted by four MaybeSources, one after the other.
      * <p>
      * <img width="640" height="422" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Maybe.concat.png" alt="">
      * <dl>
@@ -177,7 +177,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *            a MaybeSource to be concatenated
      * @param source4
      *            a MaybeSource to be concatenated
-     * @return a Observable that emits items emitted by the four source MaybeSources, one after the other.
+     * @return an Observable that emits items emitted by the four source MaybeSources, one after the other.
      * @see <a href="http://reactivex.io/documentation/operators/concat.html">ReactiveX operators documentation: Concat</a>
      */
     @CheckReturnValue
@@ -194,7 +194,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
 
     /**
      * Concatenate the single values, in a non-overlapping fashion, of the MaybeSource sources provided by
-     * a ObservableSource sequence.
+     * an ObservableSource sequence.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code concat} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -211,7 +211,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
 
     /**
      * Concatenate the single values, in a non-overlapping fashion, of the MaybeSource sources provided by
-     * a ObservableSource sequence.
+     * an ObservableSource sequence.
      * <dl>
      * <dt><b>Scheduler:</b></dt>
      * <dd>{@code concat} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -233,6 +233,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     /**
      * Concatenate the single values, in a non-overlapping fashion, of the MaybeSource sources in the array.
      * <dl>
+     * <dt><b>Scheduler:</b></dt>
      *  <dd>{@code concatArray} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      * @param <T> the value type
@@ -364,7 +365,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Concatenates a ObservableSource sequence of ObservableSources eagerly into a single stream of values.
+     * Concatenates an ObservableSource sequence of ObservableSources eagerly into a single stream of values.
      * <p>
      * Eager concatenation means that once a subscriber subscribes, this operator subscribes to all of the
      * emitted source ObservableSources as they are observed. The operator buffers the values emitted by these
@@ -735,7 +736,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Merges a Observable sequence of MaybeSource instances into a single Observable sequence,
+     * Merges an Observable sequence of MaybeSource instances into a single Observable sequence,
      * running all MaybeSources at once.
      * <dl>
      * <dt><b>Scheduler:</b></dt>
@@ -752,7 +753,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Merges a Observable sequence of MaybeSource instances into a single Observable sequence,
+     * Merges an Observable sequence of MaybeSource instances into a single Observable sequence,
      * running at most maxConcurrency MaybeSources at once.
      * <dl>
      * <dt><b>Scheduler:</b></dt>
@@ -815,7 +816,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *            a MaybeSource to be merged
      * @param source2
      *            a MaybeSource to be merged
-     * @return a Observable that emits all of the items emitted by the source MaybeSources
+     * @return an Observable that emits all of the items emitted by the source MaybeSources
      * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
      */
     @CheckReturnValue
@@ -848,7 +849,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *            a MaybeSource to be merged
      * @param source3
      *            a MaybeSource to be merged
-     * @return a Observable that emits all of the items emitted by the source MaybeSources
+     * @return an Observable that emits all of the items emitted by the source MaybeSources
      * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
      */
     @CheckReturnValue
@@ -885,7 +886,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *            a MaybeSource to be merged
      * @param source4
      *            a MaybeSource to be merged
-     * @return a Observable that emits all of the items emitted by the source MaybeSources
+     * @return an Observable that emits all of the items emitted by the source MaybeSources
      * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
      */
     @CheckReturnValue
@@ -928,18 +929,18 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Flattens an array of MaybeSources into one Observable, in a way that allows a Subscriber to receive all
+     * Flattens an array of MaybeSources into one Observable, in a way that allows an Observer to receive all
      * successfully emitted items from each of the source MaybeSources without being interrupted by an error
      * notification from one of them.
      * <p>
-     * This behaves like {@link #merge(ObservableSource)} except that if any of the merged MaybeSources notify of an
+     * This behaves like {@link #mergeArray(MaybeSource...)} except that if any of the merged MaybeSources notify of an
      * error via {@link MaybeObserver#onError onError}, {@code mergeDelayError} will refrain from propagating that
      * error notification until all of the merged MaybeSources have finished emitting items.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeDelayError.png" alt="">
      * <p>
      * Even if multiple merged MaybeSources send {@code onError} notifications, {@code mergeDelayError} will only
-     * invoke the {@code onError} method of its Subscribers once.
+     * invoke the {@code onError} method of its Observers once.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code mergeArrayDelayError} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -948,7 +949,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * @param <T> the common element base type
      * @param sources
      *            the Iterable of MaybeSources
-     * @return a Observable that emits items that are the result of flattening the items emitted by the
+     * @return an Observable that emits items that are the result of flattening the items emitted by the
      *         MaybeSources in the Iterable
      * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
      */
@@ -964,18 +965,18 @@ public abstract class Maybe<T> implements MaybeSource<T> {
 
 
     /**
-     * Flattens an Iterable of MaybeSources into one Observable, in a way that allows a Subscriber to receive all
+     * Flattens an Iterable of MaybeSources into one Observable, in a way that allows an Observer to receive all
      * successfully emitted items from each of the source MaybeSources without being interrupted by an error
      * notification from one of them.
      * <p>
-     * This behaves like {@link #merge(ObservableSource)} except that if any of the merged MaybeSources notify of an
+     * This behaves like {@link #merge(Iterable)} except that if any of the merged MaybeSources notify of an
      * error via {@link MaybeObserver#onError onError}, {@code mergeDelayError} will refrain from propagating that
      * error notification until all of the merged MaybeSources have finished emitting items.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeDelayError.png" alt="">
      * <p>
      * Even if multiple merged MaybeSources send {@code onError} notifications, {@code mergeDelayError} will only
-     * invoke the {@code onError} method of its Subscribers once.
+     * invoke the {@code onError} method of its Observers once.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code mergeDelayError} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -984,7 +985,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * @param <T> the common element base type
      * @param sources
      *            the Iterable of MaybeSources
-     * @return a Observable that emits items that are the result of flattening the items emitted by the
+     * @return an Observable that emits items that are the result of flattening the items emitted by the
      *         MaybeSources in the Iterable
      * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
      */
@@ -997,7 +998,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
 
 
     /**
-     * Flattens a ObservableSource that emits MaybeSources into one ObservableSource, in a way that allows a Subscriber to
+     * Flattens an ObservableSource that emits MaybeSources into one ObservableSource, in a way that allows an Observer to
      * receive all successfully emitted items from all of the source ObservableSources without being interrupted by
      * an error notification from one of them.
      * <p>
@@ -1008,7 +1009,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeDelayError.png" alt="">
      * <p>
      * Even if multiple merged ObservableSources send {@code onError} notifications, {@code mergeDelayError} will only
-     * invoke the {@code onError} method of its Subscribers once.
+     * invoke the {@code onError} method of its Observers once.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code mergeDelayError} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -1016,8 +1017,8 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *
      * @param <T> the common element base type
      * @param sources
-     *            a ObservableSource that emits MaybeSources
-     * @return a Observable that emits all of the items emitted by the ObservableSources emitted by the
+     *            an ObservableSource that emits MaybeSources
+     * @return an Observable that emits all of the items emitted by the ObservableSources emitted by the
      *         {@code source} ObservableSource
      * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
      */
@@ -1029,7 +1030,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Flattens two MaybeSources into one Observable, in a way that allows a Subscriber to receive all
+     * Flattens two MaybeSources into one Observable, in a way that allows an Observer to receive all
      * successfully emitted items from each of the source MaybeSources without being interrupted by an error
      * notification from one of them.
      * <p>
@@ -1040,7 +1041,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeDelayError.png" alt="">
      * <p>
      * Even if both merged MaybeSources send {@code onError} notifications, {@code mergeDelayError} will only
-     * invoke the {@code onError} method of its Subscribers once.
+     * invoke the {@code onError} method of its Observers once.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code mergeDelayError} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -1051,7 +1052,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *            a MaybeSource to be merged
      * @param source2
      *            a MaybeSource to be merged
-     * @return a Observable that emits all of the items that are emitted by the two source MaybeSources
+     * @return an Observable that emits all of the items that are emitted by the two source MaybeSources
      * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
      */
     @SuppressWarnings({ "unchecked" })
@@ -1064,7 +1065,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Flattens three MaybeSource into one Observable, in a way that allows a Subscriber to receive all
+     * Flattens three MaybeSource into one Observable, in a way that allows an Observer to receive all
      * successfully emitted items from all of the source MaybeSources without being interrupted by an error
      * notification from one of them.
      * <p>
@@ -1076,7 +1077,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeDelayError.png" alt="">
      * <p>
      * Even if multiple merged MaybeSources send {@code onError} notifications, {@code mergeDelayError} will only
-     * invoke the {@code onError} method of its Subscribers once.
+     * invoke the {@code onError} method of its Observers once.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code mergeDelayError} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -1089,7 +1090,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *            a MaybeSource to be merged
      * @param source3
      *            a MaybeSource to be merged
-     * @return a Observable that emits all of the items that are emitted by the source MaybeSources
+     * @return an Observable that emits all of the items that are emitted by the source MaybeSources
      * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
      */
     @SuppressWarnings({ "unchecked" })
@@ -1105,7 +1106,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
 
 
     /**
-     * Flattens four MaybeSources into one Observable, in a way that allows a Subscriber to receive all
+     * Flattens four MaybeSources into one Observable, in a way that allows an Observer to receive all
      * successfully emitted items from all of the source MaybeSources without being interrupted by an error
      * notification from one of them.
      * <p>
@@ -1117,7 +1118,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeDelayError.png" alt="">
      * <p>
      * Even if multiple merged MaybeSources send {@code onError} notifications, {@code mergeDelayError} will only
-     * invoke the {@code onError} method of its Subscribers once.
+     * invoke the {@code onError} method of its Observers once.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code mergeDelayError} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -1132,7 +1133,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *            a MaybeSource to be merged
      * @param source4
      *            a MaybeSource to be merged
-     * @return a Observable that emits all of the items that are emitted by the source MaybeSources
+     * @return an Observable that emits all of the items that are emitted by the source MaybeSources
      * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
      */
     @SuppressWarnings({ "unchecked" })
@@ -2029,7 +2030,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
 
 
     /**
-     * Returns a Observable that emits the items emitted from the current MaybeSource, then the next, one after
+     * Returns an Observable that emits the items emitted from the current MaybeSource, then the next, one after
      * the other, without interleaving them.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/concat.png" alt="">
@@ -2040,7 +2041,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *
      * @param other
      *            a MaybeSource to be concatenated after the current
-     * @return a Observable that emits items emitted by the two source MaybeSources, one after the other,
+     * @return an Observable that emits items emitted by the two source MaybeSources, one after the other,
      *         without interleaving them
      * @see <a href="http://reactivex.io/documentation/operators/concat.html">ReactiveX operators documentation: Concat</a>
      */
@@ -3147,7 +3148,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Returns a Observable that repeats the sequence of items emitted by the source Maybe indefinitely.
+     * Returns an Observable that repeats the sequence of items emitted by the source Maybe indefinitely.
      * <p>
      * <img width="640" height="309" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/repeat.o.png" alt="">
      * <dl>
@@ -3155,7 +3156,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *  <dd>{@code repeat} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
-     * @return a Observable that emits the items emitted by the source Maybe repeatedly and in sequence
+     * @return an Observable that emits the items emitted by the source Maybe repeatedly and in sequence
      * @see <a href="http://reactivex.io/documentation/operators/repeat.html">ReactiveX operators documentation: Repeat</a>
      */
     @CheckReturnValue
@@ -3165,7 +3166,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Returns a Observable that repeats the sequence of items emitted by the source Maybe at most
+     * Returns an Observable that repeats the sequence of items emitted by the source Maybe at most
      * {@code count} times.
      * <p>
      * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/repeat.on.png" alt="">
@@ -3177,7 +3178,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * @param times
      *            the number of times the source Maybe items are repeated, a count of 0 will yield an empty
      *            sequence
-     * @return a Observable that repeats the sequence of items emitted by the source Maybe at most
+     * @return an Observable that repeats the sequence of items emitted by the source Maybe at most
      *         {@code count} times
      * @throws IllegalArgumentException
      *             if {@code count} is less than zero
@@ -3190,7 +3191,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Returns a Observable that repeats the sequence of items emitted by the source Maybe until
+     * Returns an Observable that repeats the sequence of items emitted by the source Maybe until
      * the provided stop function returns true.
      * <p>
      * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/repeat.on.png" alt="">
@@ -3214,7 +3215,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     }
 
     /**
-     * Returns a Observable that emits the same values as the source ObservableSource with the exception of an
+     * Returns an Observable that emits the same values as the source ObservableSource with the exception of an
      * {@code onComplete}. An {@code onComplete} notification from the source will result in the emission of
      * a {@code void} item to the ObservableSource provided as an argument to the {@code notificationHandler}
      * function. If that ObservableSource calls {@code onComplete} or {@code onError} then {@code repeatWhen} will
@@ -3228,7 +3229,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * </dl>
      *
      * @param handler
-     *            receives a ObservableSource of notifications with which a user can complete or error, aborting the repeat.
+     *            receives an ObservableSource of notifications with which a user can complete or error, aborting the repeat.
      * @return the source ObservableSource modified with repeat logic
      * @see <a href="http://reactivex.io/documentation/operators/repeat.html">ReactiveX operators documentation: Repeat</a>
      */
@@ -3373,7 +3374,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * This retries 3 times, each time incrementing the number of seconds it waits.
      *
      * <pre><code>
-     *  ObservableSource.create((Subscriber<? super String> s) -> {
+     *  ObservableSource.create((Observer<? super String> s) -> {
      *      System.out.println("subscribing");
      *      s.onError(new RuntimeException("always fails"));
      *  }).retryWhen(attempts -> {
@@ -3401,7 +3402,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * </dl>
      *
      * @param handler
-     *            receives a ObservableSource of notifications with which a user can complete or error, aborting the
+     *            receives an ObservableSource of notifications with which a user can complete or error, aborting the
      *            retry
      * @return the new Maybe instance
      * @see <a href="http://reactivex.io/documentation/operators/retry.html">ReactiveX operators documentation: Retry</a>

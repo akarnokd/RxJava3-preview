@@ -36,17 +36,17 @@ public final class MaybeDelaySubscriptionOtherObservable<T, U> extends AbstractM
 
     @Override
     protected void subscribeActual(MaybeObserver<? super T> observer) {
-        other.subscribe(new OtherSubscriber<T>(observer, source));
+        other.subscribe(new OtherObserver<T>(observer, source));
     }
 
-    static final class OtherSubscriber<T> implements Observer<Object>, Disposable {
+    static final class OtherObserver<T> implements Observer<Object>, Disposable {
         final DelayMaybeObserver<T> main;
 
         MaybeSource<T> source;
 
         Disposable s;
 
-        OtherSubscriber(MaybeObserver<? super T> actual, MaybeSource<T> source) {
+        OtherObserver(MaybeObserver<? super T> actual, MaybeSource<T> source) {
             this.main = new DelayMaybeObserver<T>(actual);
             this.source = source;
         }

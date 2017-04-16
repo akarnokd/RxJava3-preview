@@ -42,7 +42,7 @@ public class SingleFromPublisherTest {
     public void range() {
         singleOrError(Flowable.range(1, 3))
         .test()
-        .assertFailure(IndexOutOfBoundsException.class);
+        .assertFailure(IllegalArgumentException.class);
     }
 
     @Test

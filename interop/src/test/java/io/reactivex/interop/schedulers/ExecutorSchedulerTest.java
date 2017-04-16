@@ -26,7 +26,6 @@ import io.reactivex.common.*;
 import io.reactivex.common.Scheduler.Worker;
 import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.common.internal.schedulers.*;
-import io.reactivex.observable.internal.disposables.EmptyDisposable;
 
 public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
 
@@ -337,11 +336,11 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
         List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
-            assertSame(EmptyDisposable.INSTANCE, s.scheduleDirect(Functions.EMPTY_RUNNABLE));
+            assertSame(Scheduler.REJECTED, s.scheduleDirect(Functions.EMPTY_RUNNABLE));
 
-            assertSame(EmptyDisposable.INSTANCE, s.scheduleDirect(Functions.EMPTY_RUNNABLE, 10, TimeUnit.MILLISECONDS));
+            assertSame(Scheduler.REJECTED, s.scheduleDirect(Functions.EMPTY_RUNNABLE, 10, TimeUnit.MILLISECONDS));
 
-            assertSame(EmptyDisposable.INSTANCE, s.schedulePeriodicallyDirect(Functions.EMPTY_RUNNABLE, 10, 10, TimeUnit.MILLISECONDS));
+            assertSame(Scheduler.REJECTED, s.schedulePeriodicallyDirect(Functions.EMPTY_RUNNABLE, 10, 10, TimeUnit.MILLISECONDS));
 
             TestCommonHelper.assertUndeliverable(errors, 0, RejectedExecutionException.class);
             TestCommonHelper.assertUndeliverable(errors, 1, RejectedExecutionException.class);
@@ -360,13 +359,13 @@ public class ExecutorSchedulerTest extends AbstractSchedulerConcurrencyTests {
 
         try {
             Worker s = Schedulers.from(exec).createWorker();
-            assertSame(EmptyDisposable.INSTANCE, s.schedule(Functions.EMPTY_RUNNABLE));
+            assertSame(Scheduler.REJECTED, s.schedule(Functions.EMPTY_RUNNABLE));
 
             s = Schedulers.from(exec).createWorker();
-            assertSame(EmptyDisposable.INSTANCE, s.schedule(Functions.EMPTY_RUNNABLE, 10, TimeUnit.MILLISECONDS));
+            assertSame(Scheduler.REJECTED, s.schedule(Functions.EMPTY_RUNNABLE, 10, TimeUnit.MILLISECONDS));
 
             s = Schedulers.from(exec).createWorker();
-            assertSame(EmptyDisposable.INSTANCE, s.schedulePeriodically(Functions.EMPTY_RUNNABLE, 10, 10, TimeUnit.MILLISECONDS));
+            assertSame(Scheduler.REJECTED, s.schedulePeriodically(Functions.EMPTY_RUNNABLE, 10, 10, TimeUnit.MILLISECONDS));
 
             TestCommonHelper.assertUndeliverable(errors, 0, RejectedExecutionException.class);
             TestCommonHelper.assertUndeliverable(errors, 1, RejectedExecutionException.class);

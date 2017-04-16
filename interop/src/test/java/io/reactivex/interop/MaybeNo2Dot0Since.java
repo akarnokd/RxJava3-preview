@@ -52,7 +52,7 @@ public class MaybeNo2Dot0Since {
         // find end of any potential postfix to /RxJava
         int j = path.indexOf("/", i + 6);
 
-        String p = path.substring(0, j + 1) + project + "/src/main/java/io/reactivex/" + baseClassName + ".java";
+        String p = path.substring(0, j + 1) + project + "/src/main/java/io/reactivex/" + project + "/" + baseClassName + ".java";
 
         File f = new File(p);
 

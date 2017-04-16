@@ -42,14 +42,14 @@ public final class MaybeDelayOtherObservable<T, U> extends AbstractMaybeWithUpst
 
     static final class DelayMaybeObserver<T, U>
     implements MaybeObserver<T>, Disposable {
-        final OtherSubscriber<T> other;
+        final OtherObserver<T> other;
 
         final ObservableSource<U> otherSource;
 
         Disposable d;
 
         DelayMaybeObserver(MaybeObserver<? super T> actual, ObservableSource<U> otherSource) {
-            this.other = new OtherSubscriber<T>(actual);
+            this.other = new OtherObserver<T>(actual);
             this.otherSource = otherSource;
         }
 
@@ -99,7 +99,7 @@ public final class MaybeDelayOtherObservable<T, U> extends AbstractMaybeWithUpst
         }
     }
 
-    static final class OtherSubscriber<T> extends
+    static final class OtherObserver<T> extends
     AtomicReference<Disposable>
     implements Observer<Object> {
 
@@ -111,7 +111,7 @@ public final class MaybeDelayOtherObservable<T, U> extends AbstractMaybeWithUpst
 
         Throwable error;
 
-        OtherSubscriber(MaybeObserver<? super T> actual) {
+        OtherObserver(MaybeObserver<? super T> actual) {
             this.actual = actual;
         }
 

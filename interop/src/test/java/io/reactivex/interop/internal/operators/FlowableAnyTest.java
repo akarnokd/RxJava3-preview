@@ -226,8 +226,8 @@ public class FlowableAnyTest {
     }
     @Test(timeout = 5000)
     public void testIssue1935NoUnsubscribeDownstream() {
-        Flowable<Integer> source = Flowable.just(1);
-            flatMapPublisher(isEmpty(source), new Function<Boolean, Publisher<Integer>>() {
+        Flowable<Integer> source =
+            flatMapPublisher(isEmpty(Flowable.just(1)), new Function<Boolean, Publisher<Integer>>() {
                 @Override
                 public Publisher<Integer> apply(Boolean t1) {
                     return Flowable.just(2).delay(500, TimeUnit.MILLISECONDS);

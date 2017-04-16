@@ -137,7 +137,7 @@ public abstract class Single<T> implements SingleSource<T> {
 
     /**
      * Concatenate the single values, in a non-overlapping fashion, of the Single sources provided by
-     * a ObservableSource sequence and prefetched by the specified amount.
+     * an ObservableSource sequence and prefetched by the specified amount.
      * <dl>
      * <dt><b>Scheduler:</b></dt>
      * <dd>{@code concat} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -158,7 +158,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Returns a Observable that emits the items emitted by two Singles, one after the other.
+     * Returns an Observable that emits the items emitted by two Singles, one after the other.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Single.concat.png" alt="">
      * <dl>
@@ -171,7 +171,7 @@ public abstract class Single<T> implements SingleSource<T> {
      *            a Single to be concatenated
      * @param source2
      *            a Single to be concatenated
-     * @return a Observable that emits items emitted by the two source Singles, one after the other.
+     * @return an Observable that emits items emitted by the two source Singles, one after the other.
      * @see <a href="http://reactivex.io/documentation/operators/concat.html">ReactiveX operators documentation: Concat</a>
      */
     @CheckReturnValue
@@ -186,7 +186,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Returns a Observable that emits the items emitted by three Singles, one after the other.
+     * Returns an Observable that emits the items emitted by three Singles, one after the other.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Single.concat.png" alt="">
      * <dl>
@@ -201,7 +201,7 @@ public abstract class Single<T> implements SingleSource<T> {
      *            a Single to be concatenated
      * @param source3
      *            a Single to be concatenated
-     * @return a Observable that emits items emitted by the three source Singles, one after the other.
+     * @return an Observable that emits items emitted by the three source Singles, one after the other.
      * @see <a href="http://reactivex.io/documentation/operators/concat.html">ReactiveX operators documentation: Concat</a>
      */
     @CheckReturnValue
@@ -218,7 +218,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Returns a Observable that emits the items emitted by four Singles, one after the other.
+     * Returns an Observable that emits the items emitted by four Singles, one after the other.
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Single.concat.png" alt="">
      * <dl>
@@ -235,7 +235,7 @@ public abstract class Single<T> implements SingleSource<T> {
      *            a Single to be concatenated
      * @param source4
      *            a Single to be concatenated
-     * @return a Observable that emits items emitted by the four source Singles, one after the other.
+     * @return an Observable that emits items emitted by the four source Singles, one after the other.
      * @see <a href="http://reactivex.io/documentation/operators/concat.html">ReactiveX operators documentation: Concat</a>
      */
     @CheckReturnValue
@@ -593,7 +593,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Merges a Observable sequence of SingleSource instances into a single Observable sequence,
+     * Merges an Observable sequence of SingleSource instances into a single Observable sequence,
      * running all SingleSources at once.
      * <dl>
      * <dt><b>Scheduler:</b></dt>
@@ -655,7 +655,7 @@ public abstract class Single<T> implements SingleSource<T> {
      *            a Single to be merged
      * @param source2
      *            a Single to be merged
-     * @return a Observable that emits all of the items emitted by the source Singles
+     * @return an Observable that emits all of the items emitted by the source Singles
      * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
      */
     @CheckReturnValue
@@ -688,7 +688,7 @@ public abstract class Single<T> implements SingleSource<T> {
      *            a Single to be merged
      * @param source3
      *            a Single to be merged
-     * @return a Observable that emits all of the items emitted by the source Singles
+     * @return an Observable that emits all of the items emitted by the source Singles
      * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
      */
     @CheckReturnValue
@@ -725,7 +725,7 @@ public abstract class Single<T> implements SingleSource<T> {
      *            a Single to be merged
      * @param source4
      *            a Single to be merged
-     * @return a Observable that emits all of the items emitted by the source Singles
+     * @return an Observable that emits all of the items emitted by the source Singles
      * @see <a href="http://reactivex.io/documentation/operators/merge.html">ReactiveX operators documentation: Merge</a>
      */
     @CheckReturnValue
@@ -1502,7 +1502,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Returns a Observable that emits the item emitted by the source Single, then the item emitted by the
+     * Returns an Observable that emits the item emitted by the source Single, then the item emitted by the
      * specified Single.
      * <p>
      * <img width="640" height="335" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Single.concatWith.png" alt="">
@@ -1513,7 +1513,7 @@ public abstract class Single<T> implements SingleSource<T> {
      *
      * @param other
      *            a Single to be concatenated after the current
-     * @return a Observable that emits the item emitted by the source Single, followed by the item emitted by
+     * @return an Observable that emits the item emitted by the source Single, followed by the item emitted by
      *         {@code t1}
      * @see <a href="http://reactivex.io/documentation/operators/concat.html">ReactiveX operators documentation: Concat</a>
      */
@@ -1898,8 +1898,8 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Returns a Observable that emits items based on applying a specified function to the item emitted by the
-     * source Single, where that function returns a ObservableSource.
+     * Returns an Observable that emits items based on applying a specified function to the item emitted by the
+     * source Single, where that function returns an ObservableSource.
      * <p>
      * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Single.flatMapObservable.png" alt="">
      * <dl>
@@ -2305,8 +2305,8 @@ public abstract class Single<T> implements SingleSource<T> {
      * <dt><b>Scheduler:</b></dt>
      * <dd>{@code repeatWhen} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
-     * @param handler the function that is called with a Observable that signals a value when the Single
-     *                signalled a success value and returns a ObservableSource that has to signal a value to
+     * @param handler the function that is called with an Observable that signals a value when the Single
+     *                signalled a success value and returns an ObservableSource that has to signal a value to
      *                trigger a resubscription to the current Single, otherwise the terminal signal of
      *                the ObservableSource will be the terminal signal of the sequence as well.
      * @return the new Observable instance
@@ -2413,8 +2413,8 @@ public abstract class Single<T> implements SingleSource<T> {
      * <dd>{@code retryWhen} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
-     * @param handler the function that receives a Observable of the error the Single emits and should
-     *                return a ObservableSource that should signal a normal value (in response to the
+     * @param handler the function that receives an Observable of the error the Single emits and should
+     *                return an ObservableSource that should signal a normal value (in response to the
      *                throwable the Observable emits) to trigger a resubscription or signal an error to
      *                be the output of the resulting Single
      * @return the new Single instance
@@ -2630,7 +2630,7 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Returns a Single that emits the item emitted by the source Single until a ObservableSource emits an item. Upon
+     * Returns a Single that emits the item emitted by the source Single until an ObservableSource emits an item. Upon
      * emission of an item from {@code other}, this will emit a {@link CancellationException} rather than go to
      * {@link SingleObserver#onSuccess(Object)}.
      * <p>

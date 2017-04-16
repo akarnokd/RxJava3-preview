@@ -55,7 +55,7 @@ public class JavadocWording {
                                 && !m.signature.contains("Flowable")
                                 && !m.signature.contains("Observable")
                                 && !m.signature.contains("ObservableSource")) {
-                            e.append("java.lang.RuntimeException: Maybe doc mentions onNext but no Flowable/Observable in signature\r\n at io.reactivex.")
+                            e.append("java.lang.RuntimeException: Maybe doc mentions onNext but no Flowable/Observable in signature\r\n at io.reactivex.observable.")
                             .append("Maybe (Maybe.java:").append(m.javadocLine + lineNumber(m.javadoc, idx) - 1).append(")\r\n\r\n");
                         }
 
@@ -72,7 +72,7 @@ public class JavadocWording {
                                 && !m.signature.contains("Flowable")
                                 && !m.signature.contains("TestSubscriber")
                         ) {
-                            e.append("java.lang.RuntimeException: Maybe doc mentions Subscriber but not using Flowable\r\n at io.reactivex.")
+                            e.append("java.lang.RuntimeException: Maybe doc mentions Subscriber but not using Flowable\r\n at io.reactivex.observable.")
                             .append("Maybe (Maybe.java:").append(m.javadocLine + lineNumber(m.javadoc, idx) - 1).append(")\r\n\r\n");
                         }
 
@@ -88,7 +88,7 @@ public class JavadocWording {
                         if (!m.signature.contains("Publisher")
                                 && !m.signature.contains("Flowable")
                         ) {
-                            e.append("java.lang.RuntimeException: Maybe doc mentions Subscription but not using Flowable\r\n at io.reactivex.")
+                            e.append("java.lang.RuntimeException: Maybe doc mentions Subscription but not using Flowable\r\n at io.reactivex.observable.")
                             .append("Maybe (Maybe.java:").append(m.javadocLine + lineNumber(m.javadoc, idx) - 1).append(")\r\n\r\n");
                         }
 
@@ -106,7 +106,7 @@ public class JavadocWording {
                                 && !m.signature.contains("TestObserver")) {
 
                             if (idx < 5 || !m.javadoc.substring(idx - 5, idx + 8).equals("MaybeObserver")) {
-                                e.append("java.lang.RuntimeException: Maybe doc mentions Observer but not using Observable\r\n at io.reactivex.")
+                                e.append("java.lang.RuntimeException: Maybe doc mentions Observer but not using Observable\r\n at io.reactivex.observable.")
                                 .append("Maybe (Maybe.java:").append(m.javadocLine + lineNumber(m.javadoc, idx) - 1).append(")\r\n\r\n");
                             }
                         }
@@ -122,7 +122,7 @@ public class JavadocWording {
                     if (idx >= 0) {
                         if (!m.signature.contains("Publisher")) {
                             if (idx == 0 || !m.javadoc.substring(idx - 1, idx + 9).equals("(Publisher")) {
-                                e.append("java.lang.RuntimeException: Maybe doc mentions Publisher but not in the signature\r\n at io.reactivex.")
+                                e.append("java.lang.RuntimeException: Maybe doc mentions Publisher but not in the signature\r\n at io.reactivex.observable.")
                                 .append("Maybe (Maybe.java:").append(m.javadocLine + lineNumber(m.javadoc, idx) - 1).append(")\r\n\r\n");
                             }
                         }
@@ -137,7 +137,7 @@ public class JavadocWording {
                     int idx = m.javadoc.indexOf("Flowable", jdx);
                     if (idx >= 0) {
                         if (!m.signature.contains("Flowable")) {
-                            e.append("java.lang.RuntimeException: Maybe doc mentions Flowable but not in the signature\r\n at io.reactivex.")
+                            e.append("java.lang.RuntimeException: Maybe doc mentions Flowable but not in the signature\r\n at io.reactivex.observable.")
                             .append("Maybe (Maybe.java:").append(m.javadocLine + lineNumber(m.javadoc, idx) - 1).append(")\r\n\r\n");
                         }
                         jdx = idx + 6;
@@ -150,7 +150,7 @@ public class JavadocWording {
                     int idx = m.javadoc.indexOf("Single", jdx);
                     if (idx >= 0) {
                         if (!m.signature.contains("Single")) {
-                            e.append("java.lang.RuntimeException: Maybe doc mentions Single but not in the signature\r\n at io.reactivex.")
+                            e.append("java.lang.RuntimeException: Maybe doc mentions Single but not in the signature\r\n at io.reactivex.observable.")
                             .append("Maybe (Maybe.java:").append(m.javadocLine + lineNumber(m.javadoc, idx) - 1).append(")\r\n\r\n");
                         }
                         jdx = idx + 6;
@@ -163,7 +163,7 @@ public class JavadocWording {
                     int idx = m.javadoc.indexOf("SingleSource", jdx);
                     if (idx >= 0) {
                         if (!m.signature.contains("SingleSource")) {
-                            e.append("java.lang.RuntimeException: Maybe doc mentions SingleSource but not in the signature\r\n at io.reactivex.")
+                            e.append("java.lang.RuntimeException: Maybe doc mentions SingleSource but not in the signature\r\n at io.reactivex.observable.")
                             .append("Maybe (Maybe.java:").append(m.javadocLine + lineNumber(m.javadoc, idx) - 1).append(")\r\n\r\n");
                         }
                         jdx = idx + 6;
@@ -176,7 +176,7 @@ public class JavadocWording {
                     int idx = m.javadoc.indexOf("Observable", jdx);
                     if (idx >= 0) {
                         if (!m.signature.contains("Observable")) {
-                            e.append("java.lang.RuntimeException: Maybe doc mentions Observable but not in the signature\r\n at io.reactivex.")
+                            e.append("java.lang.RuntimeException: Maybe doc mentions Observable but not in the signature\r\n at io.reactivex.observable.")
                             .append("Maybe (Maybe.java:").append(m.javadocLine + lineNumber(m.javadoc, idx) - 1).append(")\r\n\r\n");
                         }
                         jdx = idx + 6;
@@ -189,7 +189,7 @@ public class JavadocWording {
                     int idx = m.javadoc.indexOf("ObservableSource", jdx);
                     if (idx >= 0) {
                         if (!m.signature.contains("ObservableSource")) {
-                            e.append("java.lang.RuntimeException: Maybe doc mentions ObservableSource but not in the signature\r\n at io.reactivex.")
+                            e.append("java.lang.RuntimeException: Maybe doc mentions ObservableSource but not in the signature\r\n at io.reactivex.observable.")
                             .append("Maybe (Maybe.java:").append(m.javadocLine + lineNumber(m.javadoc, idx) - 1).append(")\r\n\r\n");
                         }
                         jdx = idx + 6;

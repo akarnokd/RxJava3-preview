@@ -39,9 +39,9 @@ public class JavadocForAnnotations {
         StringBuilder e = new StringBuilder();
 
         if (scheduler) {
-            scanFor(b, "@SchedulerSupport", "Scheduler:", e, baseClassName);
+            scanFor(b, "@SchedulerSupport", "Scheduler:", e, baseClassName, project);
         } else {
-            scanFor(b, "@BackpressureSupport", "Backpressure:", e, baseClassName);
+            scanFor(b, "@BackpressureSupport", "Backpressure:", e, baseClassName, project);
         }
 
         if (e.length() != 0) {
@@ -73,7 +73,7 @@ public class JavadocForAnnotations {
     }
 
     static final void scanFor(StringBuilder sourceCode, String annotation, String inDoc,
-            StringBuilder e, String baseClassName) {
+            StringBuilder e, String baseClassName, String project) {
         int index = 0;
         for (;;) {
             int idx = sourceCode.indexOf(annotation, index);
@@ -95,7 +95,7 @@ public class JavadocForAnnotations {
                     ;
                     int lc = lineNumber(sourceCode, idx);
 
-                    e.append(" at io.reactivex.").append(baseClassName)
+                    e.append(" at io.reactivex.").append(project).append('.').append(baseClassName)
                     .append(" (").append(baseClassName).append(".java:")
                     .append(lc).append(")").append("\r\n\r\n");
                 }
@@ -107,7 +107,7 @@ public class JavadocForAnnotations {
 
 
     static final void scanForBadMethod(StringBuilder sourceCode, String annotation, String inDoc,
-            StringBuilder e, String baseClassName) {
+            StringBuilder e, String baseClassName, String project) {
         int index = 0;
         for (;;) {
             int idx = sourceCode.indexOf(annotation, index);
@@ -155,7 +155,7 @@ public class JavadocForAnnotations {
                                         ;
                                         int lc = lineNumber(sourceCode, idx);
 
-                                        e.append(" at io.reactivex.").append(baseClassName)
+                                        e.append(" at io.reactivex.").append(project).append('.').append(baseClassName)
                                         .append(" (").append(baseClassName).append(".java:")
                                         .append(lc).append(")").append("\r\n\r\n");
                                     }
@@ -182,7 +182,7 @@ public class JavadocForAnnotations {
 
         StringBuilder e = new StringBuilder();
 
-        scanForBadMethod(b, "@SchedulerSupport", "Scheduler:", e, baseClassName);
+        scanForBadMethod(b, "@SchedulerSupport", "Scheduler:", e, baseClassName, project);
 
         if (e.length() != 0) {
             System.out.println(e);

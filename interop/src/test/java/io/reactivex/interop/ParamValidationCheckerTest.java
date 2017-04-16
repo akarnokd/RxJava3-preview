@@ -482,6 +482,12 @@ public class ParamValidationCheckerTest {
         addOverride(new ParamOverride(Observable.class, 0, ParamMode.ANY, "window", Long.TYPE, TimeUnit.class, Scheduler.class, Long.TYPE, Boolean.TYPE));
         addOverride(new ParamOverride(Observable.class, 0, ParamMode.ANY, "window", Long.TYPE, TimeUnit.class, Scheduler.class, Long.TYPE, Boolean.TYPE, Integer.TYPE));
 
+        // zero index allowed
+        addOverride(new ParamOverride(RxJava3Interop.class, 1, ParamMode.NON_NEGATIVE, "elementAt", Flowable.class, Long.TYPE));
+        addOverride(new ParamOverride(RxJava3Interop.class, 1, ParamMode.NON_NEGATIVE, "elementAt", Flowable.class, Long.TYPE, Object.class));
+
+        addOverride(new ParamOverride(RxJava3Interop.class, 1, ParamMode.NON_NEGATIVE, "elementAtOrError", Flowable.class, Long.TYPE));
+
         // -----------------------------------------------------------------------------------
 
         ignores = new HashMap<String, List<ParamIgnore>>();
@@ -511,6 +517,8 @@ public class ParamValidationCheckerTest {
         addIgnore(new ParamIgnore(Single.class, "unsafeCreate", SingleSource.class));
 
         addIgnore(new ParamIgnore(Completable.class, "unsafeCreate", CompletableSource.class));
+
+        addIgnore(new ParamIgnore(RxJava3Interop.class, "when", Scheduler.class, Function.class));
 
         // -----------------------------------------------------------------------------------
 

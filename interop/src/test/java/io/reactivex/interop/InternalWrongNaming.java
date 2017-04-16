@@ -59,7 +59,8 @@ public class InternalWrongNaming {
                     if (line.contains(consumerClassName)) {
 
                         fail.append("java.lang.RuntimeException: " + g.getName() + " mentions " + consumerClassName)
-                        .append("\r\n at io.reactivex.internal.operators.")
+                        .append("\r\n at io.reactivex.")
+                        .append(project).append(".internal.operators.")
                         .append(g.getName().replace(".java", ""))
                         .append(" (").append(g.getName()).append(":").append(i + 1).append(")\r\n\r\n");
 
@@ -113,7 +114,8 @@ public class InternalWrongNaming {
     @Test
     public void observableNoSubscription() throws Exception {
         checkInternalOperatorNaming("observable", "Observable", "Subscription",
-                "ObservableFromPublisher", "ObservableDelaySubscriptionOther");
+                "ObservableFromPublisher", "ObservableDelaySubscriptionOther",
+                "MaybeDelaySubscriptionOtherObservable");
     }
 
     @Test

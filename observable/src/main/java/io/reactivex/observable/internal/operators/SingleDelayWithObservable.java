@@ -33,10 +33,10 @@ public final class SingleDelayWithObservable<T, U> extends Single<T> {
 
     @Override
     protected void subscribeActual(SingleObserver<? super T> subscriber) {
-        other.subscribe(new OtherSubscriber<T, U>(subscriber, source));
+        other.subscribe(new OtherObserver<T, U>(subscriber, source));
     }
 
-    static final class OtherSubscriber<T, U>
+    static final class OtherObserver<T, U>
     extends AtomicReference<Disposable>
     implements Observer<U>, Disposable {
 
@@ -49,7 +49,7 @@ public final class SingleDelayWithObservable<T, U> extends Single<T> {
 
         boolean done;
 
-        OtherSubscriber(SingleObserver<? super T> actual, SingleSource<T> source) {
+        OtherObserver(SingleObserver<? super T> actual, SingleSource<T> source) {
             this.actual = actual;
             this.source = source;
         }

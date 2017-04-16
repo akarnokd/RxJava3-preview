@@ -81,7 +81,7 @@ public final class CompletableAmb extends Completable {
                 return;
             }
 
-            // no need to have separate subscribers because inner is stateless
+            // no need to have separate observers because inner is stateless
             c.subscribe(inner);
         }
 

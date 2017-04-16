@@ -732,7 +732,7 @@ public abstract class Completable implements CompletableSource {
     }
 
     /**
-     * Returns a Observable which will subscribe to this Completable and once that is completed then
+     * Returns an Observable which will subscribe to this Completable and once that is completed then
      * will subscribe to the {@code next} Observable. An error event from this Completable will be
      * propagated to the downstream subscriber and will result in skipping the subscription of the
      * ObservableSource.
@@ -1351,7 +1351,7 @@ public abstract class Completable implements CompletableSource {
      *  <dd>{@code repeatWhen} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      * @param handler the function that transforms the stream of values indicating the completion of
-     * this Completable and returns a ObservableSource that emits items for repeating or completes to indicate the
+     * this Completable and returns an ObservableSource that emits items for repeating or completes to indicate the
      * repetition should stop
      * @return the new Completable instance
      * @throws NullPointerException if stop is null
@@ -1429,14 +1429,14 @@ public abstract class Completable implements CompletableSource {
     }
 
     /**
-     * Returns a Completable which given a ObservableSource and when this Completable emits an error, delivers
-     * that error through a Observable and the ObservableSource should signal a value indicating a retry in response
+     * Returns a Completable which given an ObservableSource and when this Completable emits an error, delivers
+     * that error through an Observable and the ObservableSource should signal a value indicating a retry in response
      * or a terminal event indicating a termination.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code retryWhen} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
-     * @param handler the handler that receives a Observable delivering Throwables and should return a ObservableSource that
+     * @param handler the handler that receives an Observable delivering Throwables and should return an ObservableSource that
      * emits items to indicate retries or emits terminal events to indicate termination.
      * @return the new Completable instance
      * @throws NullPointerException if handler is null
@@ -1484,7 +1484,7 @@ public abstract class Completable implements CompletableSource {
         return other.concatWith(this.<T>toObservable());
     }
     /**
-     * Returns a Observable which first delivers the events
+     * Returns an Observable which first delivers the events
      * of the other ObservableSource then runs this Completable.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>

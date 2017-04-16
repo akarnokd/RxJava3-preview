@@ -61,7 +61,7 @@ public class NotificationTest {
     @Test
     public void toStringPattern() {
         assertEquals("OnNextNotification[1]", Notification.createOnNext(1).toString());
-        assertEquals("OnErrorNotification[io.reactivex.exceptions.TestException]", Notification.createOnError(new TestException()).toString());
+        assertEquals("OnErrorNotification[io.reactivex.common.exceptions.TestException]", Notification.createOnError(new TestException()).toString());
         assertEquals("OnCompleteNotification", Notification.createOnComplete().toString());
     }
 }

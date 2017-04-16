@@ -55,11 +55,11 @@ public final class SingleTakeUntil<T, U> extends Single<T> {
 
         final SingleObserver<? super T> actual;
 
-        final TakeUntilOtherSubscriber other;
+        final TakeUntilOtherObserver other;
 
         TakeUntilMainObserver(SingleObserver<? super T> actual) {
             this.actual = actual;
-            this.other = new TakeUntilOtherSubscriber(this);
+            this.other = new TakeUntilOtherObserver(this);
         }
 
         @Override
@@ -121,7 +121,7 @@ public final class SingleTakeUntil<T, U> extends Single<T> {
         }
     }
 
-    static final class TakeUntilOtherSubscriber
+    static final class TakeUntilOtherObserver
     extends AtomicReference<Disposable>
     implements Observer<Object> {
 
@@ -129,7 +129,7 @@ public final class SingleTakeUntil<T, U> extends Single<T> {
 
         final TakeUntilMainObserver<?> parent;
 
-        TakeUntilOtherSubscriber(TakeUntilMainObserver<?> parent) {
+        TakeUntilOtherObserver(TakeUntilMainObserver<?> parent) {
             this.parent = parent;
         }
 

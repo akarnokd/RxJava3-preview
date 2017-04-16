@@ -13,13 +13,15 @@
 
 package io.reactivex.interop.internal.consumers;
 
-import org.reactivestreams.*;
+import org.reactivestreams.Subscriber;
 
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
 import io.reactivex.common.Disposable;
 import io.reactivex.common.internal.disposables.DisposableHelper;
 import io.reactivex.observable.CompletableObserver;
 
-public final class SubscriberCompletableObserver<T> implements CompletableObserver, Subscription {
+public final class SubscriberCompletableObserver<T> implements CompletableObserver,
+FusedQueueSubscription<T> {
     final Subscriber<? super T> subscriber;
 
     Disposable d;
@@ -55,5 +57,30 @@ public final class SubscriberCompletableObserver<T> implements CompletableObserv
     @Override
     public void cancel() {
         d.dispose();
+    }
+
+    @Override
+    public boolean offer(T element) {
+        throw new UnsupportedOperationException("Should not be called!");
+    }
+
+    @Override
+    public T poll() throws Throwable {
+        return null;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return true;
+    }
+
+    @Override
+    public void clear() {
+        // deliberately no-op
+    }
+
+    @Override
+    public int requestFusion(int mode) {
+        return mode & ASYNC;
     }
 }
