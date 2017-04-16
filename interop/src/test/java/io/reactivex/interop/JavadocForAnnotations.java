@@ -28,8 +28,8 @@ import io.reactivex.observable.*;
  */
 public class JavadocForAnnotations {
 
-    static void checkSource(String baseClassName, boolean scheduler) throws Exception {
-        File f = MaybeNo2Dot0Since.findSource(baseClassName);
+    static void checkSource(String project, String baseClassName, boolean scheduler) throws Exception {
+        File f = MaybeNo2Dot0Since.findSource(baseClassName, project);
         if (f == null) {
             return;
         }
@@ -172,8 +172,8 @@ public class JavadocForAnnotations {
         }
     }
 
-    static void checkSchedulerBadMethod(String baseClassName) throws Exception {
-        File f = MaybeNo2Dot0Since.findSource(baseClassName);
+    static void checkSchedulerBadMethod(String project, String baseClassName) throws Exception {
+        File f = MaybeNo2Dot0Since.findSource(baseClassName, project);
         if (f == null) {
             return;
         }
@@ -203,76 +203,76 @@ public class JavadocForAnnotations {
 
     @Test
     public void checkFlowableBackpressure() throws Exception {
-        checkSource(Flowable.class.getSimpleName(), false);
+        checkSource("flowable", Flowable.class.getSimpleName(), false);
     }
 
     @Test
     public void checkFlowableScheduler() throws Exception {
-        checkSource(Flowable.class.getSimpleName(), true);
+        checkSource("flowable", Flowable.class.getSimpleName(), true);
     }
 
     @Test
     public void checkObservableBackpressure() throws Exception {
-        checkSource(Observable.class.getSimpleName(), false);
+        checkSource("flowable", Observable.class.getSimpleName(), false);
     }
 
     @Test
     public void checkObservableScheduler() throws Exception {
-        checkSource(Observable.class.getSimpleName(), true);
+        checkSource("observable", Observable.class.getSimpleName(), true);
     }
 
     @Test
     public void checkSingleBackpressure() throws Exception {
-        checkSource(Single.class.getSimpleName(), false);
+        checkSource("observable", Single.class.getSimpleName(), false);
     }
 
     @Test
     public void checkSingleScheduler() throws Exception {
-        checkSource(Single.class.getSimpleName(), true);
+        checkSource("observable", Single.class.getSimpleName(), true);
     }
 
     @Test
     public void checkCompletableBackpressure() throws Exception {
-        checkSource(Completable.class.getSimpleName(), false);
+        checkSource("observable", Completable.class.getSimpleName(), false);
     }
 
     @Test
     public void checkCompletableScheduler() throws Exception {
-        checkSource(Completable.class.getSimpleName(), true);
+        checkSource("observable", Completable.class.getSimpleName(), true);
     }
 
     @Test
     public void checkMaybeBackpressure() throws Exception {
-        checkSource(Maybe.class.getSimpleName(), false);
+        checkSource("observable", Maybe.class.getSimpleName(), false);
     }
 
     @Test
     public void checkMaybeScheduler() throws Exception {
-        checkSource(Maybe.class.getSimpleName(), true);
+        checkSource("observable", Maybe.class.getSimpleName(), true);
     }
 
     @Test
     public void checkFlowableSchedulerDoc() throws Exception {
-        checkSchedulerBadMethod(Flowable.class.getSimpleName());
+        checkSchedulerBadMethod("observable", Flowable.class.getSimpleName());
     }
 
     @Test
     public void checkObservableSchedulerDoc() throws Exception {
-        checkSchedulerBadMethod(Observable.class.getSimpleName());
+        checkSchedulerBadMethod("observable", Observable.class.getSimpleName());
     }
 
     @Test
     public void checkSingleSchedulerDoc() throws Exception {
-        checkSchedulerBadMethod(Single.class.getSimpleName());
+        checkSchedulerBadMethod("observable", Single.class.getSimpleName());
     }
 
     @Test
     public void checkCompletableSchedulerDoc() throws Exception {
-        checkSchedulerBadMethod(Completable.class.getSimpleName());
+        checkSchedulerBadMethod("observable", Completable.class.getSimpleName());
     }
 
     @Test
     public void checkMaybeSchedulerDoc() throws Exception {
-        checkSchedulerBadMethod(Maybe.class.getSimpleName());
+        checkSchedulerBadMethod("observable", Maybe.class.getSimpleName());
     }
 }

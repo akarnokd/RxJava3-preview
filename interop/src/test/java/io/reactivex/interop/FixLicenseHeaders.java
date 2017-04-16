@@ -39,13 +39,12 @@ public class FixLicenseHeaders {
     ""
     };
 
-    @Test
-    public void checkAndUpdateLicenses() throws Exception {
+    void checkAndUpdateLicenses(String baseType, String project) throws Exception {
         if (System.getenv("CI") != null) {
             // no point in changing the files in CI
             return;
         }
-        File f = MaybeNo2Dot0Since.findSource("Flowable");
+        File f = MaybeNo2Dot0Since.findSource(baseType, project);
         if (f == null) {
             return;
         }
@@ -129,4 +128,25 @@ public class FixLicenseHeaders {
             throw new AssertionError(fail.toString());
         }
     }
+
+    @Test
+    public void checkAndUpdateLicensesFlowable() throws Exception {
+        checkAndUpdateLicenses("Flowable", "flowable");
+    }
+
+    @Test
+    public void checkAndUpdateLicensesObservable() throws Exception {
+        checkAndUpdateLicenses("Observable", "observable");
+    }
+
+    @Test
+    public void checkAndUpdateLicensesCommon() throws Exception {
+        checkAndUpdateLicenses("Scheduler", "common");
+    }
+
+    @Test
+    public void checkAndUpdateLicensesInterop() throws Exception {
+        checkAndUpdateLicenses("RxJava3Interop", "interop");
+    }
+
 }

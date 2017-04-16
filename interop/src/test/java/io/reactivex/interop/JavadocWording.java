@@ -38,7 +38,7 @@ public class JavadocWording {
 
     @Test
     public void maybeDocRefersToMaybeTypes() throws Exception {
-        List<RxMethod> list = BaseTypeParser.parse(MaybeNo2Dot0Since.findSource("Maybe"), "Maybe");
+        List<RxMethod> list = BaseTypeParser.parse(MaybeNo2Dot0Since.findSource("Maybe", "observable"), "Maybe");
 
         assertFalse(list.isEmpty());
 
@@ -212,7 +212,7 @@ public class JavadocWording {
 
     @Test
     public void flowableDocRefersToFlowableTypes() throws Exception {
-        List<RxMethod> list = BaseTypeParser.parse(MaybeNo2Dot0Since.findSource("Flowable"), "Flowable");
+        List<RxMethod> list = BaseTypeParser.parse(MaybeNo2Dot0Since.findSource("Flowable", "flowable"), "Flowable");
 
         assertFalse(list.isEmpty());
 
@@ -321,7 +321,7 @@ public class JavadocWording {
 
     @Test
     public void observableDocRefersToObservableTypes() throws Exception {
-        List<RxMethod> list = BaseTypeParser.parse(MaybeNo2Dot0Since.findSource("Observable"), "Observable");
+        List<RxMethod> list = BaseTypeParser.parse(MaybeNo2Dot0Since.findSource("Observable", "observable"), "Observable");
 
         assertFalse(list.isEmpty());
 
@@ -422,7 +422,7 @@ public class JavadocWording {
 
     @Test
     public void singleDocRefersToSingleTypes() throws Exception {
-        List<RxMethod> list = BaseTypeParser.parse(MaybeNo2Dot0Since.findSource("Single"), "Single");
+        List<RxMethod> list = BaseTypeParser.parse(MaybeNo2Dot0Since.findSource("Single", "observable"), "Single");
 
         assertFalse(list.isEmpty());
 
@@ -596,7 +596,7 @@ public class JavadocWording {
 
     @Test
     public void completableDocRefersToCompletableTypes() throws Exception {
-        List<RxMethod> list = BaseTypeParser.parse(MaybeNo2Dot0Since.findSource("Completable"), "Completable");
+        List<RxMethod> list = BaseTypeParser.parse(MaybeNo2Dot0Since.findSource("Completable", "observable"), "Completable");
 
         assertFalse(list.isEmpty());
 

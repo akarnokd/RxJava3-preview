@@ -24,8 +24,37 @@ import org.junit.Test;
 public class TextualAorAn {
 
     @Test
-    public void checkFiles() throws Exception {
-        File f = MaybeNo2Dot0Since.findSource("Flowable");
+    public void checkFlowable() throws Exception {
+        checkFiles("Flowable", "flowable");
+    }
+
+    @Test
+    public void checkObservable() throws Exception {
+        checkFiles("Observable", "observable");
+    }
+
+    @Test
+    public void checkSingle() throws Exception {
+        checkFiles("Single", "observable");
+    }
+
+    @Test
+    public void checkMaybe() throws Exception {
+        checkFiles("Maybe", "observable");
+    }
+
+    @Test
+    public void checkCompletable() throws Exception {
+        checkFiles("Completable", "observable");
+    }
+
+    @Test
+    public void checkInterop() throws Exception {
+        checkFiles("RxJava3Interop", "interop");
+    }
+
+    void checkFiles(String baseClassName, String project) throws Exception {
+        File f = MaybeNo2Dot0Since.findSource(baseClassName, project);
         if (f == null) {
             return;
         }

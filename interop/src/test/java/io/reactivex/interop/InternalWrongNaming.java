@@ -23,8 +23,9 @@ import org.junit.Test;
  */
 public class InternalWrongNaming {
 
-    static void checkInternalOperatorNaming(String baseClassName, String consumerClassName, String... ignore) throws Exception {
-        File f = MaybeNo2Dot0Since.findSource(baseClassName);
+    static void checkInternalOperatorNaming(String project, String baseClassName,
+            String consumerClassName, String... ignore) throws Exception {
+        File f = MaybeNo2Dot0Since.findSource(baseClassName, project);
         if (f == null) {
             return;
         }
@@ -35,7 +36,7 @@ public class InternalWrongNaming {
             rxdir += "/";
         }
 
-        rxdir += "internal/operators/" + baseClassName.toLowerCase() + "/";
+        rxdir += "internal/operators/";
 
         File[] list = new File(rxdir).listFiles();
         if (list != null && list.length != 0) {
@@ -59,7 +60,7 @@ public class InternalWrongNaming {
 
                         fail.append("java.lang.RuntimeException: " + g.getName() + " mentions " + consumerClassName)
                         .append("\r\n at io.reactivex.internal.operators.")
-                        .append(baseClassName.toLowerCase()).append(".").append(g.getName().replace(".java", ""))
+                        .append(g.getName().replace(".java", ""))
                         .append(" (").append(g.getName()).append(":").append(i + 1).append(")\r\n\r\n");
 
                         count++;
@@ -99,66 +100,66 @@ public class InternalWrongNaming {
 
     @Test
     public void observableNoSubscriber() throws Exception {
-        checkInternalOperatorNaming("Observable", "Subscriber",
+        checkInternalOperatorNaming("observable", "Observable", "Subscriber",
                 "ObservableFromPublisher"
         );
     }
 
     @Test
     public void observableNoSubscribers() throws Exception {
-        checkInternalOperatorNaming("Observable", "subscribers");
+        checkInternalOperatorNaming("observable", "Observable", "subscribers");
     }
 
     @Test
     public void observableNoSubscription() throws Exception {
-        checkInternalOperatorNaming("Observable", "Subscription",
+        checkInternalOperatorNaming("observable", "Observable", "Subscription",
                 "ObservableFromPublisher", "ObservableDelaySubscriptionOther");
     }
 
     @Test
     public void observableNoPublisher() throws Exception {
-        checkInternalOperatorNaming("Observable", "Publisher",
+        checkInternalOperatorNaming("observable", "Observable", "Publisher",
                 "ObservableFromPublisher");
     }
 
     @Test
     public void observableNoFlowable() throws Exception {
-        checkInternalOperatorNaming("Observable", "Flowable", "ObservableFromPublisher");
+        checkInternalOperatorNaming("observable", "Observable", "Flowable", "ObservableFromPublisher");
     }
 
     @Test
     public void observableProducer() throws Exception {
-        checkInternalOperatorNaming("Observable", "Producer");
+        checkInternalOperatorNaming("observable", "Observable", "Producer");
     }
 
     @Test
     public void observableProducers() throws Exception {
-        checkInternalOperatorNaming("Observable", "producers");
+        checkInternalOperatorNaming("observable", "Observable", "producers");
     }
 
     @Test
     public void flowableNoProducer() throws Exception {
-        checkInternalOperatorNaming("Flowable", "Producer");
+        checkInternalOperatorNaming("flowable", "Flowable", "Producer");
     }
 
     @Test
     public void flowableNoProducers() throws Exception {
-        checkInternalOperatorNaming("Flowable", "producers");
+        checkInternalOperatorNaming("flowable", "Flowable", "producers");
     }
 
     @Test
     public void flowableNoUnsubscrib() throws Exception {
-        checkInternalOperatorNaming("Flowable", "unsubscrib");
+        checkInternalOperatorNaming("flowable", "Flowable", "unsubscrib");
     }
 
     @Test
     public void observableNoUnsubscrib() throws Exception {
-        checkInternalOperatorNaming("Observable", "unsubscrib");
+        checkInternalOperatorNaming("observable", "Observable", "unsubscrib");
     }
 
     @Test
     public void flowableNoObserver() throws Exception {
-        checkInternalOperatorNaming("Flowable", "Observer",
+        checkInternalOperatorNaming("interop", "Flowable", "Observer",
                 "FlowableFromObservable",
                 "FlowableLastSingle",
                 "FlowableAnySingle",

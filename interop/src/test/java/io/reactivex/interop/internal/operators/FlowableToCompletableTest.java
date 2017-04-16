@@ -15,6 +15,7 @@
  */
 package io.reactivex.interop.internal.operators;
 
+import static io.reactivex.interop.RxJava3Interop.*;
 import static org.junit.Assert.assertFalse;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -23,15 +24,16 @@ import org.junit.Test;
 
 import io.reactivex.common.functions.Action;
 import io.reactivex.flowable.Flowable;
-import io.reactivex.flowable.subscribers.TestSubscriber;
+import io.reactivex.observable.Completable;
+import io.reactivex.observable.observers.TestObserver;
 
 public class FlowableToCompletableTest {
 
     @Test
     public void testJustSingleItemObservable() {
-        TestSubscriber<String> subscriber = TestSubscriber.create();
-        Completable cmp = Flowable.just("Hello World!").ignoreElements();
-        cmp.<String>toFlowable().subscribe(subscriber);
+        TestObserver<String> subscriber = TestObserver.create();
+        Completable cmp = ignoreElements(Flowable.just("Hello World!"));
+        cmp.subscribe(subscriber);
 
         subscriber.assertNoValues();
         subscriber.assertComplete();
@@ -40,10 +42,10 @@ public class FlowableToCompletableTest {
 
     @Test
     public void testErrorObservable() {
-        TestSubscriber<String> subscriber = TestSubscriber.create();
+        TestObserver<String> subscriber = TestObserver.create();
         IllegalArgumentException error = new IllegalArgumentException("Error");
-        Completable cmp = Flowable.<String>error(error).ignoreElements();
-        cmp.<String>toFlowable().subscribe(subscriber);
+        Completable cmp = ignoreElements(Flowable.<String>error(error));
+        cmp.subscribe(subscriber);
 
         subscriber.assertError(error);
         subscriber.assertNoValues();
@@ -51,9 +53,9 @@ public class FlowableToCompletableTest {
 
     @Test
     public void testJustTwoEmissionsObservableThrowsError() {
-        TestSubscriber<String> subscriber = TestSubscriber.create();
-        Completable cmp = Flowable.just("First", "Second").ignoreElements();
-        cmp.<String>toFlowable().subscribe(subscriber);
+        TestObserver<String> subscriber = TestObserver.create();
+        Completable cmp = ignoreElements(Flowable.just("First", "Second"));
+        cmp.subscribe(subscriber);
 
         subscriber.assertNoErrors();
         subscriber.assertNoValues();
@@ -61,9 +63,9 @@ public class FlowableToCompletableTest {
 
     @Test
     public void testEmptyObservable() {
-        TestSubscriber<String> subscriber = TestSubscriber.create();
-        Completable cmp = Flowable.<String>empty().ignoreElements();
-        cmp.<String>toFlowable().subscribe(subscriber);
+        TestObserver<String> subscriber = TestObserver.create();
+        Completable cmp = ignoreElements(Flowable.<String>empty());
+        cmp.subscribe(subscriber);
 
         subscriber.assertNoErrors();
         subscriber.assertNoValues();
@@ -72,9 +74,9 @@ public class FlowableToCompletableTest {
 
     @Test
     public void testNeverObservable() {
-        TestSubscriber<String> subscriber = TestSubscriber.create();
-        Completable cmp = Flowable.<String>never().ignoreElements();
-        cmp.<String>toFlowable().subscribe(subscriber);
+        TestObserver<String> subscriber = TestObserver.create();
+        Completable cmp = ignoreElements(Flowable.<String>never());
+        cmp.subscribe(subscriber);
 
         subscriber.assertNotTerminated();
         subscriber.assertNoValues();
@@ -82,16 +84,16 @@ public class FlowableToCompletableTest {
 
     @Test
     public void testShouldUseUnsafeSubscribeInternallyNotSubscribe() {
-        TestSubscriber<String> subscriber = TestSubscriber.create();
+        TestObserver<String> subscriber = TestObserver.create();
         final AtomicBoolean unsubscribed = new AtomicBoolean(false);
-        Completable cmp = Flowable.just("Hello World!").doOnCancel(new Action() {
+        Completable cmp = ignoreElements(Flowable.just("Hello World!").doOnCancel(new Action() {
 
             @Override
             public void run() {
                 unsubscribed.set(true);
-            }}).ignoreElements();
+            }}));
 
-        cmp.<String>toFlowable().subscribe(subscriber);
+        cmp.subscribe(subscriber);
 
         subscriber.assertComplete();
 

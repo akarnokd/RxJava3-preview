@@ -13,23 +13,23 @@
 
 package io.reactivex.interop.internal.operators;
 
-import java.util.Observable;
+import static io.reactivex.interop.RxJava3Interop.toFlowable;
 
 import org.junit.Test;
 
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.flowable.*;
+import io.reactivex.observable.Observable;
 
 public class FlowableFromObservableTest {
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Observable.just(1).toFlowable(BackpressureStrategy.MISSING));
+        TestHelper.checkDisposed(toFlowable(Observable.just(1), BackpressureStrategy.MISSING));
     }
 
     @Test
     public void error() {
-        Observable.error(new TestException())
-        .toFlowable(BackpressureStrategy.MISSING)
+        toFlowable(Observable.error(new TestException()), BackpressureStrategy.MISSING)
         .test()
         .assertFailure(TestException.class);
     }

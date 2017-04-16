@@ -13,6 +13,7 @@
 
 package io.reactivex.interop.internal.operators;
 
+import static io.reactivex.interop.RxJava3Interop.singleOrError;
 import static org.junit.Assert.*;
 
 import java.util.*;
@@ -22,59 +23,60 @@ import org.reactivestreams.Subscriber;
 
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.observable.*;
+import io.reactivex.flowable.Flowable;
+import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.flowable.processors.PublishProcessor;
+import io.reactivex.observable.TestHelper;
 import io.reactivex.observable.observers.TestObserver;
-import io.reactivex.observable.subjects.PublishSubject;
 
 public class SingleFromPublisherTest {
 
     @Test
     public void just() {
-        Single.fromPublisher(Flowable.just(1))
+        singleOrError(Flowable.just(1))
         .test()
         .assertResult(1);
     }
 
     @Test
     public void range() {
-        Single.fromPublisher(Flowable.range(1, 3))
+        singleOrError(Flowable.range(1, 3))
         .test()
         .assertFailure(IndexOutOfBoundsException.class);
     }
 
     @Test
     public void empty() {
-        Single.fromPublisher(Flowable.empty())
+        singleOrError(Flowable.empty())
         .test()
         .assertFailure(NoSuchElementException.class);
     }
 
     @Test
     public void error() {
-        Single.fromPublisher(Flowable.error(new TestException()))
+        singleOrError(Flowable.error(new TestException()))
         .test()
         .assertFailure(TestException.class);
     }
 
     @Test
     public void dispose() {
-        PublishSubject<Integer> pp = PublishSubject.create();
+        PublishProcessor<Integer> pp = PublishProcessor.create();
 
-        TestObserver<Integer> ts = Single.fromPublisher(pp).test();
+        TestObserver<Integer> ts = singleOrError(pp).test();
 
-        assertTrue(pp.hasObservers());
+        assertTrue(pp.hasSubscribers());
 
         pp.onNext(1);
 
         ts.cancel();
 
-        assertFalse(pp.hasObservers());
+        assertFalse(pp.hasSubscribers());
     }
 
     @Test
     public void isDisposed() {
-        TestHelper.checkDisposed(Single.fromPublisher(Flowable.never()));
+        TestHelper.checkDisposed(singleOrError(Flowable.never()));
     }
 
     @Test
@@ -82,11 +84,11 @@ public class SingleFromPublisherTest {
         List<Throwable> errors = TestCommonHelper.trackPluginErrors();
 
         try {
-            Single.fromPublisher(new Flowable<Integer>() {
+            singleOrError(new Flowable<Integer>() {
                 @Override
                 protected void subscribeActual(Subscriber<? super Integer> s) {
-                    s.onSubscribe(Disposables.empty());
-                    BooleanSubscription s2 = Disposables.empty();
+                    s.onSubscribe(new BooleanSubscription());
+                    BooleanSubscription s2 = new BooleanSubscription();
                     s.onSubscribe(s2);
                     assertTrue(s2.isCancelled());
 
@@ -100,7 +102,7 @@ public class SingleFromPublisherTest {
             .test()
             .assertResult(1);
 
-            TestHelper.assertError(errors, 0, IllegalStateException.class, "Subscription already set!");
+            TestCommonHelper.assertError(errors, 0, IllegalStateException.class, "Subscription already set!");
             TestCommonHelper.assertUndeliverable(errors, 1, TestException.class);
         } finally {
             RxJavaCommonPlugins.reset();

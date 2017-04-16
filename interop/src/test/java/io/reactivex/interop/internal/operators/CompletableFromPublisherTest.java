@@ -15,37 +15,39 @@ package io.reactivex.interop.internal.operators;
 
 import org.junit.Test;
 
+import io.reactivex.flowable.Flowable;
+import io.reactivex.interop.RxJava3Interop;
 import io.reactivex.observable.*;
 
 public class CompletableFromPublisherTest {
     @Test(expected = NullPointerException.class)
     public void fromPublisherNull() {
-        Completable.fromPublisher(null);
+        RxJava3Interop.ignoreElements(null);
     }
 
     @Test
     public void fromPublisher() {
-        Completable.fromPublisher(Flowable.just(1))
+        RxJava3Interop.ignoreElements(Flowable.just(1))
             .test()
             .assertResult();
     }
 
     @Test
     public void fromPublisherEmpty() {
-        Completable.fromPublisher(Flowable.empty())
+        RxJava3Interop.ignoreElements(Flowable.empty())
             .test()
             .assertResult();
     }
 
     @Test
     public void fromPublisherThrows() {
-        Completable.fromPublisher(Flowable.error(new UnsupportedOperationException()))
+        RxJava3Interop.ignoreElements(Flowable.error(new UnsupportedOperationException()))
             .test()
             .assertFailure(UnsupportedOperationException.class);
     }
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Completable.fromPublisher(Flowable.just(1)));
+        TestHelper.checkDisposed(RxJava3Interop.ignoreElements(Flowable.just(1)));
     }
 }

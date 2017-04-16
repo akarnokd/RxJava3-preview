@@ -20,8 +20,8 @@ import org.junit.Test;
 
 public class OperatorsAreFinal {
 
-    File directoryOf(String baseClassName) throws Exception {
-        File f = MaybeNo2Dot0Since.findSource("Flowable");
+    File directoryOf(String baseClassName, String project) throws Exception {
+        File f = MaybeNo2Dot0Since.findSource(baseClassName, project);
         if (f == null) {
             return null;
         }
@@ -31,12 +31,12 @@ public class OperatorsAreFinal {
             parent += "/";
         }
 
-        parent += "internal/operators/" + baseClassName.toLowerCase() + "/";
+        parent += "internal/operators/";
         return new File(parent);
     }
 
-    void check(String baseClassName) throws Exception {
-        File f = directoryOf(baseClassName);
+    void check(String baseClassName, String project) throws Exception {
+        File f = directoryOf(baseClassName, project);
         if (f == null) {
             return;
         }
@@ -47,7 +47,7 @@ public class OperatorsAreFinal {
         if (files != null) {
             for (File g : files) {
                 if (g.getName().startsWith(baseClassName) && g.getName().endsWith(".java")) {
-                    String className = "io.reactivex.internal.operators." + baseClassName.toLowerCase() + "." + g.getName().replace(".java", "");
+                    String className = "io.reactivex." + project + ".internal.operators." + g.getName().replace(".java", "");
 
                     Class<?> clazz = Class.forName(className);
 
@@ -68,27 +68,27 @@ public class OperatorsAreFinal {
 
     @Test
     public void flowable() throws Exception {
-        check("Flowable");
+        check("Flowable", "flowable");
     }
 
     @Test
     public void observable() throws Exception {
-        check("Observable");
+        check("Observable", "observable");
     }
 
     @Test
     public void single() throws Exception {
-        check("Single");
+        check("Single", "observable");
     }
 
     @Test
     public void completable() throws Exception {
-        check("Completable");
+        check("Completable", "observable");
     }
 
     @Test
     public void maybe() throws Exception {
-        check("Maybe");
+        check("Maybe", "observable");
     }
 
 }

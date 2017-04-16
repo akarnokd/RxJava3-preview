@@ -66,6 +66,11 @@ public class ParamValidationCheckerTest {
         checkClass(ParallelFlowable.class);
     }
 
+    @Test(timeout = 30000)
+    public void checkInterop() {
+        checkClass(RxJava3Interop.class);
+    }
+
     // ---------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------
 

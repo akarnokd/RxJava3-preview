@@ -33,9 +33,10 @@ public class MaybeNo2Dot0Since {
      * path and return a file to it or null if not found.
      * @param baseClassName the class name such as {@code Maybe}
      * @return the File pointing to the source
+     * @param project the project directory of the base class
      * @throws Exception on error
      */
-    public static File findSource(String baseClassName) throws Exception {
+    public static File findSource(String baseClassName, String project) throws Exception {
         URL u = MaybeNo2Dot0Since.class.getResource(MaybeNo2Dot0Since.class.getSimpleName() + ".class");
 
         String path = new File(u.toURI()).toString().replace('\\', '/');
@@ -51,7 +52,7 @@ public class MaybeNo2Dot0Since {
         // find end of any potential postfix to /RxJava
         int j = path.indexOf("/", i + 6);
 
-        String p = path.substring(0, j + 1) + "src/main/java/io/reactivex/" + baseClassName + ".java";
+        String p = path.substring(0, j + 1) + project + "/src/main/java/io/reactivex/" + baseClassName + ".java";
 
         File f = new File(p);
 
@@ -66,7 +67,7 @@ public class MaybeNo2Dot0Since {
     @Test
     public void noSince20InMaybe() throws Exception {
 
-        File f = findSource(Maybe.class.getSimpleName());
+        File f = findSource(Maybe.class.getSimpleName(), "observable");
 
         String line;
 
