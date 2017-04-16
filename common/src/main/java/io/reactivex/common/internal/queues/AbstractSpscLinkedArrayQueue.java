@@ -57,11 +57,6 @@ public abstract class AbstractSpscLinkedArrayQueue<T> {
         soProducerIndex(0L);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * This implementation is correct for single producer thread use only.
-     */
     public final boolean offer(final T e) {
         if (null == e) {
             throw new NullPointerException("Null is not a valid element");
@@ -115,11 +110,6 @@ public abstract class AbstractSpscLinkedArrayQueue<T> {
     private AtomicReferenceArray<Object> lvNext(AtomicReferenceArray<Object> curr) {
         return (AtomicReferenceArray<Object>)lvElement(curr, calcDirectOffset(curr.length() - 1));
     }
-    /**
-     * {@inheritDoc}
-     * <p>
-     * This implementation is correct for single consumer thread use only.
-     */
     @Nullable
     @SuppressWarnings("unchecked")
     public final T poll() {

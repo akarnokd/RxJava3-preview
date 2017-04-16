@@ -27,9 +27,9 @@ import io.reactivex.flowable.internal.subscriptions.*;
 public final class FlowableReduceWith<T, R> extends AbstractFlowableWithUpstream<T, R> {
 
     final Callable<R> initialValueSupplier;
-    
+
     final BiFunction<R, ? super T, R> reducer;
-    
+
     public FlowableReduceWith(Flowable<T> source, Callable<R> initialValueSupplier, BiFunction<R, ? super T, R> reducer) {
         super(source);
         this.initialValueSupplier = initialValueSupplier;

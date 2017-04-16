@@ -40,7 +40,7 @@ public final class QueueDrainHelper {
         }
         return new SpscArrayQueue<T>(capacityHint);
     }
-    
+
     public static <T, U> void drainLoop(SimplePlainQueue<T> q, Observer<? super U> a, boolean delayError, Disposable dispose, ObservableQueueDrain<T, U> qd) {
 
         int missed = 1;

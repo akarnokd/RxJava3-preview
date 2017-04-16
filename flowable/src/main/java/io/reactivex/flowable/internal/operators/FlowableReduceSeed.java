@@ -22,9 +22,9 @@ import io.reactivex.flowable.internal.operators.FlowableReduceWith.ReduceWithSub
 public final class FlowableReduceSeed<T, R> extends AbstractFlowableWithUpstream<T, R> {
 
     final R initialValue;
-    
+
     final BiFunction<R, ? super T, R> reducer;
-    
+
     public FlowableReduceSeed(Flowable<T> source, R initialValue, BiFunction<R, ? super T, R> reducer) {
         super(source);
         this.initialValue = initialValue;

@@ -12,26 +12,27 @@
  */
 package io.reactivex.interop.internal.operators;
 
-
+import static io.reactivex.interop.RxJava3Interop.*;
 
 import java.util.concurrent.Callable;
 
 import org.junit.Test;
 
+import io.reactivex.flowable.Flowable;
 import io.reactivex.observable.Maybe;
 
 public class MaybeConcatPublisherTest {
 
     @Test
     public void scalar() {
-        Maybe.concat(Flowable.just(Maybe.just(1)))
+        concatMaybe(Flowable.just(Maybe.just(1)))
         .test()
         .assertResult(1);
     }
 
     @Test
     public void callable() {
-        Maybe.concat(Flowable.fromCallable(new Callable<Maybe<Integer>>() {
+        concatMaybe(Flowable.fromCallable(new Callable<Maybe<Integer>>() {
             @Override
             public Maybe<Integer> call() throws Exception {
                 return Maybe.just(1);

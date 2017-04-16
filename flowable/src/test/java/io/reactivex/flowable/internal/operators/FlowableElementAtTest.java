@@ -198,7 +198,7 @@ public class FlowableElementAtTest {
     public void elementAtIndex1WithDefaultOnEmptySourceObservable() {
         Flowable.empty()
             .elementAt(1, 10)
-            
+
             .test()
             .assertResult(10);
     }
@@ -207,7 +207,7 @@ public class FlowableElementAtTest {
     public void errorFlowable() {
         Flowable.error(new TestException())
             .elementAt(1, 10)
-            
+
             .test()
             .assertFailure(TestException.class);
     }
@@ -242,7 +242,7 @@ public class FlowableElementAtTest {
                 }
             }
             .elementAt(0)
-            
+
             .test()
             .assertResult(1);
 
@@ -305,7 +305,7 @@ public class FlowableElementAtTest {
                 }
             }
             .elementAt(0)
-            
+
             .test()
             .assertResult(1);
 

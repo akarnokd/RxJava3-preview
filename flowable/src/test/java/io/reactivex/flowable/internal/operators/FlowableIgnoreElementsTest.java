@@ -51,7 +51,7 @@ public class FlowableIgnoreElementsTest {
                     }
                 })
                 .ignoreElements()
-                
+
                 .count().blockingLast();
         assertEquals(num, upstreamCount.get());
         assertEquals(0, count);
@@ -91,7 +91,7 @@ public class FlowableIgnoreElementsTest {
                 unsub.set(true);
             }})
             .ignoreElements()
-            
+
             .subscribe().dispose();
 
         assertTrue(unsub.get());

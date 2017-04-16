@@ -26,7 +26,7 @@ public final class FlowableLast<T> extends AbstractFlowableWithUpstream<T, T> {
     final T defaultItem;
 
     final boolean errorOnEmpty;
-    
+
     public FlowableLast(Flowable<T> source, T defaultItem, boolean errorOnEmpty) {
         super(source);
         this.defaultItem = defaultItem;
@@ -91,7 +91,7 @@ public final class FlowableLast<T> extends AbstractFlowableWithUpstream<T, T> {
                 s.request(Long.MAX_VALUE);
             }
         }
-        
+
         @Override
         public void cancel() {
             super.cancel();

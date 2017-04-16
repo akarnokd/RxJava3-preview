@@ -183,7 +183,6 @@ public class TestSchedulerTest {
         TimedRunnable r = new TimedRunnable((TestWorker) new TestScheduler().createWorker(), 5, new Runnable() {
             @Override
             public void run() {
-                
             }
             @Override
             public String toString() {

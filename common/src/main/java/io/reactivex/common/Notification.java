@@ -157,7 +157,7 @@ public final class Notification<T> {
 
     /** The singleton instance for createOnComplete. */
     static final Notification<Object> COMPLETE = new Notification<Object>(null);
-    
+
     /**
      * Wraps a Throwable.
      */
@@ -197,7 +197,7 @@ public final class Notification<T> {
     static Object error(Throwable e) {
         return new ErrorNotification(e);
     }
-    
+
     /**
      * Checks if the given object represents a error notification.
      * @param o the object to check

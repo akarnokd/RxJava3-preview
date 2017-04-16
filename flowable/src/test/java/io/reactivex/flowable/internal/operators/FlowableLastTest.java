@@ -100,7 +100,7 @@ public class FlowableLastTest {
     public void errorLastOrErrorFlowable() {
         Flowable.error(new TestException())
         .lastOrError()
-        
+
         .test()
         .assertFailure(TestException.class);
     }
@@ -109,7 +109,7 @@ public class FlowableLastTest {
     public void emptyLastOrErrorFlowable() {
         Flowable.empty()
         .lastOrError()
-        
+
         .test()
         .assertFailure(NoSuchElementException.class);
     }

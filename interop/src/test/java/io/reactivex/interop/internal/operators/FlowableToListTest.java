@@ -13,6 +13,7 @@
 
 package io.reactivex.interop.internal.operators;
 
+import static io.reactivex.interop.RxJava3Interop.toList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -21,13 +22,11 @@ import java.util.concurrent.*;
 
 import org.junit.*;
 import org.mockito.Mockito;
-import org.reactivestreams.Subscriber;
 
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.flowable.Flowable;
 import io.reactivex.flowable.processors.PublishProcessor;
-import io.reactivex.flowable.subscribers.TestSubscriber;
 import io.reactivex.interop.TestHelper;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
@@ -37,7 +36,7 @@ public class FlowableToListTest {
     @Test
     public void testList() {
         Flowable<String> w = Flowable.fromIterable(Arrays.asList("one", "two", "three"));
-        Single<List<String>> observable = w.toList();
+        Single<List<String>> observable = toList(w);
 
         SingleObserver<List<String>> observer = TestHelper.mockSingleObserver();
         observable.subscribe(observer);
@@ -48,7 +47,7 @@ public class FlowableToListTest {
     @Test
     public void testListViaFlowable() {
         Flowable<String> w = Flowable.fromIterable(Arrays.asList("one", "two", "three"));
-        Single<List<String>> observable = w.toList();
+        Single<List<String>> observable = toList(w);
 
         SingleObserver<List<String>> observer = TestHelper.mockSingleObserver();
         observable.subscribe(observer);
@@ -59,7 +58,7 @@ public class FlowableToListTest {
     @Test
     public void testListMultipleSubscribers() {
         Flowable<String> w = Flowable.fromIterable(Arrays.asList("one", "two", "three"));
-        Single<List<String>> observable = w.toList();
+        Single<List<String>> observable = toList(w);
 
         SingleObserver<List<String>> o1 = TestHelper.mockSingleObserver();
         observable.subscribe(o1);
@@ -80,7 +79,7 @@ public class FlowableToListTest {
     @Ignore("Null values are not allowed")
     public void testListWithNullValue() {
         Flowable<String> w = Flowable.fromIterable(Arrays.asList("one", null, "three"));
-        Single<List<String>> observable = w.toList();
+        Single<List<String>> observable = toList(w);
 
         SingleObserver<List<String>> observer = TestHelper.mockSingleObserver();
         observable.subscribe(observer);
@@ -91,13 +90,13 @@ public class FlowableToListTest {
     @Test
     public void testListWithBlockingFirst() {
         Flowable<String> o = Flowable.fromIterable(Arrays.asList("one", "two", "three"));
-        List<String> actual = o.toList().blockingGet();
+        List<String> actual = toList(o).blockingGet();
         Assert.assertEquals(Arrays.asList("one", "two", "three"), actual);
     }
     @Test
     @Ignore("Single doesn't do backpressure")
     public void testBackpressureHonored() {
-        Single<List<Integer>> w = Flowable.just(1, 2, 3, 4, 5).toList();
+        Single<List<Integer>> w = toList(Flowable.just(1, 2, 3, 4, 5));
         TestObserver<List<Integer>> ts = new TestObserver<List<Integer>>();
 
         w.subscribe(ts);
@@ -128,7 +127,7 @@ public class FlowableToListTest {
                     System.out.println("testAsyncRequested -> " + i);
                 }
                 PublishProcessor<Integer> source = PublishProcessor.create();
-                Single<List<Integer>> sorted = source.toList();
+                Single<List<Integer>> sorted = toList(source);
 
                 final CyclicBarrier cb = new CyclicBarrier(2);
                 final TestObserver<List<Integer>> ts = new TestObserver<List<Integer>>();
@@ -174,26 +173,14 @@ public class FlowableToListTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(Flowable.just(1).toList().toFlowable());
-
-        TestHelper.checkDisposed(Flowable.just(1).toList());
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void error() {
-        Flowable.error(new TestException())
-        .toList()
-        .toFlowable()
-        .test()
-        .assertFailure(TestException.class);
+        TestHelper.checkDisposed(toList(Flowable.just(1)));
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void errorSingle() {
-        Flowable.error(new TestException())
-        .toList()
+        toList(Flowable.error(new TestException())
+        )
         .test()
         .assertFailure(TestException.class);
     }
@@ -201,14 +188,13 @@ public class FlowableToListTest {
     @SuppressWarnings("unchecked")
     @Test
     public void collectionSupplierThrows() {
-        Flowable.just(1)
-        .toList(new Callable<Collection<Integer>>() {
+        toList(Flowable.just(1),
+        new Callable<Collection<Integer>>() {
             @Override
             public Collection<Integer> call() throws Exception {
                 throw new TestException();
             }
         })
-        .toFlowable()
         .test()
         .assertFailure(TestException.class);
     }
@@ -216,14 +202,13 @@ public class FlowableToListTest {
     @SuppressWarnings("unchecked")
     @Test
     public void collectionSupplierReturnsNull() {
-        Flowable.just(1)
-        .toList(new Callable<Collection<Integer>>() {
+        toList(Flowable.just(1)
+        , new Callable<Collection<Integer>>() {
             @Override
             public Collection<Integer> call() throws Exception {
                 return null;
             }
         })
-        .toFlowable()
         .test()
         .assertFailure(NullPointerException.class)
         .assertErrorMessage("The collectionSupplier returned a null collection. Null values are generally not allowed in 2.x operators and sources.");
@@ -232,8 +217,8 @@ public class FlowableToListTest {
     @SuppressWarnings("unchecked")
     @Test
     public void singleCollectionSupplierThrows() {
-        Flowable.just(1)
-        .toList(new Callable<Collection<Integer>>() {
+        toList(Flowable.just(1)
+        , new Callable<Collection<Integer>>() {
             @Override
             public Collection<Integer> call() throws Exception {
                 throw new TestException();
@@ -246,8 +231,8 @@ public class FlowableToListTest {
     @SuppressWarnings("unchecked")
     @Test
     public void singleCollectionSupplierReturnsNull() {
-        Flowable.just(1)
-        .toList(new Callable<Collection<Integer>>() {
+        toList(Flowable.just(1)
+        , new Callable<Collection<Integer>>() {
             @Override
             public Collection<Integer> call() throws Exception {
                 return null;
@@ -262,7 +247,7 @@ public class FlowableToListTest {
     public void onNextCancelRace() {
         for (int i = 0; i < 1000; i++) {
             final PublishProcessor<Integer> pp = PublishProcessor.create();
-            final TestObserver<List<Integer>> ts = pp.toList().test();
+            final TestObserver<List<Integer>> ts = toList(pp).test();
 
             Runnable r1 = new Runnable() {
                 @Override
@@ -278,60 +263,6 @@ public class FlowableToListTest {
             };
 
             TestHelper.race(r1, r2);
-        }
-    }
-
-    @Test
-    public void onNextCancelRaceFlowable() {
-        for (int i = 0; i < 1000; i++) {
-            final PublishProcessor<Integer> pp = PublishProcessor.create();
-            final TestSubscriber<List<Integer>> ts = pp.toList().toFlowable().test();
-
-            Runnable r1 = new Runnable() {
-                @Override
-                public void run() {
-                    pp.onNext(1);
-                }
-            };
-            Runnable r2 = new Runnable() {
-                @Override
-                public void run() {
-                    ts.cancel();
-                }
-            };
-
-            TestHelper.race(r1, r2);
-        }
-
-    }
-
-    @Test
-    public void onCompleteCancelRaceFlowable() {
-        for (int i = 0; i < 1000; i++) {
-            final PublishProcessor<Integer> pp = PublishProcessor.create();
-            final TestSubscriber<List<Integer>> ts = pp.toList().toFlowable().test();
-
-            pp.onNext(1);
-
-            Runnable r1 = new Runnable() {
-                @Override
-                public void run() {
-                    pp.onComplete();
-                }
-            };
-            Runnable r2 = new Runnable() {
-                @Override
-                public void run() {
-                    ts.cancel();
-                }
-            };
-
-            TestHelper.race(r1, r2);
-
-            if (ts.valueCount() != 0) {
-                ts.assertValue(Arrays.asList(1))
-                .assertNoErrors();
-            }
         }
     }
 }

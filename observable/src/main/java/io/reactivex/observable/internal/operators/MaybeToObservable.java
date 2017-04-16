@@ -94,7 +94,7 @@ implements HasUpstreamMaybeSource<T> {
 
     public enum MaybeToObservableConverter implements Function<MaybeSource<Object>, Observable<Object>> {
         INSTANCE;
-        
+
         @Override
         public Observable<Object> apply(MaybeSource<Object> t) {
             return new MaybeToObservable<Object>(t);

@@ -38,21 +38,6 @@ public abstract class AbstractMpscLinkedQueue<T> {
         xchgProducerNode(node);// this ensures correct construction: StoreLoad
     }
 
-    /**
-     * {@inheritDoc} <br>
-     * <p>
-     * IMPLEMENTATION NOTES:<br>
-     * Offer is allowed from multiple threads.<br>
-     * Offer allocates a new node and:
-     * <ol>
-     * <li>Swaps it atomically with current producer node (only one producer 'wins')
-     * <li>Sets the new node as the node following from the swapped producer node
-     * </ol>
-     * This works because each producer is guaranteed to 'plant' a new node and link the old node. No 2 producers can
-     * get the same producer node as part of XCHG guarantee.
-     *
-     * @see java.util.Queue#offer(java.lang.Object)
-     */
     public final boolean offer(final T e) {
         if (null == e) {
             throw new NullPointerException("Null is not a valid element");
@@ -65,21 +50,6 @@ public abstract class AbstractMpscLinkedQueue<T> {
         return true;
     }
 
-    /**
-     * {@inheritDoc} <br>
-     * <p>
-     * IMPLEMENTATION NOTES:<br>
-     * Poll is allowed from a SINGLE thread.<br>
-     * Poll reads the next node from the consumerNode and:
-     * <ol>
-     * <li>If it is null, the queue is assumed empty (though it might not be).
-     * <li>If it is not null set it as the consumer node and return it's now evacuated value.
-     * </ol>
-     * This means the consumerNode.value is always null, which is also the starting point for the queue. Because null
-     * values are not allowed to be offered this is the only node with it's value set to null at any one time.
-     *
-     * @see java.util.Queue#poll()
-     */
     @Nullable
     public final T poll() {
         LinkedQueueNode<T> currConsumerNode = lpConsumerNode(); // don't load twice, it's alright
@@ -129,14 +99,6 @@ public abstract class AbstractMpscLinkedQueue<T> {
         consumerNode.lazySet(node);
     }
 
-    /**
-     * {@inheritDoc} <br>
-     * <p>
-     * IMPLEMENTATION NOTES:<br>
-     * Queue is empty when producerNode is the same as consumerNode. An alternative implementation would be to observe
-     * the producerNode.value is null, which also means an empty queue because only the consumerNode.value is allowed to
-     * be null.
-     */
     final public boolean isEmpty() {
         return lvConsumerNode() == lvProducerNode();
     }

@@ -39,7 +39,7 @@ public final class TrampolineScheduler extends Scheduler {
             return true;
         }
     };
-    
+
     public static TrampolineScheduler instance() {
         return INSTANCE;
     }

@@ -46,7 +46,7 @@ public class FlowableFlattenIterableTest {
                 return Math.max(a, b);
             }
         })
-        
+
         .flatMapIterable(new Function<Integer, Iterable<Integer>>() {
             @Override
             public Iterable<Integer> apply(Integer v) {

@@ -80,7 +80,7 @@ public final class MaybeConcatIterable<T> extends Observable<T> {
         public void dispose() {
             disposables.dispose();
         }
-        
+
         @Override
         public boolean isDisposed() {
             return disposables.isDisposed();

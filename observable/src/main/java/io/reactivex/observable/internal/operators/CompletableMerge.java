@@ -54,7 +54,7 @@ public final class CompletableMerge extends Completable {
         final CompositeDisposable set;
 
         final CompletableBuffer buffer;
-        
+
         Disposable s;
 
         CompletableMergeObserver(CompletableObserver actual, int maxConcurrency, boolean delayErrors) {
@@ -105,7 +105,7 @@ public final class CompletableMerge extends Completable {
             set.add(inner);
             t.subscribe(inner);
         }
-        
+
         @Override
         public void onError(Throwable t) {
             if (!delayErrors) {
@@ -223,16 +223,16 @@ public final class CompletableMerge extends Completable {
                 DisposableHelper.dispose(this);
             }
         }
-        
+
         final class CompletableBuffer extends AtomicInteger {
 
             private static final long serialVersionUID = -6105068104477470875L;
 
             final AtomicLong requested = new AtomicLong();
-            
+
             volatile boolean cancelled;
-            
-            final SpscLinkedArrayQueue<CompletableSource> queue = 
+
+            final SpscLinkedArrayQueue<CompletableSource> queue =
                     new SpscLinkedArrayQueue<CompletableSource>(Observable.bufferSize());
 
             CompletableBuffer(int initialRequest) {
@@ -255,13 +255,13 @@ public final class CompletableMerge extends Completable {
                     for (;;) {
                         long e = 0L;
                         long r = requested.get();
-                        
+
                         while (e != r) {
                             if (cancelled) {
                                 queue.clear();
                                 return;
                             }
-                            
+
                             CompletableSource t = queue.poll();
                             if (t != null) {
                                 onNextActual(t);
@@ -270,14 +270,14 @@ public final class CompletableMerge extends Completable {
                                 break;
                             }
                         }
-                        
+
                         if (e == r) {
                             if (cancelled) {
                                 queue.clear();
                                 return;
                             }
                         }
-                        
+
                         if (e != 0) {
                             requested.addAndGet(-e);
                         }
@@ -289,7 +289,7 @@ public final class CompletableMerge extends Completable {
                     }
                 }
             }
-            
+
             void cancel() {
                 cancelled = true;
                 if (getAndIncrement() == 0) {

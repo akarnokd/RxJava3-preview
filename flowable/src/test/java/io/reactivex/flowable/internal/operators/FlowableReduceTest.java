@@ -157,7 +157,7 @@ public class FlowableReduceTest {
                     throw new TestException("Reducer");
                 }
             })
-            
+
             .test()
             .assertFailureAndMessage(TestException.class, "Reducer");
 
@@ -222,7 +222,7 @@ public class FlowableReduceTest {
     public void errorFlowable() {
         Flowable.<Integer>error(new TestException())
         .reduce(sum)
-        
+
         .test()
         .assertFailure(TestException.class);
     }
@@ -239,7 +239,7 @@ public class FlowableReduceTest {
     public void emptyFlowable() {
         Flowable.<Integer>empty()
         .reduce(sum)
-        
+
         .test()
         .assertResult();
     }
@@ -337,7 +337,7 @@ public class FlowableReduceTest {
                         return l + "_" + r;
                     }
                 })
-                
+
                 .doOnNext(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {

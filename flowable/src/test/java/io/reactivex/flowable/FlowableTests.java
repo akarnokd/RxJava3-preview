@@ -256,7 +256,7 @@ public class FlowableTests {
                 return t1 + t2;
             }
         })
-        
+
         .subscribe(w);
         // we should be called only once
         verify(w, times(1)).onNext(anyInt());
@@ -272,7 +272,7 @@ public class FlowableTests {
                 return t1 + t2;
             }
         })
-        
+
         .test()
         .assertResult();
     }

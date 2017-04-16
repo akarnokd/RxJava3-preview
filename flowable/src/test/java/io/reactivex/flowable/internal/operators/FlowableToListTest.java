@@ -160,7 +160,7 @@ public class FlowableToListTest {
     public void capacityHintFlowable() {
         Flowable.range(1, 10)
         .toList(4)
-        
+
         .test()
         .assertResult(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
     }
@@ -202,7 +202,7 @@ public class FlowableToListTest {
     public void error() {
         Flowable.error(new TestException())
         .toList()
-        
+
         .test()
         .assertFailure(TestException.class);
     }
@@ -226,7 +226,7 @@ public class FlowableToListTest {
                 throw new TestException();
             }
         })
-        
+
         .test()
         .assertFailure(TestException.class);
     }
@@ -241,7 +241,7 @@ public class FlowableToListTest {
                 return null;
             }
         })
-        
+
         .test()
         .assertFailure(NullPointerException.class)
         .assertErrorMessage("The collectionSupplier returned a null collection. Null values are generally not allowed in 2.x operators and sources.");

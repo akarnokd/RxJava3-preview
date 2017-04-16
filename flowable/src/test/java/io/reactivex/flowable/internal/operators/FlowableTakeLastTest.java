@@ -148,7 +148,7 @@ public class FlowableTakeLastTest {
         assertEquals(0, Flowable
                 .empty()
                 .count()
-                
+
                 .filter(new Predicate<Long>() {
                     @Override
                     public boolean test(Long v) {

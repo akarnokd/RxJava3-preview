@@ -56,7 +56,7 @@ public final class SingleInternalHelper {
     public static <T> Function<SingleSource<? extends T>, Observable<? extends T>> toObservable() {
         return (Function)ToObservable.INSTANCE;
     }
-    
+
     static final class ToObservableIterator<T> implements Iterator<Observable<T>> {
         private final Iterator<? extends SingleSource<? extends T>> sit;
 

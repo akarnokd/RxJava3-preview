@@ -13,18 +13,21 @@
 
 package io.reactivex.interop.internal.operators;
 
+import static io.reactivex.interop.RxJava3Interop.toFlowable;
+
 import org.junit.Test;
 
 import io.reactivex.common.exceptions.MissingBackpressureException;
+import io.reactivex.flowable.BackpressureStrategy;
+import io.reactivex.flowable.subscribers.TestSubscriber;
 import io.reactivex.observable.Observable;
-import io.reactivex.observable.observers.TestObserver;
 
 public class ObservableToXTest {
 
     @Test
     public void toFlowableBuffer() {
-        Observable.range(1, 5)
-        .toFlowable(BackpressureStrategy.BUFFER)
+        toFlowable(Observable.range(1, 5)
+        , BackpressureStrategy.BUFFER)
         .test(2L)
         .assertValues(1, 2)
         .assertNoErrors()
@@ -33,16 +36,16 @@ public class ObservableToXTest {
 
     @Test
     public void toFlowableDrop() {
-        Observable.range(1, 5)
-        .toFlowable(BackpressureStrategy.DROP)
+        toFlowable(Observable.range(1, 5)
+        , BackpressureStrategy.DROP)
         .test(1)
         .assertResult(1);
     }
 
     @Test
     public void toFlowableLatest() {
-        TestObserver<Integer> ts = Observable.range(1, 5)
-        .toFlowable(BackpressureStrategy.LATEST)
+        TestSubscriber<Integer> ts = toFlowable(Observable.range(1, 5)
+        , BackpressureStrategy.LATEST)
         .test(0);
 
         ts.request(1);
@@ -52,24 +55,24 @@ public class ObservableToXTest {
 
     @Test
     public void toFlowableError1() {
-        Observable.range(1, 5)
-        .toFlowable(BackpressureStrategy.ERROR)
+        toFlowable(Observable.range(1, 5)
+        , BackpressureStrategy.ERROR)
         .test(1)
         .assertFailure(MissingBackpressureException.class, 1);
     }
 
     @Test
     public void toFlowableError2() {
-        Observable.range(1, 5)
-        .toFlowable(BackpressureStrategy.ERROR)
+        toFlowable(Observable.range(1, 5)
+        , BackpressureStrategy.ERROR)
         .test(5)
         .assertResult(1, 2, 3, 4, 5);
     }
 
     @Test
     public void toFlowableMissing() {
-        TestObserver<Integer> ts = Observable.range(1, 5)
-                .toFlowable(BackpressureStrategy.MISSING)
+        TestSubscriber<Integer> ts = toFlowable(Observable.range(1, 5)
+                , BackpressureStrategy.MISSING)
                 .test(0);
 
         ts.request(2);

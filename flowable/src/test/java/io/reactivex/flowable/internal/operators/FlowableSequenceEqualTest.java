@@ -180,7 +180,7 @@ public class FlowableSequenceEqualTest {
     @Test
     public void simpleInequalObservable() {
         Flowable.sequenceEqual(Flowable.just(1), Flowable.just(2))
-        
+
         .test()
         .assertResult(false);
     }
@@ -220,7 +220,7 @@ public class FlowableSequenceEqualTest {
     @Test
     public void prefetchFlowable() {
         Flowable.sequenceEqual(Flowable.range(1, 20), Flowable.range(1, 20), 2)
-        
+
         .test()
         .assertResult(true);
     }
@@ -230,7 +230,7 @@ public class FlowableSequenceEqualTest {
         Flowable<Integer> source = Flowable.range(1, Flowable.bufferSize() * 4).subscribeOn(Schedulers.computation());
 
         Flowable.sequenceEqual(source, source)
-        
+
         .test()
         .awaitDone(5, TimeUnit.SECONDS)
         .assertResult(true);
@@ -244,12 +244,12 @@ public class FlowableSequenceEqualTest {
         });
 
         Flowable.sequenceEqual(source, Flowable.range(1, 10).hide())
-        
+
         .test()
         .assertFailure(TestException.class);
 
         Flowable.sequenceEqual(Flowable.range(1, 10).hide(), source)
-        
+
         .test()
         .assertFailure(TestException.class);
     }
@@ -270,7 +270,7 @@ public class FlowableSequenceEqualTest {
             boolean swap = (i & 1) == 0;
 
             Flowable.sequenceEqual(swap ? pp : neverNever, swap ? neverNever : pp)
-            
+
             .subscribe(ts);
 
             Runnable r1 = new Runnable() {
@@ -304,7 +304,7 @@ public class FlowableSequenceEqualTest {
                 }
             }
         }, 8)
-        
+
         .test()
         .assertFailure(MissingBackpressureException.class);
     }
@@ -321,7 +321,7 @@ public class FlowableSequenceEqualTest {
                     s.onError(new TestException("Second"));
                 }
             }, 8)
-            
+
             .test()
             .assertFailureAndMessage(TestException.class, "First");
 

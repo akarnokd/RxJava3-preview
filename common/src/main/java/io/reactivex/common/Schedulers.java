@@ -23,8 +23,8 @@ import io.reactivex.common.internal.schedulers.*;
  * Static factory methods for returning standard Scheduler instances.
  * <p>
  * The initial and runtime values of the various scheduler types can be overridden via the
- * {@code RxJavaPlugins.setInit(scheduler name)SchedulerHandler()} and
- * {@code RxJavaPlugins.set(scheduler name)SchedulerHandler()} respectively.
+ * {@code RxJavaCommonPlugins.setInit(scheduler name)SchedulerHandler()} and
+ * {@code RxJavaCommonPlugins.set(scheduler name)SchedulerHandler()} respectively.
  * <p>
  * <strong>Supported system properties ({@code System.getProperty()}):</strong>
  * <ul>
@@ -102,7 +102,7 @@ public final class Schedulers {
      * not disposing a worker that has timed/delayed tasks not cancelled by other means may leak resources and/or
      * execute those tasks "unexpectedly".
      * <p>
-     * If the {@link RxJavaPlugins#setFailOnNonBlockingScheduler(boolean)} is set to true, attempting to execute
+     * If the {@link RxJavaCommonPlugins#setFailOnNonBlockingScheduler(boolean)} is set to true, attempting to execute
      * operators that block while running on this scheduler will throw an {@link IllegalStateException}.
      * <p>
      * You can control certain properties of this standard scheduler via system properties that have to be set
@@ -114,14 +114,14 @@ public final class Schedulers {
      * </ul>
      * <p>
      * The default value of this scheduler can be overridden at initialization time via the
-     * {@link RxJavaPlugins#setInitComputationSchedulerHandler(io.reactivex.common.functions.Function)} plugin method.
+     * {@link RxJavaCommonPlugins#setInitComputationSchedulerHandler(io.reactivex.common.functions.Function)} plugin method.
      * Note that due to possible initialization cycles, using any of the other scheduler-returning methods will
      * result in a {@code NullPointerException}.
      * Once the {@link Schedulers} class has been initialized, you can override the returned {@link Scheduler} instance
-     * via the {@link RxJavaPlugins#setComputationSchedulerHandler(io.reactivex.common.functions.Function)} method.
+     * via the {@link RxJavaCommonPlugins#setComputationSchedulerHandler(io.reactivex.common.functions.Function)} method.
      * <p>
      * It is possible to create a fresh instance of this scheduler with a custom ThreadFactory, via the
-     * {@link RxJavaPlugins#createComputationScheduler(ThreadFactory)} method. Note that such custom
+     * {@link RxJavaCommonPlugins#createComputationScheduler(ThreadFactory)} method. Note that such custom
      * instances require a manual call to {@link Scheduler#shutdown()} to allow the JVM to exit or the
      * (J2EE) container to unload properly.
      * <p>Operators on the base reactive classes that use this scheduler are marked with the
@@ -158,14 +158,14 @@ public final class Schedulers {
      * </ul>
      * <p>
      * The default value of this scheduler can be overridden at initialization time via the
-     * {@link RxJavaPlugins#setInitIoSchedulerHandler(io.reactivex.common.functions.Function)} plugin method.
+     * {@link RxJavaCommonPlugins#setInitIoSchedulerHandler(io.reactivex.common.functions.Function)} plugin method.
      * Note that due to possible initialization cycles, using any of the other scheduler-returning methods will
      * result in a {@code NullPointerException}.
      * Once the {@link Schedulers} class has been initialized, you can override the returned {@link Scheduler} instance
-     * via the {@link RxJavaPlugins#setIoSchedulerHandler(io.reactivex.common.functions.Function)} method.
+     * via the {@link RxJavaCommonPlugins#setIoSchedulerHandler(io.reactivex.common.functions.Function)} method.
      * <p>
      * It is possible to create a fresh instance of this scheduler with a custom ThreadFactory, via the
-     * {@link RxJavaPlugins#createIoScheduler(ThreadFactory)} method. Note that such custom
+     * {@link RxJavaCommonPlugins#createIoScheduler(ThreadFactory)} method. Note that such custom
      * instances require a manual call to {@link Scheduler#shutdown()} to allow the JVM to exit or the
      * (J2EE) container to unload properly.
      * <p>Operators on the base reactive classes that use this scheduler are marked with the
@@ -189,7 +189,7 @@ public final class Schedulers {
      * tasks to the "main" thread. Such behavior requires a blocking-queueing scheduler currently not provided
      * by RxJava itself but may be found in external libraries.
      * <p>
-     * This scheduler can't be overridden via an {@link RxJavaPlugins} method.
+     * This scheduler can't be overridden via an {@link RxJavaCommonPlugins} method.
      * @return a {@link Scheduler} that queues work on the current thread
      */
     @NonNull
@@ -216,14 +216,14 @@ public final class Schedulers {
      * </ul>
      * <p>
      * The default value of this scheduler can be overridden at initialization time via the
-     * {@link RxJavaPlugins#setInitNewThreadSchedulerHandler(io.reactivex.common.functions.Function)} plugin method.
+     * {@link RxJavaCommonPlugins#setInitNewThreadSchedulerHandler(io.reactivex.common.functions.Function)} plugin method.
      * Note that due to possible initialization cycles, using any of the other scheduler-returning methods will
      * result in a {@code NullPointerException}.
      * Once the {@link Schedulers} class has been initialized, you can override the returned {@link Scheduler} instance
-     * via the {@link RxJavaPlugins#setNewThreadSchedulerHandler(io.reactivex.common.functions.Function)} method.
+     * via the {@link RxJavaCommonPlugins#setNewThreadSchedulerHandler(io.reactivex.common.functions.Function)} method.
      * <p>
      * It is possible to create a fresh instance of this scheduler with a custom ThreadFactory, via the
-     * {@link RxJavaPlugins#createNewThreadScheduler(ThreadFactory)} method. Note that such custom
+     * {@link RxJavaCommonPlugins#createNewThreadScheduler(ThreadFactory)} method. Note that such custom
      * instances require a manual call to {@link Scheduler#shutdown()} to allow the JVM to exit or the
      * (J2EE) container to unload properly.
      * <p>Operators on the base reactive classes that use this scheduler are marked with the
@@ -254,7 +254,7 @@ public final class Schedulers {
      * not disposing a worker that has timed/delayed tasks not cancelled by other means may leak resources and/or
      * execute those tasks "unexpectedly".
      * <p>
-     * If the {@link RxJavaPlugins#setFailOnNonBlockingScheduler(boolean)} is set to true, attempting to execute
+     * If the {@link RxJavaCommonPlugins#setFailOnNonBlockingScheduler(boolean)} is set to true, attempting to execute
      * operators that block while running on this scheduler will throw an {@link IllegalStateException}.
      * <p>
      * You can control certain properties of this standard scheduler via system properties that have to be set
@@ -265,14 +265,14 @@ public final class Schedulers {
      * </ul>
      * <p>
      * The default value of this scheduler can be overridden at initialization time via the
-     * {@link RxJavaPlugins#setInitSingleSchedulerHandler(io.reactivex.common.functions.Function)} plugin method.
+     * {@link RxJavaCommonPlugins#setInitSingleSchedulerHandler(io.reactivex.common.functions.Function)} plugin method.
      * Note that due to possible initialization cycles, using any of the other scheduler-returning methods will
      * result in a {@code NullPointerException}.
      * Once the {@link Schedulers} class has been initialized, you can override the returned {@link Scheduler} instance
-     * via the {@link RxJavaPlugins#setSingleSchedulerHandler(io.reactivex.common.functions.Function)} method.
+     * via the {@link RxJavaCommonPlugins#setSingleSchedulerHandler(io.reactivex.common.functions.Function)} method.
      * <p>
      * It is possible to create a fresh instance of this scheduler with a custom ThreadFactory, via the
-     * {@link RxJavaPlugins#createSingleScheduler(ThreadFactory)} method. Note that such custom
+     * {@link RxJavaCommonPlugins#createSingleScheduler(ThreadFactory)} method. Note that such custom
      * instances require a manual call to {@link Scheduler#shutdown()} to allow the JVM to exit or the
      * (J2EE) container to unload properly.
      * <p>Operators on the base reactive classes that use this scheduler are marked with the

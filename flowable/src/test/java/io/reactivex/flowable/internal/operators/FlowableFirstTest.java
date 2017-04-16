@@ -326,7 +326,7 @@ public class FlowableFirstTest {
     public void firstOrErrorNoElementFlowable() {
         Flowable.empty()
             .firstOrError()
-            
+
             .test()
             .assertNoValues()
             .assertError(NoSuchElementException.class);
@@ -336,7 +336,7 @@ public class FlowableFirstTest {
     public void firstOrErrorOneElementFlowable() {
         Flowable.just(1)
             .firstOrError()
-            
+
             .test()
             .assertNoErrors()
             .assertValue(1);
@@ -346,7 +346,7 @@ public class FlowableFirstTest {
     public void firstOrErrorMultipleElementsFlowable() {
         Flowable.just(1, 2, 3)
             .firstOrError()
-            
+
             .test()
             .assertNoErrors()
             .assertValue(1);
@@ -356,7 +356,7 @@ public class FlowableFirstTest {
     public void firstOrErrorErrorFlowable() {
         Flowable.error(new RuntimeException("error"))
             .firstOrError()
-            
+
             .test()
             .assertNoValues()
             .assertErrorMessage("error")

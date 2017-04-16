@@ -26,6 +26,7 @@ import io.reactivex.common.Scheduler.Worker;
 import io.reactivex.common.annotations.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.*;
+import io.reactivex.common.internal.utils.*;
 import io.reactivex.flowable.*;
 import io.reactivex.flowable.internal.operators.*;
 import io.reactivex.interop.internal.operators.*;
@@ -92,6 +93,10 @@ public final class RxJava3Interop {
 
     public static <T> Single<List<T>> toList(Flowable<T> source) {
         return RxJavaObservablePlugins.onAssembly(new FlowableToListSingle<T, List<T>>(source));
+    }
+
+    public static <T> Single<List<T>> toList(Flowable<T> source, int capacityHint) {
+        return RxJavaObservablePlugins.onAssembly(new FlowableToListSingle<T, List<T>>(source, Functions.<T>createArrayList(capacityHint)));
     }
 
     public static <T, C extends Collection<? super T>> Single<C> toList(Flowable<T> source, Callable<C> collectionSupplier) {
@@ -174,6 +179,9 @@ public final class RxJava3Interop {
         return RxJavaObservablePlugins.onAssembly(new CompletableMerge(sources, maxConcurrency, false));
     }
 
+    public static <T> Completable mergeCompletableDelayError(Flowable<? extends CompletableSource> sources) {
+        return mergeCompletableDelayError(sources, Integer.MAX_VALUE);
+    }
 
     public static <T> Completable mergeCompletableDelayError(Flowable<? extends CompletableSource> sources, int maxConcurrency) {
         ObjectHelper.requireNonNull(sources, "sources is null");
@@ -289,6 +297,394 @@ public final class RxJava3Interop {
     }
 
     /**
+     * Returns a Single that emits a single HashMap containing all items emitted by the source Publisher,
+     * mapped by the keys returned by a specified {@code keySelector} function.
+     * <p>
+     * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toMap.png" alt="">
+     * <p>
+     * If more than one source item maps to the same key, the HashMap will contain the latest of those items.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors backpressure from downstream and consumes the source {@code Publisher} in an
+     *  unbounded manner (i.e., without applying backpressure to it).</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toMap} does not operate by default on a particular {@link Scheduler}.</dd>
+     * </dl>
+     *
+     * @param <K> the key type of the Map
+     * @param <T> the source value type
+     * @param source the source Flowable instance
+     * @param keySelector
+     *            the function that extracts the key from a source item to be used in the HashMap
+     * @return a Single that emits a single item: a HashMap containing the mapped items from the source
+     *         Publisher
+     * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
+     */
+    @CheckReturnValue
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T, K> Single<Map<K, T>> toMap(Flowable<T> source, final Function<? super T, ? extends K> keySelector) {
+        ObjectHelper.requireNonNull(keySelector, "keySelector is null");
+        return collect(source, HashMapSupplier.<K, T>asCallable(), Functions.toMapKeySelector(keySelector));
+    }
+
+    /**
+     * Returns a Single that emits a single HashMap containing values corresponding to items emitted by the
+     * source Publisher, mapped by the keys returned by a specified {@code keySelector} function.
+     * <p>
+     * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toMap.png" alt="">
+     * <p>
+     * If more than one source item maps to the same key, the HashMap will contain a single entry that
+     * corresponds to the latest of those items.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors backpressure from downstream and consumes the source {@code Publisher} in an
+     *  unbounded manner (i.e., without applying backpressure to it).</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toMap} does not operate by default on a particular {@link Scheduler}.</dd>
+     * </dl>
+     *
+     * @param <K> the key type of the Map
+     * @param <V> the value type of the Map
+     * @param <T> the source value type
+     * @param source the source Flowable instance
+     * @param keySelector
+     *            the function that extracts the key from a source item to be used in the HashMap
+     * @param valueSelector
+     *            the function that extracts the value from a source item to be used in the HashMap
+     * @return a Single that emits a single item: a HashMap containing the mapped items from the source
+     *         Publisher
+     * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
+     */
+    @CheckReturnValue
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T, K, V> Single<Map<K, V>> toMap(Flowable<T> source, final Function<? super T, ? extends K> keySelector, final Function<? super T, ? extends V> valueSelector) {
+        ObjectHelper.requireNonNull(keySelector, "keySelector is null");
+        ObjectHelper.requireNonNull(valueSelector, "valueSelector is null");
+        return collect(source, HashMapSupplier.<K, V>asCallable(), Functions.toMapKeyValueSelector(keySelector, valueSelector));
+    }
+
+    /**
+     * Returns a Single that emits a single Map, returned by a specified {@code mapFactory} function, that
+     * contains keys and values extracted from the items emitted by the source Publisher.
+     * <p>
+     * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toMap.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors backpressure from downstream and consumes the source {@code Publisher} in an
+     *  unbounded manner (i.e., without applying backpressure to it).</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toMap} does not operate by default on a particular {@link Scheduler}.</dd>
+     * </dl>
+     *
+     * @param <K> the key type of the Map
+     * @param <V> the value type of the Map
+     * @param <T> the source value type
+     * @param source the source Flowable instance
+     * @param keySelector
+     *            the function that extracts the key from a source item to be used in the Map
+     * @param valueSelector
+     *            the function that extracts the value from the source items to be used as value in the Map
+     * @param mapSupplier
+     *            the function that returns a Map instance to be used
+     * @return a Flowable that emits a single item: a Map that contains the mapped items emitted by the
+     *         source Publisher
+     * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
+     */
+    @SuppressWarnings("unchecked")
+    @CheckReturnValue
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T, K, V> Single<Map<K, V>> toMap(Flowable<T> source, final Function<? super T, ? extends K> keySelector,
+            final Function<? super T, ? extends V> valueSelector,
+            final Callable<? extends Map<K, V>> mapSupplier) {
+        ObjectHelper.requireNonNull(keySelector, "keySelector is null");
+        ObjectHelper.requireNonNull(valueSelector, "valueSelector is null");
+        return (Single<Map<K, V>>)collect(source, mapSupplier, Functions.toMapKeyValueSelector(keySelector, valueSelector));
+    }
+
+    /**
+     * Returns a Single that emits a single HashMap that contains an ArrayList of items emitted by the
+     * source Publisher keyed by a specified {@code keySelector} function.
+     * <p>
+     * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toMultiMap.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>This operator does not support backpressure as by intent it is requesting and buffering everything.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toMultimap} does not operate by default on a particular {@link Scheduler}.</dd>
+     * </dl>
+     *
+     * @param <K> the key type of the Map
+     * @param <T> the source value type
+     * @param source the source Flowable instance
+     * @param keySelector
+     *            the function that extracts the key from the source items to be used as key in the HashMap
+     * @return a Single that emits a single item: a HashMap that contains an ArrayList of items mapped from
+     *         the source Publisher
+     * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
+     */
+    @CheckReturnValue
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T, K> Single<Map<K, Collection<T>>> toMultimap(Flowable<T> source, Function<? super T, ? extends K> keySelector) {
+        Function<T, T> valueSelector = Functions.identity();
+        Callable<Map<K, Collection<T>>> mapSupplier = HashMapSupplier.asCallable();
+        Function<K, List<T>> collectionFactory = ArrayListSupplier.asFunction();
+        return toMultimap(source, keySelector, valueSelector, mapSupplier, collectionFactory);
+    }
+
+    /**
+     * Returns a Single that emits a single HashMap that contains an ArrayList of values extracted by a
+     * specified {@code valueSelector} function from items emitted by the source Publisher, keyed by a
+     * specified {@code keySelector} function.
+     * <p>
+     * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toMultiMap.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors backpressure from downstream and consumes the source {@code Publisher} in an
+     *  unbounded manner (i.e., without applying backpressure to it).</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toMultimap} does not operate by default on a particular {@link Scheduler}.</dd>
+     * </dl>
+     *
+     * @param <K> the key type of the Map
+     * @param <V> the value type of the Map
+     * @param <T> the source value type
+     * @param source the source Flowable instance
+     * @param keySelector
+     *            the function that extracts a key from the source items to be used as key in the HashMap
+     * @param valueSelector
+     *            the function that extracts a value from the source items to be used as value in the HashMap
+     * @return a Single that emits a single item: a HashMap that contains an ArrayList of items mapped from
+     *         the source Publisher
+     * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
+     */
+    @CheckReturnValue
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T, K, V> Single<Map<K, Collection<V>>> toMultimap(Flowable<T> source, Function<? super T, ? extends K> keySelector, Function<? super T, ? extends V> valueSelector) {
+        Callable<Map<K, Collection<V>>> mapSupplier = HashMapSupplier.asCallable();
+        Function<K, List<V>> collectionFactory = ArrayListSupplier.asFunction();
+        return toMultimap(source, keySelector, valueSelector, mapSupplier, collectionFactory);
+    }
+
+    /**
+     * Returns a Single that emits a single Map, returned by a specified {@code mapFactory} function, that
+     * contains a custom collection of values, extracted by a specified {@code valueSelector} function from
+     * items emitted by the source Publisher, and keyed by the {@code keySelector} function.
+     * <p>
+     * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toMultiMap.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors backpressure from downstream and consumes the source {@code Publisher} in an
+     *  unbounded manner (i.e., without applying backpressure to it).</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toMultimap} does not operate by default on a particular {@link Scheduler}.</dd>
+     * </dl>
+     *
+     * @param <K> the key type of the Map
+     * @param <V> the value type of the Map
+     * @param <T> the source value type
+     * @param source the source Flowable instance
+     * @param keySelector
+     *            the function that extracts a key from the source items to be used as the key in the Map
+     * @param valueSelector
+     *            the function that extracts a value from the source items to be used as the value in the Map
+     * @param mapSupplier
+     *            the function that returns a Map instance to be used
+     * @param collectionFactory
+     *            the function that returns a Collection instance for a particular key to be used in the Map
+     * @return a Single that emits a single item: a Map that contains the collection of mapped items from
+     *         the source Publisher
+     * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
+     */
+    @SuppressWarnings("unchecked")
+    @CheckReturnValue
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T, K, V> Single<Map<K, Collection<V>>> toMultimap(
+            Flowable<T> source,
+            final Function<? super T, ? extends K> keySelector,
+            final Function<? super T, ? extends V> valueSelector,
+            final Callable<? extends Map<K, Collection<V>>> mapSupplier,
+            final Function<? super K, ? extends Collection<? super V>> collectionFactory) {
+        ObjectHelper.requireNonNull(keySelector, "keySelector is null");
+        ObjectHelper.requireNonNull(valueSelector, "valueSelector is null");
+        ObjectHelper.requireNonNull(mapSupplier, "mapSupplier is null");
+        ObjectHelper.requireNonNull(collectionFactory, "collectionFactory is null");
+        return (Single<Map<K, Collection<V>>>)collect(source, mapSupplier, Functions.toMultimapKeyValueSelector(keySelector, valueSelector, collectionFactory));
+    }
+
+    /**
+     * Returns a Single that emits a single Map, returned by a specified {@code mapFactory} function, that
+     * contains an ArrayList of values, extracted by a specified {@code valueSelector} function from items
+     * emitted by the source Publisher and keyed by the {@code keySelector} function.
+     * <p>
+     * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toMultiMap.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors backpressure from downstream and consumes the source {@code Publisher} in an
+     *  unbounded manner (i.e., without applying backpressure to it).</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toMultimap} does not operate by default on a particular {@link Scheduler}.</dd>
+     * </dl>
+     *
+     * @param <K> the key type of the Map
+     * @param <V> the value type of the Map
+     * @param <T> the source value type
+     * @param source the source Flowable instance
+     * @param keySelector
+     *            the function that extracts a key from the source items to be used as the key in the Map
+     * @param valueSelector
+     *            the function that extracts a value from the source items to be used as the value in the Map
+     * @param mapSupplier
+     *            the function that returns a Map instance to be used
+     * @return a Single that emits a single item: a Map that contains a list items mapped from the source
+     *         Publisher
+     * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
+     */
+    @CheckReturnValue
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T, K, V> Single<Map<K, Collection<V>>> toMultimap(
+            Flowable<T> source,
+            Function<? super T, ? extends K> keySelector,
+            Function<? super T, ? extends V> valueSelector,
+            Callable<Map<K, Collection<V>>> mapSupplier
+            ) {
+        return toMultimap(source, keySelector, valueSelector, mapSupplier, ArrayListSupplier.<V, K>asFunction());
+    }
+
+    /**
+     * Returns a Single that emits a list that contains the items emitted by the source Publisher, in a
+     * sorted order. Each item emitted by the Publisher must implement {@link Comparable} with respect to all
+     * other items in the sequence.
+     *
+     * <p>If any item emitted by this Flowable does not implement {@link Comparable} with respect to
+     *             all other items emitted by this Flowable, no items will be emitted and the
+     *             sequence is terminated with a {@link ClassCastException}.
+     * <p>
+     * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toSortedList.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors backpressure from downstream and consumes the source {@code Publisher} in an
+     *  unbounded manner (i.e., without applying backpressure to it).</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toSortedList} does not operate by default on a particular {@link Scheduler}.</dd>
+     * </dl>
+     * @param <T> the source value type
+     * @param source the source Flowable instance
+     * @return a Single that emits a list that contains the items emitted by the source Publisher in
+     *         sorted order
+     * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
+     */
+    @CheckReturnValue
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T> Single<List<T>> toSortedList(Flowable<T> source) {
+        return toSortedList(source, Functions.naturalComparator());
+    }
+
+    /**
+     * Returns a Single that emits a list that contains the items emitted by the source Publisher, in a
+     * sorted order based on a specified comparison function.
+     * <p>
+     * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toSortedList.f.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors backpressure from downstream and consumes the source {@code Publisher} in an
+     *  unbounded manner (i.e., without applying backpressure to it).</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toSortedList} does not operate by default on a particular {@link Scheduler}.</dd>
+     * </dl>
+     *
+     * @param <T> the source value type
+     * @param source the source Flowable instance
+     * @param comparator
+     *            a function that compares two items emitted by the source Publisher and returns an Integer
+     *            that indicates their sort order
+     * @return a Single that emits a list that contains the items emitted by the source Publisher in
+     *         sorted order
+     * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
+     */
+    @CheckReturnValue
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T> Single<List<T>> toSortedList(Flowable<T> source, final Comparator<? super T> comparator) {
+        ObjectHelper.requireNonNull(comparator, "comparator is null");
+        return toList(source).map(Functions.listSorter(comparator));
+    }
+
+    /**
+     * Returns a Single that emits a list that contains the items emitted by the source Publisher, in a
+     * sorted order based on a specified comparison function.
+     * <p>
+     * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toSortedList.f.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors backpressure from downstream and consumes the source {@code Publisher} in an
+     *  unbounded manner (i.e., without applying backpressure to it).</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toSortedList} does not operate by default on a particular {@link Scheduler}.</dd>
+     * </dl>
+     *
+     * @param <T> the source value type
+     * @param source the source Flowable instance
+     * @param comparator
+     *            a function that compares two items emitted by the source Publisher and returns an Integer
+     *            that indicates their sort order
+     * @param capacityHint
+     *             the initial capacity of the ArrayList used to accumulate items before sorting
+     * @return a Single that emits a list that contains the items emitted by the source Publisher in
+     *         sorted order
+     * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
+     * @since 2.0
+     */
+    @CheckReturnValue
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T> Single<List<T>> toSortedList(Flowable<T> source, final Comparator<? super T> comparator, int capacityHint) {
+        ObjectHelper.requireNonNull(comparator, "comparator is null");
+        return toList(source, capacityHint).map(Functions.listSorter(comparator));
+    }
+
+    /**
+     * Returns a Flowable that emits a list that contains the items emitted by the source Publisher, in a
+     * sorted order. Each item emitted by the Publisher must implement {@link Comparable} with respect to all
+     * other items in the sequence.
+     *
+     * <p>If any item emitted by this Flowable does not implement {@link Comparable} with respect to
+     *             all other items emitted by this Flowable, no items will be emitted and the
+     *             sequence is terminated with a {@link ClassCastException}.
+     * <p>
+     * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/toSortedList.png" alt="">
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator honors backpressure from downstream and consumes the source {@code Publisher} in an
+     *  unbounded manner (i.e., without applying backpressure to it).</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code toSortedList} does not operate by default on a particular {@link Scheduler}.</dd>
+     * </dl>
+     *
+     * @param <T> the source value type
+     * @param source the source Flowable instance
+     * @param capacityHint
+     *             the initial capacity of the ArrayList used to accumulate items before sorting
+     * @return a Flowable that emits a list that contains the items emitted by the source Publisher in
+     *         sorted order
+     * @see <a href="http://reactivex.io/documentation/operators/to.html">ReactiveX operators documentation: To</a>
+     * @since 2.0
+     */
+    @CheckReturnValue
+    @BackpressureSupport(BackpressureKind.UNBOUNDED_IN)
+    @SchedulerSupport(SchedulerSupport.NONE)
+    public static <T> Single<List<T>> toSortedList(Flowable<T> source, int capacityHint) {
+        return toSortedList(source, Functions.naturalComparator(), capacityHint);
+    }
+
+    /**
      * Allows the use of operators for controlling the timing around when
      * actions scheduled on workers are actually done. This makes it possible to
      * layer additional behavior on this {@link Scheduler}. The only parameter
@@ -369,5 +765,19 @@ public final class RxJava3Interop {
         return (S) new SchedulerWhen(combine, scheduler);
     }
 
+    public static <T, U> Single<T> takeUntil(Single<T> source, Publisher<U> other) {
+        return RxJavaObservablePlugins.onAssembly(new SingleTakeUntilPublisher<T, U>(source, other));
+    }
 
+    public static <T, U> Maybe<T> takeUntil(Maybe<T> source, Publisher<U> other) {
+        return RxJavaObservablePlugins.onAssembly(new MaybeTakeUntilPublisher<T, U>(source, other));
+    }
+
+    public static <T, U> Maybe<T> timeout(Maybe<T> source, Publisher<U> other) {
+        return RxJavaObservablePlugins.onAssembly(new MaybeTimeoutPublisher<T, U>(source, other, null));
+    }
+
+    public static <T, U> Maybe<T> timeout(Maybe<T> source, Publisher<U> other, Maybe<T> fallback) {
+        return RxJavaObservablePlugins.onAssembly(new MaybeTimeoutPublisher<T, U>(source, other, fallback));
+    }
 }

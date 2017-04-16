@@ -84,7 +84,7 @@ public class FlowableSingleTest {
                 //
                 .singleElement()
                 //
-                
+
                 .subscribe(new DefaultSubscriber<Integer>() {
 
                     @Override
@@ -125,7 +125,7 @@ public class FlowableSingleTest {
                 //
                 .singleElement()
                 //
-                
+
                 .subscribe(new DefaultSubscriber<Integer>() {
 
                     @Override
@@ -165,7 +165,7 @@ public class FlowableSingleTest {
                 //
                 .singleElement()
                 //
-                
+
                 .subscribe(new DefaultSubscriber<Integer>() {
 
                     @Override

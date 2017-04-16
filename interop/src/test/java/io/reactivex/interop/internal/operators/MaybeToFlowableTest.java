@@ -13,6 +13,7 @@
 
 package io.reactivex.interop.internal.operators;
 
+import static io.reactivex.interop.RxJava3Interop.*;
 import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
@@ -28,15 +29,15 @@ public class MaybeToFlowableTest {
     public void source() {
         Maybe<Integer> m = Maybe.just(1);
 
-        assertSame(m, (((HasUpstreamMaybeSource<?>)m.toFlowable()).source()));
+        assertSame(m, (((HasUpstreamMaybeSource<?>)toFlowable(m)).source()));
     }
 
     @Test
     public void doubleOnSubscribe() {
-        TestHelper.checkDoubleOnSubscribeMaybeToFlowable(new Function<Maybe<Object>, Publisher<Object>>() {
+        io.reactivex.interop.TestHelper.checkDoubleOnSubscribeMaybeToFlowable(new Function<Maybe<Object>, Publisher<Object>>() {
             @Override
             public Publisher<Object> apply(Maybe<Object> m) throws Exception {
-                return m.toFlowable();
+                return toFlowable(m);
             }
         });
     }

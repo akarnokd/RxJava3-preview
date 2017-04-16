@@ -28,7 +28,8 @@ public class SimpleQueueTest {
 
     @Test(expected = NullPointerException.class)
     public void spscArrayQueueNull() {
-        AbstractSpscArrayQueue<Object> q = new AbstractSpscArrayQueue<Object>(16) { };
+        AbstractSpscArrayQueue<Object> q = new AbstractSpscArrayQueue<Object>(16) {
+            private static final long serialVersionUID = -413654547582735720L; };
         q.offer(null);
     }
 
@@ -46,7 +47,8 @@ public class SimpleQueueTest {
 
     @Test
     public void spscArrayQueueBiOffer() {
-        AbstractSpscArrayQueue<Object> q = new AbstractSpscArrayQueue<Object>(16) { };
+        AbstractSpscArrayQueue<Object> q = new AbstractSpscArrayQueue<Object>(16) {
+            private static final long serialVersionUID = 6547802038539201184L; };
         q.offer(1, 2);
 
         assertEquals(1, q.poll());
@@ -76,7 +78,8 @@ public class SimpleQueueTest {
 
     @Test
     public void spscBiOfferCapacity() {
-        AbstractSpscArrayQueue<Integer> q = new AbstractSpscArrayQueue<Integer>(8) { };
+        AbstractSpscArrayQueue<Integer> q = new AbstractSpscArrayQueue<Integer>(8) {
+            private static final long serialVersionUID = 2398997983196752795L; };
         assertTrue(q.offer(1, 2));
         assertTrue(q.offer(3, 4));
         assertTrue(q.offer(5, 6));
