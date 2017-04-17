@@ -2,7 +2,7 @@
 
 <a href='https://travis-ci.org/akarnokd/RxJava3-preview/builds'><img src='https://travis-ci.org/akarnokd/RxJava3-preview.svg?branch=master'></a>
 [![codecov.io](http://codecov.io/github/akarnokd/RxJava3-preview/coverage.svg?branch=master)](http://codecov.io/github/akarnokd/RxJava3-preview?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd.rxjava3/rxjava3-common/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd.rxjava3/rxjava3-common) 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-common/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-common) 
 
 Preview for version 3 of RxJava, the modern ReactiveX style library for composing (a)synchronous sequences of data and events.
 
@@ -10,16 +10,16 @@ Preview for version 3 of RxJava, the modern ReactiveX style library for composin
 
 ```groovy
 // shared components
-compile "com.github.akarnokd.rxjava3:rxjava3-common:0.1.0"
+compile "com.github.akarnokd:rxjava3-common:0.1.0"
 
 // Flowable only
-compile "com.github.akarnokd.rxjava3:rxjava3-flowable:0.1.0"
+compile "com.github.akarnokd:rxjava3-flowable:0.1.0"
 
 // Observable, Single, Maybe, Completable
-compile "com.github.akarnokd.rxjava3:rxjava3-observable:0.1.0"
+compile "com.github.akarnokd:rxjava3-observable:0.1.0"
 
 // Interoperation between Flowable and the rest
-compile "com.github.akarnokd.rxjava3:rxjava3-interop:0.1.0"
+compile "com.github.akarnokd:rxjava3-interop:0.1.0"
 ```
 
 ## Structure
