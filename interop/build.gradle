@@ -3,4 +3,8 @@ dependencies {
     compile project(':rxjava3-common')
     compile project(':rxjava3-flowable')
     compile project(':rxjava3-observable')
+
+    testCompile project(':rxjava3-common').sourceSets.test.output
+    testCompile project(':rxjava3-flowable').sourceSets.test.output
+    testCompile project(':rxjava3-observable').sourceSets.test.output
 }

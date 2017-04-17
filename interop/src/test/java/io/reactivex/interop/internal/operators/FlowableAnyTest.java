@@ -13,7 +13,6 @@
 
 package io.reactivex.interop.internal.operators;
 
-import static io.reactivex.interop.RxJava3Interop.*;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -30,6 +29,7 @@ import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.flowable.Flowable;
 import io.reactivex.flowable.internal.subscriptions.BooleanSubscription;
+import io.reactivex.interop.RxJava3Interop;
 import io.reactivex.interop.TestHelper;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
@@ -39,7 +39,7 @@ public class FlowableAnyTest {
     @Test
     public void testAnyWithTwoItems() {
         Flowable<Integer> w = Flowable.just(1, 2);
-        Single<Boolean> observable = any(w, new Predicate<Integer>() {
+        Single<Boolean> observable = RxJava3Interop.any(w, new Predicate<Integer>() {
             @Override
             public boolean test(Integer v) {
                 return true;
@@ -58,7 +58,7 @@ public class FlowableAnyTest {
     @Test
     public void testIsEmptyWithTwoItems() {
         Flowable<Integer> w = Flowable.just(1, 2);
-        Single<Boolean> observable = isEmpty(w);
+        Single<Boolean> observable = RxJava3Interop.isEmpty(w);
 
         SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
 
@@ -72,7 +72,7 @@ public class FlowableAnyTest {
     @Test
     public void testAnyWithOneItem() {
         Flowable<Integer> w = Flowable.just(1);
-        Single<Boolean> observable = any(w, new Predicate<Integer>() {
+        Single<Boolean> observable = RxJava3Interop.any(w, new Predicate<Integer>() {
             @Override
             public boolean test(Integer v) {
                 return true;
@@ -91,7 +91,7 @@ public class FlowableAnyTest {
     @Test
     public void testIsEmptyWithOneItem() {
         Flowable<Integer> w = Flowable.just(1);
-        Single<Boolean> observable = isEmpty(w);
+        Single<Boolean> observable = RxJava3Interop.isEmpty(w);
 
         SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
 
@@ -105,7 +105,7 @@ public class FlowableAnyTest {
     @Test
     public void testAnyWithEmpty() {
         Flowable<Integer> w = Flowable.empty();
-        Single<Boolean> observable = any(w, new Predicate<Integer>() {
+        Single<Boolean> observable = RxJava3Interop.any(w, new Predicate<Integer>() {
             @Override
             public boolean test(Integer v) {
                 return true;
@@ -124,7 +124,7 @@ public class FlowableAnyTest {
     @Test
     public void testIsEmptyWithEmpty() {
         Flowable<Integer> w = Flowable.empty();
-        Single<Boolean> observable = isEmpty(w);
+        Single<Boolean> observable = RxJava3Interop.isEmpty(w);
 
         SingleObserver<Boolean> observer = TestHelper.mockSingleObserver();
 
@@ -138,7 +138,7 @@ public class FlowableAnyTest {
     @Test
     public void testAnyWithPredicate1() {
         Flowable<Integer> w = Flowable.just(1, 2, 3);
-        Single<Boolean> observable = any(w, new Predicate<Integer>() {
+        Single<Boolean> observable = RxJava3Interop.any(w, new Predicate<Integer>() {
             @Override
             public boolean test(Integer t1) {
                 return t1 < 2;
@@ -157,7 +157,7 @@ public class FlowableAnyTest {
     @Test
     public void testExists1() {
         Flowable<Integer> w = Flowable.just(1, 2, 3);
-        Single<Boolean> observable = any(w, new Predicate<Integer>() {
+        Single<Boolean> observable = RxJava3Interop.any(w, new Predicate<Integer>() {
             @Override
             public boolean test(Integer t1) {
                 return t1 < 2;
@@ -176,7 +176,7 @@ public class FlowableAnyTest {
     @Test
     public void testAnyWithPredicate2() {
         Flowable<Integer> w = Flowable.just(1, 2, 3);
-        Single<Boolean> observable = any(w, new Predicate<Integer>() {
+        Single<Boolean> observable = RxJava3Interop.any(w, new Predicate<Integer>() {
             @Override
             public boolean test(Integer t1) {
                 return t1 < 1;
@@ -196,7 +196,7 @@ public class FlowableAnyTest {
     public void testAnyWithEmptyAndPredicate() {
         // If the source is empty, always output false.
         Flowable<Integer> w = Flowable.empty();
-        Single<Boolean> observable = any(w, new Predicate<Integer>() {
+        Single<Boolean> observable = RxJava3Interop.any(w, new Predicate<Integer>() {
             @Override
             public boolean test(Integer t) {
                 return true;
@@ -215,7 +215,7 @@ public class FlowableAnyTest {
     @Test
     public void testWithFollowingFirst() {
         Flowable<Integer> o = Flowable.fromArray(1, 3, 5, 6);
-        Single<Boolean> anyEven = any(o, new Predicate<Integer>() {
+        Single<Boolean> anyEven = RxJava3Interop.any(o, new Predicate<Integer>() {
             @Override
             public boolean test(Integer i) {
                 return i % 2 == 0;
@@ -227,7 +227,7 @@ public class FlowableAnyTest {
     @Test(timeout = 5000)
     public void testIssue1935NoUnsubscribeDownstream() {
         Flowable<Integer> source =
-            flatMapPublisher(isEmpty(Flowable.just(1)), new Function<Boolean, Publisher<Integer>>() {
+            RxJava3Interop.flatMapPublisher(RxJava3Interop.isEmpty(Flowable.just(1)), new Function<Boolean, Publisher<Integer>>() {
                 @Override
                 public Publisher<Integer> apply(Boolean t1) {
                     return Flowable.just(2).delay(500, TimeUnit.MILLISECONDS);
@@ -242,7 +242,7 @@ public class FlowableAnyTest {
     public void testBackpressureIfNoneRequestedNoneShouldBeDelivered() {
         TestObserver<Boolean> ts = new TestObserver<Boolean>();
 
-        any(Flowable.just(1), new Predicate<Integer>() {
+        RxJava3Interop.any(Flowable.just(1), new Predicate<Integer>() {
             @Override
             public boolean test(Integer t) {
                 return true;
@@ -258,7 +258,7 @@ public class FlowableAnyTest {
     @Test
     public void testBackpressureIfOneRequestedOneShouldBeDelivered() {
         TestObserver<Boolean> ts = new TestObserver<Boolean>();
-        any(Flowable.just(1), new Predicate<Integer>() {
+        RxJava3Interop.any(Flowable.just(1), new Predicate<Integer>() {
             @Override
             public boolean test(Integer v) {
                 return true;
@@ -276,7 +276,7 @@ public class FlowableAnyTest {
         TestObserver<Boolean> ts = new TestObserver<Boolean>();
         final IllegalArgumentException ex = new IllegalArgumentException();
 
-        any(Flowable.just("Boo!"), new Predicate<String>() {
+        RxJava3Interop.any(Flowable.just("Boo!"), new Predicate<String>() {
             @Override
             public boolean test(String v) {
                 throw ex;
@@ -293,7 +293,7 @@ public class FlowableAnyTest {
 
     @Test
     public void dispose() {
-        TestHelper.checkDisposed(any(Flowable.just(1), Functions.alwaysTrue()));
+        TestHelper.checkDisposed(RxJava3Interop.any(Flowable.just(1), Functions.alwaysTrue()));
     }
 
     @Test
@@ -301,7 +301,7 @@ public class FlowableAnyTest {
         TestHelper.checkDoubleOnSubscribeFlowableToSingle(new Function<Flowable<Object>, Single<Boolean>>() {
             @Override
             public Single<Boolean> apply(Flowable<Object> o) throws Exception {
-                return any(o, Functions.alwaysTrue());
+                return RxJava3Interop.any(o, Functions.alwaysTrue());
             }
         });
     }
@@ -310,7 +310,7 @@ public class FlowableAnyTest {
     public void badSourceSingle() {
         List<Throwable> errors = TestHelper.trackPluginErrors();
         try {
-            any(new Flowable<Integer>() {
+            RxJava3Interop.any(new Flowable<Integer>() {
                 @Override
                 protected void subscribeActual(Subscriber<? super Integer> observer) {
                     observer.onSubscribe(new BooleanSubscription());

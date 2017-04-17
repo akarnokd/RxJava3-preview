@@ -1,4 +1,5 @@
 description = "observable"
 dependencies {
     compile project(':rxjava3-common')
+    testCompile project(':rxjava3-common').sourceSets.test.output
 }
