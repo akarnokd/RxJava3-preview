@@ -1,4 +1,9 @@
 # RxJava3-preview
+
+<a href='https://travis-ci.org/akarnokd/RxJava3-preview/builds'><img src='https://travis-ci.org/akarnokd/RxJava3-preview.svg?branch=master'></a>
+[![codecov.io](http://codecov.io/github/akarnokd/RxJava3-preview/coverage.svg?branch=master)](http://codecov.io/github/akarnokd/RxJava3-preview?branch=master)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-common/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-common) 
+
 Preview for version 3 of RxJava, the modern ReactiveX style library for composing (a)synchronous sequences of data and events.
 
 This is an unofficial preparation place for RxJava 3 where the major change is the repackaging of certain components into separate libraries:
