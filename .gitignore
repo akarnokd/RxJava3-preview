@@ -78,3 +78,4 @@ bin/
 local.properties
 
 **/test-output
+!/gradle/wrapper/gradle-wrapper.jar
