@@ -20,6 +20,10 @@ description = 'Preview for version 3 of RxJava, the modern ReactiveX style libra
 
 ext.githubProjectName = 'RxJava3-preview' 
 
+repositories {
+    mavenCentral()
+}
+
 allprojects {
     apply plugin: 'java'
 
