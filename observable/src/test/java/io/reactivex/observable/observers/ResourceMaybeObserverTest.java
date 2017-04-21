@@ -22,6 +22,7 @@ import org.junit.Test;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.observable.Maybe;
+import io.reactivex.observable.internal.utils.EndObserverHelper;
 
 public class ResourceMaybeObserverTest {
     static final class TestResourceMaybeObserver<T> extends ResourceMaybeObserver<T> {
@@ -224,7 +225,7 @@ public class ResourceMaybeObserverTest {
 
             assertEquals(1, rmo.start);
 
-            TestCommonHelper.assertError(error, 0, IllegalStateException.class, "Disposable already set!");
+            TestCommonHelper.assertError(error, 0, IllegalStateException.class, EndObserverHelper.composeMessage(rmo.getClass().getName()));
         } finally {
             RxJavaCommonPlugins.reset();
         }

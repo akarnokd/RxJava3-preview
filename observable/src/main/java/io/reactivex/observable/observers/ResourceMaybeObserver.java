@@ -20,6 +20,7 @@ import io.reactivex.common.annotations.NonNull;
 import io.reactivex.common.internal.disposables.*;
 import io.reactivex.common.internal.functions.ObjectHelper;
 import io.reactivex.observable.MaybeObserver;
+import io.reactivex.observable.internal.utils.EndObserverHelper;
 
 /**
  * An abstract {@link MaybeObserver} that allows asynchronous cancellation of its subscription and associated resources.
@@ -48,7 +49,7 @@ import io.reactivex.observable.MaybeObserver;
  *
  * <p>Like all other consumers, {@code ResourceMaybeObserver} can be subscribed only once.
  * Any subsequent attempt to subscribe it to a new source will yield an
- * {@link IllegalStateException} with message {@code "Disposable already set!"}.
+ * {@link IllegalStateException} with message {@code "It is not allowed to subscribe with a(n) <class name> multiple times."}.
  *
  * <p>Implementation of {@link #onStart()}, {@link #onSuccess(Object)}, {@link #onError(Throwable)}
  * and {@link #onComplete()} are not allowed to throw any unchecked exceptions.
@@ -102,7 +103,7 @@ public abstract class ResourceMaybeObserver<T> implements MaybeObserver<T>, Disp
 
     @Override
     public final void onSubscribe(@NonNull Disposable s) {
-        if (DisposableHelper.setOnce(this.s, s)) {
+        if (EndObserverHelper.setOnce(this.s, s, getClass())) {
             onStart();
         }
     }

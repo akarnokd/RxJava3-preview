@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import io.reactivex.common.*;
 import io.reactivex.observable.Observable;
+import io.reactivex.observable.internal.utils.EndObserverHelper;
 
 public class DisposableObserverTest {
 
@@ -92,7 +93,7 @@ public class DisposableObserverTest {
 
             assertEquals(1, tc.start);
 
-            TestCommonHelper.assertError(error, 0, IllegalStateException.class, "Disposable already set!");
+            TestCommonHelper.assertError(error, 0, IllegalStateException.class, EndObserverHelper.composeMessage(tc.getClass().getName()));
         } finally {
             RxJavaCommonPlugins.reset();
         }

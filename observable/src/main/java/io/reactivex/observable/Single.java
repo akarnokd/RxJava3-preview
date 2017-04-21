@@ -1816,8 +1816,9 @@ public abstract class Single<T> implements SingleSource<T> {
      * <dt><b>Scheduler:</b></dt>
      * <dd>{@code doOnDispose} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
-     * @param onDispose the runnable called when the subscription is disposed
+     * @param onDispose the action called when the subscription is disposed
      * @return the new Single instance
+     * @throws NullPointerException if onDispose is null
      * @since 2.0
      */
     @CheckReturnValue
@@ -1898,29 +1899,6 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Returns an Observable that emits items based on applying a specified function to the item emitted by the
-     * source Single, where that function returns an ObservableSource.
-     * <p>
-     * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Single.flatMapObservable.png" alt="">
-     * <dl>
-     * <dt><b>Scheduler:</b></dt>
-     * <dd>{@code flatMapObservableSource} does not operate by default on a particular {@link Scheduler}.</dd>
-     * </dl>
-     *
-     * @param <R> the result value type
-     * @param mapper
-     *            a function that, when applied to the item emitted by the source Single, returns an
-     *            Observable
-     * @return the Observable returned from {@code func} when applied to the item emitted by the source Single
-     * @see <a href="http://reactivex.io/documentation/operators/flatmap.html">ReactiveX operators documentation: FlatMap</a>
-     */
-    @CheckReturnValue
-    @SchedulerSupport(SchedulerSupport.NONE)
-    public final <R> Observable<R> flatMapObservableSource(Function<? super T, ? extends ObservableSource<? extends R>> mapper) {
-        return toObservable().flatMap(mapper);
-    }
-
-    /**
      * Returns an Observable that maps a success value into an Iterable and emits its items.
      * <p>
      * <img width="640" height="373" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/flattenAsObservable.png" alt="">
@@ -1946,9 +1924,9 @@ public abstract class Single<T> implements SingleSource<T> {
 
     /**
      * Returns an Observable that is based on applying a specified function to the item emitted by the source Single,
-     * where that function returns a SingleSource.
+     * where that function returns an ObservableSource.
      * <p>
-     * <img width="640" height="300" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Single.flatMap.png" alt="">
+     * <img width="640" height="300" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Single.flatMapObservable.png" alt="">
      * <dl>
      * <dt><b>Scheduler:</b></dt>
      * <dd>{@code flatMapObservable} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -2874,6 +2852,25 @@ public abstract class Single<T> implements SingleSource<T> {
         return RxJavaObservablePlugins.onAssembly(new SingleToObservable<T>(this));
     }
 
+    /**
+     * Returns a Single which makes sure when a SingleObserver disposes the Disposable,
+     * that call is propagated up on the specified scheduler
+     * <dl>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>{@code unsubscribeOn} calls dispose() of the upstream on the {@link Scheduler} you specify.</dd>
+     * </dl>
+     * @param scheduler the target scheduler where to execute the cancellation
+     * @return the new Single instance
+     * @throws NullPointerException if scheduler is null
+     * @since 2.0.9 - experimental
+     */
+    @CheckReturnValue
+    @SchedulerSupport(SchedulerSupport.CUSTOM)
+    @Experimental
+    public final Single<T> unsubscribeOn(final Scheduler scheduler) {
+       ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+       return RxJavaObservablePlugins.onAssembly(new SingleUnsubscribeOn<T>(this, scheduler));
+   }
     /**
      * Returns a Single that emits the result of applying a specified function to the pair of items emitted by
      * the source Single and another specified Single.

@@ -22,6 +22,7 @@ import org.junit.Test;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.observable.Completable;
+import io.reactivex.observable.internal.utils.EndObserverHelper;
 
 public class ResourceCompletableObserverTest {
     static final class TestResourceCompletableObserver extends ResourceCompletableObserver {
@@ -174,7 +175,7 @@ public class ResourceCompletableObserverTest {
 
             assertEquals(1, rco.start);
 
-            TestCommonHelper.assertError(error, 0, IllegalStateException.class, "Disposable already set!");
+            TestCommonHelper.assertError(error, 0, IllegalStateException.class, EndObserverHelper.composeMessage(rco.getClass().getName()));
         } finally {
             RxJavaCommonPlugins.reset();
         }
