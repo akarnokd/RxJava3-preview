@@ -62,7 +62,7 @@ public final class FlowableReduceWith<T, R> extends AbstractFlowableWithUpstream
 
         boolean done;
 
-        public ReduceWithSubscriber(Subscriber<? super R> actual, R value, BiFunction<R, ? super T, R> reducer) {
+        ReduceWithSubscriber(Subscriber<? super R> actual, R value, BiFunction<R, ? super T, R> reducer) {
             super(actual);
             this.value = value;
             this.reducer = reducer;

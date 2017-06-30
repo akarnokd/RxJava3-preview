@@ -107,6 +107,10 @@ public final class TrampolineScheduler extends Scheduler {
                 int missed = 1;
                 for (;;) {
                     for (;;) {
+                        if (disposed) {
+                            queue.clear();
+                            return DONE;
+                        }
                         final TimedRunnable polled = queue.poll();
                         if (polled == null) {
                             break;

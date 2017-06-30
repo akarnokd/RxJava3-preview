@@ -16,7 +16,6 @@ package io.reactivex.common;
 import java.util.*;
 import java.util.concurrent.*;
 
-import io.reactivex.common.annotations.Experimental;
 import io.reactivex.common.exceptions.CompositeException;
 import io.reactivex.common.functions.Predicate;
 import io.reactivex.common.internal.functions.*;
@@ -336,11 +335,11 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
      * Assert that this TestObserver/TestObserver did not receive an onNext value which is equal to
      * the given value with respect to Objects.equals.
      *
-     * @since 2.0.5 - experimental
+     * <p>History: 2.0.5 - experimental
+     * @since 2.1
      * @param value the value to expect not being received
      * @return this;
      */
-    @Experimental
     @SuppressWarnings("unchecked")
     public final U assertNever(T value) {
         int s = values.size();
@@ -377,12 +376,12 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
      * Asserts that this TestObserver/TestObserver did not receive any onNext value for which
      * the provided predicate returns true.
      *
-     * @since 2.0.5 - experimental
+     * <p>History: 2.0.5 - experimental
+     * @since 2.1
      * @param valuePredicate the predicate that receives the onNext value
      *                       and should return true for the expected value.
      * @return this
      */
-    @Experimental
     @SuppressWarnings("unchecked")
     public final U assertNever(Predicate<? super T> valuePredicate) {
         int s = values.size();
@@ -548,7 +547,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
             throw fail("More values received than expected (" + i + ")");
         }
         if (expectedNext) {
-            throw fail("Fever values received than expected (" + i + ")");
+            throw fail("Fewer values received than expected (" + i + ")");
         }
         return (U)this;
     }
@@ -780,12 +779,12 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     /**
      * Set the tag displayed along with an assertion failure's
      * other state information.
+     * <p>History: 2.0.7 - experimental
      * @param tag the string to display (null won't print any tag)
      * @return this
-     * @since 2.0.7 - experimental
+     * @since 2.1
      */
     @SuppressWarnings("unchecked")
-    @Experimental
     public final U withTag(CharSequence tag) {
         this.tag = tag;
         return (U)this;
@@ -794,9 +793,9 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     /**
      * Enumeration of default wait strategies when waiting for a specific number of
      * items in {@link TestConsumer#awaitCount(int, Runnable)}.
-     * @since 2.0.7 - experimental
+     * <p>History: 2.0.7 - experimental
+     * @since 2.1
      */
-    @Experimental
     public enum TestWaitStrategy implements Runnable {
         /** The wait loop will spin as fast as possible. */
         SPIN {
@@ -859,12 +858,12 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
      * Await until the TestObserver/TestObserver receives the given
      * number of items or terminates by sleeping 10 milliseconds at a time
      * up to 5000 milliseconds of timeout.
+     * <p>History: 2.0.7 - experimental
      * @param atLeast the number of items expected at least
      * @return this
      * @see #awaitCount(int, Runnable, long)
-     * @since 2.0.7 - experimental
+     * @since 2.1
      */
-    @Experimental
     public final U awaitCount(int atLeast) {
         return awaitCount(atLeast, TestWaitStrategy.SLEEP_10MS, 5000);
     }
@@ -873,6 +872,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
      * Await until the TestObserver/TestObserver receives the given
      * number of items or terminates by waiting according to the wait
      * strategy and up to 5000 milliseconds of timeout.
+     * <p>History: 2.0.7 - experimental
      * @param atLeast the number of items expected at least
      * @param waitStrategy a Runnable called when the current received count
      *                     hasn't reached the expected value and there was
@@ -880,9 +880,8 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
      *                     for examples
      * @return this
      * @see #awaitCount(int, Runnable, long)
-     * @since 2.0.7 - experimental
+     * @since 2.1
      */
-    @Experimental
     public final U awaitCount(int atLeast, Runnable waitStrategy) {
         return awaitCount(atLeast, waitStrategy, 5000);
     }
@@ -890,6 +889,7 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     /**
      * Await until the TestObserver/TestObserver receives the given
      * number of items or terminates.
+     * <p>History: 2.0.7 - experimental
      * @param atLeast the number of items expected at least
      * @param waitStrategy a Runnable called when the current received count
      *                     hasn't reached the expected value and there was
@@ -898,10 +898,9 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
      * @param timeoutMillis if positive, the await ends if the specified amount of
      *                      time has passed no matter how many items were received
      * @return this
-     * @since 2.0.7 - experimental
+     * @since 2.1
      */
     @SuppressWarnings("unchecked")
-    @Experimental
     public final U awaitCount(int atLeast, Runnable waitStrategy, long timeoutMillis) {
         long start = System.currentTimeMillis();
         for (;;) {
@@ -922,25 +921,25 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
     }
 
     /**
+     * <p>History: 2.0.7 - experimental
      * @return true if one of the timeout-based await methods has timed out.
      * @see #clearTimeout()
      * @see #assertTimeout()
      * @see #assertNoTimeout()
-     * @since 2.0.7 - experimental
+     * @since 2.1
      */
-    @Experimental
     public final boolean isTimeout() {
         return timeout;
     }
 
     /**
      * Clears the timeout flag set by the await methods when they timed out.
+     * <p>History: 2.0.7 - experimental
      * @return this
-     * @since 2.0.7 - experimental
+     * @since 2.1
      * @see #isTimeout()
      */
     @SuppressWarnings("unchecked")
-    @Experimental
     public final U clearTimeout() {
         timeout = false;
         return (U)this;
@@ -948,11 +947,11 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
 
     /**
      * Asserts that some awaitX method has timed out.
+     * <p>History: 2.0.7 - experimental
      * @return this
-     * @since 2.0.7 - experimental
+     * @since 2.1
      */
     @SuppressWarnings("unchecked")
-    @Experimental
     public final U assertTimeout() {
         if (!timeout) {
             throw fail("No timeout?!");
@@ -963,11 +962,11 @@ public abstract class TestConsumer<T, U extends TestConsumer<T, U>> implements D
 
     /**
      * Asserts that some awaitX method has not timed out.
+     * <p>History: 2.0.7 - experimental
      * @return this
-     * @since 2.0.7 - experimental
+     * @since 2.1
      */
     @SuppressWarnings("unchecked")
-    @Experimental
     public final U assertNoTimeout() {
         if (timeout) {
             throw fail("Timeout?!");

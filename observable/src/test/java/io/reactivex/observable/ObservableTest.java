@@ -1142,9 +1142,9 @@ public class ObservableTest {
 //    public void testForEachWithError() {
 //        Observable.error(new Exception("boo"))
 //        //
-//        .forEach(new Action1<Object>() {
+//        .forEach(new Consumer<Object>() {
 //            @Override
-//            public void call(Object t) {
+//            public void accept(Object t) {
 //                //do nothing
 //            }});
 //    }

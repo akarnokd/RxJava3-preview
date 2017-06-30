@@ -89,13 +89,13 @@ public final class UnicastProcessor<T> extends FlowableProcessor<T> {
 
     /**
      * Creates an UnicastProcessor with default internal buffer capacity hint and delay error flag.
+     * <p>History: 2.0.8 - experimental
      * @param <T> the value type
      * @param delayError deliver pending onNext events before onError
      * @return an UnicastProcessor instance
-     * @since 2.0.8 - experimental
+     * @since 2.1
      */
     @CheckReturnValue
-    @Experimental
     public static <T> UnicastProcessor<T> create(boolean delayError) {
         return new UnicastProcessor<T>(bufferSize(), null, delayError);
     }
@@ -125,15 +125,15 @@ public final class UnicastProcessor<T> extends FlowableProcessor<T> {
      * <p>The callback, if not null, is called exactly once and
      * non-overlapped with any active replay.
      *
+     * <p>History: 2.0.8 - experimental
      * @param <T> the value type
      * @param capacityHint the hint to size the internal unbounded buffer
      * @param onCancelled the non null callback
      * @param delayError deliver pending onNext events before onError
      * @return an UnicastProcessor instance
-     * @since 2.0.8 - experimental
+     * @since 2.1
      */
     @CheckReturnValue
-    @Experimental
     public static <T> UnicastProcessor<T> create(int capacityHint, Runnable onCancelled, boolean delayError) {
         ObjectHelper.requireNonNull(onCancelled, "onTerminate");
         return new UnicastProcessor<T>(capacityHint, onCancelled, delayError);

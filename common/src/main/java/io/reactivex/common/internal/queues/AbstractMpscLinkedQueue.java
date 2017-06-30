@@ -99,7 +99,7 @@ public abstract class AbstractMpscLinkedQueue<T> {
         consumerNode.lazySet(node);
     }
 
-    final public boolean isEmpty() {
+    public final boolean isEmpty() {
         return lvConsumerNode() == lvProducerNode();
     }
 

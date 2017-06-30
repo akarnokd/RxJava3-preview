@@ -49,7 +49,7 @@ public final class FlowableLast<T> extends AbstractFlowableWithUpstream<T, T> {
 
         Subscription upstream;
 
-        public LastSubscriber(Subscriber<? super T> actual, T defaultItem, boolean errorOnEmpty) {
+        LastSubscriber(Subscriber<? super T> actual, T defaultItem, boolean errorOnEmpty) {
             super(actual);
             this.defaultItem = defaultItem;
             this.errorOnEmpty = errorOnEmpty;

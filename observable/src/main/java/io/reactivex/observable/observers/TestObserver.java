@@ -114,7 +114,6 @@ implements Observer<T>, Disposable, MaybeObserver<T>, SingleObserver<T>, Complet
                     } catch (Throwable ex) {
                         // Exceptions.throwIfFatal(e); TODO add fatal exceptions?
                         errors.add(ex);
-                        qs.dispose();
                     }
                     return;
                 }
@@ -143,6 +142,7 @@ implements Observer<T>, Disposable, MaybeObserver<T>, SingleObserver<T>, Complet
             } catch (Throwable ex) {
                 // Exceptions.throwIfFatal(e); TODO add fatal exceptions?
                 errors.add(ex);
+                qs.dispose();
             }
             return;
         }

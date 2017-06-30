@@ -159,7 +159,7 @@ public final class RxJava3Interop {
      * Converts the given Flowable into a non-backpressured Observable.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
-     *  <dd>Publishers don't support backpressure thus the current Flowable is consumed in an unbounded
+     *  <dd>Observables don't support backpressure thus the current Flowable is consumed in an unbounded
      *  manner (by requesting Long.MAX_VALUE).</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code toObservable} does not operate by default on a particular {@link Scheduler}.</dd>

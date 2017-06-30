@@ -199,10 +199,10 @@ public final class RxJavaFlowablePlugins {
 
     /**
      * Sets the specific hook function.
+     * <p>History: 2.0.6 - experimental
      * @param handler the hook function to set, null allowed
-     * @since 2.0.6 - experimental
+     * @since 2.1
      */
-    @Experimental
     @SuppressWarnings("rawtypes")
     public static void setOnParallelAssembly(@Nullable Function<? super ParallelFlowable, ? extends ParallelFlowable> handler) {
         if (lockdown) {
@@ -213,10 +213,10 @@ public final class RxJavaFlowablePlugins {
 
     /**
      * Returns the current hook function.
+     * <p>History: 2.0.6 - experimental
      * @return the hook function, may be null
-     * @since 2.0.6 - experimental
+     * @since 2.1
      */
-    @Experimental
     @SuppressWarnings("rawtypes")
     @Nullable
     public static Function<? super ParallelFlowable, ? extends ParallelFlowable> getOnParallelAssembly() {
@@ -225,12 +225,12 @@ public final class RxJavaFlowablePlugins {
 
     /**
      * Calls the associated hook function.
+     * <p>History: 2.0.6 - experimental
      * @param <T> the value type of the source
      * @param source the hook's input value
      * @return the value returned by the hook
-     * @since 2.0.6 - experimental
+     * @since 2.1
      */
-    @Experimental
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @NonNull
     public static <T> ParallelFlowable<T> onAssembly(@NonNull ParallelFlowable<T> source) {
@@ -244,12 +244,12 @@ public final class RxJavaFlowablePlugins {
     /**
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#computation()}
      * except using {@code threadFactory} for thread creation.
+     * <p>History: 2.0.5 - experimental
      * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     @NonNull
     public static Scheduler createComputationScheduler(@NonNull ThreadFactory threadFactory) {
         return new ComputationScheduler(ObjectHelper.requireNonNull(threadFactory, "threadFactory is null"));
@@ -258,12 +258,12 @@ public final class RxJavaFlowablePlugins {
     /**
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#io()}
      * except using {@code threadFactory} for thread creation.
+     * <p>History: 2.0.5 - experimental
      * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     @NonNull
     public static Scheduler createIoScheduler(@NonNull ThreadFactory threadFactory) {
         return new IoScheduler(ObjectHelper.requireNonNull(threadFactory, "threadFactory is null"));
@@ -272,12 +272,12 @@ public final class RxJavaFlowablePlugins {
     /**
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#newThread()}
      * except using {@code threadFactory} for thread creation.
+     * <p>History: 2.0.5 - experimental
      * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     @NonNull
     public static Scheduler createNewThreadScheduler(@NonNull ThreadFactory threadFactory) {
         return new NewThreadScheduler(ObjectHelper.requireNonNull(threadFactory, "threadFactory is null"));
@@ -286,12 +286,12 @@ public final class RxJavaFlowablePlugins {
     /**
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#single()}
      * except using {@code threadFactory} for thread creation.
+     * <p>History: 2.0.5 - experimental
      * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     @NonNull
     public static Scheduler createSingleScheduler(@NonNull ThreadFactory threadFactory) {
         return new SingleScheduler(ObjectHelper.requireNonNull(threadFactory, "threadFactory is null"));

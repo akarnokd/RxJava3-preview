@@ -7703,14 +7703,14 @@ public abstract class Flowable<T> implements Publisher<T> {
      *  <dd>This operator supports normal and conditional Subscribers as well as boundary-limited
      *  synchronous or asynchronous queue-fusion.</dd>
      * </dl>
+     * <p>History: 2.0.1 - experimental
      * @param onAfterNext the Consumer that will be called after emitting an item from upstream to the downstream
      * @return the new Flowable instance
-     * @since 2.0.1 - experimental
+     * @since 2.1
      */
     @CheckReturnValue
     @BackpressureSupport(BackpressureKind.PASS_THROUGH)
     @SchedulerSupport(SchedulerSupport.NONE)
-    @Experimental
     public final Flowable<T> doAfterNext(Consumer<? super T> onAfterNext) {
         ObjectHelper.requireNonNull(onAfterNext, "onAfterNext is null");
         return RxJavaFlowablePlugins.onAssembly(new FlowableDoAfterNext<T>(this, onAfterNext));
@@ -10365,14 +10365,14 @@ public abstract class Flowable<T> implements Publisher<T> {
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code parallel} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
+     * <p>History: 2.0.5 - experimental
      * @param parallelism the number of 'rails' to use
      * @return the new ParallelFlowable instance
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
     @BackpressureSupport(BackpressureKind.FULL)
     @SchedulerSupport(SchedulerSupport.NONE)
     @CheckReturnValue
-    @Experimental
     public final ParallelFlowable<T> parallel(int parallelism) {
         ObjectHelper.verifyPositive(parallelism, "parallelism");
         return ParallelFlowable.from(this, parallelism);

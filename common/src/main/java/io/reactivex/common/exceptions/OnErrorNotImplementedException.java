@@ -19,9 +19,9 @@ import io.reactivex.common.annotations.*;
  * Represents an exception used to signal to the {@code RxJavaCommonPlugins.onError()} that a
  * callback-based subscribe() method on a base reactive type didn't specify
  * an onError handler.
- * @since 2.0.6 - experimental
+ * <p>History: 2.0.7 - experimental
+ * @since 2.1
  */
-@Experimental
 public final class OnErrorNotImplementedException extends RuntimeException {
 
     private static final long serialVersionUID = -6298857009889503852L;

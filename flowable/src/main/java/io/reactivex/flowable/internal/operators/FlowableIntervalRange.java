@@ -19,8 +19,10 @@ import java.util.concurrent.atomic.*;
 import org.reactivestreams.*;
 
 import io.reactivex.common.*;
+import io.reactivex.common.Scheduler.Worker;
 import io.reactivex.common.exceptions.MissingBackpressureException;
 import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.schedulers.TrampolineScheduler;
 import io.reactivex.flowable.Flowable;
 import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.flowable.internal.utils.BackpressureHelper;
@@ -47,9 +49,16 @@ public final class FlowableIntervalRange extends Flowable<Long> {
         IntervalRangeSubscriber is = new IntervalRangeSubscriber(s, start, end);
         s.onSubscribe(is);
 
-        Disposable d = scheduler.schedulePeriodicallyDirect(is, initialDelay, period, unit);
+        Scheduler sch = scheduler;
 
-        is.setResource(d);
+        if (sch instanceof TrampolineScheduler) {
+            Worker worker = sch.createWorker();
+            is.setResource(worker);
+            worker.schedulePeriodically(is, initialDelay, period, unit);
+        } else {
+            Disposable d = sch.schedulePeriodicallyDirect(is, initialDelay, period, unit);
+            is.setResource(d);
+        }
     }
 
     static final class IntervalRangeSubscriber extends AtomicLong

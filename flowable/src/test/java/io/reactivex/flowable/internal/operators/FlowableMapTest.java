@@ -371,10 +371,10 @@ public class FlowableMapTest {
 //            }
 //        };
 //
-//        Action1<Object> onNext = new Action1<Object>() {
+//        Consumer<Object> onNext = new Consumer<Object>() {
 //
 //            @Override
-//            public void call(Object object) {
+//            public void accept(Object object) {
 //                System.out.println(object.toString());
 //            }
 //        };

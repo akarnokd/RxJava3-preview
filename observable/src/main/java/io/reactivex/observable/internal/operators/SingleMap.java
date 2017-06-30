@@ -16,6 +16,7 @@ package io.reactivex.observable.internal.operators;
 import io.reactivex.common.Disposable;
 import io.reactivex.common.exceptions.Exceptions;
 import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.ObjectHelper;
 import io.reactivex.observable.*;
 
 public final class SingleMap<T, R> extends Single<R> {
@@ -53,7 +54,7 @@ public final class SingleMap<T, R> extends Single<R> {
         public void onSuccess(T value) {
             R v;
             try {
-                v = mapper.apply(value);
+                v = ObjectHelper.requireNonNull(mapper.apply(value), "The mapper function returned a null value.");
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
                 onError(e);
