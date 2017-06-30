@@ -6874,13 +6874,13 @@ public abstract class Observable<T> implements ObservableSource<T> {
      *  <td><b>Operator-fusion:</b></dt>
      *  <dd>This operator supports boundary-limited synchronous or asynchronous queue-fusion.</dd>
      * </dl>
+     * <p>History: 2.0.1 - experimental
      * @param onAfterNext the Consumer that will be called after emitting an item from upstream to the downstream
      * @return the new Observable instance
-     * @since 2.0.1 - experimental
+     * @since 2.1
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    @Experimental
     public final Observable<T> doAfterNext(Consumer<? super T> onAfterNext) {
         ObjectHelper.requireNonNull(onAfterNext, "onAfterNext is null");
         return RxJavaObservablePlugins.onAssembly(new ObservableDoAfterNext<T>(this, onAfterNext));
@@ -6923,13 +6923,13 @@ public abstract class Observable<T> implements ObservableSource<T> {
      *  <td><b>Operator-fusion:</b></dt>
      *  <dd>This operator supports boundary-limited synchronous or asynchronous queue-fusion.</dd>
      * </dl>
+     * <p>History: 2.0.1 - experimental
      * @param onFinally the action called when this Observable terminates or gets cancelled
      * @return the new Observable instance
-     * @since 2.0.1 - experimental
+     * @since 2.1
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    @Experimental
     public final Observable<T> doFinally(Action onFinally) {
         ObjectHelper.requireNonNull(onFinally, "onFinally is null");
         return RxJavaObservablePlugins.onAssembly(new ObservableDoFinally<T>(this, onFinally));
@@ -9888,6 +9888,7 @@ public abstract class Observable<T> implements ObservableSource<T> {
      *  <dd>{@code sample} operates by default on the {@code computation} {@link Scheduler}.</dd>
      * </dl>
      *
+     * <p>History: 2.0.5 - experimental
      * @param period
      *            the sampling rate
      * @param unit
@@ -9900,11 +9901,10 @@ public abstract class Observable<T> implements ObservableSource<T> {
      *            if false, an unsampled last item is ignored.
      * @see <a href="http://reactivex.io/documentation/operators/sample.html">ReactiveX operators documentation: Sample</a>
      * @see #throttleLast(long, TimeUnit)
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.COMPUTATION)
-    @Experimental
     public final Observable<T> sample(long period, TimeUnit unit, boolean emitLast) {
         return sample(period, unit, Schedulers.computation(), emitLast);
     }
@@ -9949,6 +9949,7 @@ public abstract class Observable<T> implements ObservableSource<T> {
      *  <dd>You specify which {@link Scheduler} this operator will use</dd>
      * </dl>
      *
+     * <p>History: 2.0.5 - experimental
      * @param period
      *            the sampling rate
      * @param unit
@@ -9963,11 +9964,10 @@ public abstract class Observable<T> implements ObservableSource<T> {
      *         the specified time interval
      * @see <a href="http://reactivex.io/documentation/operators/sample.html">ReactiveX operators documentation: Sample</a>
      * @see #throttleLast(long, TimeUnit, Scheduler)
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.CUSTOM)
-    @Experimental
     public final Observable<T> sample(long period, TimeUnit unit, Scheduler scheduler, boolean emitLast) {
         ObjectHelper.requireNonNull(unit, "unit is null");
         ObjectHelper.requireNonNull(scheduler, "scheduler is null");
@@ -10011,6 +10011,7 @@ public abstract class Observable<T> implements ObservableSource<T> {
      *  <dd>This version of {@code sample} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
+     * <p>History: 2.0.5 - experimental
      * @param <U> the element type of the sampler ObservableSource
      * @param sampler
      *            the ObservableSource to use for sampling the source ObservableSource
@@ -10021,11 +10022,10 @@ public abstract class Observable<T> implements ObservableSource<T> {
      * @return an Observable that emits the results of sampling the items emitted by this ObservableSource whenever
      *         the {@code sampler} ObservableSource emits an item or completes
      * @see <a href="http://reactivex.io/documentation/operators/sample.html">ReactiveX operators documentation: Sample</a>
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    @Experimental
     public final <U> Observable<T> sample(ObservableSource<U> sampler, boolean emitLast) {
         ObjectHelper.requireNonNull(sampler, "sampler is null");
         return RxJavaObservablePlugins.onAssembly(new ObservableSampleWithObservable<T>(this, sampler, emitLast));
@@ -11064,15 +11064,15 @@ public abstract class Observable<T> implements ObservableSource<T> {
      *  <dd>{@code switchMapSingle} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
+     * <p>History: 2.0.8 - experimental
      * @param <R> the element type of the inner SingleSources and the output
      * @param mapper
      *            a function that, when applied to an item emitted by the source ObservableSource, returns a
      *            SingleSource
      * @return an Observable that emits the item emitted by the SingleSource returned from applying {@code func} to the most recently emitted item emitted by the source ObservableSource
      * @see <a href="http://reactivex.io/documentation/operators/flatmap.html">ReactiveX operators documentation: FlatMap</a>
-     * @since 2.0.8
+     * @since 2.1
      */
-    @Experimental
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     @NonNull
@@ -11095,15 +11095,15 @@ public abstract class Observable<T> implements ObservableSource<T> {
      *  <dd>{@code switchMapSingleDelayError} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
+     * <p>History: 2.0.8 - experimental
      * @param <R> the element type of the inner SingleSources and the output
      * @param mapper
      *            a function that, when applied to an item emitted by the source ObservableSource, returns a
      *            SingleSource
      * @return an Observable that emits the item emitted by the SingleSource returned from applying {@code func} to the most recently emitted item emitted by the source ObservableSource
      * @see <a href="http://reactivex.io/documentation/operators/flatmap.html">ReactiveX operators documentation: FlatMap</a>
-     * @since 2.0.8
+     * @since 2.1
      */
-    @Experimental
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
     @NonNull

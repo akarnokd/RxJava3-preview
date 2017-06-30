@@ -447,12 +447,12 @@ public final class RxJavaObservablePlugins {
     /**
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#computation()}
      * except using {@code threadFactory} for thread creation.
+     * <p>History: 2.0.5 - experimental
      * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     @NonNull
     public static Scheduler createComputationScheduler(@NonNull ThreadFactory threadFactory) {
         return new ComputationScheduler(ObjectHelper.requireNonNull(threadFactory, "threadFactory is null"));
@@ -461,12 +461,12 @@ public final class RxJavaObservablePlugins {
     /**
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#io()}
      * except using {@code threadFactory} for thread creation.
+     * <p>History: 2.0.5 - experimental
      * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     @NonNull
     public static Scheduler createIoScheduler(@NonNull ThreadFactory threadFactory) {
         return new IoScheduler(ObjectHelper.requireNonNull(threadFactory, "threadFactory is null"));
@@ -475,12 +475,12 @@ public final class RxJavaObservablePlugins {
     /**
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#newThread()}
      * except using {@code threadFactory} for thread creation.
+     * <p>History: 2.0.5 - experimental
      * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     @NonNull
     public static Scheduler createNewThreadScheduler(@NonNull ThreadFactory threadFactory) {
         return new NewThreadScheduler(ObjectHelper.requireNonNull(threadFactory, "threadFactory is null"));
@@ -489,12 +489,12 @@ public final class RxJavaObservablePlugins {
     /**
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#single()}
      * except using {@code threadFactory} for thread creation.
+     * <p>History: 2.0.5 - experimental
      * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     @NonNull
     public static Scheduler createSingleScheduler(@NonNull ThreadFactory threadFactory) {
         return new SingleScheduler(ObjectHelper.requireNonNull(threadFactory, "threadFactory is null"));

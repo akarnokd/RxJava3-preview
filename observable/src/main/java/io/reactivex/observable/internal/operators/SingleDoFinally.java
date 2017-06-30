@@ -16,7 +16,6 @@ package io.reactivex.observable.internal.operators;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.common.*;
-import io.reactivex.common.annotations.Experimental;
 import io.reactivex.common.exceptions.Exceptions;
 import io.reactivex.common.functions.Action;
 import io.reactivex.common.internal.disposables.DisposableHelper;
@@ -25,10 +24,10 @@ import io.reactivex.observable.*;
 /**
  * Execute an action after an onSuccess, onError or a dispose event.
  *
+ * <p>History: 2.0.1 - experimental
  * @param <T> the value type
- * @since 2.0.1 - experimental
+ * @since 2.1
  */
-@Experimental
 public final class SingleDoFinally<T> extends Single<T> {
 
     final SingleSource<T> source;

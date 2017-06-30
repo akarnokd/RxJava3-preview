@@ -118,15 +118,15 @@ public final class UnicastSubject<T> extends Subject<T> {
      * <p>The callback, if not null, is called exactly once and
      * non-overlapped with any active replay.
      *
+     * <p>History: 2.0.8 - experimental
      * @param <T> the value type
      * @param capacityHint the hint to size the internal unbounded buffer
      * @param onTerminate the callback to run when the Subject is terminated or cancelled, null not allowed
      * @param delayError deliver pending onNext events before onError
      * @return an UnicastSubject instance
-     * @since 2.0.8 - experimental
+     * @since 2.2
      */
     @CheckReturnValue
-    @Experimental
     public static <T> UnicastSubject<T> create(int capacityHint, Runnable onTerminate, boolean delayError) {
         return new UnicastSubject<T>(capacityHint, onTerminate, delayError);
     }
@@ -137,13 +137,13 @@ public final class UnicastSubject<T> extends Subject<T> {
      * <p>The callback, if not null, is called exactly once and
      * non-overlapped with any active replay.
      *
+     * <p>History: 2.0.8 - experimental
      * @param <T> the value type
      * @param delayError deliver pending onNext events before onError
      * @return an UnicastSubject instance
-     * @since 2.0.8 - experimental
+     * @since 2.2
      */
     @CheckReturnValue
-    @Experimental
     public static <T> UnicastSubject<T> create(boolean delayError) {
         return new UnicastSubject<T>(bufferSize(), delayError);
     }

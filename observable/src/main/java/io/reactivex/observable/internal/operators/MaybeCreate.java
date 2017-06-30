@@ -106,7 +106,6 @@ public final class MaybeCreate<T> extends Maybe<T> {
                     return true;
                 }
             }
-            RxJavaCommonPlugins.onError(t);
             return false;
         }
 

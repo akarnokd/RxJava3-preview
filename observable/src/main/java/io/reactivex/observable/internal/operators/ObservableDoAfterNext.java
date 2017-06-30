@@ -20,10 +20,10 @@ import io.reactivex.observable.internal.observers.BasicFuseableObserver;
 
 /**
  * Calls a consumer after pushing the current item to the downstream.
+ * <p>History: 2.0.1 - experimental
  * @param <T> the value type
- * @since 2.0.1 - experimental
+ * @since 2.1
  */
-@Experimental
 public final class ObservableDoAfterNext<T> extends AbstractObservableWithUpstream<T, T> {
 
     final Consumer<? super T> onAfterNext;

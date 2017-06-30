@@ -16,7 +16,6 @@ package io.reactivex.observable.internal.operators;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.common.Disposable;
-import io.reactivex.common.annotations.Experimental;
 import io.reactivex.common.exceptions.Exceptions;
 import io.reactivex.common.functions.Function;
 import io.reactivex.common.internal.disposables.DisposableHelper;
@@ -28,9 +27,9 @@ import io.reactivex.observable.*;
  * @param <T> the input value type
  * @param <R> the result value type
  * 
- * @since 2.0.2 - experimental
+ * <p>History: 2.0.2 - experimental
+ * @since 2.1
  */
-@Experimental
 public final class MaybeFlatMapSingleElement<T, R> extends Maybe<R> {
 
     final MaybeSource<T> source;
