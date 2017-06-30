@@ -33,10 +33,10 @@ import io.reactivex.observable.internal.utils.EndObserverHelper;
  * <p>Implementation of {@link #onStart()}, {@link #onError(Throwable)} and
  * {@link #onComplete()} are not allowed to throw any unchecked exceptions.
  *
- * <p>Example<code><pre>
+ * <p>Example<pre><code>
  * Disposable d =
  *     Completable.complete().delay(1, TimeUnit.SECONDS)
- *     .subscribeWith(new DisposableMaybeObserver&lt;Integer>() {
+ *     .subscribeWith(new DisposableMaybeObserver&lt;Integer&gt;() {
  *         &#64;Override public void onStart() {
  *             System.out.println("Start!");
  *         }
@@ -49,7 +49,7 @@ import io.reactivex.observable.internal.utils.EndObserverHelper;
  *     });
  * // ...
  * d.dispose();
- * </pre></code>
+ * </code></pre>
  */
 public abstract class DisposableCompletableObserver implements CompletableObserver, Disposable {
     final AtomicReference<Disposable> s = new AtomicReference<Disposable>();

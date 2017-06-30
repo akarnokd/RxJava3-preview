@@ -38,10 +38,10 @@ import io.reactivex.observable.internal.utils.EndObserverHelper;
  * If for some reason this can't be avoided, use {@link io.reactivex.observable.Observable#safeSubscribe(io.reactivex.observable.Observer)}
  * instead of the standard {@code subscribe()} method.
  *
- * <p>Example<code><pre>
+ * <p>Example<pre><code>
  * Disposable d =
  *     Observable.range(1, 5)
- *     .subscribeWith(new DisposableObserver&lt;Integer>() {
+ *     .subscribeWith(new DisposableObserver&lt;Integer&gt;() {
  *         &#64;Override public void onStart() {
  *             System.out.println("Start!");
  *         }
@@ -60,7 +60,7 @@ import io.reactivex.observable.internal.utils.EndObserverHelper;
  *     });
  * // ...
  * d.dispose();
- * </pre></code>
+ * </code></pre>
  *
  * @param <T> the received value type
  */

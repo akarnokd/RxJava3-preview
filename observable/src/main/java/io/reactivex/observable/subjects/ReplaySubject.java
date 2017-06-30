@@ -30,7 +30,6 @@ import io.reactivex.observable.internal.utils.NotificationLite;
  * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.ReplaySubject.png" alt="">
  * <p>
  * Example usage:
- * <p>
  * <pre> {@code
 
   ReplaySubject<Object> subject = new ReplaySubject<>();

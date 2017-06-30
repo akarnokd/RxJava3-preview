@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 /**
- * Base reactive classes: Flowable, Observable, Single and Completable; base reactive consumers;
+ * Base reactive classes: Observable, Single and Completable; base reactive consumers;
  * other common base interfaces.
  *
  * <p>A library that enables subscribing to and composing asynchronous events and
  * callbacks.</p>
- * <p>The Flowable/Subscriber, Observable/Observer, Single/SingleObserver and
+ * <p>The Observable/Observer, Single/SingleObserver and
  * Completable/CompletableObserver interfaces and associated operators (in
- * the {@code io.reactivex.internal.operators} package) are inspired by the
+ * the {@code io.reactivex.observable.internal.operators} package) are inspired by the
  * Reactive Rx library in Microsoft .NET but designed and implemented on
  * the more advanced Reactive-Streams ( http://www.reactivestreams.org ) principles.</p>
  * <p>
@@ -36,17 +36,15 @@
  * <li>Observer == IObserver (event consumer)</li>
  * <li>Disposable == IDisposable (resource/cancellation management)</li>
  * <li>Observable == Observable (factory methods)</li>
- * <li>Flowable == IAsyncEnumerable (backpressure)</li>
- * <li>Subscriber == IAsyncEnumerator</li>
  * </ul>
- * The Single and Completable reactive base types have no equivalent in Rx.NET as of 3.x.
- * </p>
+ * The Single, Maybe and Completable reactive base types have no equivalent in Rx.NET as of 3.x.
  * <p>Services which intend on exposing data asynchronously and wish
  * to allow reactive processing and composition can implement the
- * {@link io.reactivex.Flowable}, {@link io.reactivex.Observable}, {@link io.reactivex.Single}
- * or {@link io.reactivex.Completable} class which then allow consumers to subscribe to them
+ * {@link io.reactivex.observable.Observable}, {@link io.reactivex.observable.Single},
+ * {@link io.reactivex.observable.Maybe} or {@link io.reactivex.observable.Completable}
+ * class which then allow consumers to subscribe to them
  * and receive events.</p>
- * <p>Usage examples can be found on the {@link io.reactivex.Flowable}/{@link io.reactivex.Observable} and {@link org.reactivestreams.Subscriber} classes.</p>
+ * <p>Usage examples can be found on the {@link io.reactivex.observable.Observable} class.</p>
  */
 package io.reactivex.observable;
 
