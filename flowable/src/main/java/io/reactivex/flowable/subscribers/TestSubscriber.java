@@ -160,6 +160,7 @@ implements RelaxedSubscriber<T>, Subscription, Disposable {
                     } catch (Throwable ex) {
                         // Exceptions.throwIfFatal(e); TODO add fatal exceptions?
                         errors.add(ex);
+                        qs.cancel();
                     }
                     return;
                 }

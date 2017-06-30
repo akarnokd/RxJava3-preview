@@ -22,6 +22,7 @@ import org.junit.Test;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.common.internal.utils.CrashingMappedIterable;
 import io.reactivex.observable.Maybe;
 import io.reactivex.observable.observers.TestObserver;
@@ -210,5 +211,13 @@ public class MaybeZipIterableTest {
             }
         })
         .blockingGet();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void singleSourceZipperReturnsNull() {
+        Maybe.zipArray(Functions.justFunction(null), Maybe.just(1))
+        .test()
+        .assertFailureAndMessage(NullPointerException.class, "The zipper returned a null value");
     }
 }

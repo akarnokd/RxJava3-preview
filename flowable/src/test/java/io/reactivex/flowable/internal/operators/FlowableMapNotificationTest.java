@@ -16,8 +16,9 @@ package io.reactivex.flowable.internal.operators;
 import java.util.concurrent.Callable;
 
 import org.junit.Test;
-import org.reactivestreams.Subscriber;
+import org.reactivestreams.*;
 
+import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.Function;
 import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.flowable.*;
@@ -176,5 +177,23 @@ public class FlowableMapNotificationTest {
                 );
             }
         });
+    }
+
+    @Test
+    public void onErrorCrash() {
+        TestSubscriber<Integer> ts = Flowable.<Integer>error(new TestException("Outer"))
+        .flatMap(Functions.justFunction(Flowable.just(1)),
+                new Function<Throwable, Publisher<Integer>>() {
+                    @Override
+                    public Publisher<Integer> apply(Throwable t) throws Exception {
+                        throw new TestException("Inner");
+                    }
+                },
+                Functions.justCallable(Flowable.just(3)))
+        .test()
+        .assertFailure(CompositeException.class);
+
+        TestHelper.assertError(ts, 0, TestException.class, "Outer");
+        TestHelper.assertError(ts, 1, TestException.class, "Inner");
     }
 }

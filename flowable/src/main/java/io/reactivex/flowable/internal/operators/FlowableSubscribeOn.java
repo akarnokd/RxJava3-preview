@@ -35,10 +35,10 @@ public final class FlowableSubscribeOn<T> extends AbstractFlowableWithUpstream<T
 
     final boolean nonScheduledRequests;
 
-    public FlowableSubscribeOn(Flowable<T> source, Scheduler scheduler, boolean nonScheduledRequests) {
+    public FlowableSubscribeOn(Flowable<T> source, Scheduler scheduler, boolean requestOn) {
         super(source);
         this.scheduler = scheduler;
-        this.nonScheduledRequests = nonScheduledRequests;
+        this.nonScheduledRequests = !requestOn;
     }
 
     @Override

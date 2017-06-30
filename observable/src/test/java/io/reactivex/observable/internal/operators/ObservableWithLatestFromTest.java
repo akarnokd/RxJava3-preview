@@ -25,6 +25,7 @@ import org.mockito.InOrder;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.common.internal.utils.CrashingMappedIterable;
 import io.reactivex.observable.Observable;
 import io.reactivex.observable.Observer;
@@ -646,5 +647,13 @@ public class ObservableWithLatestFromTest {
         })
         .test()
         .assertFailure(NullPointerException.class);
+    }
+
+    @Test
+    public void zeroOtherCombinerReturnsNull() {
+        Observable.just(1)
+        .withLatestFrom(new Observable[0], Functions.justFunction(null))
+        .test()
+        .assertFailureAndMessage(NullPointerException.class, "The combiner returned a null value");
     }
 }

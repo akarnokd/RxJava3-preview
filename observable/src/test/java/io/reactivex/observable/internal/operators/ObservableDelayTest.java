@@ -965,4 +965,16 @@ public class ObservableDelayTest {
             // expected
         }
     }
+
+    @Test
+    public void itemDelayReturnsNull() {
+        Observable.just(1).delay(new Function<Integer, Observable<Object>>() {
+            @Override
+            public Observable<Object> apply(Integer t) throws Exception {
+                return null;
+            }
+        })
+        .test()
+        .assertFailureAndMessage(NullPointerException.class, "The itemDelay returned a null ObservableSource");
+    }
 }

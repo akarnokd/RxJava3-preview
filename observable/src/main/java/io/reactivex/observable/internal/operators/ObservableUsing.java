@@ -20,6 +20,7 @@ import io.reactivex.common.*;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.disposables.DisposableHelper;
+import io.reactivex.common.internal.functions.ObjectHelper;
 import io.reactivex.observable.*;
 import io.reactivex.observable.internal.disposables.EmptyDisposable;
 
@@ -53,7 +54,7 @@ public final class ObservableUsing<T, D> extends Observable<T> {
 
         ObservableSource<? extends T> source;
         try {
-            source = sourceSupplier.apply(resource);
+            source = ObjectHelper.requireNonNull(sourceSupplier.apply(resource), "The sourceSupplier returned a null ObservableSource");
         } catch (Throwable e) {
             Exceptions.throwIfFatal(e);
             try {

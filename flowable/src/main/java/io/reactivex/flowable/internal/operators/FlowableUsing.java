@@ -22,6 +22,7 @@ import hu.akarnokd.reactivestreams.extensions.RelaxedSubscriber;
 import io.reactivex.common.RxJavaCommonPlugins;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.ObjectHelper;
 import io.reactivex.flowable.Flowable;
 import io.reactivex.flowable.internal.subscriptions.*;
 
@@ -55,7 +56,7 @@ public final class FlowableUsing<T, D> extends Flowable<T> {
 
         Publisher<? extends T> source;
         try {
-            source = sourceSupplier.apply(resource);
+            source = ObjectHelper.requireNonNull(sourceSupplier.apply(resource), "The sourceSupplier returned a null Publisher");
         } catch (Throwable e) {
             Exceptions.throwIfFatal(e);
             try {

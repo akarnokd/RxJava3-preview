@@ -19,7 +19,7 @@ import org.reactivestreams.*;
 
 import io.reactivex.common.*;
 import io.reactivex.common.functions.*;
-import io.reactivex.common.internal.functions.Functions;
+import io.reactivex.common.internal.functions.*;
 import io.reactivex.flowable.*;
 
 /**
@@ -77,7 +77,8 @@ public final class FlowableInternalHelper {
 
         @Override
         public Publisher<T> apply(final T v) throws Exception {
-            return new FlowableTakePublisher<U>(itemDelay.apply(v), 1).map(Functions.justFunction(v)).defaultIfEmpty(v);
+            Publisher<U> p = ObjectHelper.requireNonNull(itemDelay.apply(v), "The itemDelay returned a null Publisher");
+            return new FlowableTakePublisher<U>(p, 1).map(Functions.justFunction(v)).defaultIfEmpty(v);
         }
     }
 
@@ -164,7 +165,7 @@ public final class FlowableInternalHelper {
         @Override
         public Publisher<R> apply(final T t) throws Exception {
             @SuppressWarnings("unchecked")
-            Publisher<U> u = (Publisher<U>)mapper.apply(t);
+            Publisher<U> u = (Publisher<U>)ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null Publisher");
             return new FlowableMapPublisher<U, R>(u, new FlatMapWithCombinerInner<U, R, T>(combiner, t));
         }
     }
@@ -184,7 +185,7 @@ public final class FlowableInternalHelper {
 
         @Override
         public Publisher<U> apply(T t) throws Exception {
-            return new FlowableFromIterable<U>(mapper.apply(t));
+            return new FlowableFromIterable<U>(ObjectHelper.requireNonNull(mapper.apply(t), "The mapper returned a null Iterable"));
         }
     }
 
@@ -317,7 +318,8 @@ public final class FlowableInternalHelper {
 
         @Override
         public Publisher<R> apply(Flowable<T> t) throws Exception {
-            return Flowable.fromPublisher(selector.apply(t)).observeOn(scheduler);
+            Publisher<R> p = ObjectHelper.requireNonNull(selector.apply(t), "The selector returned a null Publisher");
+            return Flowable.fromPublisher(p).observeOn(scheduler);
         }
     }
 }

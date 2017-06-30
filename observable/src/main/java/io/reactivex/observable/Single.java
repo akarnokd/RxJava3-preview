@@ -1524,14 +1524,13 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Delays the emission of the success or error signal from the current Single by
-     * the specified amount.
+     * Delays the emission of the success signal from the current Single by the specified amount.
      * <dl>
      * <dt><b>Scheduler:</b></dt>
      * <dd>{@code delay} operates by default on the {@code computation} {@link Scheduler}.</dd>
      * </dl>
      *
-     * @param time the time amount to delay the signals
+     * @param time the time amount to delay the emission of the success signal
      * @param unit the time unit
      * @return the new Single instance
      * @since 2.0
@@ -1543,16 +1542,15 @@ public abstract class Single<T> implements SingleSource<T> {
     }
 
     /**
-     * Delays the emission of the success or error signal from the current Single by
-     * the specified amount.
+     * Delays the emission of the success signal from the current Single by the specified amount.
      * <dl>
      * <dt><b>Scheduler:</b></dt>
      * <dd>you specify the {@link Scheduler} where the non-blocking wait and emission happens</dd>
      * </dl>
      *
-     * @param time the time amount to delay the signals
+     * @param time the time amount to delay the emission of the success signal
      * @param unit the time unit
-     * @param scheduler the target scheduler to use fro the non-blocking wait and emission
+     * @param scheduler the target scheduler to use for the non-blocking wait and emission
      * @return the new Single instance
      * @since 2.0
      */
@@ -1690,7 +1688,7 @@ public abstract class Single<T> implements SingleSource<T> {
 
     /**
      * Registers an {@link Action} to be called after this Single invokes either onSuccess or onError.
-     * * <p>Note that the {@code doAfterSuccess} action is shared between subscriptions and as such
+     * * <p>Note that the {@code doAfterTerminate} action is shared between subscriptions and as such
      * should be thread-safe.</p>
      * <p>
      * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/doAfterTerminate.png" alt="">

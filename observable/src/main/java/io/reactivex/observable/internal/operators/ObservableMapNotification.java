@@ -16,7 +16,7 @@ package io.reactivex.observable.internal.operators;
 import java.util.concurrent.Callable;
 
 import io.reactivex.common.Disposable;
-import io.reactivex.common.exceptions.Exceptions;
+import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.Function;
 import io.reactivex.common.internal.disposables.DisposableHelper;
 import io.reactivex.common.internal.functions.ObjectHelper;
@@ -106,7 +106,7 @@ public final class ObservableMapNotification<T, R> extends AbstractObservableWit
                 p = ObjectHelper.requireNonNull(onErrorMapper.apply(t), "The onError Observable returned is null");
             } catch (Throwable e) {
                 Exceptions.throwIfFatal(e);
-                actual.onError(e);
+                actual.onError(new CompositeException(t, e));
                 return;
             }
 

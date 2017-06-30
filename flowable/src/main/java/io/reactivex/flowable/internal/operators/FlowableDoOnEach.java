@@ -20,6 +20,7 @@ import io.reactivex.common.RxJavaCommonPlugins;
 import io.reactivex.common.annotations.Nullable;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.utils.ExceptionHelper;
 import io.reactivex.flowable.Flowable;
 import io.reactivex.flowable.internal.subscribers.*;
 
@@ -148,12 +149,34 @@ public final class FlowableDoOnEach<T> extends AbstractFlowableWithUpstream<T, T
 
         @Nullable
         @Override
-        public T poll() throws Throwable {
-            T v = qs.poll();
+        public T poll() throws Exception {
+            T v;
+
+            try {
+                v = qs.poll();
+            } catch (Throwable ex) {
+                Exceptions.throwIfFatal(ex);
+                try {
+                    onError.accept(ex);
+                } catch (Throwable exc) {
+                    throw new CompositeException(ex, exc);
+                }
+                throw ExceptionHelper.<Exception>throwIfThrowable(ex);
+            }
 
             if (v != null) {
                 try {
-                    onNext.accept(v);
+                    try {
+                        onNext.accept(v);
+                    } catch (Throwable ex) {
+                        Exceptions.throwIfFatal(ex);
+                        try {
+                            onError.accept(ex);
+                        } catch (Throwable exc) {
+                            throw new CompositeException(ex, exc);
+                        }
+                        throw ExceptionHelper.<Exception>throwIfThrowable(ex);
+                    }
                 } finally {
                     onAfterTerminate.run();
                 }
@@ -281,12 +304,34 @@ public final class FlowableDoOnEach<T> extends AbstractFlowableWithUpstream<T, T
 
         @Nullable
         @Override
-        public T poll() throws Throwable {
-            T v = qs.poll();
+        public T poll() throws Exception {
+            T v;
+
+            try {
+                v = qs.poll();
+            } catch (Throwable ex) {
+                Exceptions.throwIfFatal(ex);
+                try {
+                    onError.accept(ex);
+                } catch (Throwable exc) {
+                    throw new CompositeException(ex, exc);
+                }
+                throw ExceptionHelper.<Exception>throwIfThrowable(ex);
+            }
 
             if (v != null) {
                 try {
-                    onNext.accept(v);
+                    try {
+                        onNext.accept(v);
+                    } catch (Throwable ex) {
+                        Exceptions.throwIfFatal(ex);
+                        try {
+                            onError.accept(ex);
+                        } catch (Throwable exc) {
+                            throw new CompositeException(ex, exc);
+                        }
+                        throw ExceptionHelper.<Exception>throwIfThrowable(ex);
+                    }
                 } finally {
                     onAfterTerminate.run();
                 }
