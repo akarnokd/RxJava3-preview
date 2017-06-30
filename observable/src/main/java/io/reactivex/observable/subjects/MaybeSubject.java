@@ -28,10 +28,10 @@ import io.reactivex.observable.*;
  * <p>
  * The MaybeSubject doesn't store the Disposables coming through onSubscribe but
  * disposes them once the other onXXX methods were called (terminal state reached).
+ * <p>History: 2.0.5 - experimental
  * @param <T> the value type received and emitted
- * @since 2.0.5 - experimental
+ * @since 2.1
  */
-@Experimental
 public final class MaybeSubject<T> extends Maybe<T> implements MaybeObserver<T> {
 
     final AtomicReference<MaybeDisposable<T>[]> observers;

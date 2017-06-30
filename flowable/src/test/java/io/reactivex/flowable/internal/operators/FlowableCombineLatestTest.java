@@ -26,6 +26,7 @@ import org.junit.*;
 import org.mockito.*;
 import org.reactivestreams.*;
 
+import hu.akarnokd.reactivestreams.extensions.FusedQueueSubscription;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.*;
 import io.reactivex.common.functions.*;
@@ -1549,5 +1550,22 @@ public class FlowableCombineLatestTest {
         pp1.onNext(1);
         pp2.onNext(2);
         ts.assertResult(3);
+    }
+
+    @Test
+    public void fusedNullCheck() {
+        TestSubscriber<Integer> ts = SubscriberFusion.newTest(FusedQueueSubscription.ASYNC);
+
+        Flowable.combineLatest(Flowable.just(1), Flowable.just(2), new BiFunction<Integer, Integer, Integer>() {
+            @Override
+            public Integer apply(Integer t1, Integer t2) throws Exception {
+                return null;
+            }
+        })
+        .subscribe(ts);
+
+        ts
+        .assertOf(SubscriberFusion.<Integer>assertFusionMode(FusedQueueSubscription.ASYNC))
+        .assertFailureAndMessage(NullPointerException.class, "The combiner returned a null value");
     }
 }

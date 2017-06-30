@@ -201,6 +201,7 @@ public final class ObservableConcatMap<T, U> extends AbstractObservableWithUpstr
                     boolean empty = t == null;
 
                     if (d && empty) {
+                        disposed = true;
                         actual.onComplete();
                         return;
                     }
@@ -366,7 +367,7 @@ public final class ObservableConcatMap<T, U> extends AbstractObservableWithUpstr
 
         @Override
         public boolean isDisposed() {
-            return d.isDisposed();
+            return cancelled;
         }
 
         @Override
@@ -399,7 +400,7 @@ public final class ObservableConcatMap<T, U> extends AbstractObservableWithUpstr
                         Throwable ex = error.get();
                         if (ex != null) {
                             queue.clear();
-
+                            cancelled = true;
                             actual.onError(error.terminate());
                             return;
                         }
@@ -413,6 +414,7 @@ public final class ObservableConcatMap<T, U> extends AbstractObservableWithUpstr
                         v = queue.poll();
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);
+                        cancelled = true;
                         this.d.dispose();
                         error.addThrowable(ex);
                         actual.onError(error.terminate());
@@ -422,6 +424,7 @@ public final class ObservableConcatMap<T, U> extends AbstractObservableWithUpstr
                     boolean empty = v == null;
 
                     if (d && empty) {
+                        cancelled = true;
                         Throwable ex = error.terminate();
                         if (ex != null) {
                             actual.onError(ex);
@@ -439,6 +442,7 @@ public final class ObservableConcatMap<T, U> extends AbstractObservableWithUpstr
                             o = ObjectHelper.requireNonNull(mapper.apply(v), "The mapper returned a null ObservableSource");
                         } catch (Throwable ex) {
                             Exceptions.throwIfFatal(ex);
+                            cancelled = true;
                             this.d.dispose();
                             queue.clear();
                             error.addThrowable(ex);

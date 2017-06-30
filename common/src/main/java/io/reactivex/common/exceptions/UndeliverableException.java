@@ -13,13 +13,11 @@
 
 package io.reactivex.common.exceptions;
 
-import io.reactivex.common.annotations.Experimental;
-
 /**
  * Wrapper for Throwable errors that are sent to `RxJavaCommonPlugins.onError`.
- * @since 2.0.6 - experimental
+ * <p>History: 2.0.6 - experimental
+ * @since 2.1
  */
-@Experimental
 public final class UndeliverableException extends IllegalStateException {
 
     private static final long serialVersionUID = 1644750035281290266L;

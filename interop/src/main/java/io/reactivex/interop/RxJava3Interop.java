@@ -95,7 +95,7 @@ public final class RxJava3Interop {
      * <p>
      * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Single.toObservable.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The returned {@code Flowable} honors the backpressure of the downstream consumer.</dd>
      * <dt><b>Scheduler:</b></dt>
      * <dd>{@code toFlowable} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -138,7 +138,7 @@ public final class RxJava3Interop {
      * Returns a Flowable which when subscribed to subscribes to this Completable and
      * relays the terminal events to the subscriber.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The returned {@code Flowable} honors the backpressure of the downstream consumer.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code toFlowable} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -159,7 +159,7 @@ public final class RxJava3Interop {
      * Converts the given Flowable into a non-backpressured Observable.
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
-     *  <dd>Publishers don't support backpressure thus the current Flowable is consumed in an unbounded
+     *  <dd>Observables don't support backpressure thus the current Flowable is consumed in an unbounded
      *  manner (by requesting Long.MAX_VALUE).</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code toObservable} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -962,7 +962,7 @@ public final class RxJava3Interop {
      * size thread pool:
      * 
      * <pre>
-     * Scheduler limitScheduler = Schedulers.computation().when(workers -> {
+     * Scheduler limitScheduler = Schedulers.computation().when(workers -&gt; {
      *  // use merge max concurrent to limit the number of concurrent
      *  // callbacks two at a time
      *  return Completable.merge(Flowable.merge(workers), 2);
@@ -980,7 +980,7 @@ public final class RxJava3Interop {
      * subscription to the second.
      * 
      * <pre>
-     * Scheduler limitScheduler = Schedulers.computation().when(workers -> {
+     * Scheduler limitScheduler = Schedulers.computation().when(workers -&gt; {
      *  // use merge max concurrent to limit the number of concurrent
      *  // Flowables two at a time
      *  return Completable.merge(Flowable.merge(workers, 2));
@@ -993,9 +993,9 @@ public final class RxJava3Interop {
      * bucket algorithm).
      * 
      * <pre>
-     * Scheduler slowScheduler = Schedulers.computation().when(workers -> {
+     * Scheduler slowScheduler = Schedulers.computation().when(workers -&gt; {
      *  // use concatenate to make each worker happen one at a time.
-     *  return Completable.concat(workers.map(actions -> {
+     *  return Completable.concat(workers.map(actions -&gt; {
      *      // delay the starting of the next worker by 1 second.
      *      return Completable.merge(actions.delaySubscription(1, TimeUnit.SECONDS));
      *  }));

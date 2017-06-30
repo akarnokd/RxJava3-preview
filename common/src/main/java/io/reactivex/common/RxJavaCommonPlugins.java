@@ -12,7 +12,6 @@
  */
 package io.reactivex.common;
 
-import io.reactivex.common.annotations.Experimental;
 import io.reactivex.common.annotations.NonNull;
 import io.reactivex.common.annotations.Nullable;
 import io.reactivex.common.exceptions.*;
@@ -98,10 +97,10 @@ public final class RxJavaCommonPlugins {
      * Enables or disables the blockingX operators to fail
      * with an IllegalStateException on a non-blocking
      * scheduler such as computation or single.
+     * <p>History: 2.0.5 - experimental
      * @param enable enable or disable the feature
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     public static void setFailOnNonBlockingScheduler(boolean enable) {
         if (lockdown) {
             throw new IllegalStateException("Plugins can't be changed anymore");
@@ -113,10 +112,10 @@ public final class RxJavaCommonPlugins {
      * Returns true if the blockingX operators fail
      * with an IllegalStateException on a non-blocking scheduler
      * such as computation or single.
+     * <p>History: 2.0.5 - experimental
      * @return true if the blockingX operators fail on a non-blocking scheduler
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     public static boolean isFailOnNonBlockingScheduler() {
         return failNonBlockingScheduler;
     }
@@ -566,11 +565,11 @@ public final class RxJavaCommonPlugins {
      * such as awaiting a condition or signal
      * and should return true to indicate the operator
      * should not block but throw an IllegalArgumentException.
+     * <p>History: 2.0. - experimental
      * @return true if the blocking should be prevented
      * @see #setFailOnNonBlockingScheduler(boolean)
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     public static boolean onBeforeBlocking() {
         BooleanSupplier f = onBeforeBlocking;
         if (f != null) {
@@ -587,12 +586,12 @@ public final class RxJavaCommonPlugins {
      * Set the handler that is called when an operator attempts a blocking
      * await; the handler should return true to prevent the blocking
      * and to signal an IllegalStateException instead.
+     * <p>History: 2.0.5 - experimental
      * @param handler the handler to set, null resets to the default handler
      * that always returns false
      * @see #onBeforeBlocking()
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     public static void setOnBeforeBlocking(@Nullable BooleanSupplier handler) {
         if (lockdown) {
             throw new IllegalStateException("Plugins can't be changed anymore");
@@ -603,10 +602,10 @@ public final class RxJavaCommonPlugins {
     /**
      * Returns the current blocking handler or null if no custom handler
      * is set.
+     * <p>History: 2.0.5 - experimental
      * @return the current blocking handler or null if not specified
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     @Nullable
     public static BooleanSupplier getOnBeforeBlocking() {
         return onBeforeBlocking;
@@ -615,12 +614,12 @@ public final class RxJavaCommonPlugins {
     /**
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#computation()}
      * except using {@code threadFactory} for thread creation.
+     * <p>History: 2.0.5 - experimental
      * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     @NonNull
     public static Scheduler createComputationScheduler(@NonNull ThreadFactory threadFactory) {
         return new ComputationScheduler(ObjectHelper.requireNonNull(threadFactory, "threadFactory is null"));
@@ -629,12 +628,12 @@ public final class RxJavaCommonPlugins {
     /**
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#io()}
      * except using {@code threadFactory} for thread creation.
+     * <p>History: 2.0.5 - experimental
      * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     @NonNull
     public static Scheduler createIoScheduler(@NonNull ThreadFactory threadFactory) {
         return new IoScheduler(ObjectHelper.requireNonNull(threadFactory, "threadFactory is null"));
@@ -643,12 +642,12 @@ public final class RxJavaCommonPlugins {
     /**
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#newThread()}
      * except using {@code threadFactory} for thread creation.
+     * <p>History: 2.0.5 - experimental
      * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     @NonNull
     public static Scheduler createNewThreadScheduler(@NonNull ThreadFactory threadFactory) {
         return new NewThreadScheduler(ObjectHelper.requireNonNull(threadFactory, "threadFactory is null"));
@@ -657,12 +656,12 @@ public final class RxJavaCommonPlugins {
     /**
      * Create an instance of the default {@link Scheduler} used for {@link Schedulers#single()}
      * except using {@code threadFactory} for thread creation.
+     * <p>History: 2.0.5 - experimental
      * @param threadFactory thread factory to use for creating worker threads. Note that this takes precedence over any
      *                      system properties for configuring new thread creation. Cannot be null.
      * @return the created Scheduler instance
-     * @since 2.0.5 - experimental
+     * @since 2.1
      */
-    @Experimental
     @NonNull
     public static Scheduler createSingleScheduler(@NonNull ThreadFactory threadFactory) {
         return new SingleScheduler(ObjectHelper.requireNonNull(threadFactory, "threadFactory is null"));

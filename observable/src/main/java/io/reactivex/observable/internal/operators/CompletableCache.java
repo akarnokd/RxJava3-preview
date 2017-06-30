@@ -16,15 +16,14 @@ package io.reactivex.observable.internal.operators;
 import java.util.concurrent.atomic.*;
 
 import io.reactivex.common.Disposable;
-import io.reactivex.common.annotations.Experimental;
 import io.reactivex.observable.*;
 
 /**
  * Consume the upstream source exactly once and cache its terminal event.
  * 
- * @since 2.0.4 - experimental
+ * <p>History: 2.0.4 - experimental
+ * @since 2.1
  */
-@Experimental
 public final class CompletableCache extends Completable implements CompletableObserver {
 
     static final InnerCompletableCache[] EMPTY = new InnerCompletableCache[0];

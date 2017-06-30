@@ -15,12 +15,13 @@ package io.reactivex.common.internal.schedulers;
 
 import static org.junit.Assert.*;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import org.junit.Test;
 
 import io.reactivex.common.*;
 import io.reactivex.common.Scheduler.Worker;
+import io.reactivex.common.internal.disposables.SequentialDisposable;
 import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.common.internal.schedulers.SingleScheduler.ScheduledWorker;
 
@@ -113,6 +114,66 @@ public class SingleSchedulerTest {
 
         while (!d.isDisposed()) {
             Thread.sleep(1);
+        }
+    }
+
+    @Test(timeout = 10000)
+    public void schedulePeriodicallyDirectZeroPeriod() throws Exception {
+        Scheduler s = Schedulers.single();
+
+        for (int initial = 0; initial < 2; initial++) {
+            final CountDownLatch cdl = new CountDownLatch(1);
+
+            final SequentialDisposable sd = new SequentialDisposable();
+
+            try {
+                sd.replace(s.schedulePeriodicallyDirect(new Runnable() {
+                    int count;
+                    @Override
+                    public void run() {
+                        if (++count == 10) {
+                            sd.dispose();
+                            cdl.countDown();
+                        }
+                    }
+                }, initial, 0, TimeUnit.MILLISECONDS));
+
+                assertTrue("" + initial, cdl.await(5, TimeUnit.SECONDS));
+            } finally {
+                sd.dispose();
+            }
+        }
+    }
+
+    @Test(timeout = 10000)
+    public void schedulePeriodicallyZeroPeriod() throws Exception {
+        Scheduler s = Schedulers.single();
+
+        for (int initial = 0; initial < 2; initial++) {
+
+            final CountDownLatch cdl = new CountDownLatch(1);
+
+            final SequentialDisposable sd = new SequentialDisposable();
+
+            Scheduler.Worker w = s.createWorker();
+
+            try {
+                sd.replace(w.schedulePeriodically(new Runnable() {
+                    int count;
+                    @Override
+                    public void run() {
+                        if (++count == 10) {
+                            sd.dispose();
+                            cdl.countDown();
+                        }
+                    }
+                }, initial, 0, TimeUnit.MILLISECONDS));
+
+                assertTrue("" + initial, cdl.await(5, TimeUnit.SECONDS));
+            } finally {
+                sd.dispose();
+                w.dispose();
+            }
         }
     }
 }

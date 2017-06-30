@@ -556,4 +556,14 @@ public class ObservableUsingTest {
             RxJavaCommonPlugins.reset();
         }
     }
+
+    @Test
+    public void sourceSupplierReturnsNull() {
+        Observable.using(Functions.justCallable(1),
+                Functions.justFunction((Observable<Object>)null),
+                Functions.emptyConsumer())
+        .test()
+        .assertFailureAndMessage(NullPointerException.class, "The sourceSupplier returned a null ObservableSource")
+        ;
+    }
 }

@@ -25,10 +25,10 @@ import io.reactivex.observable.internal.observers.BasicIntQueueDisposable;
 /**
  * Execute an action after an onError, onComplete or a dispose event.
  *
+ * <p>History: 2.0.1 - experimental
  * @param <T> the value type
- * @since 2.0.1 - experimental
+ * @since 2.1
  */
-@Experimental
 public final class ObservableDoFinally<T> extends AbstractObservableWithUpstream<T, T> {
 
     final Action onFinally;

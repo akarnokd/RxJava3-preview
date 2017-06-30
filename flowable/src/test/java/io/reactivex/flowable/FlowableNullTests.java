@@ -1342,6 +1342,7 @@ public class FlowableNullTests {
     }
 
     @Test(expected = NullPointerException.class)
+    @Ignore("No longer crashes with NPE but signals it; tested elsewhere.")
     public void flatMapNotificationOnErrorReturnsNull() {
         Flowable.error(new TestException()).flatMap(new Function<Object, Publisher<Integer>>() {
             @Override

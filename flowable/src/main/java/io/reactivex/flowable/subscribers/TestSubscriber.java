@@ -18,7 +18,6 @@ import org.reactivestreams.*;
 
 import hu.akarnokd.reactivestreams.extensions.*;
 import io.reactivex.common.*;
-import io.reactivex.common.annotations.Experimental;
 import io.reactivex.common.functions.Consumer;
 import io.reactivex.common.internal.utils.ExceptionHelper;
 import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
@@ -202,6 +201,7 @@ implements RelaxedSubscriber<T>, Subscription, Disposable {
             } catch (Throwable ex) {
                 // Exceptions.throwIfFatal(e); TODO add fatal exceptions?
                 errors.add(ex);
+                qs.cancel();
             }
             return;
         }
@@ -408,11 +408,11 @@ implements RelaxedSubscriber<T>, Subscription, Disposable {
 
     /**
      * Calls {@link #request(long)} and returns this.
+     * <p>History: 2.0.1 - experimental
      * @param n the request amount
      * @return this
-     * @since 2.0.1 - experimental
+     * @since 2.1
      */
-    @Experimental
     public final TestSubscriber<T> requestMore(long n) {
         request(n);
         return this;

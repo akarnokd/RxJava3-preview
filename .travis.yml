@@ -10,6 +10,7 @@ before_install:
   - chmod +x gradlew
 
 script:
+  - export GRADLE_OPTS=-Xmx1024m
   - ./gradlew assemble --stacktrace
   - ./gradlew check jacocoFullReport --stacktrace
 

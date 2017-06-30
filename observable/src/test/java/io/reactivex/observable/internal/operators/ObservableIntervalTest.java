@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
-import io.reactivex.common.TestScheduler;
+import io.reactivex.common.*;
 import io.reactivex.observable.*;
 
 public class ObservableIntervalTest {
@@ -27,5 +27,13 @@ public class ObservableIntervalTest {
     @Test
     public void dispose() {
         TestHelper.checkDisposed(Observable.interval(1, TimeUnit.MILLISECONDS, new TestScheduler()));
+    }
+
+    @Test(timeout = 2000)
+    public void cancel() {
+        Observable.interval(1, TimeUnit.MILLISECONDS, Schedulers.trampoline())
+        .take(10)
+        .test()
+        .assertResult(0L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L);
     }
 }

@@ -22,6 +22,7 @@ import org.junit.Test;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
@@ -185,5 +186,13 @@ public class SingleZipArrayTest {
         }, Single.just(1))
         .test()
         .assertResult(2);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void singleSourceZipperReturnsNull() {
+        Single.zipArray(Functions.justFunction(null), Single.just(1))
+        .test()
+        .assertFailureAndMessage(NullPointerException.class, "The zipper returned a null value");
     }
 }

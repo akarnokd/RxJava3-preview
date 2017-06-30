@@ -16,6 +16,7 @@ package io.reactivex.observable.internal.operators;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -309,5 +310,28 @@ public class MaybeCreateTest {
                 throw new TestException();
             }
         });
+    }
+
+    @Test
+    public void tryOnError() {
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
+        try {
+            final Boolean[] response = { null };
+            Maybe.create(new MaybeOnSubscribe<Object>() {
+                @Override
+                public void subscribe(MaybeEmitter<Object> e) throws Exception {
+                    e.onSuccess(1);
+                    response[0] = e.tryOnError(new TestException());
+                }
+            })
+            .test()
+            .assertResult(1);
+
+            assertFalse(response[0]);
+
+            assertTrue(errors.toString(), errors.isEmpty());
+        } finally {
+            RxJavaCommonPlugins.reset();
+        }
     }
 }

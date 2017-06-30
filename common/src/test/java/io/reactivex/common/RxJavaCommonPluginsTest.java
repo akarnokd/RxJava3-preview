@@ -846,7 +846,6 @@ public class RxJavaCommonPluginsTest {
      * @throws Exception on error
      */
     @Test
-    @SuppressWarnings("rawtypes")
     public void onErrorWithSuper() throws Exception {
         try {
             Consumer<? super Throwable> errorHandler = new Consumer<Throwable>() {
@@ -893,7 +892,6 @@ public class RxJavaCommonPluginsTest {
         }
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked" })
     @Test
     public void clearIsPassthrough() {
         try {

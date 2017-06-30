@@ -16,10 +16,12 @@ package io.reactivex.common.internal.functions;
 import static org.junit.Assert.*;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import org.junit.Test;
 
-import io.reactivex.common.TestCommonHelper;
+import io.reactivex.common.*;
+import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
 import io.reactivex.common.internal.functions.Functions.*;
 import io.reactivex.common.internal.utils.ExceptionHelper;
@@ -245,4 +247,16 @@ public class FunctionsTest {
         assertEquals("EmptyConsumer", Functions.EMPTY_CONSUMER.toString());
     }
 
+    @Test
+    public void errorConsumerEmpty() throws Exception {
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
+        try {
+            Functions.ERROR_CONSUMER.accept(new TestException());
+
+            TestCommonHelper.assertUndeliverable(errors, 0, TestException.class);
+            assertEquals(errors.toString(), 1, errors.size());
+        } finally {
+            RxJavaCommonPlugins.reset();
+        }
+    }
 }

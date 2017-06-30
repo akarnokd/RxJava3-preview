@@ -35,7 +35,6 @@ import io.reactivex.flowable.internal.utils.*;
  * <img width="640" height="460" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.BehaviorProcessor.png" alt="">
  * <p>
  * Example usage:
- * <p>
  * <pre> {@code
 
   // observer will receive all events.
@@ -226,11 +225,11 @@ public final class BehaviorProcessor<T> extends FlowableProcessor<T> {
      * <p>
      * Calling with null will terminate the PublishProcessor and a NullPointerException
      * is signalled to the Subscribers.
+     * <p>History: 2.0.8 - experimental
      * @param t the item to emit, not null
      * @return true if the item was emitted to all Subscribers
-     * @since 2.0.8 - experimental
+     * @since 2.1
      */
-    @Experimental
     public boolean offer(T t) {
         if (t == null) {
             onError(new NullPointerException("onNext called with null. Null values are generally not allowed in 2.x operators and sources."));

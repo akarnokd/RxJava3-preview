@@ -51,13 +51,13 @@ import io.reactivex.observable.internal.utils.EndObserverHelper;
  * <p>Implementation of {@link #onStart()}, {@link #onSuccess(Object)} and {@link #onError(Throwable)}
  * are not allowed to throw any unchecked exceptions.
  *
- * <p>Example<code><pre>
+ * <p>Example<pre><code>
  * Disposable d =
  *     Single.just(1).delay(1, TimeUnit.SECONDS)
- *     .subscribeWith(new ResourceSingleObserver&lt;Integer>() {
+ *     .subscribeWith(new ResourceSingleObserver&lt;Integer&gt;() {
  *         &#64;Override public void onStart() {
  *             add(Schedulers.single()
- *                 .scheduleDirect(() -> System.out.println("Time!"),
+ *                 .scheduleDirect(() -&gt; System.out.println("Time!"),
  *                     2, TimeUnit.SECONDS));
  *         }
  *         &#64;Override public void onSuccess(Integer t) {
@@ -71,7 +71,7 @@ import io.reactivex.observable.internal.utils.EndObserverHelper;
  *     });
  * // ...
  * d.dispose();
- * </pre></code>
+ * </code></pre>
  *
  * @param <T> the value type
  */

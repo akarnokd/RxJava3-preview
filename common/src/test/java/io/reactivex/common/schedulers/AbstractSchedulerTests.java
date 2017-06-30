@@ -25,6 +25,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import io.reactivex.common.*;
+import io.reactivex.common.internal.disposables.SequentialDisposable;
 import io.reactivex.common.internal.schedulers.TrampolineScheduler;
 
 /**
@@ -339,5 +340,72 @@ public abstract class AbstractSchedulerTests {
             d.dispose();
         }
         assertTrue(d.isDisposed());
+    }
+
+    @Test(timeout = 10000)
+    public void schedulePeriodicallyDirectZeroPeriod() throws Exception {
+        Scheduler s = getScheduler();
+        if (s instanceof TrampolineScheduler) {
+            // can't properly stop a trampolined periodic task
+            return;
+        }
+
+        for (int initial = 0; initial < 2; initial++) {
+            final CountDownLatch cdl = new CountDownLatch(1);
+
+            final SequentialDisposable sd = new SequentialDisposable();
+
+            try {
+                sd.replace(s.schedulePeriodicallyDirect(new Runnable() {
+                    int count;
+                    @Override
+                    public void run() {
+                        if (++count == 10) {
+                            sd.dispose();
+                            cdl.countDown();
+                        }
+                    }
+                }, initial, 0, TimeUnit.MILLISECONDS));
+
+                assertTrue("" + initial, cdl.await(5, TimeUnit.SECONDS));
+            } finally {
+                sd.dispose();
+            }
+        }
+    }
+
+    @Test(timeout = 10000)
+    public void schedulePeriodicallyZeroPeriod() throws Exception {
+        Scheduler s = getScheduler();
+        if (s instanceof TrampolineScheduler) {
+            // can't properly stop a trampolined periodic task
+            return;
+        }
+
+        for (int initial = 0; initial < 2; initial++) {
+            final CountDownLatch cdl = new CountDownLatch(1);
+
+            final SequentialDisposable sd = new SequentialDisposable();
+
+            Scheduler.Worker w = s.createWorker();
+
+            try {
+                sd.replace(w.schedulePeriodically(new Runnable() {
+                    int count;
+                    @Override
+                    public void run() {
+                        if (++count == 10) {
+                            sd.dispose();
+                            cdl.countDown();
+                        }
+                    }
+                }, initial, 0, TimeUnit.MILLISECONDS));
+
+                assertTrue("" + initial, cdl.await(5, TimeUnit.SECONDS));
+            } finally {
+                sd.dispose();
+                w.dispose();
+            }
+        }
     }
 }

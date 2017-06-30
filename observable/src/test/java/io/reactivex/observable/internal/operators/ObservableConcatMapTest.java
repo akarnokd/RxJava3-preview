@@ -13,8 +13,7 @@
 
 package io.reactivex.observable.internal.operators;
 
-
-
+import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -24,6 +23,7 @@ import org.junit.Test;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.Function;
+import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.observable.*;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.*;
@@ -367,5 +367,67 @@ public class ObservableConcatMapTest {
         } finally {
             RxJavaCommonPlugins.reset();
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void concatReportsDisposedOnComplete() {
+        final Disposable[] disposable = { null };
+
+        Observable.fromArray(Observable.just(1), Observable.just(2))
+        .hide()
+        .concatMap(Functions.<Observable<Integer>>identity())
+        .subscribe(new Observer<Integer>() {
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable[0] = d;
+            }
+
+            @Override
+            public void onNext(Integer t) {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
+
+        assertTrue(disposable[0].isDisposed());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void concatReportsDisposedOnError() {
+        final Disposable[] disposable = { null };
+
+        Observable.fromArray(Observable.just(1), Observable.<Integer>error(new TestException()))
+        .hide()
+        .concatMap(Functions.<Observable<Integer>>identity())
+        .subscribe(new Observer<Integer>() {
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable[0] = d;
+            }
+
+            @Override
+            public void onNext(Integer t) {
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
+
+        assertTrue(disposable[0].isDisposed());
     }
 }

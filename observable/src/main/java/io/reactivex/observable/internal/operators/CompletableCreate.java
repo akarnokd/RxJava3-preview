@@ -72,6 +72,13 @@ public final class CompletableCreate extends Completable {
 
         @Override
         public void onError(Throwable t) {
+            if (!tryOnError(t)) {
+                RxJavaCommonPlugins.onError(t);
+            }
+        }
+
+        @Override
+        public boolean tryOnError(Throwable t) {
             if (t == null) {
                 t = new NullPointerException("onError called with null. Null values are generally not allowed in 2.x operators and sources.");
             }
@@ -85,10 +92,10 @@ public final class CompletableCreate extends Completable {
                             d.dispose();
                         }
                     }
-                    return;
+                    return true;
                 }
             }
-            RxJavaCommonPlugins.onError(t);
+            return false;
         }
 
         @Override

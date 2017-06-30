@@ -28,9 +28,9 @@ import io.reactivex.observable.*;
  * <p>
  * The CompletableSubject doesn't store the Disposables coming through onSubscribe but
  * disposes them once the other onXXX methods were called (terminal state reached).
- * @since 2.0.5 - experimental
+ * <p>History: 2.0.5 - experimental
+ * @since 2.1
  */
-@Experimental
 public final class CompletableSubject extends Completable implements CompletableObserver {
 
     final AtomicReference<CompletableDisposable[]> observers;

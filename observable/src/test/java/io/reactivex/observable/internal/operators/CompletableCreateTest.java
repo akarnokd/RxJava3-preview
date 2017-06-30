@@ -16,6 +16,7 @@ package io.reactivex.observable.internal.operators;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -241,35 +242,25 @@ public class CompletableCreateTest {
     }
 
     @Test
-    public void onCompleteThrows2() {
-        Completable.create(new CompletableOnSubscribe() {
-            @Override
-            public void subscribe(CompletableEmitter e) throws Exception {
-                try {
+    public void tryOnError() {
+        List<Throwable> errors = TestCommonHelper.trackPluginErrors();
+        try {
+            final Boolean[] response = { null };
+            Completable.create(new CompletableOnSubscribe() {
+                @Override
+                public void subscribe(CompletableEmitter e) throws Exception {
                     e.onComplete();
-                    fail("Should have thrown");
-                } catch (TestException ex) {
-                    // expected
+                    response[0] = e.tryOnError(new TestException());
                 }
+            })
+            .test()
+            .assertResult();
 
-                assertTrue(e.isDisposed());
-            }
-        }).subscribe(new CompletableObserver() {
+            assertFalse(response[0]);
 
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-                throw new TestException();
-            }
-        });
+            assertTrue(errors.toString(), errors.isEmpty());
+        } finally {
+            RxJavaCommonPlugins.reset();
+        }
     }
 }

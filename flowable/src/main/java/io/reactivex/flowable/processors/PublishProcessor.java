@@ -23,14 +23,14 @@ import io.reactivex.flowable.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.flowable.internal.utils.BackpressureHelper;
 
 /**
- * A Subject that multicasts events to Subscribers that are currently subscribed to it.
+ * Processor that multicasts all subsequently observed items to its current {@link Subscriber}s.
  *
  * <p>
  * <img width="640" height="405" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.PublishSubject.png" alt="">
  *
- * <p>The subject does not coordinate backpressure for its subscribers and implements a weaker onSubscribe which
- * calls requests Long.MAX_VALUE from the incoming Subscriptions. This makes it possible to subscribe the PublishSubject
- * to multiple sources (note on serialization though) unlike the standard contract on Subscriber. Child subscribers, however, are not overflown but receive an
+ * <p>The processor does not coordinate backpressure for its subscribers and implements a weaker onSubscribe which
+ * calls requests Long.MAX_VALUE from the incoming Subscriptions. This makes it possible to subscribe the PublishProcessor
+ * to multiple sources (note on serialization though) unlike the standard Subscriber contract. Child subscribers, however, are not overflown but receive an
  * IllegalStateException in case their requested amount is zero.
  *
  * <p>The implementation of onXXX methods are technically thread-safe but non-serialized calls
@@ -40,7 +40,6 @@ import io.reactivex.flowable.internal.utils.BackpressureHelper;
  * {@code new} but must be created via the {@link #create()} method.
  *
  * Example usage:
- * <p>
  * <pre> {@code
 
   PublishProcessor<Object> processor = PublishProcessor.create();
@@ -54,7 +53,7 @@ import io.reactivex.flowable.internal.utils.BackpressureHelper;
   processor.onComplete();
 
   } </pre>
- * @param <T> the value type multicast to Subscribers.
+ * @param <T> the value type multicasted to Subscribers.
  */
 public final class PublishProcessor<T> extends FlowableProcessor<T> {
     /** The terminated indicator for the subscribers array. */
@@ -236,11 +235,11 @@ public final class PublishProcessor<T> extends FlowableProcessor<T> {
      * <p>
      * Calling with null will terminate the PublishProcessor and a NullPointerException
      * is signalled to the Subscribers.
+     * <p>History: 2.0.8 - experimental
      * @param t the item to emit, not null
      * @return true if the item was emitted to all Subscribers
-     * @since 2.0.8 - experimental
+     * @since 2.1
      */
-    @Experimental
     public boolean offer(T t) {
         if (t == null) {
             onError(new NullPointerException("onNext called with null. Null values are generally not allowed in 2.x operators and sources."));

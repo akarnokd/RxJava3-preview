@@ -459,12 +459,12 @@ extends AbstractObservableWithUpstream<T, U> {
                 if (b.size() < maxSize) {
                     return;
                 }
+
+                buffer = null;
+                producerIndex++;
             }
 
             if (restartTimerOnMaxSize) {
-                buffer = null;
-                producerIndex++;
-
                 timer.dispose();
             }
 
@@ -479,17 +479,13 @@ extends AbstractObservableWithUpstream<T, U> {
                 return;
             }
 
-            if (restartTimerOnMaxSize) {
-                synchronized (this) {
-                    buffer = b;
-                    consumerIndex++;
-                }
+            synchronized (this) {
+                buffer = b;
+                consumerIndex++;
+            }
 
+            if (restartTimerOnMaxSize) {
                 timer = w.schedulePeriodically(this, timespan, timespan, unit);
-            } else {
-                synchronized (this) {
-                    buffer = b;
-                }
             }
         }
 

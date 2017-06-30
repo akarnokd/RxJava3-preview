@@ -91,7 +91,7 @@ public class FlowableDoOnRequestTest {
     public void dontRequestIfDownstreamRequestsLate() {
 //        final List<Long> requested = new ArrayList<Long>();
 //
-//        Action1<Long> empty = Actions.empty();
+//        Consumer<Long> empty = Functions.emptyConsumer();
 //
 //        final AtomicReference<Producer> producer = new AtomicReference<Producer>();
 //

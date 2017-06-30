@@ -22,6 +22,7 @@ import org.junit.Test;
 import io.reactivex.common.*;
 import io.reactivex.common.exceptions.TestException;
 import io.reactivex.common.functions.*;
+import io.reactivex.common.internal.functions.Functions;
 import io.reactivex.observable.Maybe;
 import io.reactivex.observable.observers.TestObserver;
 import io.reactivex.observable.subjects.PublishSubject;
@@ -159,5 +160,13 @@ public class MaybeZipArrayTest {
             }
         }, Maybe.just(1), null)
         .blockingGet();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void singleSourceZipperReturnsNull() {
+        Maybe.zipArray(Functions.justFunction(null), Maybe.just(1))
+        .test()
+        .assertFailureAndMessage(NullPointerException.class, "The zipper returned a null value");
     }
 }

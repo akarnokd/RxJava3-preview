@@ -413,7 +413,6 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *
      * });
      * </code></pre>
-     * <p>
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code create} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -778,7 +777,6 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * emitted by the nested {@code MaybeSource}, without any transformation.
      * <p>
      * <img width="640" height="393" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/Maybe.merge.oo.png" alt="">
-     * <p>
      * <dl>
      * <dt><b>Scheduler:</b></dt>
      * <dd>{@code merge} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -2174,7 +2172,6 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * Delays the emission of this Maybe until the given ObservableSource signals an item or completes.
      * <p>
      * <img width="640" height="450" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/delay.oo.png" alt="">
-     * <p>
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>This version of {@code delay} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -2200,7 +2197,7 @@ public abstract class Maybe<T> implements MaybeSource<T> {
     /**
      * Returns a Maybe that delays the subscription to this Maybe
      * until the other ObservableSource emits an element or completes normally.
-     * <p>
+     *
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>This method does not operate by default on a particular {@link Scheduler}.</dd>
@@ -2275,13 +2272,13 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code doAfterSuccess} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
+     * <p>History: 2.0.1 - experimental
      * @param onAfterSuccess the Consumer that will be called after emitting an item from upstream to the downstream
      * @return the new Maybe instance
-     * @since 2.0.1 - experimental
+     * @since 2.1
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    @Experimental
     public final Maybe<T> doAfterSuccess(Consumer<? super T> onAfterSuccess) {
         ObjectHelper.requireNonNull(onAfterSuccess, "doAfterSuccess is null");
         return RxJavaObservablePlugins.onAssembly(new MaybeDoAfterSuccess<T>(this, onAfterSuccess));
@@ -2328,13 +2325,13 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code doFinally} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
+     * <p>History: 2.0.1 - experimental
      * @param onFinally the action called when this Maybe terminates or gets cancelled
      * @return the new Maybe instance
-     * @since 2.0.1 - experimental
+     * @since 2.1
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    @Experimental
     public final Maybe<T> doFinally(Action onFinally) {
         ObjectHelper.requireNonNull(onFinally, "onFinally is null");
         return RxJavaObservablePlugins.onAssembly(new MaybeDoFinally<T>(this, onFinally));
@@ -2675,17 +2672,17 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * <dd>{@code flatMapSingleElement} does not operate by default on a particular {@link Scheduler}.</dd>
      * </dl>
      *
+     * <p>History: 2.0.2 - experimental
      * @param <R> the result value type
      * @param mapper
      *            a function that, when applied to the item emitted by the source Maybe, returns a
      *            Single
      * @return the new Maybe instance
      * @see <a href="http://reactivex.io/documentation/operators/flatmap.html">ReactiveX operators documentation: FlatMap</a>
-     * @since 2.0.2 - experimental
+     * @since 2.1
      */
     @CheckReturnValue
     @SchedulerSupport(SchedulerSupport.NONE)
-    @Experimental
     public final <R> Maybe<R> flatMapSingleElement(final Function<? super T, ? extends SingleSource<? extends R>> mapper) {
         ObjectHelper.requireNonNull(mapper, "mapper is null");
         return RxJavaObservablePlugins.onAssembly(new MaybeFlatMapSingleElement<T, R>(this, mapper));
@@ -2937,7 +2934,8 @@ public abstract class Maybe<T> implements MaybeSource<T> {
 
     /**
      * Converts this Maybe into a Single instance composing cancellation
-     * through and turning an empty Maybe into a signal of NoSuchElementException.
+     * through and turning an empty Maybe into a Single that emits the given
+     * value through onSuccess.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code toSingle} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -3375,11 +3373,11 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * This retries 3 times, each time incrementing the number of seconds it waits.
      *
      * <pre><code>
-     *  ObservableSource.create((Observer<? super String> s) -> {
+     *  ObservableSource.create((Observer&lt;? super String&gt; s) -&gt; {
      *      System.out.println("subscribing");
      *      s.onError(new RuntimeException("always fails"));
-     *  }).retryWhen(attempts -> {
-     *      return attempts.zipWith(ObservableSource.range(1, 3), (n, i) -> i).flatMap(i -> {
+     *  }).retryWhen(attempts -&gt; {
+     *      return attempts.zipWith(ObservableSource.range(1, 3), (n, i) -&gt; i).flatMap(i -&gt; {
      *          System.out.println("delay retry by " + i + " second(s)");
      *          return ObservableSource.timer(i, TimeUnit.SECONDS);
      *      });
@@ -3575,10 +3573,10 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * MaybeObserver as is.
      * <p>Usage example:
      * <pre><code>
-     * Maybe&lt;Integer> source = Maybe.just(1);
+     * Maybe&lt;Integer&gt; source = Maybe.just(1);
      * CompositeDisposable composite = new CompositeDisposable();
      *
-     * MaybeObserver&lt;Integer> ms = new MaybeObserver&lt;>() {
+     * MaybeObserver&lt;Integer&gt; ms = new MaybeObserver&lt;&gt;() {
      *     // ...
      * };
      *
@@ -3605,7 +3603,6 @@ public abstract class Maybe<T> implements MaybeSource<T> {
      * MaybeSource if the current Maybe is empty.
      * <p>
      * <img width="640" height="445" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/switchifempty.m.png" alt="">
-     * <p/>
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code switchIfEmpty} does not operate by default on a particular {@link Scheduler}.</dd>
