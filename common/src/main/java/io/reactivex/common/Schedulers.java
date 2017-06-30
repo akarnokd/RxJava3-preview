@@ -312,7 +312,7 @@ public final class Schedulers {
      * <p>
      * Starting, stopping and restarting this scheduler is not supported (no-op) and the provided
      * executor's lifecycle must be managed externally:
-     * <code><pre>
+     * <pre><code>
      * ExecutorService exec = Executors.newSingleThreadedExecutor();
      * try {
      *     Scheduler scheduler = Schedulers.from(exec);
@@ -324,7 +324,7 @@ public final class Schedulers {
      * } finally {
      *     exec.shutdown();
      * }
-     * </pre></code>
+     * </code></pre>
      * <p>
      * This type of scheduler is less sensitive to leaking {@link io.reactivex.common.Scheduler.Worker} instances, although
      * not disposing a worker that has timed/delayed tasks not cancelled by other means may leak resources and/or

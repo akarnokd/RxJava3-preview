@@ -35,7 +35,6 @@ import io.reactivex.flowable.internal.utils.*;
  * <img width="640" height="460" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/S.BehaviorProcessor.png" alt="">
  * <p>
  * Example usage:
- * <p>
  * <pre> {@code
 
   // observer will receive all events.

@@ -1346,7 +1346,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     /**
      * Concatenates a variable number of Publisher sources.
      * <p>
-     * Note: named this way because of overload conflict with concat(Publisher&lt;Publisher&gt).
+     * Note: named this way because of overload conflict with concat(Publisher&lt;Publisher&gt;).
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/concat.png" alt="">
      * <dl>
@@ -2116,7 +2116,6 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a cold, synchronous, stateless and backpressure-aware generator of values.
-     * <p>
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure.</dd>
@@ -2143,7 +2142,6 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a cold, synchronous, stateful and backpressure-aware generator of values.
-     * <p>
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure.</dd>
@@ -2171,7 +2169,6 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a cold, synchronous, stateful and backpressure-aware generator of values.
-     * <p>
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure.</dd>
@@ -2201,7 +2198,6 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a cold, synchronous, stateful and backpressure-aware generator of values.
-     * <p>
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure.</dd>
@@ -2228,7 +2224,6 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Returns a cold, synchronous, stateful and backpressure-aware generator of values.
-     * <p>
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure.</dd>
@@ -4201,7 +4196,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/zip.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -4254,7 +4249,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="370" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/zip.o.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -4309,7 +4304,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * use {@link #doOnCancel(Action)} as well or use {@code using()} to do cleanup in case of completion
      * or cancellation.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -4369,7 +4364,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * use {@link #doOnCancel(Action)} as well or use {@code using()} to do cleanup in case of completion
      * or cancellation.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -4431,7 +4426,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * use {@link #doOnCancel(Action)} as well or use {@code using()} to do cleanup in case of completion
      * or cancellation.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -4494,7 +4489,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * use {@link #doOnCancel(Action)} as well or use {@code using()} to do cleanup in case of completion
      * or cancellation.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -4559,7 +4554,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * use {@link #doOnCancel(Action)} as well or use {@code using()} to do cleanup in case of completion
      * or cancellation.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -4629,7 +4624,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * use {@link #doOnCancel(Action)} as well or use {@code using()} to do cleanup in case of completion
      * or cancellation.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -4702,7 +4697,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * use {@link #doOnCancel(Action)} as well or use {@code using()} to do cleanup in case of completion
      * or cancellation.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -4779,7 +4774,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * use {@link #doOnCancel(Action)} as well or use {@code using()} to do cleanup in case of completion
      * or cancellation.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -4861,7 +4856,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * use {@link #doOnCancel(Action)} as well or use {@code using()} to do cleanup in case of completion
      * or cancellation.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -4947,7 +4942,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * use {@link #doOnCancel(Action)} as well or use {@code using()} to do cleanup in case of completion
      * or cancellation.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -5038,7 +5033,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/zip.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -5099,7 +5094,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/zip.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -5612,7 +5607,6 @@ public abstract class Flowable<T> implements Publisher<T> {
      * If the Flowable emits an error, it is wrapped into an
      * {@link io.reactivex.common.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
      * and routed to the RxJavaFlowablePlugins.onError handler.
-     * <p>
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator consumes the source {@code Flowable} in an unbounded manner
@@ -5671,7 +5665,6 @@ public abstract class Flowable<T> implements Publisher<T> {
 
     /**
      * Subscribes to the source and calls the Subscriber methods <strong>on the current thread</strong>.
-     * <p>
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The supplied {@code Subscriber} determines how backpressure is applied.</dd>
@@ -6904,8 +6897,6 @@ public abstract class Flowable<T> implements Publisher<T> {
     /**
      * Returns a Flowable that concatenate each item emitted by the source Publisher with the values in an
      * Iterable corresponding to that item that is generated by a selector.
-     * <p>
-     *
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors backpressure from downstream. The source {@code Publisher}s is
@@ -6934,8 +6925,6 @@ public abstract class Flowable<T> implements Publisher<T> {
     /**
      * Returns a Flowable that concatenate each item emitted by the source Publisher with the values in an
      * Iterable corresponding to that item that is generated by a selector.
-     * <p>
-     *
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors backpressure from downstream. The source {@code Publisher}s is
@@ -7086,7 +7075,6 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/debounce.png" alt="">
      * <p>
      * Information on debounce vs throttle:
-     * <p>
      * <ul>
      * <li><a href="http://drupalmotion.com/article/debounce-and-throttle-visual-explanation">Debounce and Throttle: visual explanation</a></li>
      * <li><a href="http://unscriptable.com/2009/03/20/debouncing-javascript-methods/">Debouncing: javascript methods</a></li>
@@ -7128,7 +7116,6 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/debounce.s.png" alt="">
      * <p>
      * Information on debounce vs throttle:
-     * <p>
      * <ul>
      * <li><a href="http://drupalmotion.com/article/debounce-and-throttle-visual-explanation">Debounce and Throttle: visual explanation</a></li>
      * <li><a href="http://unscriptable.com/2009/03/20/debouncing-javascript-methods/">Debouncing: javascript methods</a></li>
@@ -7388,7 +7375,6 @@ public abstract class Flowable<T> implements Publisher<T> {
     /**
      * Returns a Flowable that delays the subscription to this Publisher
      * until the other Publisher emits an element or completes normally.
-     * <p>
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator forwards the backpressure requests to this Publisher once
@@ -7672,7 +7658,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *  behavior.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code doFinally} does not operate by default on a particular {@link Scheduler}.</dd>
-     *  <td><b>Operator-fusion:</b></dt>
+     *  <dt><b>Operator-fusion:</b></dt>
      *  <dd>This operator supports normal and conditional Subscribers as well as boundary-limited
      *  synchronous or asynchronous queue-fusion.</dd>
      * </dl>
@@ -7699,7 +7685,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *  behavior.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code doAfterNext} does not operate by default on a particular {@link Scheduler}.</dd>
-     *  <td><b>Operator-fusion:</b></dt>
+     *  <dt><b>Operator-fusion:</b></dt>
      *  <dd>This operator supports normal and conditional Subscribers as well as boundary-limited
      *  synchronous or asynchronous queue-fusion.</dd>
      * </dl>
@@ -8332,7 +8318,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Publishers and emitting the results of this merger, while limiting the maximum number of concurrent
      * subscriptions to these Publishers.
      * <p>
-     * <!-- <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/flatMap.png" alt=""> -->
+     * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/flatMap.png" alt="">
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors backpressure from downstream. The upstream Flowable is consumed
@@ -8368,7 +8354,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Publishers and emitting the results of this merger, while limiting the maximum number of concurrent
      * subscriptions to these Publishers.
      * <p>
-     * <!-- <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/flatMap.png" alt=""> -->
+     * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/flatMap.png" alt="">
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors backpressure from downstream. The upstream Flowable is consumed
@@ -8407,7 +8393,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Publishers and emitting the results of this merger, while limiting the maximum number of concurrent
      * subscriptions to these Publishers.
      * <p>
-     * <!-- <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/flatMap.png" alt=""> -->
+     * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/flatMap.png" alt="">
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors backpressure from downstream. The upstream Flowable is consumed
@@ -8501,7 +8487,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Publisher and then flattens the Publishers returned from these functions and emits the resulting items,
      * while limiting the maximum number of concurrent subscriptions to these Publishers.
      * <p>
-     * <!-- <img width="640" height="410" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeMap.nce.png" alt=""> -->
+     * <img width="640" height="410" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeMap.nce.png" alt="">
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors backpressure from downstream. The upstream Flowable is consumed
@@ -8624,7 +8610,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * source Publisher and a specified collection Publisher, while limiting the maximum number of concurrent
      * subscriptions to these Publishers.
      * <p>
-     * <!-- <img width="640" height="390" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeMap.r.png" alt=""> -->
+     * <img width="640" height="390" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeMap.r.png" alt="">
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors backpressure from downstream. The upstream Flowable is consumed
@@ -8667,7 +8653,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * source Publisher and a specified collection Publisher, while limiting the maximum number of concurrent
      * subscriptions to these Publishers.
      * <p>
-     * <!-- <img width="640" height="390" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeMap.r.png" alt=""> -->
+     * <img width="640" height="390" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeMap.r.png" alt="">
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors backpressure from downstream. The upstream Flowable is consumed
@@ -8716,7 +8702,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * source Publisher and a specified collection Publisher, while limiting the maximum number of concurrent
      * subscriptions to these Publishers.
      * <p>
-     * <!-- <img width="640" height="390" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeMap.r.png" alt=""> -->
+     * <img width="640" height="390" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/mergeMap.r.png" alt="">
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors backpressure from downstream. The upstream Flowable is consumed
@@ -8899,7 +8885,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * Alias to {@link #subscribe(Consumer)}
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator consumes the source {@code Publisher} in an unbounded manner (i.e., no
      *  backpressure is applied to it).</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -8929,7 +8915,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * {@link io.reactivex.common.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
      * and routed to the RxJavaFlowablePlugins.onError handler.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator consumes the source {@code Publisher} in an unbounded manner (i.e., no
      *  backpressure is applied to it).</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -8955,7 +8941,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Subscribes to the {@link Publisher} and receives notifications for each element and error events until the
      * onNext Predicate returns false.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator consumes the source {@code Publisher} in an unbounded manner (i.e., no
      *  backpressure is applied to it).</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -8984,7 +8970,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Subscribes to the {@link Publisher} and receives notifications for each element and the terminal events until the
      * onNext Predicate returns false.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator consumes the source {@code Publisher} in an unbounded manner (i.e., no
      *  backpressure is applied to it).</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -9967,7 +9953,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *     cancelling the source, and notifying the producer with {@code onOverflow}. </li>
      *     <li>{@code BackpressureOverflow.Strategy.ON_OVERFLOW_DROP_LATEST} will drop any new items emitted by the producer while
      *     the buffer is full, without generating any {@code onError}.  Each drop will however invoke {@code onOverflow}
-     *     to signal the overflow to the producer.</li>j
+     *     to signal the overflow to the producer.</li>
      *     <li>{@code BackpressureOverflow.Strategy.ON_OVERFLOW_DROP_OLDEST} will drop the oldest items in the buffer in order to make
      *     room for newly emitted ones. Overflow will not generate an{@code onError}, but each drop will invoke
      *     {@code onOverflow} to signal the overflow to the producer.</li>
@@ -10068,7 +10054,6 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * Note that due to the nature of how backpressure requests are propagated through subscribeOn/observeOn,
      * requesting more than 1 from downstream doesn't guarantee a continuous delivery of onNext events.
-     * <p>
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors backpressure from downstream and consumes the source {@code Publisher} in an unbounded
@@ -10419,7 +10404,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="510" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/publishConnect.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The returned {@code ConnectableFlowable} honors backpressure for each of its {@code Subscriber}s
      *  and expects the source {@code Publisher} to honor backpressure as well. If this expectation is violated,
      *  the operator will signal a {@code MissingBackpressureException} to its {@code Subscriber}s and disconnect.</dd>
@@ -10513,7 +10498,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="510" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/publishConnect.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The returned {@code ConnectableFlowable} honors backpressure for each of its {@code Subscriber}s
      *  and expects the source {@code Publisher} to honor backpressure as well. If this expectation is violated,
      *  the operator will signal a {@code MissingBackpressureException} to its {@code Subscriber}s and disconnect.</dd>
@@ -10613,18 +10598,18 @@ public abstract class Flowable<T> implements Publisher<T> {
      * and may cause problems if it is mutable. To make sure each subscriber gets its own value, defer
      * the application of this operator via {@link #defer(Callable)}:
      * <pre><code>
-     * Publisher&lt;T> source = ...
-     * Flowable.defer(() -> source.reduce(new ArrayList&lt;>(), (list, item) -> list.add(item)));
+     * Publisher&lt;T&gt; source = ...
+     * Flowable.defer(() -&gt; source.reduce(new ArrayList&lt;&gt;(), (list, item) -&gt; list.add(item)));
      *
      * // alternatively, by using compose to stay fluent
      *
-     * source.compose(o ->
-     *     Flowable.defer(() -> o.reduce(new ArrayList&lt;>(), (list, item) -> list.add(item)))
+     * source.compose(o -&gt;
+     *     Flowable.defer(() -&gt; o.reduce(new ArrayList&lt;&gt;(), (list, item) -&gt; list.add(item)))
      * ).firstOrError();
      *
      * // or, by using reduceWith instead of reduce
      *
-     * source.reduceWith(() -> new ArrayList&lt;>(), (list, item) -> list.add(item)));
+     * source.reduceWith(() -&gt; new ArrayList&lt;&gt;(), (list, item) -&gt; list.add(item)));
      * </code></pre>
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
@@ -10700,7 +10685,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="309" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/repeat.o.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure and expects the source {@code Publisher} to honor backpressure as well.
      *  If this expectation is violated, the operator <em>may</em> throw an {@code IllegalStateException}.</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -10723,7 +10708,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/repeat.on.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure and expects the source {@code Publisher} to honor backpressure as well.
      *  If this expectation is violated, the operator <em>may</em> throw an {@code IllegalStateException}.</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -10758,7 +10743,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="310" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/repeat.on.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure and expects the source {@code Publisher} to honor backpressure as well.
      *  If this expectation is violated, the operator <em>may</em> throw an {@code IllegalStateException}.</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -10791,7 +10776,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="430" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/repeatWhen.f.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure and expects the source {@code Publisher} to honor backpressure as well.
      *  If this expectation is violated, the operator <em>may</em> throw an {@code IllegalStateException}.</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -11395,7 +11380,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * {@code [1, 2]} then succeeds the second time and emits {@code [1, 2, 3, 4, 5]} then the complete sequence
      * of emissions and notifications would be {@code [1, 2, 1, 2, 3, 4, 5, onComplete]}.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure and expects the source {@code Publisher} to honor backpressure as well.
      *  If this expectation is violated, the operator <em>may</em> throw an {@code IllegalStateException}.</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -11418,7 +11403,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * <img width="640" height="315" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/retry.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure and expects the source {@code Publisher} to honor backpressure as well.
      *  If this expectation is violated, the operator <em>may</em> throw an {@code IllegalStateException}.</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -11456,7 +11441,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * {@code [1, 2]} then succeeds the second time and emits {@code [1, 2, 3, 4, 5]} then the complete sequence
      * of emissions and notifications would be {@code [1, 2, 1, 2, 3, 4, 5, onComplete]}.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure and expects the source {@code Publisher} to honor backpressure as well.
      *  If this expectation is violated, the operator <em>may</em> throw an {@code IllegalStateException}.</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -11479,7 +11464,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Retries at most times or until the predicate returns false, whichever happens first.
      *
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure and expects the source {@code Publisher} to honor backpressure as well.
      *  If this expectation is violated, the operator <em>may</em> throw an {@code IllegalStateException}.</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -11504,7 +11489,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     /**
      * Retries the current Flowable if the predicate returns true.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure and expects the source {@code Publisher} to honor backpressure as well.
      *  If this expectation is violated, the operator <em>may</em> throw an {@code IllegalStateException}.</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -11524,7 +11509,7 @@ public abstract class Flowable<T> implements Publisher<T> {
     /**
      * Retries until the given stop function returns true.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure and expects the source {@code Publisher} to honor backpressure as well.
      *  If this expectation is violated, the operator <em>may</em> throw an {@code IllegalStateException}.</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -11556,11 +11541,11 @@ public abstract class Flowable<T> implements Publisher<T> {
      * This retries 3 times, each time incrementing the number of seconds it waits.
      *
      * <pre><code>
-     *  Publisher.create((Subscriber<? super String> s) -> {
+     *  Flowable.create((Subscriber&lt;? super String&gt; s) -&gt; {
      *      System.out.println("subscribing");
      *      s.onError(new RuntimeException("always fails"));
-     *  }).retryWhen(attempts -> {
-     *      return attempts.zipWith(Publisher.range(1, 3), (n, i) -> i).flatMap(i -> {
+     *  }).retryWhen(attempts -&gt; {
+     *      return attempts.zipWith(Publisher.range(1, 3), (n, i) -&gt; i).flatMap(i -&gt; {
      *          System.out.println("delay retry by " + i + " second(s)");
      *          return Publisher.timer(i, TimeUnit.SECONDS);
      *      });
@@ -11579,7 +11564,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * subscribing
      * } </pre>
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure and expects the source {@code Publisher} to honor backpressure as well.
      *  If this expectation is violated, the operator <em>may</em> throw an {@code IllegalStateException}.</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -11608,7 +11593,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * deals with exceptions thrown by a misbehaving Subscriber (that doesn't follow the
      * Reactive-Streams specification).
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>This operator leaves the reactive world and the backpressure behavior depends on the Subscriber's behavior.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code safeSubscribe} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -11841,7 +11826,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * This sort of function is sometimes called an accumulator.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure and expects the source {@code Publisher} to honor backpressure as well.
      *  Violating this expectation, a {@code MissingBackpressureException} <em>may</em> get signalled somewhere downstream.</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -11880,17 +11865,17 @@ public abstract class Flowable<T> implements Publisher<T> {
      * and may cause problems if it is mutable. To make sure each subscriber gets its own value, defer
      * the application of this operator via {@link #defer(Callable)}:
      * <pre><code>
-     * Publisher&lt;T> source = ...
-     * Publisher.defer(() -> source.scan(new ArrayList&lt;>(), (list, item) -> list.add(item)));
+     * Publisher&lt;T&gt; source = ...
+     * Flowable.defer(() -&gt; source.scan(new ArrayList&lt;&gt;(), (list, item) -&gt; list.add(item)));
      *
      * // alternatively, by using compose to stay fluent
      *
-     * source.compose(o ->
-     *     Publisher.defer(() -> o.scan(new ArrayList&lt;>(), (list, item) -> list.add(item)))
+     * source.compose(o -&gt;
+     *     Flowable.defer(() -&gt; o.scan(new ArrayList&lt;&gt;(), (list, item) -&gt; list.add(item)))
      * );
      * </code></pre>
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure and expects the source {@code Publisher} to honor backpressure as well.
      *  Violating this expectation, a {@code MissingBackpressureException} <em>may</em> get signalled somewhere downstream.</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -11926,26 +11911,10 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * This sort of function is sometimes called an accumulator.
      * <p>
-     * Note that the Publisher that results from this method will emit {@code initialValue} as its first
+     * Note that the Publisher that results from this method will emit value returned by {@code seedSupplier} as its first
      * emitted item.
-     * <p>
-     * Note that the {@code initialValue} is shared among all subscribers to the resulting Publisher
-     * and may cause problems if it is mutable. To make sure each subscriber gets its own value, defer
-     * the application of this operator via {@link #defer(Callable)}:
-     * <pre><code>
-     * Publisher&lt;T> source = ...
-     * Publisher.defer(() -> source.scan(new ArrayList&lt;>(), (list, item) -> list.add(item)));
-     *
-     * // alternatively, by using compose to stay fluent
-     *
-     * source.compose(o ->
-     *     Publisher.defer(() -> o.scan(new ArrayList&lt;>(), (list, item) -> list.add(item)))
-     * );
-     * </code></pre>
-     * <p>
-     * Unlike 1.x, this operator doesn't emit the seed value unless the upstream signals an event.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator honors downstream backpressure and expects the source {@code Publisher} to honor backpressure as well.
      *  Violating this expectation, a {@code MissingBackpressureException} <em>may</em> get signalled somewhere downstream.</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -12674,7 +12643,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * {@link io.reactivex.common.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
      * and routed to the RxJavaFlowablePlugins.onError handler.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator consumes the source {@code Publisher} in an unbounded manner (i.e., no
      *  backpressure is applied to it).</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -12699,7 +12668,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * {@link io.reactivex.common.exceptions.OnErrorNotImplementedException OnErrorNotImplementedException}
      * and routed to the RxJavaFlowablePlugins.onError handler.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator consumes the source {@code Publisher} in an unbounded manner (i.e., no
      *  backpressure is applied to it).</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -12726,7 +12695,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Subscribes to a Publisher and provides callbacks to handle the items it emits and any error
      * notification it issues.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator consumes the source {@code Publisher} in an unbounded manner (i.e., no
      *  backpressure is applied to it).</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -12756,7 +12725,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Subscribes to a Publisher and provides callbacks to handle the items it emits and any error or
      * completion notification it issues.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator consumes the source {@code Publisher} in an unbounded manner (i.e., no
      *  backpressure is applied to it).</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -12791,7 +12760,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Subscribes to a Publisher and provides callbacks to handle the items it emits and any error or
      * completion notification it issues.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator consumes the source {@code Publisher} in an unbounded manner (i.e., no
      *  backpressure is applied to it).</dd>
      *  <dt><b>Scheduler:</b></dt>
@@ -12920,10 +12889,10 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Subscriber as is.
      * <p>Usage example:
      * <pre><code>
-     * Flowable&lt;Integer> source = Flowable.range(1, 10);
+     * Flowable&lt;Integer&gt; source = Flowable.range(1, 10);
      * CompositeDisposable composite = new CompositeDisposable();
      *
-     * ResourceSubscriber&lt;Integer> rs = new ResourceSubscriber&lt;>() {
+     * ResourceSubscriber&lt;Integer&gt; rs = new ResourceSubscriber&lt;&gt;() {
      *     // ...
      * };
      *
@@ -13024,8 +12993,8 @@ public abstract class Flowable<T> implements Publisher<T> {
     /**
      * Returns a Flowable that emits the items emitted by the source Publisher or the items of an alternate
      * Publisher if the source Publisher is empty.
+     * <p>
      * <img width="640" height="255" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/switchifempty.png" alt="">
-     * <p/>
      * <dl>
      *  <dt><b>Backpressure:</b></dt>
      *  <dd>If the source {@code Publisher} is empty, the alternate {@code Publisher} is expected to honor backpressure.
@@ -13458,7 +13427,6 @@ public abstract class Flowable<T> implements Publisher<T> {
      *  unbounded manner (i.e., no backpressure is applied to it) but note that this <em>may</em>
      *  lead to {@code OutOfMemoryError} due to internal buffer bloat.
      *  Consider using {@link #takeLast(long, long, TimeUnit)} in this case.</dd>
-     *  behavior.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>This version of {@code takeLast} operates by default on the {@code computation} {@link Scheduler}.</dd>
      * </dl>
@@ -13489,7 +13457,6 @@ public abstract class Flowable<T> implements Publisher<T> {
      *  unbounded manner (i.e., no backpressure is applied to it) but note that this <em>may</em>
      *  lead to {@code OutOfMemoryError} due to internal buffer bloat.
      *  Consider using {@link #takeLast(long, long, TimeUnit)} in this case.</dd>
-     *  behavior.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>This version of {@code takeLast} operates by default on the {@code computation} {@link Scheduler}.</dd>
      * </dl>
@@ -13854,7 +13821,6 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/throttleWithTimeout.png" alt="">
      * <p>
      * Information on debounce vs throttle:
-     * <p>
      * <ul>
      * <li><a href="http://drupalmotion.com/article/debounce-and-throttle-visual-explanation">Debounce and Throttle: visual explanation</a></li>
      * <li><a href="http://unscriptable.com/2009/03/20/debouncing-javascript-methods/">Debouncing: javascript methods</a></li>
@@ -13896,7 +13862,6 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <img width="640" height="305" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/throttleWithTimeout.s.png" alt="">
      * <p>
      * Information on debounce vs throttle:
-     * <p>
      * <ul>
      * <li><a href="http://drupalmotion.com/article/debounce-and-throttle-visual-explanation">Debounce and Throttle: visual explanation</a></li>
      * <li><a href="http://unscriptable.com/2009/03/20/debouncing-javascript-methods/">Debouncing: javascript methods</a></li>
@@ -14453,7 +14418,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * <p>
      * This allows fluent conversion to any other type.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The backpressure behavior depends on what happens in the {@code converter} function.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code to} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -15909,7 +15874,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Note that the {@code other} Iterable is evaluated as items are observed from the source Publisher; it is
      * not pre-consumed. This allows you to zip infinite streams on either side.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -15943,7 +15908,6 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Returns a Flowable that emits items that are the result of applying a specified function to pairs of
      * values, one each from the source Publisher and another specified Publisher.
      * <p>
-     * <p>
      * The operator subscribes to its sources in order they are specified and completes eagerly if
      * one of the sources is shorter than the rest while cancelling the other sources. Therefore, it
      * is possible those other sources will never be able to run to completion (and thus not calling
@@ -15958,7 +15922,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/zip.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -15991,7 +15955,6 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Returns a Flowable that emits items that are the result of applying a specified function to pairs of
      * values, one each from the source Publisher and another specified Publisher.
      * <p>
-     * <p>
      * The operator subscribes to its sources in order they are specified and completes eagerly if
      * one of the sources is shorter than the rest while cancelling the other sources. Therefore, it
      * is possible those other sources will never be able to run to completion (and thus not calling
@@ -16006,7 +15969,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/zip.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -16042,7 +16005,6 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Returns a Flowable that emits items that are the result of applying a specified function to pairs of
      * values, one each from the source Publisher and another specified Publisher.
      * <p>
-     * <p>
      * The operator subscribes to its sources in order they are specified and completes eagerly if
      * one of the sources is shorter than the rest while cancelling the other sources. Therefore, it
      * is possible those other sources will never be able to run to completion (and thus not calling
@@ -16057,7 +16019,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      *
      * <img width="640" height="380" src="https://raw.github.com/wiki/ReactiveX/RxJava/images/rx-operators/zip.png" alt="">
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The operator expects backpressure from the sources and honors backpressure from the downstream.
      *  (I.e., zipping with {@link #interval(long, TimeUnit)} may result in MissingBackpressureException, use
      *  one of the {@code onBackpressureX} to handle similar, backpressure-ignoring sources.</dd>
@@ -16098,7 +16060,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Creates a TestSubscriber that requests Long.MAX_VALUE and subscribes
      * it to this Flowable.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The returned TestSubscriber consumes this Flowable in an unbounded fashion.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code test} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -16119,7 +16081,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * Creates a TestSubscriber with the given initial request amount and subscribes
      * it to this Flowable.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The returned TestSubscriber requests the given {@code initialRequest} amount upfront.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code test} does not operate by default on a particular {@link Scheduler}.</dd>
@@ -16142,7 +16104,7 @@ public abstract class Flowable<T> implements Publisher<T> {
      * optionally cancels it before the subscription and subscribes
      * it to this Flowable.
      * <dl>
-     *  <dt><b>Backpressure:</b><dt>
+     *  <dt><b>Backpressure:</b></dt>
      *  <dd>The returned TestSubscriber requests the given {@code initialRequest} amount upfront.</dd>
      *  <dt><b>Scheduler:</b></dt>
      *  <dd>{@code test} does not operate by default on a particular {@link Scheduler}.</dd>

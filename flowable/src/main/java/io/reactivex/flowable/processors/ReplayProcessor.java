@@ -43,7 +43,6 @@ import io.reactivex.flowable.internal.utils.*;
  *
  * <p>
  * Example usage:
- * <p>
  * <pre> {@code
 
   ReplayProcessor<Object> processor = new ReplayProcessor<T>();

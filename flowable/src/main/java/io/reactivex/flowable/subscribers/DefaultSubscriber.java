@@ -49,9 +49,9 @@ import io.reactivex.flowable.internal.utils.EndSubscriberHelper;
  * instead of the standard {@code subscribe()} method.
  * @param <T> the value type
  *
- * <p>Example<code><pre>
+ * <p>Example<pre><code>
  * Flowable.range(1, 5)
- *     .subscribeWith(new DefaultSubscriber&lt;Integer>() {
+ *     .subscribeWith(new DefaultSubscriber&lt;Integer&gt;() {
  *         &#64;Override public void onStart() {
  *             System.out.println("Start!");
  *             request(1);
@@ -70,7 +70,7 @@ import io.reactivex.flowable.internal.utils.EndSubscriberHelper;
  *             System.out.println("Done!");
  *         }
  *     });
- * </pre></code>
+ * </code></pre>
  */
 public abstract class DefaultSubscriber<T> implements RelaxedSubscriber<T> {
     private Subscription s;

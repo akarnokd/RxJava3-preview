@@ -60,13 +60,13 @@ import io.reactivex.flowable.internal.utils.EndSubscriberHelper;
  * If for some reason this can't be avoided, use {@link io.reactivex.flowable.Flowable#safeSubscribe(org.reactivestreams.Subscriber)}
  * instead of the standard {@code subscribe()} method.
  *
- * <p>Example<code><pre>
+ * <p>Example<pre><code>
  * Disposable d =
  *     Flowable.range(1, 5)
- *     .subscribeWith(new ResourceSubscriber&lt;Integer>() {
+ *     .subscribeWith(new ResourceSubscriber&lt;Integer&gt;() {
  *         &#64;Override public void onStart() {
  *             add(Schedulers.single()
- *                 .scheduleDirect(() -> System.out.println("Time!"),
+ *                 .scheduleDirect(() -&gt; System.out.println("Time!"),
  *                     2, TimeUnit.SECONDS));
  *             request(1);
  *         }
@@ -88,7 +88,7 @@ import io.reactivex.flowable.internal.utils.EndSubscriberHelper;
  *     });
  * // ...
  * d.dispose();
- * </pre></code>
+ * </code></pre>
  *
  * @param <T> the value type
  */

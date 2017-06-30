@@ -47,10 +47,10 @@ import io.reactivex.flowable.internal.utils.EndSubscriberHelper;
  * If for some reason this can't be avoided, use {@link io.reactivex.flowable.Flowable#safeSubscribe(org.reactivestreams.Subscriber)}
  * instead of the standard {@code subscribe()} method.
  *
- * <p>Example<code><pre>
+ * <p>Example<pre><code>
  * Disposable d =
  *     Flowable.range(1, 5)
- *     .subscribeWith(new DisposableSubscriber&lt;Integer>() {
+ *     .subscribeWith(new DisposableSubscriber&lt;Integer&gt;() {
  *         &#64;Override public void onStart() {
  *             request(1);
  *         }
@@ -70,7 +70,7 @@ import io.reactivex.flowable.internal.utils.EndSubscriberHelper;
  *     });
  * // ...
  * d.dispose();
- * </pre></code>
+ * </code></pre>
  * @param <T> the received value type.
  */
 public abstract class DisposableSubscriber<T> implements RelaxedSubscriber<T>, Disposable {
