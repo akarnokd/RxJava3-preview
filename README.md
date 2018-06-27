@@ -1,5 +1,9 @@
 # RxJava3-preview
 
+**Discontinued.** Version 3 development will be branched off of 2.x sometime after **2.2** has been finalized in the main [RxJava repository](https://github.com/ReactiveX/RxJava).
+
+-------------------------
+
 <a href='https://travis-ci.org/akarnokd/RxJava3-preview/builds'><img src='https://travis-ci.org/akarnokd/RxJava3-preview.svg?branch=master'></a>
 [![codecov.io](http://codecov.io/github/akarnokd/RxJava3-preview/coverage.svg?branch=master)](http://codecov.io/github/akarnokd/RxJava3-preview?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-common/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-common) 
